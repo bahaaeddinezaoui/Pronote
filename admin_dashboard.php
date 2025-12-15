@@ -5,7 +5,7 @@ date_default_timezone_set('Africa/Algiers');
 
 // Check if user is logged in as Admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
-    header("Location: login.html");
+    header("Location: login.php");
     exit;
 }
 
@@ -472,7 +472,10 @@ $conn->close();
 
 <div class="navbar-admin">
     <div style="font-family: sans-serif; display:flex; align-items:center; justify-content:space-between; width:100%;">
-        <a href="admin_dashboard.php" style="text-decoration:none; color:inherit;">Home</a>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <a href="admin_dashboard.php" class="navbar_buttons">Home</a>
+            <a href="profile.php" class="navbar_buttons">Profile</a>
+        </div>
         <div style="display:flex; align-items:center; gap:20px; margin-left:auto;">
             <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
                 🔔
@@ -484,8 +487,7 @@ $conn->close();
                     <div id="notificationsContent"></div>
                 </div>
             </div>
-            <a href="profile.php">Profile</a>
-            <a href="logout.php">Logout</a>
+            <a href="logout.php" class="navbar_buttons logout-btn">Logout</a>
         </div>
     </div>
 </div>

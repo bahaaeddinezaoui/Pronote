@@ -349,6 +349,7 @@ if ($class_q) {
                                     <th>First Name</th>
                                     <th>Motif</th>
                                     <th>Observation</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -556,8 +557,29 @@ function addStudentRow() {
         </td>
         <td><input type="text" name="motif[]" ></td>
         <td><input type="text" name="observation[]" ></td>
+        <td>
+            <button type="button" onclick="editStudentRow(this)">Edit</button>
+            <button type="button" onclick="removeStudentRow(this)">Delete</button>
+        </td>
     `;
     tableBody.appendChild(row);
+    updateAbsenteesAndPresentees();
+}
+
+function editStudentRow(btn) {
+    const row = btn.closest('tr');
+    if (!row) return;
+    const firstInput = row.querySelector('.first_name');
+    const lastInput = row.querySelector('.last_name');
+    if (firstInput) firstInput.removeAttribute('readonly');
+    if (lastInput) lastInput.removeAttribute('readonly');
+    if (firstInput) firstInput.focus();
+}
+
+function removeStudentRow(btn) {
+    const row = btn.closest('tr');
+    if (!row) return;
+    row.remove();
     updateAbsenteesAndPresentees();
 }
 

@@ -11,6 +11,6 @@ $_SESSION = [];
 session_destroy();
 
 // Redirect to login page
-header("Location: login.html"); // or wherever your login form is
+header("Location: login.php"); // or wherever your login form is
 exit;
 ?>

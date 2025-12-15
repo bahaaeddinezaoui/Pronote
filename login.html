@@ -1,31 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css" />
-    <title>Document</title>
+    <title>Redirecting…</title>
+    <script>
+        // Always use login.php (handles session-aware redirect).
+        window.location.replace('login.php');
+    </script>
 </head>
-
 <body>
-
-    <form action="index.php" method="post" id="login">
-        <fieldset id="login_fieldset">
-            <legend id="login_credentials">Welcome to Pronote!</legend>
-            <div id="login_username">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username" required>
-            </div>
-
-            <div id="login_password">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-
-            <button type="submit" id="login_button">Login</button>
-        </fieldset>
-
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=login.php" />
+        <p>Redirecting to <a href="login.php">login.php</a>…</p>
+    </noscript>
 </body>
-
 </html>
