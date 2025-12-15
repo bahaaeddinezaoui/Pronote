@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 09, 2025 at 08:41 AM
+-- Generation Time: Dec 15, 2025 at 09:12 AM
 -- Server version: 9.1.0
 -- PHP Version: 8.3.14
 
@@ -43,20 +43,9 @@ CREATE TABLE IF NOT EXISTS `absence` (
 --
 
 INSERT INTO `absence` (`ABSENCE_ID`, `STUDY_SESSION_ID`, `ABSENCE_DATE_AND_TIME`, `ABSENCE_MOTIF`, `ABSENCE_OBSERVATION`) VALUES
-(14, 12, '2025-12-08 15:05:22', 'e', 'e'),
-(13, 12, '2025-12-08 15:05:22', 'r', 'r'),
-(12, 12, '2025-12-08 15:05:22', 'r', 'r'),
-(11, 11, '2025-12-08 15:03:41', 'z', 'z'),
-(10, 11, '2025-12-08 15:03:41', 'e', 'e'),
-(9, 10, '2025-12-08 15:52:14', 'Late as usual', 'Overtime Work'),
-(8, 9, '2025-12-08 15:33:06', 'zzzzzzzzzz', 'zzzzzzzzzzzzzzzzzzzzzzz'),
-(7, 8, '2025-12-08 11:52:55', 'Late as usual', 'Overtime Work'),
-(6, 7, '2025-12-08 10:12:38', 'Late as usual', 'Overtime Work'),
-(4, 5, '2025-11-02 15:55:18', 'z', 'z'),
-(5, 6, '2025-12-08 10:09:04', 'Late as usual', 'Overtime Work'),
-(2, 3, '2025-11-02 15:34:51', 'z', 'z'),
-(3, 4, '2025-11-02 15:45:01', 'Late as usual', 'Overtime Work'),
-(1, 2, '2025-11-02 15:32:28', 'zzzzzzzzzz', 'zzzzzzzzzzzzzzzzzzzzzzz');
+(1, 1, '2025-12-09 14:04:45', 'z', 'z'),
+(2, 2, '2025-12-11 11:06:16', 'ddddd', 'dddd'),
+(3, 2, '2025-12-11 11:06:16', '', '');
 
 -- --------------------------------------------------------
 
@@ -70,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `administrator` (
   `USER_ID` int NOT NULL,
   `ADMINISTRATOR_FIRST_NAME` varchar(24) DEFAULT NULL,
   `ADMINISTRATOR_LAST_NAME` varchar(24) DEFAULT NULL,
+  `ADMINISTRATOR_GRADE` int NOT NULL,
   `ADMINISTRATOR_POSITION` varchar(24) DEFAULT NULL,
   PRIMARY KEY (`ADMINISTRATOR_ID`),
   KEY `FK_ADMINIST_ADMINISTR_USER_ACC` (`USER_ID`)
@@ -79,8 +69,8 @@ CREATE TABLE IF NOT EXISTS `administrator` (
 -- Dumping data for table `administrator`
 --
 
-INSERT INTO `administrator` (`ADMINISTRATOR_ID`, `USER_ID`, `ADMINISTRATOR_FIRST_NAME`, `ADMINISTRATOR_LAST_NAME`, `ADMINISTRATOR_POSITION`) VALUES
-(1, 2, 'ad', 'min', 'Chef Brigade');
+INSERT INTO `administrator` (`ADMINISTRATOR_ID`, `USER_ID`, `ADMINISTRATOR_FIRST_NAME`, `ADMINISTRATOR_LAST_NAME`, `ADMINISTRATOR_GRADE`, `ADMINISTRATOR_POSITION`) VALUES
+(1, 2, 'ad', 'min', 0, 'Chef Brigade');
 
 -- --------------------------------------------------------
 
@@ -182,16 +172,9 @@ CREATE TABLE IF NOT EXISTS `observation` (
 --
 
 INSERT INTO `observation` (`OBSERVATION_ID`, `STUDY_SESSION_ID`) VALUES
-(5, 10),
-(4, 9),
-(3, 8),
-(2, 6),
-(1, 3),
-(6, 13),
-(7, 14),
-(8, 15),
-(9, 15),
-(10, 15);
+(2, 1),
+(1, 1),
+(3, 2);
 
 -- --------------------------------------------------------
 
@@ -294,20 +277,9 @@ CREATE TABLE IF NOT EXISTS `student_gets_absent` (
 --
 
 INSERT INTO `student_gets_absent` (`STUDENT_SERIAL_NUMBER`, `ABSENCE_ID`) VALUES
-('2', 1),
 ('2', 2),
-('2', 3),
-('2', 4),
-('2', 6),
-('2', 11),
-('2', 13),
-('3', 14),
-('4', 5),
-('4', 7),
-('4', 8),
-('4', 9),
-('4', 10),
-('4', 12);
+('4', 1),
+('4', 3);
 
 -- --------------------------------------------------------
 
@@ -351,20 +323,7 @@ CREATE TABLE IF NOT EXISTS `studies_in` (
 
 INSERT INTO `studies_in` (`SECTION_ID`, `STUDY_SESSION_ID`) VALUES
 (2, 1),
-(2, 2),
-(2, 3),
-(2, 4),
-(2, 5),
-(2, 6),
-(2, 7),
-(2, 8),
-(2, 9),
-(2, 10),
-(2, 11),
-(2, 12),
-(2, 13),
-(2, 14),
-(2, 15);
+(2, 2);
 
 -- --------------------------------------------------------
 
@@ -390,21 +349,8 @@ CREATE TABLE IF NOT EXISTS `study_session` (
 --
 
 INSERT INTO `study_session` (`STUDY_SESSION_ID`, `CLASS_ID`, `TEACHER_SERIAL_NUMBER`, `STUDY_SESSION_DATE`, `STUDY_SESSION_START_TIME`, `STUDY_SESSION_END_TIME`) VALUES
-(12, 1, '1', '2025-12-08', '14:30:00', '16:00:00'),
-(11, 1, '1', '2025-12-08', '14:30:00', '16:00:00'),
-(10, 1, '1', '2025-12-08', '14:30:00', '16:00:00'),
-(9, 1, '1', '2025-12-08', '14:30:00', '16:00:00'),
-(8, 1, '1', '2025-12-08', '10:00:00', '12:00:00'),
-(7, 1, '1', '2025-12-08', '10:00:00', '12:00:00'),
-(6, 1, '1', '2025-12-08', '10:00:00', '12:00:00'),
-(5, 1, '1', '2025-11-02', '14:30:00', '16:00:00'),
-(4, 1, '1', '2025-11-02', '14:30:00', '16:00:00'),
-(3, 1, '1', '2025-11-02', '14:30:00', '16:00:00'),
-(2, 1, '1', '2025-11-02', '14:30:00', '16:00:00'),
-(1, 1, '1', '2025-11-02', '14:30:00', '16:00:00'),
-(13, 1, '1', '2025-12-09', '08:00:00', '10:00:00'),
-(14, 1, '1', '2025-12-09', '08:00:00', '10:00:00'),
-(15, 1, '1', '2025-12-09', '08:00:00', '10:00:00');
+(1, 2, '1', '2025-12-09', '13:00:00', '14:30:00'),
+(2, 1, '1', '2025-12-11', '10:00:00', '12:00:00');
 
 -- --------------------------------------------------------
 
@@ -428,7 +374,7 @@ CREATE TABLE IF NOT EXISTS `teacher` (
 --
 
 INSERT INTO `teacher` (`TEACHER_SERIAL_NUMBER`, `USER_ID`, `TEACHER_GRADE`, `TEACHER_FIRST_NAME`, `TEACHER_LAST_NAME`) VALUES
-('1', 1, 'PCA', 'ABCD', 'EFGH');
+('1', 1, 'PCA', 'Mohamed', 'MERINE');
 
 -- --------------------------------------------------------
 
@@ -457,15 +403,9 @@ CREATE TABLE IF NOT EXISTS `teacher_makes_an_observation_for_a_student` (
 --
 
 INSERT INTO `teacher_makes_an_observation_for_a_student` (`STUDENT_SERIAL_NUMBER`, `OBSERVATION_ID`, `TEACHER_SERIAL_NUMBER`, `STUDY_SESSION_ID`, `OBSERVATION_DATE_AND_TIME`, `OBSERVATION_MOTIF`, `OBSERVATION_NOTE`, `IS_NEW_FOR_ADMIN`) VALUES
-('4', 3, '1', 8, '2025-12-08 11:53:19', 'fdsgfdfhgfcj', 'fdxgfdhgcfhgcfjh', 1),
-('4', 2, '1', 6, '2025-12-08 10:09:12', 'zzzzz', 'zzzzz', 1),
-('2', 1, '1', 3, '2025-11-02 15:34:57', 'z', 'z', 1),
-('2', 4, '1', 9, '2025-12-08 15:34:35', 'feqsfsdwgfdgf', 'gdfxhgfhgc', 1),
-('2', 5, '1', 10, '2025-12-08 15:53:45', 'vxcvcxbcvxvc n', 'vdxvcgfxhgdxhxhgfc', 1),
-('2', 7, '1', 14, '2025-12-09 09:26:31', 'z', 'd', 1),
-('2', 8, '1', 15, '2025-12-09 09:28:47', 'zdsdsqf', 'sdfdsgdfs', 1),
-('2', 9, '1', 15, '2025-12-09 09:28:56', 'esfrsgd', 'gfdxgfxdhxgf', 1),
-('2', 10, '1', 15, '2025-12-09 09:34:34', 'bgfgfg', 'hgbdhb', 1);
+('4', 2, '1', 1, '2025-12-09 14:15:56', 'tttt', 'ttt', 0),
+('2', 1, '1', 1, '2025-12-09 14:04:59', 'z', 'z', 0),
+('2', 3, '1', 2, '2025-12-11 11:06:33', 'dddddddddddddddddd', 'dddddddddddddddddd', 0);
 
 -- --------------------------------------------------------
 

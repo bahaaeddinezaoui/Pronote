@@ -472,7 +472,7 @@ $conn->close();
 
 <div class="navbar-admin">
     <div style="font-family: sans-serif; display:flex; align-items:center; justify-content:space-between; width:100%;">
-        <a href="#" style="text-decoration:none; color:inherit;">Home</a>
+        <a href="admin_dashboard.php" style="text-decoration:none; color:inherit;">Home</a>
         <div style="display:flex; align-items:center; gap:20px; margin-left:auto;">
             <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
                 🔔
@@ -484,6 +484,7 @@ $conn->close();
                     <div id="notificationsContent"></div>
                 </div>
             </div>
+            <a href="profile.php">Profile</a>
             <a href="logout.php">Logout</a>
         </div>
     </div>

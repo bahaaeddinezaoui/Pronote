@@ -270,9 +270,10 @@ if ($class_q) {
 
 <div class="parent">
     <div class="div1" id="navbar">
-        <div style="font-family: sans-serif; display:flex; align-items:center; justify-content:space-between; width:100%;">
-            <a href="#" id="home" class="navbar_buttons">Home</a>
-            <a href="logout.php" class="navbar_buttons" style="margin-left:auto;">Logout</a>
+        <div style="font-family: sans-serif; display:flex; align-items:center; gap:12px; width:100%;">
+            <a href="fill_form.php" id="home" class="navbar_buttons">Home</a>
+            <a href="profile.php" class="navbar_buttons">Profile</a>
+            <a href="logout.php" class="navbar_buttons logout-btn" style="margin-left:auto;">Logout</a>
         </div>
     </div>
 
@@ -280,18 +281,10 @@ if ($class_q) {
         <fieldset id="form_fill">
             <legend id="form_legend">Absentees and Observations</legend>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                
-                <div>
-                    <strong>Teacher:</strong>
-                    <input type="text" id="teacher_name_display" value="<?php echo $logged_in_teacher_name; ?>" disabled style="background:#eee; border:0; padding:2px 6px;">
-                </div>
-                
-                <div>
-                    <div class="tab-buttons">
-                        <button id="tabAbs" class="active">Absences</button>
-                        <button id="tabObs">Observations</button>
-                    </div>
+            <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:8px;">
+                <div class="tab-buttons">
+                    <button id="tabAbs" class="active">Absences</button>
+                    <button id="tabObs">Observations</button>
                 </div>
             </div>
 
@@ -300,21 +293,8 @@ if ($class_q) {
                 <form id="absence_main_form" method="POST">
                     <input type="hidden" name="teacher_serial_number" value="<?php echo $logged_in_teacher_serial; ?>">
                     
-                    <div id="div_select_date_and_time">
-                        <label for="date_display">Current Date:</label>
-                        <input type="text" id="date_display" value="<?php echo $server_date_display; ?>" disabled style="background-color:#eee;">
-                        <input type="hidden" name="session_date" value="<?php echo $server_date_value; ?>">
-                    </div>
-                    
-
-                    
-                    <div id="select_time_slot">
-                        <label for="time_slot_display">Selected time slot:</label>
-                        <input type="text" id="time_slot_display" value="<?php echo htmlspecialchars($display_time_message); ?>" readonly style="background:#eee;">
-                        <input type="hidden" name="time_slot" value="<?php echo htmlspecialchars($selected_slot_value); ?>">
-                    </div>
-                    
-
+                    <input type="hidden" name="session_date" value="<?php echo $server_date_value; ?>">
+                    <input type="hidden" name="time_slot" value="<?php echo htmlspecialchars($selected_slot_value); ?>">
                     <!-- NEW: Class selector -->
                     <div>
                         <label for="class_select">Select Class:</label>
@@ -744,6 +724,16 @@ document.getElementById('tabObs').addEventListener('click', function() {
 document.getElementById('absence_main_form').addEventListener('submit', function(e) {
     e.preventDefault();
     
+    const rows = document.querySelectorAll('#student_table tbody tr');
+    for (const row of rows) {
+        const first = row.querySelector('.first_name')?.value.trim() || '';
+        const last = row.querySelector('.last_name')?.value.trim() || '';
+        if (!first || !last) {
+            alert('Please fill first and last name for every added student row.');
+            return;
+        }
+    }
+
     const formData = new FormData(this);
     const submitBtn = document.getElementById('submit_button');
     submitBtn.disabled = true;

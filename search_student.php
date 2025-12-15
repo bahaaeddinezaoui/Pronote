@@ -27,11 +27,12 @@ $types = str_repeat('i', count($sections));
 $sql = "SELECT STUDENT_FIRST_NAME, STUDENT_LAST_NAME
         FROM student
         WHERE SECTION_ID IN ($placeholders)
-        AND STUDENT_FIRST_NAME LIKE CONCAT('%', ?, '%')";
+          AND (STUDENT_FIRST_NAME LIKE CONCAT('%', ?, '%')
+               OR STUDENT_LAST_NAME LIKE CONCAT('%', ?, '%'))";
 
 $stmt = $conn->prepare($sql);
-$params = [...$sections, $query];
-$stmt->bind_param($types . 's', ...$params);
+$params = [...$sections, $query, $query];
+$stmt->bind_param($types . 'ss', ...$params);
 $stmt->execute();
 $result = $stmt->get_result();
 
