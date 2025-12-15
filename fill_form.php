@@ -342,6 +342,20 @@ if ($class_q) {
                     <div id="select_sections"></div>
 
                     <div id="student_table_container">
+                        <div id="stats_container" style="margin-bottom:15px; display:none; width: 100%; gap: 15px;">
+                            <div style="flex: 1; text-align: center; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <span id="total_students" style="display:block; font-size: 2.5rem; font-weight: 800; color: #4f46e5; line-height: 1.1; margin-bottom: 4px;">0</span>
+                                <span style="display:block; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Total Students</span>
+                            </div>
+                            <div style="flex: 1; text-align: center; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <span id="presentees" style="display:block; font-size: 2.5rem; font-weight: 800; color: #10b981; line-height: 1.1; margin-bottom: 4px;">0</span>
+                                <span style="display:block; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Presentees</span>
+                            </div>
+                            <div style="flex: 1; text-align: center; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <span id="absentees" style="display:block; font-size: 2.5rem; font-weight: 800; color: #ef4444; line-height: 1.1; margin-bottom: 4px;">0</span>
+                                <span style="display:block; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Absentees</span>
+                            </div>
+                        </div>
                         <table id="student_table">
                             <thead>
                                 <tr>
@@ -359,11 +373,7 @@ if ($class_q) {
                             <button type="button" onclick="addStudentRow()">➕ Add Student</button>
                         </div>
 
-                        <div id="stats_container" style="margin-top:10px; display:none;">
-                            <p><strong>Total Students:</strong> <span id="total_students">0</span></p>
-                            <p><strong>Presentees:</strong> <span id="presentees">0</span></p>
-                            <p><strong>Absentees:</strong> <span id="absentees">0</span></p>
-                        </div>
+
                     </div>
 
                     <div style="margin-top:12px;">
@@ -470,8 +480,14 @@ function loadSections() {
         .then(res => res.json())
         .then(data => {
             if (data.success && data.sections.length > 0) {
-                sectionContainer.innerHTML = '<label>Select Sections:</label><br>';
+                sectionContainer.innerHTML = '<label class="section-group-label">Select Sections:</label>';
+                const gridDiv = document.createElement('div');
+                gridDiv.className = 'section-grid';
+                
                 data.sections.forEach(section => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'section-item';
+                    
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
                     checkbox.value = section.id;
@@ -480,12 +496,13 @@ function loadSections() {
 
                     const label = document.createElement('label');
                     label.htmlFor = checkbox.id;
-                    label.textContent = ' ' + section.name;
+                    label.textContent = section.name;
 
-                    sectionContainer.appendChild(checkbox);
-                    sectionContainer.appendChild(label);
-                    sectionContainer.appendChild(document.createElement('br'));
+                    wrapper.appendChild(checkbox);
+                    wrapper.appendChild(label);
+                    gridDiv.appendChild(wrapper);
                 });
+                sectionContainer.appendChild(gridDiv);
             } else {
                 sectionContainer.innerHTML = '<p>No sections found for this major.</p>';
             }
@@ -511,7 +528,7 @@ function loadStudents() {
     }
 
     addRowContainer.style.display = 'block';
-    statsContainer.style.display = 'block';
+    statsContainer.style.display = 'flex';
 
     const sectionIds = Array.from(checkedBoxes).map(cb => cb.value);
 
@@ -552,8 +569,10 @@ function addStudentRow() {
     row.innerHTML = `
         <td><input type="text" name="last_name[]" class="last_name" readonly></td>
         <td>
-            <input type="text" name="first_name[]" class="first_name" oninput="searchStudent(this)" placeholder="Search student...">
-            <div class="suggestions" style="position:relative;"></div>
+            <div style="position: relative; width: 100%;">
+                <input type="text" name="first_name[]" class="first_name" oninput="searchStudent(this)" placeholder="Search student...">
+                <div class="suggestions"></div>
+            </div>
         </td>
         <td><input type="text" name="motif[]" ></td>
         <td><input type="text" name="observation[]" ></td>
