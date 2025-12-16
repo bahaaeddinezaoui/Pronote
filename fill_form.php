@@ -203,6 +203,37 @@ foreach ($time_slots as $slot) {
 }
 $display_time_message = $slot_found ? $selected_slot_value : 'N/A (Outside teaching hours: ' . $current_time . ')';
 
+// ----------------------
+// NEW: Check if session exists for this teacher/date/time
+// ----------------------
+$existing_session_found = false;
+$existing_session_id = 0;
+// Default mode message
+$session_status_message = "";
+
+if ($slot_found && !empty($logged_in_teacher_serial)) {
+    // Determine start/end from selected slot
+    $parts = explode(' - ', $selected_slot_value);
+    if (count($parts) === 2) {
+        $st = trim($parts[0]);
+        $et = trim($parts[1]);
+        
+        $chk = $conn->prepare("SELECT STUDY_SESSION_ID FROM study_session WHERE TEACHER_SERIAL_NUMBER = ? AND STUDY_SESSION_DATE = ? AND STUDY_SESSION_START_TIME = ? AND STUDY_SESSION_END_TIME = ?");
+        $chk->bind_param("isss", $logged_in_teacher_serial, $server_date_value, $st, $et);
+        $chk->execute();
+        $res = $chk->get_result();
+        if ($res->num_rows > 0) {
+            $existing_session_found = true;
+            $existing_session_id = $res->fetch_assoc()['STUDY_SESSION_ID'];
+            // Store in session for usage in submit_observation
+            $_SESSION['current_study_session_id'] = $existing_session_id;
+            $session_status_message = "Session already exists for this slot. You can only record observations.";
+        }
+        $chk->close();
+    }
+}
+
+
 // Teacher categories (existing)
 $teacher_categories = [];
 if (!empty($logged_in_teacher_serial)) {
@@ -281,15 +312,28 @@ if ($class_q) {
         <fieldset id="form_fill">
             <legend id="form_legend">Absentees and Observations</legend>
 
-            <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <?php if ($existing_session_found): ?>
+                    <div style="color: #d97706; font-weight: bold; font-size: 0.9em;">
+                        ⚠️ <?php echo $session_status_message; ?>
+                    </div>
+                <?php else: ?>
+                    <div></div>
+                <?php endif; ?>
+
                 <div class="tab-buttons">
-                    <button id="tabAbs" class="active">Absences</button>
-                    <button id="tabObs">Observations</button>
+                    <?php if (!$existing_session_found): ?>
+                        <button id="tabAbs" class="active">Absences</button>
+                    <?php else: ?>
+                        <!-- Disabled appearance for Absences -->
+                        <button disabled style="opacity:0.5; cursor:not-allowed;">Absences (Done)</button>
+                    <?php endif; ?>
+                    <button id="tabObs" class="<?php echo $existing_session_found ? 'active' : ''; ?>">Observations</button>
                 </div>
             </div>
 
             <!-- ABSENCES -->
-            <div id="absences_section" class="form-section active">
+            <div id="absences_section" class="form-section <?php echo $existing_session_found ? '' : 'active'; ?>">
                 <form id="absence_main_form" method="POST">
                     <input type="hidden" name="teacher_serial_number" value="<?php echo $logged_in_teacher_serial; ?>">
                     
@@ -383,7 +427,7 @@ if ($class_q) {
             </div>
 
             <!-- OBSERVATIONS -->
-            <div id="observations_section" class="form-section">
+            <div id="observations_section" class="form-section <?php echo $existing_session_found ? 'active' : ''; ?>">
                 <h3>Record an Observation (one student)</h3>
 
                 <div style="position:relative; max-width:420px;">
@@ -729,36 +773,42 @@ document.getElementById('obs_submit_btn').addEventListener('click', function() {
     .then(r => r.json())
     .then(obj => {
         if (obj.success) {
-            resp.style.color = 'green';
-            resp.textContent = obj.message || 'Observation saved.';
+            alert(obj.message || 'Observation recorded successfully.');
+            resp.textContent = ''; // Clear any previous text
+            
             document.getElementById('obs_student_input').value = '';
             document.getElementById('obs_student_serial').value = '';
             document.getElementById('obs_motif').value = '';
             document.getElementById('obs_note').value = '';
         } else {
-            resp.style.color = 'red';
-            resp.textContent = obj.message || 'Error saving observation.';
+            alert(obj.message || 'Error saving observation.');
         }
     })
     .catch(err => {
         console.error('Observation submit error', err);
-        resp.style.color = 'red';
-        resp.textContent = 'Error contacting server.';
+        alert('Error contacting server.');
     });
 });
 
 // ===== Tabs =====
+// ===== Tabs =====
+<?php if (!$existing_session_found): ?>
 document.getElementById('tabAbs').addEventListener('click', function() {
     document.getElementById('absences_section').classList.add('active');
     document.getElementById('observations_section').classList.remove('active');
     this.classList.add('active');
     document.getElementById('tabObs').classList.remove('active');
 });
+<?php endif; ?>
+
 document.getElementById('tabObs').addEventListener('click', function() {
     document.getElementById('observations_section').classList.add('active');
     document.getElementById('absences_section').classList.remove('active');
     this.classList.add('active');
-    document.getElementById('tabAbs').classList.remove('active');
+    // If abs tab exists (it might be the disabled button which has no ID 'tabAbs' in my PHP Logic above?? No wait)
+    // Actually I replaced the button with a disabled one without ID 'tabAbs' in the case above.
+    const absBtn = document.getElementById('tabAbs');
+    if(absBtn) absBtn.classList.remove('active');
 });
 
 // ===== Absence Form Submit Handler (AJAX) =====

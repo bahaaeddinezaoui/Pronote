@@ -72,7 +72,21 @@ function nextId($conn, $table, $column)
 $conn->autocommit(false);
 
 try {
-    // 1️⃣ Insert into study_session
+    // 1️⃣ Check for existing session
+    $stmtCheck = $conn->prepare("SELECT STUDY_SESSION_ID FROM study_session WHERE TEACHER_SERIAL_NUMBER = ? AND STUDY_SESSION_DATE = ? AND STUDY_SESSION_START_TIME = ? AND STUDY_SESSION_END_TIME = ?");
+    $stmtCheck->bind_param("isss", $teacher_serial, $session_date, $start_time, $end_time);
+    $stmtCheck->execute();
+    $resCheck = $stmtCheck->get_result();
+
+    if ($resCheck->num_rows > 0) {
+        // Session already exists
+        $conn->rollback();
+        echo json_encode(["success" => false, "message" => "A session already exists for this time slot. You can only record observations."]);
+        exit;
+    }
+    $stmtCheck->close();
+
+    // 2️⃣ Insert into study_session
     $session_id = nextId($conn, 'study_session', 'STUDY_SESSION_ID');
     $stmt = $conn->prepare("INSERT INTO study_session 
         (STUDY_SESSION_ID, CLASS_ID, TEACHER_SERIAL_NUMBER, STUDY_SESSION_DATE, STUDY_SESSION_START_TIME, STUDY_SESSION_END_TIME)
