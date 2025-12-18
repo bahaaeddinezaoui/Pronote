@@ -466,6 +466,97 @@ $conn->close();
         .detail-table tr.new-observation-row:nth-child(even) {
             background-color: #fef08a !important;
         }
+
+        /* Absence Summary Styles */
+        .absence-summary-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #bbb;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+        }
+
+        .absence-summary-section h2 {
+            margin: 0 0 15px 0;
+            font-weight: 600;
+            color: #1f1f1f;
+        }
+
+        .absence-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .absence-stat-card {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #fcd34d;
+            text-align: center;
+        }
+
+        .absence-stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #d97706;
+            margin: 5px 0;
+        }
+
+        .absence-stat-label {
+            font-size: 12px;
+            color: #92400e;
+            font-weight: 600;
+        }
+
+        .absence-details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .absence-details-table th, .absence-details-table td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .absence-details-table th {
+            background-color: #f59e0b;
+            color: white;
+            font-weight: 600;
+        }
+
+        .absence-details-table tr:nth-child(even) {
+            background-color: #fffbeb;
+        }
+
+        .absence-details-table tr:hover {
+            background-color: #fef3c7;
+        }
+
+        .absence-motif-badge {
+            display: inline-block;
+            background: #fed7aa;
+            color: #92400e;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .no-absences-message {
+            padding: 20px;
+            text-align: center;
+            color: #9ca3af;
+            font-style: italic;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px dashed #e5e7eb;
+        }
     </style>
 </head>
 <body>
@@ -522,6 +613,11 @@ $conn->close();
         <div id="sessions_container">
             <p class="no-data">Please select a date and click "Search Sessions" to view study sessions.</p>
         </div>
+    </div>
+
+    <div class="absence-summary-section" id="absenceSummarySection" style="display:none;">
+        <h2>📊 Absence Summary</h2>
+        <div id="absenceSummaryContainer"></div>
     </div>
 </div>
 
@@ -745,6 +841,7 @@ function searchSessions() {
     
     if (!date) {
         container.innerHTML = '<p class="no-data">Please select a date.</p>';
+        document.getElementById('absenceSummarySection').style.display = 'none';
         return;
     }
     
@@ -760,11 +857,13 @@ function searchSessions() {
         .then(data => {
             if (!data.success) {
                 container.innerHTML = '<p class="no-data">Error: ' + (data.message || 'Unknown error') + '</p>';
+                document.getElementById('absenceSummarySection').style.display = 'none';
                 return;
             }
             
             if (!data.sessions || data.sessions.length === 0) {
                 container.innerHTML = '<p class="no-data">No sessions found for the selected date/time.</p>';
+                document.getElementById('absenceSummarySection').style.display = 'none';
                 return;
             }
             latestSessions = data.sessions;
@@ -781,11 +880,106 @@ function searchSessions() {
             html += '</div>'; // sessions-grid
             
             container.innerHTML = html;
+
+            // Fetch and display absence summary
+            fetchAbsenceSummary(date, timeSlot);
         })
         .catch(err => {
             console.error('Error fetching sessions:', err);
             container.innerHTML = '<p class="no-data">Error loading sessions. Please try again.</p>';
+            document.getElementById('absenceSummarySection').style.display = 'none';
         });
+}
+
+function fetchAbsenceSummary(date, timeSlot) {
+    let url = 'get_absence_summary.php?date=' + encodeURIComponent(date);
+    if (timeSlot) {
+        url += '&time_slot=' + encodeURIComponent(timeSlot);
+    }
+
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                displayAbsenceSummary(data);
+            } else {
+                console.error('Error fetching absence summary:', data.message);
+                document.getElementById('absenceSummarySection').style.display = 'none';
+            }
+        })
+        .catch(err => {
+            console.error('Error fetching absence summary:', err);
+            document.getElementById('absenceSummarySection').style.display = 'none';
+        });
+}
+
+function displayAbsenceSummary(data) {
+    const section = document.getElementById('absenceSummarySection');
+    const container = document.getElementById('absenceSummaryContainer');
+
+    if (!data.absences || data.absences.length === 0) {
+        container.innerHTML = '<div class="no-absences-message">✓ No absences recorded for the selected date and time</div>';
+        section.style.display = 'block';
+        return;
+    }
+
+    // Calculate statistics
+    const totalAbsences = data.absences.length;
+    const uniqueStudents = new Set(data.absences.map(a => a.student_name)).size;
+    const motifsCount = {};
+    data.absences.forEach(a => {
+        const motif = a.motif || 'Unknown';
+        motifsCount[motif] = (motifsCount[motif] || 0) + 1;
+    });
+    const mostCommonMotif = Object.keys(motifsCount).length > 0 
+        ? Object.keys(motifsCount).reduce((a, b) => motifsCount[a] > motifsCount[b] ? a : b)
+        : 'N/A';
+
+    let html = '';
+    
+    // Stats cards
+    html += '<div class="absence-stats-grid">';
+    html += '<div class="absence-stat-card">';
+    html += '<div class="absence-stat-label">Total Absences</div>';
+    html += '<div class="absence-stat-number">' + totalAbsences + '</div>';
+    html += '</div>';
+    
+    html += '<div class="absence-stat-card">';
+    html += '<div class="absence-stat-label">Students Absent</div>';
+    html += '<div class="absence-stat-number">' + uniqueStudents + '</div>';
+    html += '</div>';
+    
+    html += '<div class="absence-stat-card">';
+    html += '<div class="absence-stat-label">Most Common Motif</div>';
+    html += '<div class="absence-stat-number" style="font-size: 16px; overflow: hidden; text-overflow: ellipsis;">' + mostCommonMotif + '</div>';
+    html += '</div>';
+    html += '</div>';
+
+    // Detailed absence table
+    html += '<table class="absence-details-table">';
+    html += '<thead><tr>';
+    html += '<th>Student Name</th>';
+    html += '<th>Date</th>';
+    html += '<th>Time</th>';
+    html += '<th>Motif</th>';
+    html += '<th>Observation</th>';
+    html += '</tr></thead>';
+    html += '<tbody>';
+    
+    data.absences.forEach(absence => {
+        html += '<tr>';
+        html += '<td><strong>' + absence.student_name + '</strong></td>';
+        html += '<td>' + absence.absence_date + '</td>';
+        html += '<td>' + absence.absence_time + '</td>';
+        html += '<td><span class="absence-motif-badge">' + absence.motif + '</span></td>';
+        html += '<td>' + (absence.observation || '-') + '</td>';
+        html += '</tr>';
+    });
+    
+    html += '</tbody></table>';
+
+    container.innerHTML = html;
+    section.style.display = 'block';
 }
 
 // Auto-search on page load with today's date
