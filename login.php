@@ -8,7 +8,7 @@ header('Pragma: no-cache');
 // If already authenticated, send user to their home
 if (isset($_SESSION['user_id'], $_SESSION['role'])) {
     if ($_SESSION['role'] === 'Admin') {
-        header('Location: admin_dashboard.php');
+        header('Location: admin_home.php');
     } else {
         header('Location: fill_form.php');
     }
