@@ -229,9 +229,14 @@ if ($slot_found && !empty($logged_in_teacher_serial)) {
             $_SESSION['current_study_session_id'] = $existing_session_id;
             $session_status_message = "Session already exists for this slot. You can only record observations.";
         }
-        $chk->close();
+                $chk->close();
     }
 }
+
+// Determine which tab to show initially
+$tab_param = $_GET['tab'] ?? '';
+$show_obs_initially = $existing_session_found || ($tab_param === 'observations');
+$show_abs_initially = !$show_obs_initially;
 
 
 // Teacher categories (existing)
@@ -287,14 +292,16 @@ if ($class_q) {
     <link rel="stylesheet" href="styles.css" />
     <title>Fill Form (Absences & Observations)</title>
     <style>
-        .tab-buttons { display:flex; gap:8px; margin-bottom:12px; }
-        .tab-buttons button { padding:6px 10px; border-radius:6px; border:1px solid #bbb; background:#f2f2f2; cursor:pointer; }
-        .tab-buttons button.active { background:#007bff; color:white; border-color:#007bff; }
+        .tab-buttons { display:none; } /* Hidden as moved to navbar */
         .form-section { display:none; }
         .form-section.active { display:block; }
         .suggestions-list { position: absolute; background:#fff; border:1px solid #ccc; max-height:150px; overflow:auto; width:100%; z-index:1000; padding:0; margin:0; list-style:none; }
         .suggestions-list li { padding:6px; cursor:pointer; }
         .suggestions-list li:hover { background:#eee; }
+        .navbar_buttons.active {
+            background: var(--primary-color);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -302,7 +309,15 @@ if ($class_q) {
 <div class="parent">
     <div class="div1" id="navbar">
         <div style="font-family: sans-serif; display:flex; align-items:center; gap:12px; width:100%;">
-            <a href="fill_form.php" id="home" class="navbar_buttons">Home</a>
+            <a href="teacher_home.php" id="home" class="navbar_buttons">Home</a>
+            
+            <?php if (!$existing_session_found): ?>
+                <a href="?tab=absences" id="tabAbs" class="navbar_buttons <?php echo $show_abs_initially ? 'active' : ''; ?>">Absences</a>
+            <?php else: ?>
+                <a href="#" class="navbar_buttons" style="opacity:0.5; cursor:not-allowed;">Absences (Done)</a>
+            <?php endif; ?>
+            <a href="?tab=observations" id="tabObs" class="navbar_buttons <?php echo $show_obs_initially ? 'active' : ''; ?>">Observations</a>
+
             <a href="profile.php" class="navbar_buttons">Profile</a>
             <a href="logout.php" class="navbar_buttons logout-btn" style="margin-left:auto;">Logout</a>
         </div>
@@ -321,19 +336,11 @@ if ($class_q) {
                     <div></div>
                 <?php endif; ?>
 
-                <div class="tab-buttons">
-                    <?php if (!$existing_session_found): ?>
-                        <button id="tabAbs" class="active">Absences</button>
-                    <?php else: ?>
-                        <!-- Disabled appearance for Absences -->
-                        <button disabled style="opacity:0.5; cursor:not-allowed;">Absences (Done)</button>
-                    <?php endif; ?>
-                    <button id="tabObs" class="<?php echo $existing_session_found ? 'active' : ''; ?>">Observations</button>
-                </div>
+                <!-- Tab buttons moved to navbar -->
             </div>
 
             <!-- ABSENCES -->
-            <div id="absences_section" class="form-section <?php echo $existing_session_found ? '' : 'active'; ?>">
+            <div id="absences_section" class="form-section <?php echo $show_abs_initially ? 'active' : ''; ?>">
                 <form id="absence_main_form" method="POST">
                     <input type="hidden" name="teacher_serial_number" value="<?php echo $logged_in_teacher_serial; ?>">
                     
@@ -793,7 +800,8 @@ document.getElementById('obs_submit_btn').addEventListener('click', function() {
 // ===== Tabs =====
 // ===== Tabs =====
 <?php if (!$existing_session_found): ?>
-document.getElementById('tabAbs').addEventListener('click', function() {
+document.getElementById('tabAbs').addEventListener('click', function(e) {
+    e.preventDefault();
     document.getElementById('absences_section').classList.add('active');
     document.getElementById('observations_section').classList.remove('active');
     this.classList.add('active');
@@ -801,7 +809,8 @@ document.getElementById('tabAbs').addEventListener('click', function() {
 });
 <?php endif; ?>
 
-document.getElementById('tabObs').addEventListener('click', function() {
+document.getElementById('tabObs').addEventListener('click', function(e) {
+    e.preventDefault();
     document.getElementById('observations_section').classList.add('active');
     document.getElementById('absences_section').classList.remove('active');
     this.classList.add('active');

@@ -84,7 +84,7 @@ if ($role === 'Teacher') {
     $stmt->close();
 }
 
-$homeUrl = ($role === 'Admin') ? 'admin_dashboard.php' : 'fill_form.php';
+$homeUrl = ($role === 'Admin') ? 'admin_dashboard.php' : (($role === 'Teacher') ? 'teacher_home.php' : 'fill_form.php');
 
 $conn->close();
 ?>
@@ -149,7 +149,13 @@ $conn->close();
     <div class="div1" id="navbar">
         <div style="font-family: sans-serif; display:flex; align-items:center; gap:12px; width:100%;">
             <a href="<?php echo $homeUrl; ?>" class="navbar_buttons">Home</a>
-            <a href="profile.php" class="navbar_buttons">Profile</a>
+            
+            <?php if ($role === 'Teacher'): ?>
+                <a href="fill_form.php?tab=absences" class="navbar_buttons">Absences</a>
+                <a href="fill_form.php?tab=observations" class="navbar_buttons">Observations</a>
+            <?php endif; ?>
+
+            <a href="profile.php" class="navbar_buttons active">Profile</a>
             <a href="logout.php" class="navbar_buttons logout-btn" style="margin-left:auto;">Logout</a>
         </div>
     </div>

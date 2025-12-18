@@ -206,6 +206,11 @@ body {
     color: var(--primary-color);
 }
 
+.navbar_buttons.active {
+    background: var(--primary-color);
+    color: white;
+}
+
 .logout-btn {
     background: var(--danger-color) !important;
     color: white !important;
