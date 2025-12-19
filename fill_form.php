@@ -543,6 +543,7 @@ function loadSections() {
                     checkbox.type = 'checkbox';
                     checkbox.value = section.id;
                     checkbox.id = 'section_' + section.id;
+                    checkbox.name = 'sections[]';  // ✅ FIX: Added name attribute
                     checkbox.addEventListener('change', loadStudents);
 
                     const label = document.createElement('label');
@@ -798,7 +799,6 @@ document.getElementById('obs_submit_btn').addEventListener('click', function() {
 });
 
 // ===== Tabs =====
-// ===== Tabs =====
 <?php if (!$existing_session_found): ?>
 document.getElementById('tabAbs').addEventListener('click', function(e) {
     e.preventDefault();
@@ -814,8 +814,6 @@ document.getElementById('tabObs').addEventListener('click', function(e) {
     document.getElementById('observations_section').classList.add('active');
     document.getElementById('absences_section').classList.remove('active');
     this.classList.add('active');
-    // If abs tab exists (it might be the disabled button which has no ID 'tabAbs' in my PHP Logic above?? No wait)
-    // Actually I replaced the button with a disabled one without ID 'tabAbs' in the case above.
     const absBtn = document.getElementById('tabAbs');
     if(absBtn) absBtn.classList.remove('active');
 });

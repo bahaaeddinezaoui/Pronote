@@ -97,14 +97,20 @@ try {
     // Store the current study session ID in the PHP session
     $_SESSION['current_study_session_id'] = $session_id;
 
-    // 2️⃣ Link sections to session (studies_in)
-    $stmtSection = $conn->prepare("INSERT INTO studies_in (SECTION_ID, STUDY_SESSION_ID) VALUES (?, ?)");
+    // 3️⃣ Link sections to session (studies_in) - ✅ FIX: Create new statement for each iteration
     foreach ($sections as $section_id) {
+        $stmtSection = $conn->prepare("INSERT INTO studies_in (SECTION_ID, STUDY_SESSION_ID) VALUES (?, ?)");
+        if (!$stmtSection) {
+            throw new Exception("Prepare failed: " . $conn->error);
+        }
         $stmtSection->bind_param("ii", $section_id, $session_id);
-        $stmtSection->execute();
+        if (!$stmtSection->execute()) {
+            throw new Exception("Execute failed: " . $stmtSection->error);
+        }
+        $stmtSection->close();
     }
 
-    // 3️⃣ Insert absences
+    // 4️⃣ Insert absences
     $stmtAbs = $conn->prepare("INSERT INTO absence 
         (ABSENCE_ID, STUDY_SESSION_ID, ABSENCE_DATE_AND_TIME, ABSENCE_MOTIF, ABSENCE_OBSERVATION)
         VALUES (?, ?, ?, ?, ?)");
@@ -126,6 +132,7 @@ try {
         if ($result->num_rows === 0) continue;
         $student = $result->fetch_assoc();
         $student_serial = $student['STUDENT_SERIAL_NUMBER'];
+        $stmtFind->close();
 
         // New absence ID
         $absence_id = nextId($conn, 'absence', 'ABSENCE_ID');
@@ -134,12 +141,19 @@ try {
 
         // Insert absence
         $stmtAbs->bind_param("iisss", $absence_id, $session_id, $absence_date, $motif, $obs);
-        $stmtAbs->execute();
+        if (!$stmtAbs->execute()) {
+            throw new Exception("Failed to insert absence: " . $stmtAbs->error);
+        }
 
         // Link student <-> absence
         $stmtStudentAbs->bind_param("si", $student_serial, $absence_id);
-        $stmtStudentAbs->execute();
+        if (!$stmtStudentAbs->execute()) {
+            throw new Exception("Failed to link student to absence: " . $stmtStudentAbs->error);
+        }
     }
+
+    $stmtAbs->close();
+    $stmtStudentAbs->close();
 
     $conn->commit();
     echo json_encode(["success" => true, "message" => "Form submitted successfully!"]);
