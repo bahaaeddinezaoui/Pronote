@@ -46,19 +46,43 @@ if (isset($_GET['action']) && $_GET['action'] === 'search_students') {
         exit;
     }
 
-    $sql = "
-        SELECT DISTINCT s.STUDENT_SERIAL_NUMBER, s.STUDENT_FIRST_NAME, s.STUDENT_LAST_NAME
-        FROM student s
-        INNER JOIN section se ON s.SECTION_ID = se.SECTION_ID
-        INNER JOIN studies st ON se.SECTION_ID = st.SECTION_ID
-        INNER JOIN teaches th ON st.MAJOR_ID = th.MAJOR_ID
-        INNER JOIN teacher t ON th.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
-        WHERE t.USER_ID = ? AND (s.STUDENT_FIRST_NAME LIKE ? OR s.STUDENT_LAST_NAME LIKE ?)
-        LIMIT 10
-    ";
-    $stmt = $conn->prepare($sql);
-    $like = '%' . $query . '%';
-    $stmt->bind_param('iss', $_SESSION['user_id'], $like, $like);
+    // If a study session is active in the session, restrict students to the
+    // sections linked to that study session and exclude students who are
+    // marked absent for that same study session. Otherwise fall back to the
+    // previous behavior (students taught by this teacher).
+    $study_session_id = $_SESSION['current_study_session_id'] ?? 0;
+    if (!empty($study_session_id)) {
+        $sql = "
+            SELECT DISTINCT s.STUDENT_SERIAL_NUMBER, s.STUDENT_FIRST_NAME, s.STUDENT_LAST_NAME
+            FROM student s
+            INNER JOIN section se ON s.SECTION_ID = se.SECTION_ID
+            INNER JOIN studies_in si ON se.SECTION_ID = si.SECTION_ID AND si.STUDY_SESSION_ID = ?
+            WHERE (s.STUDENT_FIRST_NAME LIKE ? OR s.STUDENT_LAST_NAME LIKE ?)
+            AND NOT EXISTS (
+                SELECT 1 FROM student_gets_absent sga
+                INNER JOIN absence a ON sga.ABSENCE_ID = a.ABSENCE_ID AND a.STUDY_SESSION_ID = ?
+                WHERE sga.STUDENT_SERIAL_NUMBER = s.STUDENT_SERIAL_NUMBER
+            )
+            LIMIT 10
+        ";
+        $stmt = $conn->prepare($sql);
+        $like = '%' . $query . '%';
+        $stmt->bind_param('isss', $study_session_id, $like, $like, $study_session_id);
+    } else {
+        $sql = "
+            SELECT DISTINCT s.STUDENT_SERIAL_NUMBER, s.STUDENT_FIRST_NAME, s.STUDENT_LAST_NAME
+            FROM student s
+            INNER JOIN section se ON s.SECTION_ID = se.SECTION_ID
+            INNER JOIN studies st ON se.SECTION_ID = st.SECTION_ID
+            INNER JOIN teaches th ON st.MAJOR_ID = th.MAJOR_ID
+            INNER JOIN teacher t ON th.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
+            WHERE t.USER_ID = ? AND (s.STUDENT_FIRST_NAME LIKE ? OR s.STUDENT_LAST_NAME LIKE ?)
+            LIMIT 10
+        ";
+        $stmt = $conn->prepare($sql);
+        $like = '%' . $query . '%';
+        $stmt->bind_param('iss', $_SESSION['user_id'], $like, $like);
+    }
     $stmt->execute();
     $res = $stmt->get_result();
     $out = [];
