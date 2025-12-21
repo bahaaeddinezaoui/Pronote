@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // 7. Role-Based Action
             if ($role === 'Teacher') {
                 // Redirect teacher to fill_form.php
-                header("Location: fill_form.php");
+                header("Location: teacher_home.php");
                 exit();
             } elseif ($role === 'Admin') {
                 // Redirect admin to admin_dashboard.php
