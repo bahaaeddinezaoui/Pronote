@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             } elseif ($role === 'Admin') {
                 // Redirect admin to admin_dashboard.php
-                header("Location: admin_dashboard.php");
+                header("Location: admin_home.php");
                 exit();
             } else {
                 // For users with unrecognized roles
