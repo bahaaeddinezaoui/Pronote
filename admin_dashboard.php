@@ -566,6 +566,7 @@ $conn->close();
         <div style="display:flex; align-items:center; gap:12px;">
             <a href="admin_home.php" class="navbar_buttons">Home</a>
             <a href="admin_dashboard.php" class="navbar_buttons active">Search</a>
+            <a href="admin_search_student.php" class="navbar_buttons">Student Records</a>
             <a href="profile.php" class="navbar_buttons">Profile</a>
         </div>
         <div style="display:flex; align-items:center; gap:20px; margin-left:auto;">
