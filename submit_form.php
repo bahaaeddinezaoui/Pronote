@@ -18,7 +18,22 @@ if ($conn->connect_error) {
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Teacher') {
     die(json_encode(["success" => false, "message" => "Teacher not logged in."]));
 }
-$teacher_serial = $_SESSION['user_id'];
+
+// Look up the teacher serial number from the `teacher` table using the logged-in user id
+$teacher_serial = null;
+$stmtTeacher = $conn->prepare("SELECT TEACHER_SERIAL_NUMBER FROM teacher WHERE USER_ID = ?");
+if (!$stmtTeacher) {
+    die(json_encode(["success" => false, "message" => "Prepare failed: " . $conn->error]));
+}
+$stmtTeacher->bind_param("i", $_SESSION['user_id']);
+$stmtTeacher->execute();
+$resTeacher = $stmtTeacher->get_result();
+if ($resTeacher && $resTeacher->num_rows > 0) {
+    $teacher_serial = $resTeacher->fetch_assoc()['TEACHER_SERIAL_NUMBER'];
+} else {
+    die(json_encode(["success" => false, "message" => "Teacher record not found for this account."]));
+}
+$stmtTeacher->close();
 
 // --- RETRIEVE FORM DATA ---
 $class_id = $_POST['class_id'] ?? null;
@@ -74,7 +89,7 @@ $conn->autocommit(false);
 try {
     // 1️⃣ Check for existing session
     $stmtCheck = $conn->prepare("SELECT STUDY_SESSION_ID FROM study_session WHERE TEACHER_SERIAL_NUMBER = ? AND STUDY_SESSION_DATE = ? AND STUDY_SESSION_START_TIME = ? AND STUDY_SESSION_END_TIME = ?");
-    $stmtCheck->bind_param("isss", $teacher_serial, $session_date, $start_time, $end_time);
+    $stmtCheck->bind_param("ssss", $teacher_serial, $session_date, $start_time, $end_time);
     $stmtCheck->execute();
     $resCheck = $stmtCheck->get_result();
 

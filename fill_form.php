@@ -243,7 +243,7 @@ if ($slot_found && !empty($logged_in_teacher_serial)) {
         $et = trim($parts[1]);
         
         $chk = $conn->prepare("SELECT STUDY_SESSION_ID FROM study_session WHERE TEACHER_SERIAL_NUMBER = ? AND STUDY_SESSION_DATE = ? AND STUDY_SESSION_START_TIME = ? AND STUDY_SESSION_END_TIME = ?");
-        $chk->bind_param("isss", $logged_in_teacher_serial, $server_date_value, $st, $et);
+        $chk->bind_param("ssss", $logged_in_teacher_serial, $server_date_value, $st, $et);
         $chk->execute();
         $res = $chk->get_result();
         if ($res->num_rows > 0) {

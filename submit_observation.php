@@ -8,7 +8,23 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Teacher') {
     exit;
 }
 
-$teacher_serial = $_SESSION['user_id'];
+$teacher_serial = null;
+$stmtT = null;
+// Lookup teacher serial from teacher table using logged in user id
+$stmtT = $conn->prepare("SELECT TEACHER_SERIAL_NUMBER FROM teacher WHERE USER_ID = ?");
+if ($stmtT) {
+    $stmtT->bind_param("i", $_SESSION['user_id']);
+    $stmtT->execute();
+    $resT = $stmtT->get_result();
+    if ($resT && $resT->num_rows > 0) {
+        $teacher_serial = $resT->fetch_assoc()['TEACHER_SERIAL_NUMBER'];
+    }
+    $stmtT->close();
+}
+if (empty($teacher_serial)) {
+    echo json_encode(['success' => false, 'message' => 'Teacher record not found for this account.']);
+    exit;
+}
 $session_id = $_SESSION['current_study_session_id'] ?? null;
 
 if (!$session_id) {
