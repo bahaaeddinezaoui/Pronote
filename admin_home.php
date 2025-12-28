@@ -449,9 +449,8 @@ $conn->close();
 <div class="admin-container">
     <!-- Welcome Section -->
     <div class="welcome-section">
-        <h1>Welcome, <?php echo $admin_name; ?>! 👋</h1>
-        <p><strong>Position:</strong> <?php echo $admin_position; ?></p>
-        <p>Here's an overview of your educational management system</p>
+        <h1>Welcome, <?php echo $admin_position; ?>! 👋</h1>
+        <p>Here's an overview of the educational management system</p>
     </div>
 
     <!-- Statistics Cards -->
