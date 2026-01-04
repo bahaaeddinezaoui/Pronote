@@ -34,7 +34,12 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
             <div id="login_password">
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <div style="position: relative;">
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required style="padding-right: 40px;">
+                    <span id="togglePassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-light); user-select: none; font-size: 1.2rem;">
+                        👁️
+                    </span>
+                </div>
             </div>
 
             <button type="submit" id="login_button" style="display: flex; justify-content: center; align-items: center; width: 100%;">Login</button>
@@ -68,6 +73,16 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
                 errorDiv.textContent = 'An unexpected error occurred.';
                 errorDiv.style.display = 'block';
             });
+        });
+
+        // Password toggle logic
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁️' : '🔒';
         });
 
         // If the user navigates back to this page while still logged in, bounce them home.
