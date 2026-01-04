@@ -1,0 +1,7 @@
+DELETE FROM absence;
+DELETE FROM notification;
+DELETE FROM observation;
+DELETE FROM student_gets_absent;
+DELETE FROM studies_in;
+DELETE FROM study_session;
+DELETE FROM teacher_makes_an_observation_for_a_student;

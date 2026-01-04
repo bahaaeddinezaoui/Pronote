@@ -21,7 +21,7 @@ if ($conn->connect_error) {
     exit;
 }
 
-// Fetch obs where IS_NEW_FOR_ADMIN = 1
+// Fetch obs where NOT EXISTS in admin_read_observation for this admin
 $sql = "
     SELECT 
         tmo.OBSERVATION_ID,
@@ -39,11 +39,19 @@ $sql = "
     INNER JOIN student st ON tmo.STUDENT_SERIAL_NUMBER = st.STUDENT_SERIAL_NUMBER
     INNER JOIN teacher t ON tmo.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
     INNER JOIN study_session ss ON tmo.STUDY_SESSION_ID = ss.STUDY_SESSION_ID
-    WHERE tmo.IS_NEW_FOR_ADMIN = 1
+    WHERE NOT EXISTS (
+        SELECT 1 
+        FROM admin_read_observation aro 
+        WHERE aro.OBSERVATION_ID = tmo.OBSERVATION_ID 
+        AND aro.ADMINISTRATOR_ID = (SELECT ADMINISTRATOR_ID FROM administrator WHERE USER_ID = ?)
+    )
     ORDER BY tmo.OBSERVATION_DATE_AND_TIME DESC
 ";
 
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$result = $stmt->get_result();
 
 $notifications = [];
 if ($result) {

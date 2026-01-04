@@ -912,3 +912,33 @@ button:disabled {
 .gap-3 {
     gap: 1.5rem;
 }
+
+/* ---------- ABSENCES PAGE LAYOUT (NEW) ---------- */
+.absences-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.absences-left-column {
+    flex: 0 0 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.absences-right-column {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 1024px) {
+    .absences-layout {
+        flex-direction: column;
+    }
+    .absences-left-column {
+        width: 100%;
+        flex: none;
+    }
+}
+

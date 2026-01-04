@@ -30,15 +30,29 @@ if ($conn->connect_error) {
     exit;
 }
 
-// Update IS_NEW_FOR_ADMIN = 0
-$stmt = $conn->prepare("UPDATE teacher_makes_an_observation_for_a_student SET IS_NEW_FOR_ADMIN = 0 WHERE OBSERVATION_ID = ?");
-$stmt->bind_param("i", $obsId);
+// Get Administrator ID
+$stmtAdmin = $conn->prepare("SELECT ADMINISTRATOR_ID FROM administrator WHERE USER_ID = ?");
+$stmtAdmin->bind_param("i", $_SESSION['user_id']);
+$stmtAdmin->execute();
+$resultAdmin = $stmtAdmin->get_result();
 
-if ($stmt->execute()) {
-    echo json_encode(['success' => true]);
+if ($rowAdmin = $resultAdmin->fetch_assoc()) {
+    $adminId = $rowAdmin['ADMINISTRATOR_ID'];
+
+    // Insert into admin_read_observation
+    $stmt = $conn->prepare("INSERT IGNORE INTO admin_read_observation (OBSERVATION_ID, ADMINISTRATOR_ID) VALUES (?, ?)");
+    $stmt->bind_param("ii", $obsId, $adminId);
+
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Update failed: ' . $conn->error]);
+    }
+    $stmt->close();
 } else {
-    echo json_encode(['success' => false, 'message' => 'Update failed']);
+    echo json_encode(['success' => false, 'message' => 'Administrator not found']);
 }
+$stmtAdmin->close();
 
 $stmt->close();
 $conn->close();

@@ -66,10 +66,10 @@ $date_time = date('Y-m-d H:i:s');
 $is_new = 1;
 
 $stmt = $conn->prepare("INSERT INTO teacher_makes_an_observation_for_a_student 
-    (STUDENT_SERIAL_NUMBER, OBSERVATION_ID, TEACHER_SERIAL_NUMBER, STUDY_SESSION_ID, OBSERVATION_DATE_AND_TIME, OBSERVATION_MOTIF, OBSERVATION_NOTE, IS_NEW_FOR_ADMIN)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    (STUDENT_SERIAL_NUMBER, OBSERVATION_ID, TEACHER_SERIAL_NUMBER, STUDY_SESSION_ID, OBSERVATION_DATE_AND_TIME, OBSERVATION_MOTIF, OBSERVATION_NOTE)
+    VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-$stmt->bind_param("sisisssi", $student_serial, $observation_id, $teacher_serial, $session_id, $date_time, $motif, $note, $is_new);
+$stmt->bind_param("sisisss", $student_serial, $observation_id, $teacher_serial, $session_id, $date_time, $motif, $note);
 
 if ($stmt->execute()) {
     echo json_encode(['success' => true, 'message' => 'Observation submitted successfully!']);

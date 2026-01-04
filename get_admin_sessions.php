@@ -131,13 +131,15 @@ while ($row = $result->fetch_assoc()) {
     
     // Get observations for this session
     $observations = [];
+    // Get observations for this session, checking read status for THIS admin
+    $observations = [];
     $stmtObs = $conn->prepare("
         SELECT 
             tmo.OBSERVATION_ID,
             tmo.OBSERVATION_DATE_AND_TIME,
             tmo.OBSERVATION_MOTIF,
             tmo.OBSERVATION_NOTE,
-            tmo.IS_NEW_FOR_ADMIN,
+            (CASE WHEN aro.OBSERVATION_ID IS NULL THEN 1 ELSE 0 END) as IS_NEW_FOR_ADMIN,
             st.STUDENT_FIRST_NAME,
             st.STUDENT_LAST_NAME,
             t.TEACHER_FIRST_NAME,
@@ -145,10 +147,12 @@ while ($row = $result->fetch_assoc()) {
         FROM teacher_makes_an_observation_for_a_student tmo
         INNER JOIN student st ON tmo.STUDENT_SERIAL_NUMBER = st.STUDENT_SERIAL_NUMBER
         INNER JOIN teacher t ON tmo.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
+        LEFT JOIN admin_read_observation aro ON tmo.OBSERVATION_ID = aro.OBSERVATION_ID 
+            AND aro.ADMINISTRATOR_ID = (SELECT ADMINISTRATOR_ID FROM administrator WHERE USER_ID = ?)
         WHERE tmo.STUDY_SESSION_ID = ?
         ORDER BY tmo.OBSERVATION_DATE_AND_TIME
     ");
-    $stmtObs->bind_param('i', $session_id);
+    $stmtObs->bind_param('ii', $_SESSION['user_id'], $session_id);
     $stmtObs->execute();
     $resObs = $stmtObs->get_result();
     while ($obs = $resObs->fetch_assoc()) {

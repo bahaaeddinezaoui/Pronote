@@ -138,8 +138,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         $stmtInsert = $conn->prepare("
             INSERT INTO teacher_makes_an_observation_for_a_student
-            (STUDENT_SERIAL_NUMBER, OBSERVATION_ID, TEACHER_SERIAL_NUMBER, STUDY_SESSION_ID, OBSERVATION_DATE_AND_TIME, OBSERVATION_MOTIF, OBSERVATION_NOTE, IS_NEW_FOR_ADMIN)
-            VALUES (?, ?, ?, ?, NOW(), ?, ?, 1)
+            (STUDENT_SERIAL_NUMBER, OBSERVATION_ID, TEACHER_SERIAL_NUMBER, STUDY_SESSION_ID, OBSERVATION_DATE_AND_TIME, OBSERVATION_MOTIF, OBSERVATION_NOTE)
+            VALUES (?, ?, ?, ?, NOW(), ?, ?)
         ");
         $stmtInsert->bind_param('sisiss', $student_serial, $obs_id, $teacher_serial, $study_session_id, $motif, $note);
         $ok = $stmtInsert->execute();

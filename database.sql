@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 15, 2025 at 09:12 AM
+-- Generation Time: Jan 04, 2026 at 12:25 PM
 -- Server version: 9.1.0
 -- PHP Version: 8.3.14
 
@@ -38,14 +38,20 @@ CREATE TABLE IF NOT EXISTS `absence` (
   KEY `FK_ABSENCE_TAKES_PLA_STUDY_SE` (`STUDY_SESSION_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `absence`
+-- Table structure for table `admin_read_observation`
 --
 
-INSERT INTO `absence` (`ABSENCE_ID`, `STUDY_SESSION_ID`, `ABSENCE_DATE_AND_TIME`, `ABSENCE_MOTIF`, `ABSENCE_OBSERVATION`) VALUES
-(1, 1, '2025-12-09 14:04:45', 'z', 'z'),
-(2, 2, '2025-12-11 11:06:16', 'ddddd', 'dddd'),
-(3, 2, '2025-12-11 11:06:16', '', '');
+DROP TABLE IF EXISTS `admin_read_observation`;
+CREATE TABLE IF NOT EXISTS `admin_read_observation` (
+  `OBSERVATION_ID` int NOT NULL,
+  `ADMINISTRATOR_ID` int NOT NULL,
+  `READ_AT` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`OBSERVATION_ID`,`ADMINISTRATOR_ID`),
+  KEY `FK_ARO_ADMINISTRATOR` (`ADMINISTRATOR_ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -59,18 +65,11 @@ CREATE TABLE IF NOT EXISTS `administrator` (
   `USER_ID` int NOT NULL,
   `ADMINISTRATOR_FIRST_NAME` varchar(24) DEFAULT NULL,
   `ADMINISTRATOR_LAST_NAME` varchar(24) DEFAULT NULL,
-  `ADMINISTRATOR_GRADE` int NOT NULL,
-  `ADMINISTRATOR_POSITION` varchar(24) DEFAULT NULL,
+  `ADMINISTRATOR_GRADE` varchar(20) NOT NULL,
+  `ADMINISTRATOR_POSITION` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`ADMINISTRATOR_ID`),
   KEY `FK_ADMINIST_ADMINISTR_USER_ACC` (`USER_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `administrator`
---
-
-INSERT INTO `administrator` (`ADMINISTRATOR_ID`, `USER_ID`, `ADMINISTRATOR_FIRST_NAME`, `ADMINISTRATOR_LAST_NAME`, `ADMINISTRATOR_GRADE`, `ADMINISTRATOR_POSITION`) VALUES
-(1, 2, 'ad', 'min', 0, 'Chef Brigade');
 
 -- --------------------------------------------------------
 
@@ -81,22 +80,9 @@ INSERT INTO `administrator` (`ADMINISTRATOR_ID`, `USER_ID`, `ADMINISTRATOR_FIRST
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE IF NOT EXISTS `category` (
   `CATEGORY_ID` int NOT NULL,
-  `CATEGORY_NAME` varchar(12) DEFAULT NULL,
+  `CATEGORY_NAME` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`CATEGORY_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `category`
---
-
-INSERT INTO `category` (`CATEGORY_ID`, `CATEGORY_NAME`) VALUES
-(7, 'EOA 1'),
-(1, 'Master'),
-(2, 'Etat-Major'),
-(3, 'Spécialité'),
-(4, 'Recyclage'),
-(5, 'EOA 2'),
-(6, 'EOA 3');
 
 -- --------------------------------------------------------
 
@@ -111,15 +97,6 @@ CREATE TABLE IF NOT EXISTS `class` (
   PRIMARY KEY (`CLASS_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `class`
---
-
-INSERT INTO `class` (`CLASS_ID`, `CLASS_NAME`) VALUES
-(1, 'Class 1'),
-(2, 'Class 2'),
-(3, 'Class 3');
-
 -- --------------------------------------------------------
 
 --
@@ -132,14 +109,6 @@ CREATE TABLE IF NOT EXISTS `major` (
   `MAJOR_NAME` varchar(48) DEFAULT NULL,
   PRIMARY KEY (`MAJOR_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `major`
---
-
-INSERT INTO `major` (`MAJOR_ID`, `MAJOR_NAME`) VALUES
-('2', 'Algorithms 1'),
-('1', 'Stats 1');
 
 -- --------------------------------------------------------
 
@@ -166,15 +135,6 @@ CREATE TABLE IF NOT EXISTS `observation` (
   PRIMARY KEY (`OBSERVATION_ID`),
   KEY `FK_OBSERVAT_HAPPENS_I_STUDY_SE` (`STUDY_SESSION_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `observation`
---
-
-INSERT INTO `observation` (`OBSERVATION_ID`, `STUDY_SESSION_ID`) VALUES
-(2, 1),
-(1, 1),
-(3, 2);
 
 -- --------------------------------------------------------
 
@@ -205,17 +165,6 @@ CREATE TABLE IF NOT EXISTS `section` (
   KEY `FK_SECTION_BELONGS_T_CATEGORY` (`CATEGORY_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `section`
---
-
-INSERT INTO `section` (`SECTION_ID`, `CATEGORY_ID`, `SECTION_NAME`) VALUES
-(1, 7, 'Section 1'),
-(2, 7, 'Section 2'),
-(3, 7, 'Section 3'),
-(4, 7, 'Section 4'),
-(5, 2, 'Section 1');
-
 -- --------------------------------------------------------
 
 --
@@ -241,22 +190,13 @@ CREATE TABLE IF NOT EXISTS `student` (
   `STUDENT_SERIAL_NUMBER` varchar(16) NOT NULL,
   `CATEGORY_ID` int NOT NULL,
   `SECTION_ID` int NOT NULL,
-  `STUDENT_FIRST_NAME` varchar(24) DEFAULT NULL,
-  `STUDENT_LAST_NAME` varchar(24) DEFAULT NULL,
+  `STUDENT_FIRST_NAME` varchar(42) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `STUDENT_LAST_NAME` varchar(42) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `STUDNET_GRADE` varchar(24) DEFAULT NULL,
   PRIMARY KEY (`STUDENT_SERIAL_NUMBER`),
   KEY `FK_STUDENT_BELONGS_T_SECTION` (`SECTION_ID`),
   KEY `FK_STUDENT_IS_OF_CAT_CATEGORY` (`CATEGORY_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `student`
---
-
-INSERT INTO `student` (`STUDENT_SERIAL_NUMBER`, `CATEGORY_ID`, `SECTION_ID`, `STUDENT_FIRST_NAME`, `STUDENT_LAST_NAME`, `STUDNET_GRADE`) VALUES
-('2', 7, 1, 'Yazid', 'BELFRAG', 'EOA'),
-('3', 7, 1, 'Mohamed Wassim', 'OUHAB', 'EOA'),
-('4', 7, 2, 'Brahim Abderezak', 'BOUDRA', 'EOA');
 
 -- --------------------------------------------------------
 
@@ -272,15 +212,6 @@ CREATE TABLE IF NOT EXISTS `student_gets_absent` (
   KEY `FK_STUDENT__STUDENT_G_ABSENCE` (`ABSENCE_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `student_gets_absent`
---
-
-INSERT INTO `student_gets_absent` (`STUDENT_SERIAL_NUMBER`, `ABSENCE_ID`) VALUES
-('2', 2),
-('4', 1),
-('4', 3);
-
 -- --------------------------------------------------------
 
 --
@@ -295,14 +226,6 @@ CREATE TABLE IF NOT EXISTS `studies` (
   KEY `FK_STUDIES_STUDIES_MAJOR` (`MAJOR_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `studies`
---
-
-INSERT INTO `studies` (`SECTION_ID`, `MAJOR_ID`) VALUES
-(1, '2'),
-(2, '2');
-
 -- --------------------------------------------------------
 
 --
@@ -316,14 +239,6 @@ CREATE TABLE IF NOT EXISTS `studies_in` (
   PRIMARY KEY (`SECTION_ID`,`STUDY_SESSION_ID`),
   KEY `FK_STUDIES__STUDIES_I_STUDY_SE` (`STUDY_SESSION_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `studies_in`
---
-
-INSERT INTO `studies_in` (`SECTION_ID`, `STUDY_SESSION_ID`) VALUES
-(2, 1),
-(2, 2);
 
 -- --------------------------------------------------------
 
@@ -344,14 +259,6 @@ CREATE TABLE IF NOT EXISTS `study_session` (
   KEY `FK_STUDY_SESSION_CLASS` (`CLASS_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `study_session`
---
-
-INSERT INTO `study_session` (`STUDY_SESSION_ID`, `CLASS_ID`, `TEACHER_SERIAL_NUMBER`, `STUDY_SESSION_DATE`, `STUDY_SESSION_START_TIME`, `STUDY_SESSION_END_TIME`) VALUES
-(1, 2, '1', '2025-12-09', '13:00:00', '14:30:00'),
-(2, 1, '1', '2025-12-11', '10:00:00', '12:00:00');
-
 -- --------------------------------------------------------
 
 --
@@ -369,13 +276,6 @@ CREATE TABLE IF NOT EXISTS `teacher` (
   KEY `FK_TEACHER_TEACHER_U_USER_ACC` (`USER_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `teacher`
---
-
-INSERT INTO `teacher` (`TEACHER_SERIAL_NUMBER`, `USER_ID`, `TEACHER_GRADE`, `TEACHER_FIRST_NAME`, `TEACHER_LAST_NAME`) VALUES
-('1', 1, 'PCA', 'Mohamed', 'MERINE');
-
 -- --------------------------------------------------------
 
 --
@@ -391,21 +291,11 @@ CREATE TABLE IF NOT EXISTS `teacher_makes_an_observation_for_a_student` (
   `OBSERVATION_DATE_AND_TIME` datetime DEFAULT NULL,
   `OBSERVATION_MOTIF` varchar(30) DEFAULT NULL,
   `OBSERVATION_NOTE` varchar(256) DEFAULT NULL,
-  `IS_NEW_FOR_ADMIN` tinyint(1) DEFAULT '1' COMMENT '1 = new/unread by admin, 0 = read by admin',
   PRIMARY KEY (`STUDENT_SERIAL_NUMBER`,`OBSERVATION_ID`,`TEACHER_SERIAL_NUMBER`),
   KEY `FK_TEACHER__TEACHER_M_TEACHER` (`TEACHER_SERIAL_NUMBER`),
   KEY `FK_TEACHER__TEACHER_M_OBSERVAT` (`OBSERVATION_ID`),
   KEY `FK_TEACHER__OBSERVATION_STUDY_SESSION` (`STUDY_SESSION_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `teacher_makes_an_observation_for_a_student`
---
-
-INSERT INTO `teacher_makes_an_observation_for_a_student` (`STUDENT_SERIAL_NUMBER`, `OBSERVATION_ID`, `TEACHER_SERIAL_NUMBER`, `STUDY_SESSION_ID`, `OBSERVATION_DATE_AND_TIME`, `OBSERVATION_MOTIF`, `OBSERVATION_NOTE`, `IS_NEW_FOR_ADMIN`) VALUES
-('4', 2, '1', 1, '2025-12-09 14:15:56', 'tttt', 'ttt', 0),
-('2', 1, '1', 1, '2025-12-09 14:04:59', 'z', 'z', 0),
-('2', 3, '1', 2, '2025-12-11 11:06:33', 'dddddddddddddddddd', 'dddddddddddddddddd', 0);
 
 -- --------------------------------------------------------
 
@@ -420,13 +310,6 @@ CREATE TABLE IF NOT EXISTS `teaches` (
   PRIMARY KEY (`MAJOR_ID`,`TEACHER_SERIAL_NUMBER`),
   KEY `FK_TEACHES_TEACHES_TEACHER` (`TEACHER_SERIAL_NUMBER`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `teaches`
---
-
-INSERT INTO `teaches` (`MAJOR_ID`, `TEACHER_SERIAL_NUMBER`) VALUES
-('2', '1');
 
 -- --------------------------------------------------------
 
@@ -446,14 +329,6 @@ CREATE TABLE IF NOT EXISTS `user_account` (
   `LAST_LOGIN_AT` datetime DEFAULT NULL,
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `user_account`
---
-
-INSERT INTO `user_account` (`USER_ID`, `USERNAME`, `PASSWORD_HASH`, `EMAIL`, `ROLE`, `ACCOUNT_STATUS`, `CREATED_AT`, `LAST_LOGIN_AT`) VALUES
-(1, 'teacher1', '$2y$10$FPgoRYiqkoXZVi9PefLek.iByOCxECtzCisUJoih0Hr6PFGElfSjW', 'teacher1@esam.com', 'Teacher', 'Active', NULL, NULL),
-(2, 'admin1', '$2y$10$A5zmNOHnXmMxVeD4.fJHPu0Ww64OKkxm0UdxTD7bWzi3wYNKkOwye', 'admin1@esam.com', 'Admin', 'Active', NULL, NULL);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
