@@ -37,10 +37,39 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
             </div>
 
-            <button type="submit" id="login_button">Login</button>
+            <button type="submit" id="login_button" style="display: flex; justify-content: center; align-items: center; width: 100%;">Login</button>
+            <div id="login_error" style="color: red; margin-top: 10px; display: none; text-align: center; width: 100%;"></div>
         </fieldset>
     </form>
     <script>
+        const loginForm = document.getElementById('login');
+        const errorDiv = document.getElementById('login_error');
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            errorDiv.style.display = 'none';
+            
+            const formData = new FormData(loginForm);
+            
+            fetch('index.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    errorDiv.textContent = data.message;
+                    errorDiv.style.display = 'block';
+                }
+            })
+            .catch(err => {
+                errorDiv.textContent = 'An unexpected error occurred.';
+                errorDiv.style.display = 'block';
+            });
+        });
+
         // If the user navigates back to this page while still logged in, bounce them home.
         window.addEventListener('pageshow', function () {
             fetch('session_status.php', { credentials: 'same-origin' })
