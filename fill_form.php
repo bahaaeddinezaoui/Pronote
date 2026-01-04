@@ -332,17 +332,20 @@ if ($class_q) {
 
 <div class="parent">
     <div class="div1" id="navbar">
-        <div style="font-family: sans-serif; display:flex; align-items:center; gap:12px; width:100%;">
-            <a href="teacher_home.php" id="home" class="navbar_buttons">Home</a>
-            
-            <?php if (!$existing_session_found): ?>
-                <a href="?tab=absences" id="tabAbs" class="navbar_buttons <?php echo $show_abs_initially ? 'active' : ''; ?>">Absences</a>
-            <?php else: ?>
-                <a href="#" class="navbar_buttons" style="opacity:0.5; cursor:not-allowed;">Absences (Done)</a>
-            <?php endif; ?>
-            <a href="?tab=observations" id="tabObs" class="navbar_buttons <?php echo $show_obs_initially ? 'active' : ''; ?>">Observations</a>
-
-            <a href="profile.php" class="navbar_buttons">Profile</a>
+        <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
+            <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <a href="teacher_home.php" id="home" class="navbar_buttons">Home</a>
+                
+                <?php if (!$existing_session_found): ?>
+                    <a href="?tab=absences" id="tabAbs" class="navbar_buttons <?php echo $show_abs_initially ? 'active' : ''; ?>">Absences</a>
+                <?php else: ?>
+                    <a href="#" class="navbar_buttons" style="opacity:0.5; cursor:not-allowed;">Absences (Done)</a>
+                <?php endif; ?>
+                <a href="?tab=observations" id="tabObs" class="navbar_buttons <?php echo $show_obs_initially ? 'active' : ''; ?>">Observations</a>
+    
+                <a href="profile.php" class="navbar_buttons">Profile</a>
+            </div>
             <a href="logout.php" class="navbar_buttons logout-btn" style="margin-left:auto;">Logout</a>
         </div>
     </div>

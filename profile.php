@@ -37,9 +37,11 @@ $grade = "N/A";
 $position = "";
 $safeRole = htmlspecialchars($role ?? 'User');
 
+$photoData = null;
+
 if ($role === 'Teacher') {
     $stmt = $conn->prepare("
-        SELECT TEACHER_FIRST_NAME, TEACHER_LAST_NAME, TEACHER_GRADE
+        SELECT TEACHER_FIRST_NAME, TEACHER_LAST_NAME, TEACHER_GRADE, TEACHER_PHOTO
         FROM teacher
         WHERE USER_ID = ?
     ");
@@ -52,11 +54,12 @@ if ($role === 'Teacher') {
         $last = $row['TEACHER_LAST_NAME'] ?? '';
         $fullName = trim(htmlspecialchars($first . ' ' . $last)) ?: "Teacher";
         $grade = htmlspecialchars($row['TEACHER_GRADE'] ?? 'N/A');
+        $photoData = $row['TEACHER_PHOTO'];
     }
     $stmt->close();
 } elseif ($role === 'Admin') {
     $stmt = $conn->prepare("
-        SELECT ADMINISTRATOR_FIRST_NAME, ADMINISTRATOR_LAST_NAME, ADMINISTRATOR_GRADE, ADMINISTRATOR_POSITION
+        SELECT ADMINISTRATOR_FIRST_NAME, ADMINISTRATOR_LAST_NAME, ADMINISTRATOR_GRADE, ADMINISTRATOR_POSITION, ADMINISTRATOR_PHOTO
         FROM administrator
         WHERE USER_ID = ?
     ");
@@ -70,6 +73,7 @@ if ($role === 'Teacher') {
         $fullName = trim(htmlspecialchars($first . ' ' . $last)) ?: "Administrator";
         $grade = htmlspecialchars($row['ADMINISTRATOR_GRADE'] ?? 'N/A');
         $position = htmlspecialchars($row['ADMINISTRATOR_POSITION'] ?? '');
+        $photoData = $row['ADMINISTRATOR_PHOTO'];
     }
     $stmt->close();
 } else {
@@ -96,19 +100,19 @@ $conn->close();
     <link rel="stylesheet" href="styles.css">
     <title>User Profile</title>
     <style>
-        /* Admin navbar styling */
+        /* Modern Profile Styles */
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f9fafb;
-            color: #333;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f3f4f6;
+            color: #1f2937;
             margin: 0;
             padding: 0;
         }
 
-        .navbar-admin {
+        .navbar-admin, .div1 {
             background: #fff;
             padding: 1rem 2rem;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             border-bottom: 1px solid #e5e7eb;
             display: flex;
             justify-content: space-between;
@@ -118,27 +122,29 @@ $conn->close();
             z-index: 100;
         }
         
-        .navbar-admin a {
+        .navbar-admin a, .navbar_buttons {
             text-decoration: none;
             color: #6b7280;
             padding: 0.5rem 1rem;
-            margin-left: 1rem;
+            margin-left: 0.5rem;
             border-radius: 8px;
             border: none;
             background: transparent;
             font-size: 0.875rem;
             font-weight: 500;
             transition: all 0.2s ease;
+            display: inline-block;
         }
         
-        .navbar-admin a:hover {
+        .navbar-admin a:hover, .navbar_buttons:hover {
             background: #f3f4f6;
             color: #4f46e5;
         }
 
-        .navbar-admin a.active {
+        .navbar-admin a.active, .navbar_buttons.active {
             color: #6f42c1;
             font-weight: 600;
+            background: #f3f4f6;
         }
 
         .notification-badge {
@@ -148,222 +154,314 @@ $conn->close();
             background: #dc2626;
             color: white;
             border-radius: 50%;
-            min-width: 24px;
-            height: 24px;
-            font-size: 12px;
+            min-width: 20px;
+            height: 20px;
+            font-size: 11px;
             font-weight: 700;
-            margin-left: 8px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+            margin-left: -8px;
+            margin-top: -8px;
+            position: relative;
         }
 
         .notification-bell {
             cursor: pointer;
             font-size: 20px;
-            position: relative;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.2s;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
+        }
+
+        .notification-bell:hover {
+            background: #f3f4f6;
         }
 
         .notifications-panel {
             display: none;
             position: absolute;
-            top: 50px;
-            right: 0;
-            width: 400px;
-            max-height: 500px;
+            top: 60px;
+            right: 2rem;
+            width: 380px;
+            max-height: 480px;
             overflow-y: auto;
             background: #fff;
-            border: 1px solid #bbb;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
             z-index: 1000;
         }
 
-        .notifications-panel.active {
-            display: block;
-        }
+        .notifications-panel.active { display: block; }
 
         .notification-item {
-            padding: 12px;
+            padding: 12px 16px;
             border-bottom: 1px solid #f0f0f0;
             cursor: pointer;
-            transition: background-color 0.2s ease;
-            background-color: #fef3c7;
+            transition: background 0.2s;
+            background: #fff9db; /* Light yellow for unread */
             border-left: 4px solid #f59e0b;
         }
 
-        .notification-item:hover {
-            background-color: #fde68a;
-        }
-
-        .notification-item.new {
-            background-color: #dbeafe;
-            border-left-color: #3b82f6;
-            font-weight: 500;
-        }
-
+        .notification-item:hover { background: #fff3bf; }
+        
         .notification-item-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 6px;
-        }
-
-        .notification-item-student {
-            font-weight: 600;
-            color: #1f2937;
+            margin-bottom: 4px;
             font-size: 14px;
         }
+        
+        .notification-item-student { font-weight: 600; color: #1f2937; }
+        .notification-item-time { font-size: 12px; color: #6b7280; }
+        .notification-item-details { font-size: 13px; color: #4b5563; }
+        .notification-empty { padding: 24px; text-align: center; color: #9ca3af; }
 
-        .notification-item-time {
-            font-size: 12px;
-            color: #6b7280;
+        /* Profile Specific Styles */
+        .profile-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
-        .notification-item-details {
-            font-size: 13px;
-            color: #374151;
-            margin-top: 4px;
-        }
-
-        .notification-empty {
-            padding: 20px;
-            text-align: center;
-            color: #9ca3af;
-        }
-
-        .profile-wrapper {
-            max-width: 720px;
-            margin: 2rem auto;
-            width: 100%;
-        }
         .profile-card {
-            background: var(--bg-primary);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-xl);
-            padding: 1.75rem;
-            box-shadow: var(--shadow-md);
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
         }
+
+        .profile-banner {
+            height: 160px;
+            background: linear-gradient(135deg, #6f42c1 0%, #8b5cf6 100%);
+            position: relative;
+        }
+
         .profile-header {
+            padding: 0 40px;
+            margin-top: -60px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            margin-bottom: 1rem;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 10;
         }
-        .profile-header h2 {
-            margin: 0;
-            font-size: 1.25rem;
-            color: var(--text-primary);
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+            padding: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 16px;
         }
-        .profile-meta {
+
+        .profile-avatar-inner {
+            width: 100%;
+            height: 100%;
+            background: #f3f4f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #6f42c1;
+            font-weight: 700;
+        }
+
+        .profile-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 0 4px 0;
+        }
+
+        .profile-role-badge {
+            display: inline-block;
+            background: #ede9fe;
+            color: #6f42c1;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .profile-content {
+            padding: 0 40px 40px 40px;
+        }
+
+        .info-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
         }
-        .profile-item {
+
+        .info-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
             display: flex;
-            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            transition: all 0.2s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-color: #ddd6fe;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: #ede9fe;
+            border-radius: 10px;
+            display: flex;
             align-items: center;
-            padding: 0.75rem 1rem;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
+            justify-content: center;
+            font-size: 20px;
+            color: #6f42c1;
         }
-        .profile-label {
-            font-weight: 700;
-            color: var(--text-secondary);
+
+        .info-text label {
+            display: block;
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .profile-value {
-            font-weight: 700;
-            color: var(--text-primary);
+
+        .info-text div {
+            font-size: 16px;
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        @media (max-width: 640px) {
+            .profile-header { padding: 0 20px; }
+            .profile-content { padding: 0 20px 30px 20px; }
+            .info-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-<div class="parent">
+    
     <?php if ($role === 'Admin'): ?>
         <!-- Admin Navbar -->
         <div class="navbar-admin">
-            <div style="font-family: sans-serif; display:flex; align-items:center; justify-content:space-between; width:100%;">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <a href="admin_home.php" class="navbar_buttons">Home</a>
-                    <a href="admin_dashboard.php" class="navbar_buttons">Search</a>
-                    <a href="profile.php" class="navbar_buttons active">Profile</a>
+            <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
+                <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
+                <div style="display:flex; align-items:center;">
+                    <a href="admin_home.php">Home</a>
+                    <a href="admin_dashboard.php">Search</a>
+                    <a href="admin_search_student.php">Student Records</a>
+                    <a href="profile.php" class="active">Profile</a>
                 </div>
-                <div style="display:flex; align-items:center; gap:20px; margin-left:auto;">
+                <div style="display:flex; align-items:center; gap:16px; margin-left:auto;">
                     <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
                         🔔
                         <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
                         <div class="notifications-panel" id="notificationsPanel">
-                            <div style="padding:12px; border-bottom:1px solid #e5e7eb; font-weight:600; background:#f9fafb;">
+                            <div style="padding:16px; border-bottom:1px solid #e5e7eb; font-weight:600; background:#f9fafb;">
                                 New Observations
                             </div>
                             <div id="notificationsContent"></div>
                         </div>
                     </div>
-                    <a href="logout.php" class="navbar_buttons logout-btn">Logout</a>
+                    <a href="logout.php" style="color: #dc2626;">Logout</a>
                 </div>
             </div>
         </div>
     <?php else: ?>
-        <!-- Teacher/Other Navbar -->
+        <!-- Teacher/Other Navbar (Consistent with fill_form.php) -->
         <div class="div1" id="navbar">
-            <div style="font-family: sans-serif; display:flex; align-items:center; gap:12px; width:100%;">
-                <a href="<?php echo $homeUrl; ?>" class="navbar_buttons">Home</a>
-                
-                <?php if ($role === 'Teacher'): ?>
-                    <a href="fill_form.php?tab=absences" class="navbar_buttons">Absences</a>
-                    <a href="fill_form.php?tab=observations" class="navbar_buttons">Observations</a>
-                <?php endif; ?>
+            <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
+                <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <a href="<?php echo $homeUrl; ?>" class="navbar_buttons">Home</a>
+                    
+                    <?php if ($role === 'Teacher'): ?>
+                        <a href="fill_form.php?tab=absences" class="navbar_buttons">Absences</a>
+                        <a href="fill_form.php?tab=observations" class="navbar_buttons">Observations</a>
+                    <?php endif; ?>
 
-                <a href="profile.php" class="navbar_buttons active">Profile</a>
+                    <a href="profile.php" class="navbar_buttons active">Profile</a>
+                </div>
                 <a href="logout.php" class="navbar_buttons logout-btn" style="margin-left:auto;">Logout</a>
             </div>
         </div>
     <?php endif; ?>
 
-    <div class="div2" id="left_side">
-        <fieldset id="form_fill">
-            <legend id="form_legend">Profile</legend>
-            <div class="profile-wrapper">
-                <div class="profile-card">
-                    <div class="profile-header">
-                        <div>
-                            <div style="text-transform: uppercase; font-size: 0.75rem; color: var(--text-light);">Signed in as</div>
-                            <h2><?php echo $safeRole; ?></h2>
-                        </div>
-                    </div>
-                    <div class="profile-meta">
-                        <div class="profile-item">
-                            <span class="profile-label">Full name</span>
-                            <span class="profile-value"><?php echo $fullName; ?></span>
-                        </div>
-                        <div class="profile-item">
-                            <span class="profile-label">Role</span>
-                            <span class="profile-value"><?php echo $safeRole; ?></span>
-                        </div>
-                        <div class="profile-item">
-                            <span class="profile-label">Grade</span>
-                            <span class="profile-value"><?php echo $grade ?: 'N/A'; ?></span>
-                        </div>
-                        <?php if ($position !== ""): ?>
-                        <div class="profile-item">
-                            <span class="profile-label">Position</span>
-                            <span class="profile-value"><?php echo $position; ?></span>
-                        </div>
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-banner"></div>
+            
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <div class="profile-avatar-inner">
+                        <?php if (!empty($photoData)): ?>
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($photoData); ?>" alt="Profile Photo" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                        <?php else: ?>
+                            <?php echo strtoupper(substr($fullName, 0, 1)); ?>
                         <?php endif; ?>
                     </div>
                 </div>
+                <h1 class="profile-name"><?php echo $fullName; ?></h1>
+                <div class="profile-role-badge"><?php echo $safeRole; ?></div>
             </div>
-        </fieldset>
+
+            <div class="profile-content">
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-icon">🆔</div>
+                        <div class="info-text">
+                            <label>User ID</label>
+                            <div>#<?php echo $userId; ?></div>
+                        </div>
+                    </div>
+
+                    <?php if ($grade !== "N/A"): ?>
+                    <div class="info-card">
+                        <div class="info-icon">🎓</div>
+                        <div class="info-text">
+                            <label>Grade / Level</label>
+                            <div><?php echo $grade; ?></div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if ($position !== ""): ?>
+                    <div class="info-card">
+                        <div class="info-icon">💼</div>
+                        <div class="info-text">
+                            <label>Position</label>
+                            <div><?php echo $position; ?></div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <div class="info-card">
+                        <div class="info-icon">🛡️</div>
+                        <div class="info-text">
+                            <label>Access Level</label>
+                            <div><?php echo $safeRole; ?> Privileges</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
 <script>
 let newNotifications = [];

@@ -562,19 +562,20 @@ $conn->close();
 <body>
 
 <div class="navbar-admin">
-    <div style="font-family: sans-serif; display:flex; align-items:center; justify-content:space-between; width:100%;">
-        <div style="display:flex; align-items:center; gap:12px;">
+    <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
+        <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
+        <div style="display:flex; align-items:center;">
             <a href="admin_home.php" class="navbar_buttons">Home</a>
             <a href="admin_dashboard.php" class="navbar_buttons active">Search</a>
             <a href="admin_search_student.php" class="navbar_buttons">Student Records</a>
             <a href="profile.php" class="navbar_buttons">Profile</a>
         </div>
-        <div style="display:flex; align-items:center; gap:20px; margin-left:auto;">
+        <div style="display:flex; align-items:center; gap:16px; margin-left:auto;">
             <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
                 🔔
                 <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
                 <div class="notifications-panel" id="notificationsPanel">
-                    <div style="padding:12px; border-bottom:1px solid #e5e7eb; font-weight:600; background:#f9fafb;">
+                    <div style="padding:16px; border-bottom:1px solid #e5e7eb; font-weight:600; background:#f9fafb;">
                         New Observations
                     </div>
                     <div id="notificationsContent"></div>

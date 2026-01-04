@@ -190,13 +190,16 @@ $conn->close();
 
 <div class="parent">
     <div class="div1" id="navbar">
-        <div style="font-family: sans-serif; display:flex; align-items:center; gap:12px; width:100%;">
-            <a href="teacher_home.php" id="home" class="navbar_buttons active">Home</a>
-            
-            <a href="fill_form.php?tab=absences" class="navbar_buttons">Absences</a>
-            <a href="fill_form.php?tab=observations" class="navbar_buttons">Observations</a>
+        <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
+            <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <a href="teacher_home.php" id="home" class="navbar_buttons active">Home</a>
+                
+                <a href="fill_form.php?tab=absences" class="navbar_buttons">Absences</a>
+                <a href="fill_form.php?tab=observations" class="navbar_buttons">Observations</a>
 
-            <a href="profile.php" class="navbar_buttons">Profile</a>
+                <a href="profile.php" class="navbar_buttons">Profile</a>
+            </div>
             <a href="logout.php" class="navbar_buttons logout-btn" style="margin-left:auto;">Logout</a>
         </div>
     </div>

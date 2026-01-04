@@ -398,6 +398,103 @@ $conn->close();
             border-bottom: none;
         }
 
+        /* Notification styles */
+        .notification-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #dc2626;
+            color: white;
+            border-radius: 50%;
+            min-width: 24px;
+            height: 24px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .notification-bell {
+            cursor: pointer;
+            font-size: 20px;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .notifications-panel {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            background: #fff;
+            border: 1px solid #bbb;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .notifications-panel.active {
+            display: block;
+        }
+
+        .notification-item {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .notification-item:hover {
+            background-color: #fde68a;
+        }
+
+        .notification-item.new {
+            background-color: #dbeafe;
+            border-left-color: #3b82f6;
+            font-weight: 500;
+        }
+
+        .notification-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+
+        .notification-item-student {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 14px;
+        }
+
+        .notification-item-time {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .notification-item-details {
+            font-size: 13px;
+            color: #374151;
+            margin-top: 4px;
+        }
+
+        .notification-empty {
+            padding: 20px;
+            text-align: center;
+            color: #9ca3af;
+        }
+
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -416,15 +513,26 @@ $conn->close();
 <body>
 
 <div class="navbar-admin">
-    <div style="font-family: sans-serif; display:flex; align-items:center; justify-content:space-between; width:100%;">
-        <div style="display:flex; align-items:center; gap:12px;">
+    <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
+        <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
+        <div style="display:flex; align-items:center;">
             <a href="admin_home.php" class="navbar_buttons">Home</a>
             <a href="admin_dashboard.php" class="navbar_buttons">Search</a>
             <a href="admin_search_student.php" class="navbar_buttons active">Student Records</a>
             <a href="profile.php" class="navbar_buttons">Profile</a>
         </div>
         <div style="display:flex; align-items:center; gap:20px; margin-left:auto;">
-            <a href="logout.php" class="navbar_buttons">Logout</a>
+            <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
+                🔔
+                <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
+                <div class="notifications-panel" id="notificationsPanel">
+                    <div style="padding:12px; border-bottom:1px solid #e5e7eb; font-weight:600; background:#f9fafb;">
+                        New Observations
+                    </div>
+                    <div id="notificationsContent"></div>
+                </div>
+            </div>
+            <a href="logout.php" class="navbar_buttons logout-btn">Logout</a>
         </div>
     </div>
 </div>
@@ -691,6 +799,7 @@ $conn->close();
         window.addEventListener('load', function() {
             initializeDates();
             fetchAllStudents();
+            fetchNotifications(); // Initial fetch
         });
 
         // Close suggestions when clicking outside
@@ -699,6 +808,70 @@ $conn->close();
                 document.getElementById('suggestionsContainer').style.display = 'none';
             }
         });
+
+        /* --- Notification Logic --- */
+        let newNotifications = [];
+
+        function toggleNotificationsPanel() {
+            const panel = document.getElementById('notificationsPanel');
+            if (panel) {
+                panel.classList.toggle('active');
+            }
+        }
+
+        function fetchNotifications() {
+            fetch('get_new_notifications.php')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        newNotifications = data.notifications;
+                        updateNotificationDisplay();
+                    }
+                })
+                .catch(err => console.error('Error fetching notifications:', err));
+        }
+
+        function updateNotificationDisplay() {
+            const countBadge = document.getElementById('notificationCount');
+            const content = document.getElementById('notificationsContent');
+            
+            if (newNotifications.length > 0) {
+                countBadge.textContent = newNotifications.length;
+                countBadge.style.display = 'flex';
+                
+                let html = '';
+                newNotifications.forEach((notif) => {
+                    html += `<div class="notification-item new">
+                        <div class="notification-item-header">
+                            <span class="notification-item-student">${notif.student_name}</span>
+                            <span class="notification-item-time">${notif.observation_time}</span>
+                        </div>
+                        <div class="notification-item-details">
+                            <div><strong>Teacher:</strong> ${notif.teacher_name}</div>
+                            <div><strong>Session:</strong> ${notif.session_date} (${notif.session_time})</div>
+                            <div><strong>Motif:</strong> ${notif.motif}</div>
+                        </div>
+                    </div>`;
+                });
+                content.innerHTML = html;
+            } else {
+                countBadge.style.display = 'none';
+                content.innerHTML = '<div class="notification-empty">No new observations</div>';
+            }
+        }
+
+        // Close notifications panel when clicking outside
+        document.addEventListener('click', function(event) {
+            const notifBell = document.getElementById('notificationBell');
+            const panel = document.getElementById('notificationsPanel');
+            
+            if (notifBell && panel && !notifBell.contains(event.target)) {
+                panel.classList.remove('active');
+            }
+        });
+
+        // Refresh notifications every 30 seconds
+        setInterval(fetchNotifications, 30000);
     </script>
 </body>
 </html>

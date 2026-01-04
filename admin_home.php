@@ -423,8 +423,9 @@ $conn->close();
 <body>
 
 <div class="navbar-admin">
-    <div style="font-family: sans-serif; display:flex; align-items:center; justify-content:space-between; width:100%;">
-        <div style="display:flex; align-items:center; gap:12px;">
+    <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
+        <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
+        <div style="display:flex; align-items:center;">
             <a href="admin_home.php" class="navbar_buttons active">Home</a>
             <a href="admin_dashboard.php" class="navbar_buttons">Search</a>
             <a href="admin_search_student.php" class="navbar_buttons">Student Records</a>
