@@ -108,8 +108,8 @@ while ($row = $result->fetch_assoc()) {
             a.ABSENCE_DATE_AND_TIME,
             a.ABSENCE_MOTIF,
             a.ABSENCE_OBSERVATION,
-            st.STUDENT_FIRST_NAME,
-            st.STUDENT_LAST_NAME
+            st.STUDENT_FIRST_NAME_EN,
+            st.STUDENT_LAST_NAME_EN
         FROM absence a
         INNER JOIN student_gets_absent sga ON a.ABSENCE_ID = sga.ABSENCE_ID
         INNER JOIN student st ON sga.STUDENT_SERIAL_NUMBER = st.STUDENT_SERIAL_NUMBER
@@ -121,7 +121,7 @@ while ($row = $result->fetch_assoc()) {
     $resAbs = $stmtAbs->get_result();
     while ($abs = $resAbs->fetch_assoc()) {
         $absences[] = [
-            'student_name' => $abs['STUDENT_FIRST_NAME'] . ' ' . $abs['STUDENT_LAST_NAME'],
+            'student_name' => $abs['STUDENT_FIRST_NAME_EN'] . ' ' . $abs['STUDENT_LAST_NAME_EN'],
             'absence_time' => date('H:i', strtotime($abs['ABSENCE_DATE_AND_TIME'])),
             'motif' => $abs['ABSENCE_MOTIF'] ?? '',
             'observation' => $abs['ABSENCE_OBSERVATION'] ?? ''
@@ -140,8 +140,8 @@ while ($row = $result->fetch_assoc()) {
             tmo.OBSERVATION_MOTIF,
             tmo.OBSERVATION_NOTE,
             (CASE WHEN aro.OBSERVATION_ID IS NULL THEN 1 ELSE 0 END) as IS_NEW_FOR_ADMIN,
-            st.STUDENT_FIRST_NAME,
-            st.STUDENT_LAST_NAME,
+            st.STUDENT_FIRST_NAME_EN,
+            st.STUDENT_LAST_NAME_EN,
             t.TEACHER_FIRST_NAME,
             t.TEACHER_LAST_NAME
         FROM teacher_makes_an_observation_for_a_student tmo
@@ -158,7 +158,7 @@ while ($row = $result->fetch_assoc()) {
     while ($obs = $resObs->fetch_assoc()) {
         $observations[] = [
             'observation_id' => $obs['OBSERVATION_ID'],
-            'student_name' => $obs['STUDENT_FIRST_NAME'] . ' ' . $obs['STUDENT_LAST_NAME'],
+            'student_name' => $obs['STUDENT_FIRST_NAME_EN'] . ' ' . $obs['STUDENT_LAST_NAME_EN'],
             'teacher_name' => $obs['TEACHER_FIRST_NAME'] . ' ' . $obs['TEACHER_LAST_NAME'],
             'observation_time' => date('H:i', strtotime($obs['OBSERVATION_DATE_AND_TIME'])),
             'motif' => $obs['OBSERVATION_MOTIF'] ?? '',

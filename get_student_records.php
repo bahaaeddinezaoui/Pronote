@@ -48,8 +48,8 @@ try {
     $studentQuery = "
         SELECT 
             s.STUDENT_SERIAL_NUMBER,
-            s.STUDENT_FIRST_NAME,
-            s.STUDENT_LAST_NAME,
+            s.STUDENT_FIRST_NAME_EN,
+            s.STUDENT_LAST_NAME_EN,
             s.STUDNET_GRADE,
             s.SECTION_ID,
             s.CATEGORY_ID,
@@ -169,8 +169,8 @@ try {
         'success' => true,
         'student' => [
             'serial_number' => htmlspecialchars($student['STUDENT_SERIAL_NUMBER']),
-            'first_name' => htmlspecialchars($student['STUDENT_FIRST_NAME']),
-            'last_name' => htmlspecialchars($student['STUDENT_LAST_NAME']),
+            'first_name' => htmlspecialchars($student['STUDENT_FIRST_NAME_EN']),
+            'last_name' => htmlspecialchars($student['STUDENT_LAST_NAME_EN']),
             'grade' => htmlspecialchars($student['STUDNET_GRADE'] ?? ''),
             'section_name' => htmlspecialchars($student['SECTION_NAME'] ?? ''),
             'category_name' => htmlspecialchars($student['CATEGORY_NAME'] ?? '')

@@ -59,7 +59,7 @@ if ($role === 'Teacher') {
     $stmt->close();
 } elseif ($role === 'Admin') {
     $stmt = $conn->prepare("
-        SELECT ADMINISTRATOR_FIRST_NAME, ADMINISTRATOR_LAST_NAME, ADMINISTRATOR_GRADE, ADMINISTRATOR_POSITION, ADMINISTRATOR_PHOTO
+        SELECT ADMINISTRATOR_FIRST_NAME_EN, ADMINISTRATOR_LAST_NAME_EN, ADMINISTRATOR_GRADE, ADMINISTRATOR_POSITION, ADMINISTRATOR_PHOTO
         FROM administrator
         WHERE USER_ID = ?
     ");
@@ -68,8 +68,8 @@ if ($role === 'Teacher') {
     $result = $stmt->get_result();
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $first = $row['ADMINISTRATOR_FIRST_NAME'] ?? '';
-        $last = $row['ADMINISTRATOR_LAST_NAME'] ?? '';
+        $first = $row['ADMINISTRATOR_FIRST_NAME_EN'] ?? '';
+        $last = $row['ADMINISTRATOR_LAST_NAME_EN'] ?? '';
         $fullName = trim(htmlspecialchars($first . ' ' . $last)) ?: "Administrator";
         $grade = htmlspecialchars($row['ADMINISTRATOR_GRADE'] ?? 'N/A');
         $position = htmlspecialchars($row['ADMINISTRATOR_POSITION'] ?? '');

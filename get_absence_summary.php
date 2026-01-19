@@ -48,8 +48,8 @@ try {
             // Get absences within the time slot
             $query = "
                 SELECT 
-                    s.STUDENT_FIRST_NAME,
-                    s.STUDENT_LAST_NAME,
+                    s.STUDENT_FIRST_NAME_EN,
+                    s.STUDENT_LAST_NAME_EN,
                     a.ABSENCE_DATE_AND_TIME,
                     a.ABSENCE_MOTIF,
                     a.ABSENCE_OBSERVATION,
@@ -75,8 +75,8 @@ try {
         // Get all absences for the date
         $query = "
             SELECT 
-                s.STUDENT_FIRST_NAME,
-                s.STUDENT_LAST_NAME,
+                s.STUDENT_FIRST_NAME_EN,
+                s.STUDENT_LAST_NAME_EN,
                 a.ABSENCE_DATE_AND_TIME,
                 a.ABSENCE_MOTIF,
                 a.ABSENCE_OBSERVATION,
@@ -98,7 +98,7 @@ try {
 
     while ($row = $result->fetch_assoc()) {
         $absences[] = [
-            'student_name' => htmlspecialchars($row['STUDENT_FIRST_NAME'] . ' ' . $row['STUDENT_LAST_NAME']),
+            'student_name' => htmlspecialchars($row['STUDENT_FIRST_NAME_EN'] . ' ' . $row['STUDENT_LAST_NAME_EN']),
             'absence_date' => date('d/m/Y', strtotime($row['STUDY_SESSION_DATE'])),
             'absence_time' => date('H:i', strtotime($row['ABSENCE_DATE_AND_TIME'])),
             'motif' => htmlspecialchars($row['ABSENCE_MOTIF'] ?: 'No motif'),

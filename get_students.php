@@ -23,7 +23,7 @@ $placeholders = implode(',', array_fill(0, count($sections), '?'));
 $types = str_repeat('i', count($sections));
 
 // --- Fetch students belonging to the selected sections ---
-$stmt = $conn->prepare("SELECT STUDENT_SERIAL_NUMBER, STUDENT_FIRST_NAME, STUDENT_LAST_NAME 
+$stmt = $conn->prepare("SELECT STUDENT_SERIAL_NUMBER, STUDENT_FIRST_NAME_EN, STUDENT_LAST_NAME_EN 
                         FROM student 
                         WHERE SECTION_ID IN ($placeholders)");
 $stmt->bind_param($types, ...$sections);
@@ -34,8 +34,8 @@ $students = [];
 while ($row = $result->fetch_assoc()) {
     $students[] = [
         'serial_number' => $row['STUDENT_SERIAL_NUMBER'],
-        'first_name' => $row['STUDENT_FIRST_NAME'],
-        'last_name' => $row['STUDENT_LAST_NAME']
+        'first_name' => $row['STUDENT_FIRST_NAME_EN'],
+        'last_name' => $row['STUDENT_LAST_NAME_EN']
     ];
 }
 

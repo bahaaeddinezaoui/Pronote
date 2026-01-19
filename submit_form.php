@@ -140,7 +140,7 @@ try {
         if ($f === '' || $l === '') continue;
 
         // Find student serial number
-        $stmtFind = $conn->prepare("SELECT STUDENT_SERIAL_NUMBER FROM student WHERE STUDENT_FIRST_NAME = ? AND STUDENT_LAST_NAME = ?");
+        $stmtFind = $conn->prepare("SELECT STUDENT_SERIAL_NUMBER FROM student WHERE STUDENT_FIRST_NAME_EN = ? AND STUDENT_LAST_NAME_EN = ?");
         $stmtFind->bind_param("ss", $f, $l);
         $stmtFind->execute();
         $result = $stmtFind->get_result();

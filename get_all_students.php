@@ -28,11 +28,11 @@ if ($conn->connect_error) {
 $query = "
     SELECT 
         STUDENT_SERIAL_NUMBER,
-        STUDENT_FIRST_NAME,
-        STUDENT_LAST_NAME,
+        STUDENT_FIRST_NAME_EN,
+        STUDENT_LAST_NAME_EN,
         SECTION_ID
     FROM student
-    ORDER BY STUDENT_FIRST_NAME, STUDENT_LAST_NAME
+    ORDER BY STUDENT_FIRST_NAME_EN, STUDENT_LAST_NAME_EN
 ";
 
 $result = $conn->query($query);
@@ -42,8 +42,8 @@ if ($result) {
     while ($row = $result->fetch_assoc()) {
         $students[] = [
             'serial_number' => $row['STUDENT_SERIAL_NUMBER'],
-            'first_name' => htmlspecialchars($row['STUDENT_FIRST_NAME']),
-            'last_name' => htmlspecialchars($row['STUDENT_LAST_NAME']),
+            'first_name' => htmlspecialchars($row['STUDENT_FIRST_NAME_EN']),
+            'last_name' => htmlspecialchars($row['STUDENT_LAST_NAME_EN']),
             'section_id' => $row['SECTION_ID']
         ];
     }

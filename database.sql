@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 04, 2026 at 03:01 PM
+-- Generation Time: Jan 19, 2026 at 01:10 PM
 -- Server version: 9.1.0
 -- PHP Version: 8.3.14
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `test_class_edition`
+-- Database: `enote_with_control`
 --
 
 -- --------------------------------------------------------
@@ -35,8 +35,28 @@ CREATE TABLE IF NOT EXISTS `absence` (
   `ABSENCE_MOTIF` varchar(30) DEFAULT NULL,
   `ABSENCE_OBSERVATION` varchar(258) DEFAULT NULL,
   PRIMARY KEY (`ABSENCE_ID`),
-  KEY `FK_ABSENCE_TAKES_PLA_STUDY_SE` (`STUDY_SESSION_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `FK_ABSENCE_SESSION` (`STUDY_SESSION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `address`
+--
+
+DROP TABLE IF EXISTS `address`;
+CREATE TABLE IF NOT EXISTS `address` (
+  `ADDRESS_ID` int NOT NULL AUTO_INCREMENT,
+  `ADDRESS_STREET_EN` varchar(255) DEFAULT NULL,
+  `ADDRESS_STREET_AR` varchar(255) DEFAULT NULL,
+  `COMMUNE_ID` int DEFAULT NULL,
+  `DAIRA_ID` int DEFAULT NULL,
+  `WILAYA_ID` int DEFAULT NULL,
+  `COUNTRY_ID` int NOT NULL,
+  PRIMARY KEY (`ADDRESS_ID`),
+  KEY `FK_ADDR_COMMUNE` (`COMMUNE_ID`),
+  KEY `FK_ADDR_COUNTRY` (`COUNTRY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -48,25 +68,14 @@ DROP TABLE IF EXISTS `administrator`;
 CREATE TABLE IF NOT EXISTS `administrator` (
   `ADMINISTRATOR_ID` int NOT NULL,
   `USER_ID` int NOT NULL,
-  `ADMINISTRATOR_FIRST_NAME` varchar(24) DEFAULT NULL,
-  `ADMINISTRATOR_LAST_NAME` varchar(24) DEFAULT NULL,
+  `ADMINISTRATOR_FIRST_NAME_FR` varchar(24) DEFAULT NULL,
+  `ADMINISTRATOR_LAST_NAME_FR` varchar(24) DEFAULT NULL,
   `ADMINISTRATOR_GRADE` varchar(20) NOT NULL,
-  `ADMINISTRATOR_POSITION` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `ADMINISTRATOR_POSITION` varchar(60) DEFAULT NULL,
   `ADMINISTRATOR_PHOTO` mediumblob NOT NULL,
   PRIMARY KEY (`ADMINISTRATOR_ID`),
-  KEY `FK_ADMINIST_ADMINISTR_USER_ACC` (`USER_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `administrator`
---
-
-INSERT INTO `administrator` (`ADMINISTRATOR_ID`, `USER_ID`, `ADMINISTRATOR_FIRST_NAME`, `ADMINISTRATOR_LAST_NAME`, `ADMINISTRATOR_GRADE`, `ADMINISTRATOR_POSITION`, `ADMINISTRATOR_PHOTO`) VALUES
-(1, 1, 'Said', 'SIDI OUIS', 'General', 'Mr. le Général, le Commandant de l\'Ecole', ''),
-(2, 2, 'Yacine', 'ROUABHIA', 'Lieutenant-colonel', 'Chef Brigade', ''),
-(3, 3, 'Mohamed Taher', 'BADI', 'Colonel', 'DGE', ''),
-(4, 4, 'Eldjilali', 'YETTOU', 'Colonel', 'DEM', ''),
-(5, 5, 'Lakhdar', 'YOUSEFI', 'Lieutenant-colonel', 'DESU', '');
+  KEY `FK_ADMIN_USER` (`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -80,16 +89,8 @@ CREATE TABLE IF NOT EXISTS `admin_read_observation` (
   `ADMINISTRATOR_ID` int NOT NULL,
   `READ_AT` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`OBSERVATION_ID`,`ADMINISTRATOR_ID`),
-  KEY `FK_ARO_ADMINISTRATOR` (`ADMINISTRATOR_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `admin_read_observation`
---
-
-INSERT INTO `admin_read_observation` (`OBSERVATION_ID`, `ADMINISTRATOR_ID`, `READ_AT`) VALUES
-(4, 1, '2026-01-04 15:18:32'),
-(4, 2, '2026-01-04 15:18:55');
+  KEY `FK_ARO_ADMIN` (`ADMINISTRATOR_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -100,27 +101,9 @@ INSERT INTO `admin_read_observation` (`OBSERVATION_ID`, `ADMINISTRATOR_ID`, `REA
 DROP TABLE IF EXISTS `category`;
 CREATE TABLE IF NOT EXISTS `category` (
   `CATEGORY_ID` int NOT NULL,
-  `CATEGORY_NAME` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `CATEGORY_NAME` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`CATEGORY_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `category`
---
-
-INSERT INTO `category` (`CATEGORY_ID`, `CATEGORY_NAME`) VALUES
-(1, 'LMD 1'),
-(9, 'Master Professionel 1'),
-(12, 'Etat-Major'),
-(5, 'Spécialisation 1'),
-(11, 'Recyclage'),
-(2, 'LMD 2'),
-(3, 'LMD 3'),
-(4, 'Perfectionnement'),
-(10, 'Master Professionel 2'),
-(6, 'Spécialisation 2'),
-(7, 'Spécialisation 3'),
-(8, 'Spécialisation 4');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -133,34 +116,55 @@ CREATE TABLE IF NOT EXISTS `class` (
   `CLASS_ID` int NOT NULL,
   `CLASS_NAME` varchar(12) DEFAULT NULL,
   PRIMARY KEY (`CLASS_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `class`
+-- Table structure for table `commune`
 --
 
-INSERT INTO `class` (`CLASS_ID`, `CLASS_NAME`) VALUES
-(1, 'Class 1'),
-(2, 'Class 2'),
-(3, 'Class 3'),
-(4, 'Class 4'),
-(5, 'Class 5'),
-(6, 'Class 6'),
-(7, 'Class 7'),
-(8, 'Class 8'),
-(9, 'Class 9'),
-(10, 'Class 10'),
-(11, 'Class 11'),
-(12, 'Class 12'),
-(13, 'Class 13'),
-(14, 'Class 14'),
-(15, 'Class 15'),
-(16, 'Class 16'),
-(17, 'Class 17'),
-(18, 'Class 18'),
-(19, 'Class 19'),
-(20, 'Class 20'),
-(21, 'Class 21');
+DROP TABLE IF EXISTS `commune`;
+CREATE TABLE IF NOT EXISTS `commune` (
+  `COMMUNE_ID` int NOT NULL AUTO_INCREMENT,
+  `DAIRA_ID` int NOT NULL,
+  `COMMUNE_NAME_EN` varchar(100) NOT NULL,
+  `COMMUNE_NAME_AR` varchar(100) NOT NULL,
+  PRIMARY KEY (`COMMUNE_ID`),
+  KEY `FK_COMMUNE_DAIRA` (`DAIRA_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `country`
+--
+
+DROP TABLE IF EXISTS `country`;
+CREATE TABLE IF NOT EXISTS `country` (
+  `COUNTRY_ID` int NOT NULL AUTO_INCREMENT,
+  `COUNTRY_CODE` varchar(3) NOT NULL,
+  `COUNTRY_NAME_EN` varchar(100) NOT NULL,
+  `COUNTRY_NAME_AR` varchar(100) NOT NULL,
+  PRIMARY KEY (`COUNTRY_ID`),
+  UNIQUE KEY `UK_COUNTRY_CODE` (`COUNTRY_CODE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `daira`
+--
+
+DROP TABLE IF EXISTS `daira`;
+CREATE TABLE IF NOT EXISTS `daira` (
+  `DAIRA_ID` int NOT NULL AUTO_INCREMENT,
+  `WILAYA_ID` int NOT NULL,
+  `DAIRA_NAME_EN` varchar(100) NOT NULL,
+  `DAIRA_NAME_AR` varchar(100) NOT NULL,
+  PRIMARY KEY (`DAIRA_ID`),
+  KEY `FK_DAIRA_WILAYA` (`WILAYA_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -173,14 +177,7 @@ CREATE TABLE IF NOT EXISTS `major` (
   `MAJOR_ID` varchar(12) NOT NULL,
   `MAJOR_NAME` varchar(48) DEFAULT NULL,
   PRIMARY KEY (`MAJOR_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `major`
---
-
-INSERT INTO `major` (`MAJOR_ID`, `MAJOR_NAME`) VALUES
-('1', 'Algorithmes et Structures de Données');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -192,7 +189,7 @@ DROP TABLE IF EXISTS `notification`;
 CREATE TABLE IF NOT EXISTS `notification` (
   `NOTIFICATION_ID` int NOT NULL,
   PRIMARY KEY (`NOTIFICATION_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -205,18 +202,8 @@ CREATE TABLE IF NOT EXISTS `observation` (
   `OBSERVATION_ID` int NOT NULL,
   `STUDY_SESSION_ID` int NOT NULL,
   PRIMARY KEY (`OBSERVATION_ID`),
-  KEY `FK_OBSERVAT_HAPPENS_I_STUDY_SE` (`STUDY_SESSION_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `observation`
---
-
-INSERT INTO `observation` (`OBSERVATION_ID`, `STUDY_SESSION_ID`) VALUES
-(1, 1),
-(2, 1),
-(3, 1),
-(4, 1);
+  KEY `FK_OBS_SESSION` (`STUDY_SESSION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -229,8 +216,24 @@ CREATE TABLE IF NOT EXISTS `receives` (
   `NOTIFICATION_ID` int NOT NULL,
   `ADMINISTRATOR_ID` int NOT NULL,
   PRIMARY KEY (`NOTIFICATION_ID`,`ADMINISTRATOR_ID`),
-  KEY `FK_RECEIVES_RECEIVES_ADMINIST` (`ADMINISTRATOR_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `FK_RECEIVE_ADMIN` (`ADMINISTRATOR_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recruitment_source`
+--
+
+DROP TABLE IF EXISTS `recruitment_source`;
+CREATE TABLE IF NOT EXISTS `recruitment_source` (
+  `RECRUITMENT_SOURCE_ID` int NOT NULL AUTO_INCREMENT,
+  `RECRUITMENT_TYPE` enum('Civil','ECN') NOT NULL,
+  `ECN_SCHOOL_NAME` varchar(100) DEFAULT NULL,
+  `ECN_SCHOOL_WILAYA_ID` int DEFAULT NULL,
+  PRIMARY KEY (`RECRUITMENT_SOURCE_ID`),
+  KEY `FK_RECRUIT_WILAYA` (`ECN_SCHOOL_WILAYA_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -244,35 +247,8 @@ CREATE TABLE IF NOT EXISTS `section` (
   `CATEGORY_ID` int NOT NULL,
   `SECTION_NAME` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`SECTION_ID`),
-  KEY `FK_SECTION_BELONGS_T_CATEGORY` (`CATEGORY_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `section`
---
-
-INSERT INTO `section` (`SECTION_ID`, `CATEGORY_ID`, `SECTION_NAME`) VALUES
-(1, 1, 'Section 1 EOA 1'),
-(2, 1, 'Section 2 EOA 1'),
-(3, 1, 'Section 3 EOA 1'),
-(4, 1, 'Section 4 EOA 1'),
-(5, 2, 'Section 1 EOA 2'),
-(6, 2, 'Section 2 EOA 2'),
-(7, 2, 'Section 2 EOA 3'),
-(8, 2, 'Section 4 EOA 2'),
-(9, 3, 'Section 1 EOA 3'),
-(10, 3, 'Section 2 EOA 3'),
-(11, 3, 'Section 3 EOA 2'),
-(12, 3, 'Section 4 EOA 2'),
-(13, 8, 'Section Etat-major'),
-(14, 9, 'Section Perfectionnement'),
-(15, 9, 'Section Recyclage'),
-(16, 0, 'Section Master 1'),
-(17, 0, 'Section Master 2'),
-(18, 0, 'Section Spécialisation 1'),
-(19, 0, 'Section Spécialisation 2'),
-(20, 0, 'Section Spécialisation 3'),
-(21, 0, 'Section Spécialisation 4');
+  KEY `FK_SECTION_CAT` (`CATEGORY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -285,8 +261,8 @@ CREATE TABLE IF NOT EXISTS `sends` (
   `NOTIFICATION_ID` int NOT NULL,
   `CLASS_ID` int NOT NULL,
   PRIMARY KEY (`NOTIFICATION_ID`,`CLASS_ID`),
-  KEY `FK_SENDS_SENDS_CLASS` (`CLASS_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `FK_SEND_CLASS` (`CLASS_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -299,23 +275,87 @@ CREATE TABLE IF NOT EXISTS `student` (
   `STUDENT_SERIAL_NUMBER` varchar(16) NOT NULL,
   `CATEGORY_ID` int NOT NULL,
   `SECTION_ID` int NOT NULL,
-  `STUDENT_FIRST_NAME` varchar(42) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `STUDENT_LAST_NAME` varchar(42) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `STUDENT_FIRST_NAME_EN` varchar(42) DEFAULT NULL,
+  `STUDENT_LAST_NAME_EN` varchar(42) DEFAULT NULL,
+  `STUDENT_FIRST_NAME_AR` varchar(42) DEFAULT NULL,
+  `STUDENT_LAST_NAME_AR` varchar(42) DEFAULT NULL,
   `STUDNET_GRADE` varchar(24) DEFAULT NULL,
+  `STUDENT_SEX` enum('Male','Female') DEFAULT NULL,
+  `STUDENT_BIRTH_DATE` date DEFAULT NULL,
+  `STUDENT_BLOOD_TYPE` enum('A+','A-','B+','B-','AB+','AB-','O+','O-') DEFAULT NULL,
+  `STUDENT_PERSONAL_PHONE` varchar(20) DEFAULT NULL,
+  `STUDENT_HEIGHT_CM` decimal(5,2) DEFAULT NULL,
+  `STUDENT_WEIGHT_KG` decimal(5,2) DEFAULT NULL,
+  `STUDENT_IS_FOREIGN` enum('Yes','No') DEFAULT 'No',
+  `STUDENT_ACADEMIC_AVERAGE` decimal(5,2) DEFAULT NULL,
+  `STUDENT_SPECIALITY` varchar(60) DEFAULT NULL,
+  `STUDENT_ACADEMIC_LEVEL` varchar(60) DEFAULT NULL,
+  `STUDENT_BACCALAUREATE_SUB_NUMBER` varchar(30) DEFAULT NULL,
+  `STUDENT_EDUCATIONAL_CERTIFICATES` text,
+  `STUDENT_MILITARY_CERTIFICATES` text,
+  `STUDENT_SCHOOL_SUB_DATE` date DEFAULT NULL,
+  `STUDENT_SCHOOL_SUB_CARD_NUMBER` varchar(30) DEFAULT NULL,
+  `STUDENT_LAPTOP_SERIAL_NUMBER` varchar(50) DEFAULT NULL,
+  `STUDENT_BIRTHDATE_CERTIFICATE_NUMBER` varchar(30) DEFAULT NULL,
+  `STUDENT_ID_CARD_NUMBER` varchar(30) DEFAULT NULL,
+  `STUDENT_POSTAL_ACCOUNT_NUMBER` varchar(30) DEFAULT NULL,
+  `STUDENT_HOBBIES` text,
+  `STUDENT_HEALTH_STATUS` text,
+  `STUDENT_MILITARY_NECKLACE` enum('Yes','No') DEFAULT 'No',
+  `STUDENT_NUMBER_OF_SIBLINGS` int DEFAULT NULL,
+  `STUDENT_NUMBER_OF_SISTERS` int DEFAULT NULL,
+  `STUDENT_ORDER_AMONG_SIBLINGS` int DEFAULT NULL,
+  `STUDENT_IS_IN_ARMY` enum('Yes','No') DEFAULT 'No',
+  `STUDENT_ORPHAN_STATUS` enum('None','Father','Mother','Both') DEFAULT 'None',
+  `STUDENT_PARENTS_SITUATION` enum('Married','Divorced','Separated','Widowed') DEFAULT 'Married',
+  `STUDENT_BIRTH_PLACE_ID` int DEFAULT NULL,
+  `STUDENT_PERSONAL_ADDRESS_ID` int DEFAULT NULL,
+  `STUDENT_RECRUITMENT_SOURCE_ID` int DEFAULT NULL,
   PRIMARY KEY (`STUDENT_SERIAL_NUMBER`),
-  KEY `FK_STUDENT_BELONGS_T_SECTION` (`SECTION_ID`),
-  KEY `FK_STUDENT_IS_OF_CAT_CATEGORY` (`CATEGORY_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `FK_STUDENT_SECTION` (`SECTION_ID`),
+  KEY `FK_STUDENT_CAT` (`CATEGORY_ID`),
+  KEY `FK_STUDENT_BIRTH` (`STUDENT_BIRTH_PLACE_ID`),
+  KEY `FK_STUDENT_ADDR` (`STUDENT_PERSONAL_ADDRESS_ID`),
+  KEY `FK_STUDENT_RECRUIT_REF` (`STUDENT_RECRUITMENT_SOURCE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `student`
+-- Table structure for table `student_combat_outfit`
 --
 
-INSERT INTO `student` (`STUDENT_SERIAL_NUMBER`, `CATEGORY_ID`, `SECTION_ID`, `STUDENT_FIRST_NAME`, `STUDENT_LAST_NAME`, `STUDNET_GRADE`) VALUES
-('9996', 1, 1, 'Yazid', 'BELFRAG', 'EOA'),
-('9997', 1, 1, 'Mohamed Wassim', 'OUHAB', 'EOA'),
-('9998', 1, 2, 'Brahim Abderezak', 'BOUDRA', 'EOA'),
-('9999', 1, 2, 'Imed Eddine', 'AMRANI', 'EOA');
+DROP TABLE IF EXISTS `student_combat_outfit`;
+CREATE TABLE IF NOT EXISTS `student_combat_outfit` (
+  `STUDENT_SERIAL_NUMBER` varchar(16) NOT NULL,
+  `FIRST_OUTFIT_NUMBER` varchar(30) DEFAULT NULL,
+  `FIRST_OUTFIT_SIZE` varchar(10) DEFAULT NULL,
+  `SECOND_OUTFIT_NUMBER` varchar(30) DEFAULT NULL,
+  `SECOND_OUTFIT_SIZE` varchar(10) DEFAULT NULL,
+  `COMBAT_SHOE_SIZE` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`STUDENT_SERIAL_NUMBER`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_emergency_contact`
+--
+
+DROP TABLE IF EXISTS `student_emergency_contact`;
+CREATE TABLE IF NOT EXISTS `student_emergency_contact` (
+  `EMERGENCY_CONTACT_ID` int NOT NULL AUTO_INCREMENT,
+  `STUDENT_SERIAL_NUMBER` varchar(16) NOT NULL,
+  `CONTACT_FIRST_NAME` varchar(42) DEFAULT NULL,
+  `CONTACT_LAST_NAME` varchar(42) DEFAULT NULL,
+  `CONTACT_RELATION` varchar(30) DEFAULT NULL,
+  `CONTACT_PHONE_NUMBER` varchar(20) DEFAULT NULL,
+  `CONTACT_ADDRESS_ID` int DEFAULT NULL,
+  `CONSULATE_NUMBER` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`EMERGENCY_CONTACT_ID`),
+  KEY `FK_EMERGENCY_STUDENT` (`STUDENT_SERIAL_NUMBER`),
+  KEY `FK_EMERGENCY_ADDR` (`CONTACT_ADDRESS_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -328,8 +368,54 @@ CREATE TABLE IF NOT EXISTS `student_gets_absent` (
   `STUDENT_SERIAL_NUMBER` varchar(16) NOT NULL,
   `ABSENCE_ID` int NOT NULL,
   PRIMARY KEY (`STUDENT_SERIAL_NUMBER`,`ABSENCE_ID`),
-  KEY `FK_STUDENT__STUDENT_G_ABSENCE` (`ABSENCE_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `FK_SGA_ABSENCE` (`ABSENCE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_parade_uniform`
+--
+
+DROP TABLE IF EXISTS `student_parade_uniform`;
+CREATE TABLE IF NOT EXISTS `student_parade_uniform` (
+  `STUDENT_SERIAL_NUMBER` varchar(16) NOT NULL,
+  `SUMMER_JACKET_SIZE` varchar(10) DEFAULT NULL,
+  `WINTER_JACKET_SIZE` varchar(10) DEFAULT NULL,
+  `SUMMER_TROUSERS_SIZE` varchar(10) DEFAULT NULL,
+  `WINTER_TROUSERS_SIZE` varchar(10) DEFAULT NULL,
+  `SUMMER_SHIRT_SIZE` varchar(10) DEFAULT NULL,
+  `WINTER_SHIRT_SIZE` varchar(10) DEFAULT NULL,
+  `SUMMER_HAT_SIZE` varchar(10) DEFAULT NULL,
+  `WINTER_HAT_SIZE` varchar(10) DEFAULT NULL,
+  `SUMMER_SKIRT_SIZE` varchar(10) DEFAULT NULL,
+  `WINTER_SKIRT_SIZE` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`STUDENT_SERIAL_NUMBER`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_parent_info`
+--
+
+DROP TABLE IF EXISTS `student_parent_info`;
+CREATE TABLE IF NOT EXISTS `student_parent_info` (
+  `STUDENT_SERIAL_NUMBER` varchar(16) NOT NULL,
+  `FATHER_FIRST_NAME_EN` varchar(42) DEFAULT NULL,
+  `FATHER_LAST_NAME_EN` varchar(42) DEFAULT NULL,
+  `FATHER_FIRST_NAME_AR` varchar(42) DEFAULT NULL,
+  `FATHER_LAST_NAME_AR` varchar(42) DEFAULT NULL,
+  `FATHER_PROFESSION_EN` varchar(60) DEFAULT NULL,
+  `FATHER_PROFESSION_AR` varchar(60) DEFAULT NULL,
+  `MOTHER_FIRST_NAME_EN` varchar(42) DEFAULT NULL,
+  `MOTHER_LAST_NAME_EN` varchar(42) DEFAULT NULL,
+  `MOTHER_FIRST_NAME_AR` varchar(42) DEFAULT NULL,
+  `MOTHER_LAST_NAME_AR` varchar(42) DEFAULT NULL,
+  `MOTHER_PROFESSION_EN` varchar(60) DEFAULT NULL,
+  `MOTHER_PROFESSION_AR` varchar(60) DEFAULT NULL,
+  PRIMARY KEY (`STUDENT_SERIAL_NUMBER`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -342,16 +428,8 @@ CREATE TABLE IF NOT EXISTS `studies` (
   `SECTION_ID` int NOT NULL,
   `MAJOR_ID` varchar(12) NOT NULL,
   PRIMARY KEY (`SECTION_ID`,`MAJOR_ID`),
-  KEY `FK_STUDIES_STUDIES_MAJOR` (`MAJOR_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `studies`
---
-
-INSERT INTO `studies` (`SECTION_ID`, `MAJOR_ID`) VALUES
-(1, '1'),
-(2, '1');
+  KEY `FK_STUDIES_MAJOR` (`MAJOR_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -364,15 +442,8 @@ CREATE TABLE IF NOT EXISTS `studies_in` (
   `SECTION_ID` int NOT NULL,
   `STUDY_SESSION_ID` int NOT NULL,
   PRIMARY KEY (`SECTION_ID`,`STUDY_SESSION_ID`),
-  KEY `FK_STUDIES__STUDIES_I_STUDY_SE` (`STUDY_SESSION_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `studies_in`
---
-
-INSERT INTO `studies_in` (`SECTION_ID`, `STUDY_SESSION_ID`) VALUES
-(1, 1);
+  KEY `FK_SI_SESSION` (`STUDY_SESSION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -389,16 +460,9 @@ CREATE TABLE IF NOT EXISTS `study_session` (
   `STUDY_SESSION_START_TIME` time DEFAULT NULL,
   `STUDY_SESSION_END_TIME` time DEFAULT NULL,
   PRIMARY KEY (`STUDY_SESSION_ID`),
-  KEY `FK_STUDY_SE_TEACHES_I_TEACHER` (`TEACHER_SERIAL_NUMBER`),
-  KEY `FK_STUDY_SESSION_CLASS` (`CLASS_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `study_session`
---
-
-INSERT INTO `study_session` (`STUDY_SESSION_ID`, `CLASS_ID`, `TEACHER_SERIAL_NUMBER`, `STUDY_SESSION_DATE`, `STUDY_SESSION_START_TIME`, `STUDY_SESSION_END_TIME`) VALUES
-(1, 19, '1', '2026-01-04', '14:30:00', '16:00:00');
+  KEY `FK_SESSION_CLASS` (`CLASS_ID`),
+  KEY `FK_SESSION_TEACHER` (`TEACHER_SERIAL_NUMBER`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -415,15 +479,8 @@ CREATE TABLE IF NOT EXISTS `teacher` (
   `TEACHER_LAST_NAME` varchar(24) DEFAULT NULL,
   `TEACHER_PHOTO` mediumblob NOT NULL,
   PRIMARY KEY (`TEACHER_SERIAL_NUMBER`),
-  KEY `FK_TEACHER_TEACHER_U_USER_ACC` (`USER_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `teacher`
---
-
-INSERT INTO `teacher` (`TEACHER_SERIAL_NUMBER`, `USER_ID`, `TEACHER_GRADE`, `TEACHER_FIRST_NAME`, `TEACHER_LAST_NAME`, `TEACHER_PHOTO`) VALUES
-('1', 100, 'Lieutenant', 'Bahaa Eddine', 'ZAOUI', '');
+  KEY `FK_TEACHER_USER` (`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -441,17 +498,10 @@ CREATE TABLE IF NOT EXISTS `teacher_makes_an_observation_for_a_student` (
   `OBSERVATION_MOTIF` varchar(30) DEFAULT NULL,
   `OBSERVATION_NOTE` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`STUDENT_SERIAL_NUMBER`,`OBSERVATION_ID`,`TEACHER_SERIAL_NUMBER`),
-  KEY `FK_TEACHER__TEACHER_M_TEACHER` (`TEACHER_SERIAL_NUMBER`),
-  KEY `FK_TEACHER__TEACHER_M_OBSERVAT` (`OBSERVATION_ID`),
-  KEY `FK_TEACHER__OBSERVATION_STUDY_SESSION` (`STUDY_SESSION_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `teacher_makes_an_observation_for_a_student`
---
-
-INSERT INTO `teacher_makes_an_observation_for_a_student` (`STUDENT_SERIAL_NUMBER`, `OBSERVATION_ID`, `TEACHER_SERIAL_NUMBER`, `STUDY_SESSION_ID`, `OBSERVATION_DATE_AND_TIME`, `OBSERVATION_MOTIF`, `OBSERVATION_NOTE`) VALUES
-('9997', 4, '1', 1, '2026-01-04 15:18:22', 'eee', 'eeee');
+  KEY `FK_TMO_OBS` (`OBSERVATION_ID`),
+  KEY `FK_TMO_TEACHER` (`TEACHER_SERIAL_NUMBER`),
+  KEY `FK_TMO_SESSION` (`STUDY_SESSION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -464,15 +514,8 @@ CREATE TABLE IF NOT EXISTS `teaches` (
   `MAJOR_ID` varchar(12) NOT NULL,
   `TEACHER_SERIAL_NUMBER` varchar(16) NOT NULL,
   PRIMARY KEY (`MAJOR_ID`,`TEACHER_SERIAL_NUMBER`),
-  KEY `FK_TEACHES_TEACHES_TEACHER` (`TEACHER_SERIAL_NUMBER`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `teaches`
---
-
-INSERT INTO `teaches` (`MAJOR_ID`, `TEACHER_SERIAL_NUMBER`) VALUES
-('1', '1');
+  KEY `FK_TEACHES_TEACHER_REF` (`TEACHER_SERIAL_NUMBER`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -491,19 +534,189 @@ CREATE TABLE IF NOT EXISTS `user_account` (
   `CREATED_AT` datetime DEFAULT NULL,
   `LAST_LOGIN_AT` datetime DEFAULT NULL,
   PRIMARY KEY (`USER_ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `user_account`
+-- Table structure for table `wilaya`
 --
 
-INSERT INTO `user_account` (`USER_ID`, `USERNAME`, `PASSWORD_HASH`, `EMAIL`, `ROLE`, `ACCOUNT_STATUS`, `CREATED_AT`, `LAST_LOGIN_AT`) VALUES
-(1, 'admin1', '$2y$10$A5zmNOHnXmMxVeD4.fJHPu0Ww64OKkxm0UdxTD7bWzi3wYNKkOwye', 'admin1@esam.com', 'Admin', 'Active', NULL, NULL),
-(2, 'admin2', '$2y$10$CqthaDg0uYTHa5gFKd.JhOdvpcLbSso6y1PSawJKJKfD3osAIgNqC', NULL, 'Admin', 'Active', NULL, NULL),
-(100, 'teacher2', '$2y$10$w50.DE1y2mi4n4AdBoip5eVoOuJpw5FHkMN0VN17947w4fGsDNRIy', 'zaouibahaaeddine@esam.com', 'Teacher', 'Active', NULL, NULL),
-(3, 'admin3', '$2y$10$LWXpgJSZd1S84r/f0EZv.uHvU478.72beR6mIkclDJD.yfbbd0/.y', NULL, 'Admin', 'Active', NULL, NULL),
-(4, 'admin4', '$2y$10$rMrapk8NAzb1HQbOFHFkFO7tGzCw.EmI4Nt8R/Bo9m/jiSxYm6ukm', NULL, 'Admin', 'Active', NULL, NULL),
-(5, 'admin5', '$2y$10$gLZy3M7C2q2/AOsF6OdpP.WxYbCa1LfCpuHlYjGbDloa5ldY.okam', NULL, 'Admin', 'Active', NULL, NULL);
+DROP TABLE IF EXISTS `wilaya`;
+CREATE TABLE IF NOT EXISTS `wilaya` (
+  `WILAYA_ID` int NOT NULL AUTO_INCREMENT,
+  `COUNTRY_ID` int NOT NULL,
+  `WILAYA_CODE` varchar(2) NOT NULL,
+  `WILAYA_NAME_EN` varchar(50) NOT NULL,
+  `WILAYA_NAME_AR` varchar(50) NOT NULL,
+  PRIMARY KEY (`WILAYA_ID`),
+  KEY `FK_WILAYA_COUNTRY` (`COUNTRY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `absence`
+--
+ALTER TABLE `absence`
+  ADD CONSTRAINT `FK_ABSENCE_SESSION` FOREIGN KEY (`STUDY_SESSION_ID`) REFERENCES `study_session` (`STUDY_SESSION_ID`);
+
+--
+-- Constraints for table `address`
+--
+ALTER TABLE `address`
+  ADD CONSTRAINT `FK_ADDR_COMMUNE` FOREIGN KEY (`COMMUNE_ID`) REFERENCES `commune` (`COMMUNE_ID`),
+  ADD CONSTRAINT `FK_ADDR_COUNTRY` FOREIGN KEY (`COUNTRY_ID`) REFERENCES `country` (`COUNTRY_ID`);
+
+--
+-- Constraints for table `administrator`
+--
+ALTER TABLE `administrator`
+  ADD CONSTRAINT `FK_ADMIN_USER` FOREIGN KEY (`USER_ID`) REFERENCES `user_account` (`USER_ID`);
+
+--
+-- Constraints for table `admin_read_observation`
+--
+ALTER TABLE `admin_read_observation`
+  ADD CONSTRAINT `FK_ARO_ADMIN` FOREIGN KEY (`ADMINISTRATOR_ID`) REFERENCES `administrator` (`ADMINISTRATOR_ID`),
+  ADD CONSTRAINT `FK_ARO_OBS` FOREIGN KEY (`OBSERVATION_ID`) REFERENCES `observation` (`OBSERVATION_ID`);
+
+--
+-- Constraints for table `commune`
+--
+ALTER TABLE `commune`
+  ADD CONSTRAINT `FK_COMMUNE_DAIRA` FOREIGN KEY (`DAIRA_ID`) REFERENCES `daira` (`DAIRA_ID`);
+
+--
+-- Constraints for table `daira`
+--
+ALTER TABLE `daira`
+  ADD CONSTRAINT `FK_DAIRA_WILAYA` FOREIGN KEY (`WILAYA_ID`) REFERENCES `wilaya` (`WILAYA_ID`);
+
+--
+-- Constraints for table `observation`
+--
+ALTER TABLE `observation`
+  ADD CONSTRAINT `FK_OBS_SESSION` FOREIGN KEY (`STUDY_SESSION_ID`) REFERENCES `study_session` (`STUDY_SESSION_ID`);
+
+--
+-- Constraints for table `receives`
+--
+ALTER TABLE `receives`
+  ADD CONSTRAINT `FK_RECEIVE_ADMIN` FOREIGN KEY (`ADMINISTRATOR_ID`) REFERENCES `administrator` (`ADMINISTRATOR_ID`),
+  ADD CONSTRAINT `FK_RECEIVE_NOTIF` FOREIGN KEY (`NOTIFICATION_ID`) REFERENCES `notification` (`NOTIFICATION_ID`);
+
+--
+-- Constraints for table `recruitment_source`
+--
+ALTER TABLE `recruitment_source`
+  ADD CONSTRAINT `FK_RECRUIT_WILAYA` FOREIGN KEY (`ECN_SCHOOL_WILAYA_ID`) REFERENCES `wilaya` (`WILAYA_ID`);
+
+--
+-- Constraints for table `section`
+--
+ALTER TABLE `section`
+  ADD CONSTRAINT `FK_SECTION_CAT` FOREIGN KEY (`CATEGORY_ID`) REFERENCES `category` (`CATEGORY_ID`);
+
+--
+-- Constraints for table `sends`
+--
+ALTER TABLE `sends`
+  ADD CONSTRAINT `FK_SEND_CLASS` FOREIGN KEY (`CLASS_ID`) REFERENCES `class` (`CLASS_ID`),
+  ADD CONSTRAINT `FK_SEND_NOTIF` FOREIGN KEY (`NOTIFICATION_ID`) REFERENCES `notification` (`NOTIFICATION_ID`);
+
+--
+-- Constraints for table `student`
+--
+ALTER TABLE `student`
+  ADD CONSTRAINT `FK_STUDENT_ADDR` FOREIGN KEY (`STUDENT_PERSONAL_ADDRESS_ID`) REFERENCES `address` (`ADDRESS_ID`),
+  ADD CONSTRAINT `FK_STUDENT_BIRTH` FOREIGN KEY (`STUDENT_BIRTH_PLACE_ID`) REFERENCES `address` (`ADDRESS_ID`),
+  ADD CONSTRAINT `FK_STUDENT_CAT` FOREIGN KEY (`CATEGORY_ID`) REFERENCES `category` (`CATEGORY_ID`),
+  ADD CONSTRAINT `FK_STUDENT_RECRUIT_REF` FOREIGN KEY (`STUDENT_RECRUITMENT_SOURCE_ID`) REFERENCES `recruitment_source` (`RECRUITMENT_SOURCE_ID`),
+  ADD CONSTRAINT `FK_STUDENT_SECTION` FOREIGN KEY (`SECTION_ID`) REFERENCES `section` (`SECTION_ID`);
+
+--
+-- Constraints for table `student_combat_outfit`
+--
+ALTER TABLE `student_combat_outfit`
+  ADD CONSTRAINT `FK_COMBAT_STUDENT` FOREIGN KEY (`STUDENT_SERIAL_NUMBER`) REFERENCES `student` (`STUDENT_SERIAL_NUMBER`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student_emergency_contact`
+--
+ALTER TABLE `student_emergency_contact`
+  ADD CONSTRAINT `FK_EMERGENCY_ADDR` FOREIGN KEY (`CONTACT_ADDRESS_ID`) REFERENCES `address` (`ADDRESS_ID`),
+  ADD CONSTRAINT `FK_EMERGENCY_STUDENT` FOREIGN KEY (`STUDENT_SERIAL_NUMBER`) REFERENCES `student` (`STUDENT_SERIAL_NUMBER`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student_gets_absent`
+--
+ALTER TABLE `student_gets_absent`
+  ADD CONSTRAINT `FK_SGA_ABSENCE` FOREIGN KEY (`ABSENCE_ID`) REFERENCES `absence` (`ABSENCE_ID`),
+  ADD CONSTRAINT `FK_SGA_STUDENT` FOREIGN KEY (`STUDENT_SERIAL_NUMBER`) REFERENCES `student` (`STUDENT_SERIAL_NUMBER`);
+
+--
+-- Constraints for table `student_parade_uniform`
+--
+ALTER TABLE `student_parade_uniform`
+  ADD CONSTRAINT `FK_PARADE_STUDENT` FOREIGN KEY (`STUDENT_SERIAL_NUMBER`) REFERENCES `student` (`STUDENT_SERIAL_NUMBER`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student_parent_info`
+--
+ALTER TABLE `student_parent_info`
+  ADD CONSTRAINT `FK_PARENT_INFO_STUDENT` FOREIGN KEY (`STUDENT_SERIAL_NUMBER`) REFERENCES `student` (`STUDENT_SERIAL_NUMBER`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `studies`
+--
+ALTER TABLE `studies`
+  ADD CONSTRAINT `FK_STUDIES_MAJOR` FOREIGN KEY (`MAJOR_ID`) REFERENCES `major` (`MAJOR_ID`),
+  ADD CONSTRAINT `FK_STUDIES_SECTION` FOREIGN KEY (`SECTION_ID`) REFERENCES `section` (`SECTION_ID`);
+
+--
+-- Constraints for table `studies_in`
+--
+ALTER TABLE `studies_in`
+  ADD CONSTRAINT `FK_SI_SECTION` FOREIGN KEY (`SECTION_ID`) REFERENCES `section` (`SECTION_ID`),
+  ADD CONSTRAINT `FK_SI_SESSION` FOREIGN KEY (`STUDY_SESSION_ID`) REFERENCES `study_session` (`STUDY_SESSION_ID`);
+
+--
+-- Constraints for table `study_session`
+--
+ALTER TABLE `study_session`
+  ADD CONSTRAINT `FK_SESSION_CLASS` FOREIGN KEY (`CLASS_ID`) REFERENCES `class` (`CLASS_ID`),
+  ADD CONSTRAINT `FK_SESSION_TEACHER` FOREIGN KEY (`TEACHER_SERIAL_NUMBER`) REFERENCES `teacher` (`TEACHER_SERIAL_NUMBER`);
+
+--
+-- Constraints for table `teacher`
+--
+ALTER TABLE `teacher`
+  ADD CONSTRAINT `FK_TEACHER_USER` FOREIGN KEY (`USER_ID`) REFERENCES `user_account` (`USER_ID`);
+
+--
+-- Constraints for table `teacher_makes_an_observation_for_a_student`
+--
+ALTER TABLE `teacher_makes_an_observation_for_a_student`
+  ADD CONSTRAINT `FK_TMO_OBS` FOREIGN KEY (`OBSERVATION_ID`) REFERENCES `observation` (`OBSERVATION_ID`),
+  ADD CONSTRAINT `FK_TMO_SESSION` FOREIGN KEY (`STUDY_SESSION_ID`) REFERENCES `study_session` (`STUDY_SESSION_ID`),
+  ADD CONSTRAINT `FK_TMO_STUDENT` FOREIGN KEY (`STUDENT_SERIAL_NUMBER`) REFERENCES `student` (`STUDENT_SERIAL_NUMBER`),
+  ADD CONSTRAINT `FK_TMO_TEACHER` FOREIGN KEY (`TEACHER_SERIAL_NUMBER`) REFERENCES `teacher` (`TEACHER_SERIAL_NUMBER`);
+
+--
+-- Constraints for table `teaches`
+--
+ALTER TABLE `teaches`
+  ADD CONSTRAINT `FK_TEACHES_MAJOR_REF` FOREIGN KEY (`MAJOR_ID`) REFERENCES `major` (`MAJOR_ID`),
+  ADD CONSTRAINT `FK_TEACHES_TEACHER_REF` FOREIGN KEY (`TEACHER_SERIAL_NUMBER`) REFERENCES `teacher` (`TEACHER_SERIAL_NUMBER`);
+
+--
+-- Constraints for table `wilaya`
+--
+ALTER TABLE `wilaya`
+  ADD CONSTRAINT `FK_WILAYA_COUNTRY` FOREIGN KEY (`COUNTRY_ID`) REFERENCES `country` (`COUNTRY_ID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

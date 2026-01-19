@@ -24,11 +24,11 @@ if (empty($query) || empty($sections)) {
 
 $placeholders = implode(',', array_fill(0, count($sections), '?'));
 $types = str_repeat('i', count($sections));
-$sql = "SELECT STUDENT_FIRST_NAME, STUDENT_LAST_NAME
+$sql = "SELECT STUDENT_FIRST_NAME_EN, STUDENT_LAST_NAME_EN
         FROM student
         WHERE SECTION_ID IN ($placeholders)
-          AND (STUDENT_FIRST_NAME LIKE CONCAT('%', ?, '%')
-               OR STUDENT_LAST_NAME LIKE CONCAT('%', ?, '%'))";
+          AND (STUDENT_FIRST_NAME_EN LIKE CONCAT('%', ?, '%')
+               OR STUDENT_LAST_NAME_EN LIKE CONCAT('%', ?, '%'))";
 
 $stmt = $conn->prepare($sql);
 $params = [...$sections, $query, $query];
@@ -39,8 +39,8 @@ $result = $stmt->get_result();
 $students = [];
 while ($row = $result->fetch_assoc()) {
     $students[] = [
-        'first_name' => $row['STUDENT_FIRST_NAME'],
-        'last_name' => $row['STUDENT_LAST_NAME']
+        'first_name' => $row['STUDENT_FIRST_NAME_EN'],
+        'last_name' => $row['STUDENT_LAST_NAME_EN']
     ];
 }
 

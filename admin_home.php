@@ -24,13 +24,13 @@ if ($conn->connect_error) {
 $admin_name = "Admin";
 $admin_position = "Administrator";
 if (isset($_SESSION['user_id'])) {
-    $stmt = $conn->prepare("SELECT ADMINISTRATOR_FIRST_NAME, ADMINISTRATOR_LAST_NAME, ADMINISTRATOR_POSITION FROM administrator WHERE USER_ID = ?");
+    $stmt = $conn->prepare("SELECT ADMINISTRATOR_FIRST_NAME_EN, ADMINISTRATOR_LAST_NAME_EN, ADMINISTRATOR_POSITION FROM administrator WHERE USER_ID = ?");
     $stmt->bind_param("i", $_SESSION['user_id']);
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $admin_name = htmlspecialchars($row['ADMINISTRATOR_FIRST_NAME']) . ' ' . htmlspecialchars($row['ADMINISTRATOR_LAST_NAME']);
+        $admin_name = htmlspecialchars($row['ADMINISTRATOR_FIRST_NAME_EN']) . ' ' . htmlspecialchars($row['ADMINISTRATOR_LAST_NAME_EN']);
         $admin_position = htmlspecialchars($row['ADMINISTRATOR_POSITION']);
     }
     $stmt->close();
@@ -106,8 +106,8 @@ if ($result) {
 $recent_observations = [];
 $result = $conn->query("
     SELECT 
-        s.STUDENT_FIRST_NAME,
-        s.STUDENT_LAST_NAME,
+        s.STUDENT_FIRST_NAME_EN,
+        s.STUDENT_LAST_NAME_EN,
         t.TEACHER_FIRST_NAME,
         t.TEACHER_LAST_NAME,
         tmoas.OBSERVATION_MOTIF,
@@ -130,8 +130,8 @@ if ($result && $result->num_rows > 0) {
 $recent_absences = [];
 $result = $conn->query("
     SELECT 
-        s.STUDENT_FIRST_NAME,
-        s.STUDENT_LAST_NAME,
+        s.STUDENT_FIRST_NAME_EN,
+        s.STUDENT_LAST_NAME_EN,
         a.ABSENCE_MOTIF,
         a.ABSENCE_DATE_AND_TIME,
         ss.STUDY_SESSION_DATE
@@ -508,7 +508,7 @@ $conn->close();
                     <?php foreach ($recent_observations as $obs): ?>
                         <li>
                             <div>
-                                <strong><?php echo htmlspecialchars($obs['STUDENT_FIRST_NAME'] . ' ' . $obs['STUDENT_LAST_NAME']); ?></strong>
+                                <strong><?php echo htmlspecialchars($obs['STUDENT_FIRST_NAME_EN'] . ' ' . $obs['STUDENT_LAST_NAME_EN']); ?></strong>
                                 <div style="font-size: 12px; color: #6b7280;">By <?php echo htmlspecialchars($obs['TEACHER_FIRST_NAME'] . ' ' . $obs['TEACHER_LAST_NAME']); ?></div>
                             </div>
                             <div>
@@ -533,7 +533,7 @@ $conn->close();
                     <?php foreach ($recent_absences as $abs): ?>
                         <li>
                             <div>
-                                <strong><?php echo htmlspecialchars($abs['STUDENT_FIRST_NAME'] . ' ' . $abs['STUDENT_LAST_NAME']); ?></strong>
+                                <strong><?php echo htmlspecialchars($abs['STUDENT_FIRST_NAME_EN'] . ' ' . $abs['STUDENT_LAST_NAME_EN']); ?></strong>
                                 <div style="font-size: 12px; color: #6b7280;">Session: <?php echo date('d/m/Y', strtotime($abs['STUDY_SESSION_DATE'])); ?></div>
                             </div>
                             <div>

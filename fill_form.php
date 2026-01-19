@@ -53,11 +53,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'search_students') {
     $study_session_id = $_SESSION['current_study_session_id'] ?? 0;
     if (!empty($study_session_id)) {
         $sql = "
-            SELECT DISTINCT s.STUDENT_SERIAL_NUMBER, s.STUDENT_FIRST_NAME, s.STUDENT_LAST_NAME
+            SELECT DISTINCT s.STUDENT_SERIAL_NUMBER, s.STUDENT_FIRST_NAME_EN, s.STUDENT_LAST_NAME_EN
             FROM student s
             INNER JOIN section se ON s.SECTION_ID = se.SECTION_ID
             INNER JOIN studies_in si ON se.SECTION_ID = si.SECTION_ID AND si.STUDY_SESSION_ID = ?
-            WHERE (s.STUDENT_FIRST_NAME LIKE ? OR s.STUDENT_LAST_NAME LIKE ?)
+            WHERE (s.STUDENT_FIRST_NAME_EN LIKE ? OR s.STUDENT_LAST_NAME_EN LIKE ?)
             AND NOT EXISTS (
                 SELECT 1 FROM student_gets_absent sga
                 INNER JOIN absence a ON sga.ABSENCE_ID = a.ABSENCE_ID AND a.STUDY_SESSION_ID = ?
@@ -70,13 +70,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'search_students') {
         $stmt->bind_param('isss', $study_session_id, $like, $like, $study_session_id);
     } else {
         $sql = "
-            SELECT DISTINCT s.STUDENT_SERIAL_NUMBER, s.STUDENT_FIRST_NAME, s.STUDENT_LAST_NAME
+            SELECT DISTINCT s.STUDENT_SERIAL_NUMBER, s.STUDENT_FIRST_NAME_EN, s.STUDENT_LAST_NAME_EN
             FROM student s
             INNER JOIN section se ON s.SECTION_ID = se.SECTION_ID
             INNER JOIN studies st ON se.SECTION_ID = st.SECTION_ID
             INNER JOIN teaches th ON st.MAJOR_ID = th.MAJOR_ID
             INNER JOIN teacher t ON th.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
-            WHERE t.USER_ID = ? AND (s.STUDENT_FIRST_NAME LIKE ? OR s.STUDENT_LAST_NAME LIKE ?)
+            WHERE t.USER_ID = ? AND (s.STUDENT_FIRST_NAME_EN LIKE ? OR s.STUDENT_LAST_NAME_EN LIKE ?)
             LIMIT 10
         ";
         $stmt = $conn->prepare($sql);
@@ -89,9 +89,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'search_students') {
     while ($r = $res->fetch_assoc()) {
         $out[] = [
             'serial' => $r['STUDENT_SERIAL_NUMBER'],
-            'first_name' => $r['STUDENT_FIRST_NAME'],
-            'last_name' => $r['STUDENT_LAST_NAME'],
-            'label' => $r['STUDENT_FIRST_NAME'] . ' ' . $r['STUDENT_LAST_NAME']
+            'first_name' => $r['STUDENT_FIRST_NAME_EN'],
+            'last_name' => $r['STUDENT_LAST_NAME_EN'],
+            'label' => $r['STUDENT_FIRST_NAME_EN'] . ' ' . $r['STUDENT_LAST_NAME_EN']
         ];
     }
     echo json_encode($out);
