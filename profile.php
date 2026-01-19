@@ -76,6 +76,26 @@ if ($role === 'Teacher') {
         $photoData = $row['ADMINISTRATOR_PHOTO'];
     }
     $stmt->close();
+    $stmt->close();
+} elseif ($role === 'Secretary') {
+    $stmt = $conn->prepare("
+        SELECT SECRETARY_FIRST_NAME_EN, SECRETARY_LAST_NAME_EN, SECRETARY_GRADE, SECRETARY_POSITION, SECRETARY_PHOTO
+        FROM secretary
+        WHERE USER_ID = ?
+    ");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $first = $row['SECRETARY_FIRST_NAME_EN'] ?? '';
+        $last = $row['SECRETARY_LAST_NAME_EN'] ?? '';
+        $fullName = trim(htmlspecialchars($first . ' ' . $last)) ?: "Secretary";
+        $grade = htmlspecialchars($row['SECRETARY_GRADE'] ?? 'N/A');
+        $position = htmlspecialchars($row['SECRETARY_POSITION'] ?? '');
+        $photoData = $row['SECRETARY_PHOTO'];
+    }
+    $stmt->close();
 } else {
     $stmt = $conn->prepare("SELECT USERNAME FROM user_account WHERE USER_ID = ?");
     $stmt->bind_param("i", $userId);
@@ -88,7 +108,7 @@ if ($role === 'Teacher') {
     $stmt->close();
 }
 
-$homeUrl = ($role === 'Admin') ? 'admin_dashboard.php' : (($role === 'Teacher') ? 'teacher_home.php' : 'fill_form.php');
+$homeUrl = ($role === 'Admin') ? 'admin_dashboard.php' : (($role === 'Teacher') ? 'teacher_home.php' : (($role === 'Secretary') ? 'secretary_home.php' : 'fill_form.php'));
 
 $conn->close();
 ?>

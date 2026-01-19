@@ -80,6 +80,20 @@ CREATE TABLE IF NOT EXISTS `administrator` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `army`
+--
+
+DROP TABLE IF EXISTS `army`;
+CREATE TABLE IF NOT EXISTS `army` (
+  `ARMY_ID` int NOT NULL,
+  `ARMY_LABEL` varchar(30) DEFAULT NULL,
+  `ARMY_NAME` varchar(60) DEFAULT NULL,
+  PRIMARY KEY (`ARMY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `admin_read_observation`
 --
 
@@ -169,6 +183,21 @@ CREATE TABLE IF NOT EXISTS `daira` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `grade`
+--
+
+DROP TABLE IF EXISTS `grade`;
+CREATE TABLE IF NOT EXISTS `grade` (
+  `GRADE_ID` int NOT NULL,
+  `GRADE_LABEL` varchar(30) DEFAULT NULL,
+  `GRADE_NAME` varchar(30) DEFAULT NULL,
+  `GRADE_TYPE` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`GRADE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `major`
 --
 
@@ -241,6 +270,25 @@ CREATE TABLE IF NOT EXISTS `recruitment_source` (
 -- Table structure for table `section`
 --
 
+DROP TABLE IF EXISTS `secretary`;
+CREATE TABLE IF NOT EXISTS `secretary` (
+  `SECRETARY_ID` int NOT NULL,
+  `USER_ID` int NOT NULL,
+  `SECRETARY_FIRST_NAME_EN` varchar(24) DEFAULT NULL,
+  `SECRETARY_LAST_NAME_EN` varchar(24) DEFAULT NULL,
+  `SECRETARY_GRADE` varchar(20) NOT NULL,
+  `SECRETARY_POSITION` varchar(60) DEFAULT NULL,
+  `SECRETARY_PHOTO` mediumblob NOT NULL,
+  PRIMARY KEY (`SECRETARY_ID`),
+  KEY `FK_SECRETARY_USER` (`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `section`
+--
+
 DROP TABLE IF EXISTS `section`;
 CREATE TABLE IF NOT EXISTS `section` (
   `SECTION_ID` int NOT NULL,
@@ -279,7 +327,7 @@ CREATE TABLE IF NOT EXISTS `student` (
   `STUDENT_LAST_NAME_EN` varchar(42) DEFAULT NULL,
   `STUDENT_FIRST_NAME_AR` varchar(42) DEFAULT NULL,
   `STUDENT_LAST_NAME_AR` varchar(42) DEFAULT NULL,
-  `STUDNET_GRADE` varchar(24) DEFAULT NULL,
+  `STUDENT_GRADE_ID` int DEFAULT NULL,
   `STUDENT_SEX` enum('Male','Female') DEFAULT NULL,
   `STUDENT_BIRTH_DATE` date DEFAULT NULL,
   `STUDENT_BLOOD_TYPE` enum('A+','A-','B+','B-','AB+','AB-','O+','O-') DEFAULT NULL,
@@ -305,7 +353,7 @@ CREATE TABLE IF NOT EXISTS `student` (
   `STUDENT_NUMBER_OF_SIBLINGS` int DEFAULT NULL,
   `STUDENT_NUMBER_OF_SISTERS` int DEFAULT NULL,
   `STUDENT_ORDER_AMONG_SIBLINGS` int DEFAULT NULL,
-  `STUDENT_IS_IN_ARMY` enum('Yes','No') DEFAULT 'No',
+  `STUDENT_ARMY_ID` int DEFAULT NULL,
   `STUDENT_ORPHAN_STATUS` enum('None','Father','Mother','Both') DEFAULT 'None',
   `STUDENT_PARENTS_SITUATION` enum('Married','Divorced','Separated','Widowed') DEFAULT 'Married',
   `STUDENT_BIRTH_PLACE_ID` int DEFAULT NULL,
@@ -316,7 +364,9 @@ CREATE TABLE IF NOT EXISTS `student` (
   KEY `FK_STUDENT_CAT` (`CATEGORY_ID`),
   KEY `FK_STUDENT_BIRTH` (`STUDENT_BIRTH_PLACE_ID`),
   KEY `FK_STUDENT_ADDR` (`STUDENT_PERSONAL_ADDRESS_ID`),
-  KEY `FK_STUDENT_RECRUIT_REF` (`STUDENT_RECRUITMENT_SOURCE_ID`)
+  KEY `FK_STUDENT_RECRUIT_REF` (`STUDENT_RECRUITMENT_SOURCE_ID`),
+  KEY `FK_STUDENT_GRADE` (`STUDENT_GRADE_ID`),
+  KEY `FK_STUDENT_ARMY` (`STUDENT_ARMY_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -635,7 +685,9 @@ ALTER TABLE `student`
   ADD CONSTRAINT `FK_STUDENT_BIRTH` FOREIGN KEY (`STUDENT_BIRTH_PLACE_ID`) REFERENCES `address` (`ADDRESS_ID`),
   ADD CONSTRAINT `FK_STUDENT_CAT` FOREIGN KEY (`CATEGORY_ID`) REFERENCES `category` (`CATEGORY_ID`),
   ADD CONSTRAINT `FK_STUDENT_RECRUIT_REF` FOREIGN KEY (`STUDENT_RECRUITMENT_SOURCE_ID`) REFERENCES `recruitment_source` (`RECRUITMENT_SOURCE_ID`),
-  ADD CONSTRAINT `FK_STUDENT_SECTION` FOREIGN KEY (`SECTION_ID`) REFERENCES `section` (`SECTION_ID`);
+  ADD CONSTRAINT `FK_STUDENT_SECTION` FOREIGN KEY (`SECTION_ID`) REFERENCES `section` (`SECTION_ID`),
+  ADD CONSTRAINT `FK_STUDENT_GRADE` FOREIGN KEY (`STUDENT_GRADE_ID`) REFERENCES `grade` (`GRADE_ID`),
+  ADD CONSTRAINT `FK_STUDENT_ARMY` FOREIGN KEY (`STUDENT_ARMY_ID`) REFERENCES `army` (`ARMY_ID`);
 
 --
 -- Constraints for table `student_combat_outfit`
@@ -717,6 +769,12 @@ ALTER TABLE `teaches`
 --
 ALTER TABLE `wilaya`
   ADD CONSTRAINT `FK_WILAYA_COUNTRY` FOREIGN KEY (`COUNTRY_ID`) REFERENCES `country` (`COUNTRY_ID`);
+--
+-- Constraints for table `secretary`
+--
+ALTER TABLE `secretary`
+  ADD CONSTRAINT `FK_SECRETARY_USER` FOREIGN KEY (`USER_ID`) REFERENCES `user_account` (`USER_ID`);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

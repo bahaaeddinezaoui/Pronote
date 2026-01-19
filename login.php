@@ -9,6 +9,8 @@ header('Pragma: no-cache');
 if (isset($_SESSION['user_id'], $_SESSION['role'])) {
     if ($_SESSION['role'] === 'Admin') {
         header('Location: admin_home.php');
+    } elseif ($_SESSION['role'] === 'Secretary') {
+        header('Location: secretary_home.php');
     } else {
         header('Location: fill_form.php');
     }
