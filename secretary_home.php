@@ -256,36 +256,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         }
                     }
 
-                    $contact_fname = $_POST['CONTACT_FIRST_NAME'] ?? '';
-                    $contact_lname = $_POST['CONTACT_LAST_NAME'] ?? '';
-                    $contact_relation = $_POST['CONTACT_RELATION'] ?? '';
+                    $contact_fname_en = $_POST['CONTACT_FIRST_NAME_EN'] ?? '';
+                    $contact_lname_en = $_POST['CONTACT_LAST_NAME_EN'] ?? '';
+                    $contact_fname_ar = $_POST['CONTACT_FIRST_NAME_AR'] ?? '';
+                    $contact_lname_ar = $_POST['CONTACT_LAST_NAME_AR'] ?? '';
+                    $contact_relation_en = $_POST['CONTACT_RELATION_EN'] ?? '';
+                    $contact_relation_ar = $_POST['CONTACT_RELATION_AR'] ?? '';
                     $contact_phone = $_POST['CONTACT_PHONE_NUMBER'] ?? '';
                     $consulate_num = null; // No consulate number for locals
 
                 } else {
                     // 2. Foreign: No address, Relation is "X's consulate"
                     $contact_address_id = null;
-                    $contact_fname = null;
-                    $contact_lname = null;
+                    $contact_fname_en = null;
+                    $contact_lname_en = null;
+                    $contact_fname_ar = null;
+                    $contact_lname_ar = null;
                     $contact_phone = $_POST['CONTACT_PHONE_NUMBER'] ?? '';
                     $consulate_num = $_POST['CONSULATE_NUMBER'] ?? '';
                     
-                    // Fetch country name from BP_COUNTRY_ID (inserted earlier as $birth_place_id's country, but easier to get from POST)
+                    // Fetch country name from BP_COUNTRY_ID
                     $bp_country_id = !empty($_POST['BP_COUNTRY_ID']) ? intval($_POST['BP_COUNTRY_ID']) : 0;
-                    $country_name = "Unknown";
+                    $country_name_en = "Unknown";
+                    $country_name_ar = "غير معروف";
                     if ($bp_country_id) {
-                        $res_c = $conn->query("SELECT COUNTRY_NAME_EN FROM country WHERE COUNTRY_ID = $bp_country_id");
+                        $res_c = $conn->query("SELECT COUNTRY_NAME_EN, COUNTRY_NAME_AR FROM country WHERE COUNTRY_ID = $bp_country_id");
                         if ($res_c && $row_c = $res_c->fetch_assoc()) {
-                            $country_name = $row_c['COUNTRY_NAME_EN'];
+                            $country_name_en = $row_c['COUNTRY_NAME_EN'];
+                            $country_name_ar = $row_c['COUNTRY_NAME_AR'];
                         }
                     }
-                    $contact_relation = $country_name . "'s consulate";
+                    $contact_relation_en = $country_name_en . "'s consulate";
+                    $contact_relation_ar = "قنصلية " . $country_name_ar;
                 }
 
-                $sql_emg = "INSERT INTO student_emergency_contact (STUDENT_SERIAL_NUMBER, CONTACT_FIRST_NAME, CONTACT_LAST_NAME, CONTACT_RELATION, CONTACT_PHONE_NUMBER, CONTACT_ADDRESS_ID, CONSULATE_NUMBER) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                $sql_emg = "INSERT INTO student_emergency_contact (
+                    STUDENT_SERIAL_NUMBER, 
+                    CONTACT_FIRST_NAME_EN, CONTACT_LAST_NAME_EN, 
+                    CONTACT_FIRST_NAME_AR, CONTACT_LAST_NAME_AR,
+                    CONTACT_RELATION_EN, CONTACT_RELATION_AR,
+                    CONTACT_PHONE_NUMBER, CONTACT_ADDRESS_ID, CONSULATE_NUMBER
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt_emg = $conn->prepare($sql_emg);
                 if ($stmt_emg) {
-                    $stmt_emg->bind_param("sssssis", $serial, $contact_fname, $contact_lname, $contact_relation, $contact_phone, $contact_address_id, $consulate_num);
+                    $stmt_emg->bind_param("ssssssssis", 
+                        $serial, 
+                        $contact_fname_en, $contact_lname_en, 
+                        $contact_fname_ar, $contact_lname_ar,
+                        $contact_relation_en, $contact_relation_ar,
+                        $contact_phone, $contact_address_id, $consulate_num
+                    );
                     $stmt_emg->execute();
                     $stmt_emg->close();
                 }
@@ -309,16 +329,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 // 5. Fetch Dropdowns
 $categories = [];
-$res = $conn->query("SELECT CATEGORY_ID, CATEGORY_NAME FROM category ORDER BY CATEGORY_NAME");
+$res = $conn->query("SELECT CATEGORY_ID, CATEGORY_NAME_EN FROM category ORDER BY CATEGORY_NAME_EN");
 while($r = $res->fetch_assoc()) $categories[] = $r;
 
 $sections = [];
-$res = $conn->query("SELECT SECTION_ID, SECTION_NAME, CATEGORY_ID FROM section ORDER BY SECTION_NAME");
+$res = $conn->query("SELECT SECTION_ID, SECTION_NAME_EN, CATEGORY_ID FROM section ORDER BY SECTION_NAME_EN");
 while($r = $res->fetch_assoc()) $sections[] = $r;
 
 // NEW: Fetch Grades
 $grades = [];
-$res = $conn->query("SELECT GRADE_ID, GRADE_NAME FROM grade ORDER BY GRADE_NAME");
+$res = $conn->query("SELECT GRADE_ID, GRADE_NAME_EN FROM grade ORDER BY GRADE_NAME_EN");
 while($r = $res->fetch_assoc()) $grades[] = $r;
 
 // Countries (For Address)
@@ -328,14 +348,14 @@ while($r = $res->fetch_assoc()) $countries[] = $r;
 
 // Recruitment Sources (Fetched from DB)
 $recruitmentSources = [];
-$res = $conn->query("SELECT RECRUITMENT_SOURCE_ID, RECRUITMENT_TYPE, ECN_SCHOOL_NAME, ECN_SCHOOL_WILAYA_ID FROM recruitment_source ORDER BY RECRUITMENT_TYPE, ECN_SCHOOL_NAME");
+$res = $conn->query("SELECT RECRUITMENT_SOURCE_ID, RECRUITMENT_TYPE_EN, ECN_SCHOOL_NAME_EN, ECN_SCHOOL_WILAYA_ID FROM recruitment_source ORDER BY RECRUITMENT_TYPE_EN, ECN_SCHOOL_NAME_EN");
 if ($res) {
     while($r = $res->fetch_assoc()) $recruitmentSources[] = $r;
 }
 
 // Armies (Fetched from DB)
 $armies = [];
-$res = $conn->query("SELECT ARMY_ID, ARMY_NAME FROM army ORDER BY ARMY_NAME");
+$res = $conn->query("SELECT ARMY_ID, ARMY_NAME_EN FROM army ORDER BY ARMY_NAME_EN");
 if ($res) {
     while($r = $res->fetch_assoc()) $armies[] = $r;
 }
@@ -431,7 +451,7 @@ $conn->close();
                     <select id="CATEGORY_ID" name="CATEGORY_ID" required>
                         <option value="">Select...</option>
                         <?php foreach ($categories as $c): ?>
-                            <option value="<?php echo $c['CATEGORY_ID']; ?>"><?php echo htmlspecialchars($c['CATEGORY_NAME']); ?></option>
+                            <option value="<?php echo $c['CATEGORY_ID']; ?>"><?php echo htmlspecialchars($c['CATEGORY_NAME_EN']); ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -441,7 +461,7 @@ $conn->close();
                         <option value="">Select...</option>
                         <?php foreach ($sections as $s): ?>
                             <option value="<?php echo $s['SECTION_ID']; ?>" data-category="<?php echo $s['CATEGORY_ID']; ?>">
-                                <?php echo htmlspecialchars($s['SECTION_NAME']); ?>
+                                <?php echo htmlspecialchars($s['SECTION_NAME_EN']); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -566,7 +586,7 @@ $conn->close();
                     <select name="STUDENT_GRADE_ID">
                         <option value="">Select Grade...</option>
                         <?php foreach($grades as $g): ?>
-                            <option value="<?php echo $g['GRADE_ID']; ?>"><?php echo htmlspecialchars($g['GRADE_NAME']); ?></option>
+                            <option value="<?php echo $g['GRADE_ID']; ?>"><?php echo htmlspecialchars($g['GRADE_NAME_EN']); ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -581,12 +601,12 @@ $conn->close();
                     <div style="margin-top:0.5rem;">
                         <div class="form-group">
                             <label style="font-size:0.8rem;">Select Recruitment Source</label>
-                            <select name="RECRUITMENT_SOURCE_ID">
+                            <select id="RECRUITMENT_SOURCE_ID" name="RECRUITMENT_SOURCE_ID" onchange="toggleECN()">
                                 <option value="">Select...</option>
                                 <?php foreach ($recruitmentSources as $rs): ?>
                                     <?php 
-                                        $label = $rs['RECRUITMENT_TYPE'];
-                                        if ($rs['ECN_SCHOOL_NAME']) $label .= ' - ' . $rs['ECN_SCHOOL_NAME'];
+                                        $label = $rs['RECRUITMENT_TYPE_EN'];
+                                        if ($rs['ECN_SCHOOL_NAME_EN']) $label .= ' - ' . $rs['ECN_SCHOOL_NAME_EN'];
                                     ?>
                                     <option value="<?php echo $rs['RECRUITMENT_SOURCE_ID']; ?>"><?php echo htmlspecialchars($label); ?></option>
                                 <?php endforeach; ?>
@@ -637,7 +657,7 @@ $conn->close();
                     <select name="STUDENT_ARMY_ID">
                         <option value="">Select Army...</option>
                         <?php foreach ($armies as $a): ?>
-                            <option value="<?php echo $a['ARMY_ID']; ?>"><?php echo htmlspecialchars($a['ARMY_NAME']); ?></option>
+                            <option value="<?php echo $a['ARMY_ID']; ?>"><?php echo htmlspecialchars($a['ARMY_NAME_EN']); ?></option>
                         <?php endforeach; ?>
                     </select>
                  </div>
@@ -692,9 +712,12 @@ $conn->close();
                          
                          <!-- Local Contact Fields (Hidden if Foreign) -->
                          <div id="LOCAL_CONTACT_FIELDS" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-                             <div class="form-group"><label>First Name</label><input type="text" name="CONTACT_FIRST_NAME"></div>
-                             <div class="form-group"><label>Last Name</label><input type="text" name="CONTACT_LAST_NAME"></div>
-                             <div class="form-group"><label>Relation</label><input type="text" name="CONTACT_RELATION" placeholder="e.g. Father, Uncle"></div>
+                             <div class="form-group"><label>First Name (EN)</label><input type="text" name="CONTACT_FIRST_NAME_EN"></div>
+                             <div class="form-group"><label>Last Name (EN)</label><input type="text" name="CONTACT_LAST_NAME_EN"></div>
+                             <div class="form-group"><label>Relation (EN)</label><input type="text" name="CONTACT_RELATION_EN" placeholder="e.g. Father, Uncle"></div>
+                             <div class="form-group"><label>First Name (AR)</label><input type="text" name="CONTACT_FIRST_NAME_AR" dir="rtl"></div>
+                             <div class="form-group"><label>Last Name (AR)</label><input type="text" name="CONTACT_LAST_NAME_AR" dir="rtl"></div>
+                             <div class="form-group"><label>Relation (AR)</label><input type="text" name="CONTACT_RELATION_AR" dir="rtl" placeholder="مثل الأب"></div>
                              
                              <!-- Contact Address -->
                              <div class="sub-group">
@@ -754,7 +777,7 @@ $conn->close();
 <script>
 // Toggle ECN Section
 function toggleECN() {
-    const type = document.getElementById('RECRUITMENT_TYPE').value;
+    const type = document.getElementById('RECRUITMENT_SOURCE_ID').value;
     const section = document.getElementById('ECN_SECTION');
     if (type === 'ECN') {
         section.style.display = 'grid';

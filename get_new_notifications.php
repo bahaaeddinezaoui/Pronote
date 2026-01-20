@@ -30,8 +30,8 @@ $sql = "
         tmo.STUDY_SESSION_ID,
         st.STUDENT_FIRST_NAME_EN,
         st.STUDENT_LAST_NAME_EN,
-        t.TEACHER_FIRST_NAME,
-        t.TEACHER_LAST_NAME,
+        t.TEACHER_FIRST_NAME_EN,
+        t.TEACHER_LAST_NAME_EN,
         ss.STUDY_SESSION_DATE,
         ss.STUDY_SESSION_START_TIME,
         ss.STUDY_SESSION_END_TIME
@@ -59,7 +59,7 @@ if ($result) {
         $notifications[] = [
             'observation_id' => $row['OBSERVATION_ID'],
             'student_name' => $row['STUDENT_FIRST_NAME_EN'] . ' ' . $row['STUDENT_LAST_NAME_EN'],
-            'teacher_name' => $row['TEACHER_FIRST_NAME'] . ' ' . $row['TEACHER_LAST_NAME'],
+            'teacher_name' => $row['TEACHER_FIRST_NAME_EN'] . ' ' . $row['TEACHER_LAST_NAME_EN'],
             'observation_time' => date('d/m/Y H:i', strtotime($row['OBSERVATION_DATE_AND_TIME'])),
             'motif' => $row['OBSERVATION_MOTIF'],
             'session_id' => $row['STUDY_SESSION_ID'],

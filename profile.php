@@ -41,27 +41,29 @@ $photoData = null;
 
 if ($role === 'Teacher') {
     $stmt = $conn->prepare("
-        SELECT TEACHER_FIRST_NAME, TEACHER_LAST_NAME, TEACHER_GRADE, TEACHER_PHOTO
-        FROM teacher
-        WHERE USER_ID = ?
+        SELECT t.TEACHER_FIRST_NAME_EN, t.TEACHER_LAST_NAME_EN, g.GRADE_NAME_EN, t.TEACHER_PHOTO
+        FROM teacher t
+        LEFT JOIN grade g ON t.TEACHER_GRADE_ID = g.GRADE_ID
+        WHERE t.USER_ID = ?
     ");
     $stmt->bind_param("i", $userId);
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $first = $row['TEACHER_FIRST_NAME'] ?? '';
-        $last = $row['TEACHER_LAST_NAME'] ?? '';
+        $first = $row['TEACHER_FIRST_NAME_EN'] ?? '';
+        $last = $row['TEACHER_LAST_NAME_EN'] ?? '';
         $fullName = trim(htmlspecialchars($first . ' ' . $last)) ?: "Teacher";
-        $grade = htmlspecialchars($row['TEACHER_GRADE'] ?? 'N/A');
+        $grade = htmlspecialchars($row['GRADE_NAME_EN'] ?? 'N/A');
         $photoData = $row['TEACHER_PHOTO'];
     }
     $stmt->close();
 } elseif ($role === 'Admin') {
     $stmt = $conn->prepare("
-        SELECT ADMINISTRATOR_FIRST_NAME_EN, ADMINISTRATOR_LAST_NAME_EN, ADMINISTRATOR_GRADE, ADMINISTRATOR_POSITION, ADMINISTRATOR_PHOTO
-        FROM administrator
-        WHERE USER_ID = ?
+        SELECT a.ADMINISTRATOR_FIRST_NAME_EN, a.ADMINISTRATOR_LAST_NAME_EN, g.GRADE_NAME_EN, a.ADMINISTRATOR_POSITION, a.ADMINISTRATOR_PHOTO
+        FROM administrator a
+        LEFT JOIN grade g ON a.ADMINISTRATOR_GRADE_ID = g.GRADE_ID
+        WHERE a.USER_ID = ?
     ");
     $stmt->bind_param("i", $userId);
     $stmt->execute();
@@ -71,16 +73,17 @@ if ($role === 'Teacher') {
         $first = $row['ADMINISTRATOR_FIRST_NAME_EN'] ?? '';
         $last = $row['ADMINISTRATOR_LAST_NAME_EN'] ?? '';
         $fullName = trim(htmlspecialchars($first . ' ' . $last)) ?: "Administrator";
-        $grade = htmlspecialchars($row['ADMINISTRATOR_GRADE'] ?? 'N/A');
+        $grade = htmlspecialchars($row['GRADE_NAME_EN'] ?? 'N/A');
         $position = htmlspecialchars($row['ADMINISTRATOR_POSITION'] ?? '');
         $photoData = $row['ADMINISTRATOR_PHOTO'];
     }
     $stmt->close();
 } elseif ($role === 'Secretary') {
     $stmt = $conn->prepare("
-        SELECT SECRETARY_FIRST_NAME_EN, SECRETARY_LAST_NAME_EN, SECRETARY_GRADE, SECRETARY_POSITION, SECRETARY_PHOTO
-        FROM secretary
-        WHERE USER_ID = ?
+        SELECT s.SECRETARY_FIRST_NAME_EN, s.SECRETARY_LAST_NAME_EN, g.GRADE_NAME_EN, s.SECRETARY_POSITION, s.SECRETARY_PHOTO
+        FROM secretary s
+        LEFT JOIN grade g ON s.SECRETARY_GRADE_ID = g.GRADE_ID
+        WHERE s.USER_ID = ?
     ");
     $stmt->bind_param("i", $userId);
     $stmt->execute();
@@ -90,7 +93,7 @@ if ($role === 'Teacher') {
         $first = $row['SECRETARY_FIRST_NAME_EN'] ?? '';
         $last = $row['SECRETARY_LAST_NAME_EN'] ?? '';
         $fullName = trim(htmlspecialchars($first . ' ' . $last)) ?: "Secretary";
-        $grade = htmlspecialchars($row['SECRETARY_GRADE'] ?? 'N/A');
+        $grade = htmlspecialchars($row['GRADE_NAME_EN'] ?? 'N/A');
         $position = htmlspecialchars($row['SECRETARY_POSITION'] ?? '');
         $photoData = $row['SECRETARY_PHOTO'];
     }

@@ -929,6 +929,21 @@ $conn->close();
                 ${item('Postal Account', s.postal_account)}
                 ${item('Mil. Necklace', s.mil_necklace)}
             `);
+            
+            // 7. Emergency Contact
+            if (s.emergency_contact) {
+                html += createSection('🚨 Emergency Contact', `
+                    ${item('Contact Name (EN)', (s.emergency_contact.first_name_en || '') + ' ' + (s.emergency_contact.last_name_en || ''))}
+                    ${item('Contact Name (AR)', (s.emergency_contact.first_name_ar || '') + ' ' + (s.emergency_contact.last_name_ar || ''))}
+                    ${item('Relation (EN)', s.emergency_contact.relation_en)}
+                    ${item('Relation (AR)', s.emergency_contact.relation_ar)}
+                    ${item('Phone Number', s.emergency_contact.phone)}
+                    ${s.emergency_contact.consulate_number ? item('Consulate Number', s.emergency_contact.consulate_number) : ''}
+                    <div style="grid-column: span 2;">
+                        ${item('Contact Address', s.emergency_contact.address)}
+                    </div>
+                `);
+            }
 
             document.getElementById('fullInfoContainer').innerHTML = html;
         }

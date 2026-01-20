@@ -28,7 +28,7 @@ if ($category_id <= 0 || empty($teacher_serial)) {
 
 // Query to get majors that the teacher teaches in the selected category
 $sql_majors = $conn->prepare("
-    SELECT DISTINCT M.MAJOR_ID, M.MAJOR_NAME
+    SELECT DISTINCT M.MAJOR_ID, M.MAJOR_NAME_EN
     FROM TEACHER T
     INNER JOIN TEACHES TH ON T.TEACHER_SERIAL_NUMBER = TH.TEACHER_SERIAL_NUMBER
     INNER JOIN MAJOR M ON TH.MAJOR_ID = M.MAJOR_ID
@@ -36,7 +36,7 @@ $sql_majors = $conn->prepare("
     INNER JOIN SECTION SE ON SD.SECTION_ID = SE.SECTION_ID
     INNER JOIN CATEGORY C ON SE.CATEGORY_ID = C.CATEGORY_ID
     WHERE T.TEACHER_SERIAL_NUMBER = ? AND C.CATEGORY_ID = ?
-    ORDER BY M.MAJOR_NAME
+    ORDER BY M.MAJOR_NAME_EN
 ");
 
 $sql_majors->bind_param("si", $teacher_serial, $category_id);
@@ -48,7 +48,7 @@ if ($result_majors->num_rows > 0) {
     while ($row = $result_majors->fetch_assoc()) {
         $majors[] = [
             'id' => $row['MAJOR_ID'],
-            'name' => $row['MAJOR_NAME']
+            'name' => $row['MAJOR_NAME_EN']
         ];
     }
 }

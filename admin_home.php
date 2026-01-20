@@ -108,8 +108,8 @@ $result = $conn->query("
     SELECT 
         s.STUDENT_FIRST_NAME_EN,
         s.STUDENT_LAST_NAME_EN,
-        t.TEACHER_FIRST_NAME,
-        t.TEACHER_LAST_NAME,
+        t.TEACHER_FIRST_NAME_EN,
+        t.TEACHER_LAST_NAME_EN,
         tmoas.OBSERVATION_MOTIF,
         tmoas.OBSERVATION_DATE_AND_TIME,
         ss.STUDY_SESSION_DATE
@@ -509,7 +509,7 @@ $conn->close();
                         <li>
                             <div>
                                 <strong><?php echo htmlspecialchars($obs['STUDENT_FIRST_NAME_EN'] . ' ' . $obs['STUDENT_LAST_NAME_EN']); ?></strong>
-                                <div style="font-size: 12px; color: #6b7280;">By <?php echo htmlspecialchars($obs['TEACHER_FIRST_NAME'] . ' ' . $obs['TEACHER_LAST_NAME']); ?></div>
+                                <div style="font-size: 12px; color: #6b7280;">By <?php echo htmlspecialchars($obs['TEACHER_FIRST_NAME_EN'] . ' ' . $obs['TEACHER_LAST_NAME_EN']); ?></div>
                             </div>
                             <div>
                                 <span class="highlight"><?php echo htmlspecialchars($obs['OBSERVATION_MOTIF']); ?></span>

@@ -25,7 +25,7 @@ if (!$major_id || !$teacher_serial) {
 // --- QUERY ---
 // Get sections that study the selected major and belong to the category that studies that major
 $sql = $conn->prepare("
-    SELECT DISTINCT SE.SECTION_ID, SE.SECTION_NAME
+    SELECT DISTINCT SE.SECTION_ID, SE.SECTION_NAME_EN
     FROM TEACHER T
     INNER JOIN TEACHES TH ON T.TEACHER_SERIAL_NUMBER = TH.TEACHER_SERIAL_NUMBER
     INNER JOIN MAJOR M ON TH.MAJOR_ID = M.MAJOR_ID
@@ -41,7 +41,7 @@ $sections = [];
 while ($row = $result->fetch_assoc()) {
     $sections[] = [
         "id" => $row["SECTION_ID"],
-        "name" => $row["SECTION_NAME"]
+        "name" => $row["SECTION_NAME_EN"]
     ];
 }
 

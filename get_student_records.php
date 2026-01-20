@@ -67,10 +67,10 @@ try {
             s.STUDENT_ORDER_AMONG_SIBLINGS,
             s.STUDENT_ORPHAN_STATUS, s.STUDENT_PARENTS_SITUATION,
             
-            g.GRADE_NAME,
-            sec.SECTION_NAME,
-            cat.CATEGORY_NAME,
-            a.ARMY_NAME,
+            g.GRADE_NAME_EN,
+            sec.SECTION_NAME_EN,
+            cat.CATEGORY_NAME_EN,
+            a.ARMY_NAME_EN,
 
             -- Parent Info
             spi.FATHER_FIRST_NAME_EN, spi.FATHER_LAST_NAME_EN, spi.FATHER_PROFESSION_EN,
@@ -98,7 +98,17 @@ try {
             -- Personal Address
             addr_p.ADDRESS_STREET_EN AS PERS_STREET,
             c_p.COUNTRY_NAME_EN AS PERS_COUNTRY,
-            w_p.WILAYA_NAME_EN AS PERS_WILAYA
+            w_p.WILAYA_NAME_EN AS PERS_WILAYA,
+
+            -- Emergency Contact
+            sec_emg.CONTACT_FIRST_NAME_EN, sec_emg.CONTACT_LAST_NAME_EN,
+            sec_emg.CONTACT_FIRST_NAME_AR, sec_emg.CONTACT_LAST_NAME_AR,
+            sec_emg.CONTACT_RELATION_EN, sec_emg.CONTACT_RELATION_AR,
+            sec_emg.CONTACT_PHONE_NUMBER AS EMG_PHONE,
+            sec_emg.CONSULATE_NUMBER,
+            addr_emg.ADDRESS_STREET_EN AS EMG_STREET,
+            c_emg.COUNTRY_NAME_EN AS EMG_COUNTRY,
+            w_emg.WILAYA_NAME_EN AS EMG_WILAYA
 
         FROM student s
         LEFT JOIN section sec ON s.SECTION_ID = sec.SECTION_ID
@@ -118,6 +128,12 @@ try {
         LEFT JOIN address addr_p ON s.STUDENT_PERSONAL_ADDRESS_ID = addr_p.ADDRESS_ID
         LEFT JOIN country c_p ON addr_p.COUNTRY_ID = c_p.COUNTRY_ID
         LEFT JOIN wilaya w_p ON addr_p.WILAYA_ID = w_p.WILAYA_ID
+
+        -- Emergency Contact Joins
+        LEFT JOIN student_emergency_contact sec_emg ON s.STUDENT_SERIAL_NUMBER = sec_emg.STUDENT_SERIAL_NUMBER
+        LEFT JOIN address addr_emg ON sec_emg.CONTACT_ADDRESS_ID = addr_emg.ADDRESS_ID
+        LEFT JOIN country c_emg ON addr_emg.COUNTRY_ID = c_emg.COUNTRY_ID
+        LEFT JOIN wilaya w_emg ON addr_emg.WILAYA_ID = w_emg.WILAYA_ID
 
         WHERE s.STUDENT_SERIAL_NUMBER = ?
     ";
@@ -189,8 +205,8 @@ try {
             tmao.OBSERVATION_DATE_AND_TIME,
             tmao.OBSERVATION_MOTIF,
             tmao.OBSERVATION_NOTE,
-            t.TEACHER_FIRST_NAME,
-            t.TEACHER_LAST_NAME,
+            t.TEACHER_FIRST_NAME_EN,
+            t.TEACHER_LAST_NAME_EN,
             ss.STUDY_SESSION_DATE
         FROM teacher_makes_an_observation_for_a_student tmao
         JOIN teacher t ON tmao.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
@@ -219,7 +235,7 @@ try {
             'observation_date_and_time' => $row['OBSERVATION_DATE_AND_TIME'],
             'observation_motif' => $row['OBSERVATION_MOTIF'],
             'observation_note' => $row['OBSERVATION_NOTE'],
-            'teacher_name' => htmlspecialchars($row['TEACHER_FIRST_NAME'] . ' ' . $row['TEACHER_LAST_NAME']),
+            'teacher_name' => htmlspecialchars($row['TEACHER_FIRST_NAME_EN'] . ' ' . $row['TEACHER_LAST_NAME_EN']),
             'study_session_date' => $row['STUDY_SESSION_DATE']
         ];
     }
@@ -257,10 +273,10 @@ try {
             'health_status' => htmlspecialchars($student['STUDENT_HEALTH_STATUS'] ?? ''),
             'mil_necklace' => htmlspecialchars($student['STUDENT_MILITARY_NECKLACE'] ?? ''),
             
-            'grade' => htmlspecialchars($student['GRADE_NAME'] ?? ''),
-            'section_name' => htmlspecialchars($student['SECTION_NAME'] ?? ''),
-            'category_name' => htmlspecialchars($student['CATEGORY_NAME'] ?? ''),
-            'army_name' => htmlspecialchars($student['ARMY_NAME'] ?? ''),
+            'grade' => htmlspecialchars($student['GRADE_NAME_EN'] ?? ''),
+            'section_name' => htmlspecialchars($student['SECTION_NAME_EN'] ?? ''),
+            'category_name' => htmlspecialchars($student['CATEGORY_NAME_EN'] ?? ''),
+            'army_name' => htmlspecialchars($student['ARMY_NAME_EN'] ?? ''),
 
             // Parents
             'father_name_en' => htmlspecialchars(($student['FATHER_FIRST_NAME_EN'] ?? '') . ' ' . ($student['FATHER_LAST_NAME_EN'] ?? '')),
@@ -301,6 +317,19 @@ try {
                     'summer_skirt' => htmlspecialchars($student['SUMMER_SKIRT_SIZE'] ?? ''),
                     'winter_skirt' => htmlspecialchars($student['WINTER_SKIRT_SIZE'] ?? '')
                 ]
+            ],
+            
+            // Emergency Contact
+            'emergency_contact' => [
+                'first_name_en' => htmlspecialchars($student['CONTACT_FIRST_NAME_EN'] ?? ''),
+                'last_name_en' => htmlspecialchars($student['CONTACT_LAST_NAME_EN'] ?? ''),
+                'first_name_ar' => htmlspecialchars($student['CONTACT_FIRST_NAME_AR'] ?? ''),
+                'last_name_ar' => htmlspecialchars($student['CONTACT_LAST_NAME_AR'] ?? ''),
+                'relation_en' => htmlspecialchars($student['CONTACT_RELATION_EN'] ?? ''),
+                'relation_ar' => htmlspecialchars($student['CONTACT_RELATION_AR'] ?? ''),
+                'phone' => htmlspecialchars($student['EMG_PHONE'] ?? ''),
+                'consulate_number' => htmlspecialchars($student['CONSULATE_NUMBER'] ?? ''),
+                'address' => htmlspecialchars(($student['EMG_STREET'] ?? '') . ', ' . ($student['EMG_WILAYA'] ?? '') . ', ' . ($student['EMG_COUNTRY'] ?? ''))
             ]
         ],
         'absences' => $absences,

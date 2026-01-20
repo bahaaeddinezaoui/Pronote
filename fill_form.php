@@ -179,8 +179,8 @@ if (isset($_SESSION['user_id'])) {
     $user_id = $_SESSION['user_id'];
     $sql_teacher_name = $conn->prepare("
         SELECT 
-            T.TEACHER_FIRST_NAME, 
-            T.TEACHER_LAST_NAME,
+            T.TEACHER_FIRST_NAME_EN, 
+            T.TEACHER_LAST_NAME_EN,
             T.TEACHER_SERIAL_NUMBER
         FROM TEACHER T
         INNER JOIN USER_ACCOUNT U ON T.USER_ID = U.USER_ID
@@ -192,7 +192,7 @@ if (isset($_SESSION['user_id'])) {
 
     if ($result_teacher_name->num_rows > 0) {
         $row = $result_teacher_name->fetch_assoc();
-        $logged_in_teacher_name = htmlspecialchars($row['TEACHER_FIRST_NAME']) . ' ' . htmlspecialchars($row['TEACHER_LAST_NAME']);
+        $logged_in_teacher_name = htmlspecialchars($row['TEACHER_FIRST_NAME_EN']) . ' ' . htmlspecialchars($row['TEACHER_LAST_NAME_EN']);
         $logged_in_teacher_serial = htmlspecialchars($row['TEACHER_SERIAL_NUMBER']);
     } else {
         if ($debug_mode) error_log("Teacher not found for USER_ID: " . $user_id);
@@ -267,7 +267,7 @@ $show_abs_initially = !$show_obs_initially;
 $teacher_categories = [];
 if (!empty($logged_in_teacher_serial)) {
     $sql_categories = $conn->prepare("
-        SELECT DISTINCT C.CATEGORY_ID, C.CATEGORY_NAME
+        SELECT DISTINCT C.CATEGORY_ID, C.CATEGORY_NAME_EN
         FROM TEACHER T
         INNER JOIN TEACHES TH ON T.TEACHER_SERIAL_NUMBER = TH.TEACHER_SERIAL_NUMBER
         INNER JOIN MAJOR M ON TH.MAJOR_ID = M.MAJOR_ID
@@ -284,7 +284,7 @@ if (!empty($logged_in_teacher_serial)) {
         while ($row = $result_categories->fetch_assoc()) {
             $teacher_categories[] = [
                 'id' => $row['CATEGORY_ID'],
-                'name' => $row['CATEGORY_NAME']
+                'name' => $row['CATEGORY_NAME_EN']
             ];
         }
     } else {
@@ -299,10 +299,10 @@ if (!empty($logged_in_teacher_serial)) {
 // NEW: load classes to populate the Class dropdown
 // ----------------------
 $classes = [];
-$class_q = $conn->query("SELECT CLASS_ID, CLASS_NAME FROM class ORDER BY CLASS_NAME");
+$class_q = $conn->query("SELECT CLASS_ID, CLASS_NAME_EN FROM class ORDER BY CLASS_NAME_EN");
 if ($class_q) {
     while ($r = $class_q->fetch_assoc()) {
-        $classes[] = ['id' => $r['CLASS_ID'], 'name' => $r['CLASS_NAME']];
+        $classes[] = ['id' => $r['CLASS_ID'], 'name' => $r['CLASS_NAME_EN']];
     }
 }
 

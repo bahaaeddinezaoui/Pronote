@@ -39,9 +39,9 @@ $sql = "
         ss.STUDY_SESSION_START_TIME,
         ss.STUDY_SESSION_END_TIME,
         ss.CLASS_ID,
-        c.CLASS_NAME,
-        t.TEACHER_FIRST_NAME,
-        t.TEACHER_LAST_NAME
+        c.CLASS_NAME_EN,
+        t.TEACHER_FIRST_NAME_EN,
+        t.TEACHER_LAST_NAME_EN
     FROM study_session ss
     LEFT JOIN class c ON ss.CLASS_ID = c.CLASS_ID
     LEFT JOIN teacher t ON ss.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
@@ -88,7 +88,7 @@ while ($row = $result->fetch_assoc()) {
     // Get sections for this session
     $sections = [];
     $stmtSections = $conn->prepare("
-        SELECT DISTINCT s.SECTION_NAME
+        SELECT DISTINCT s.SECTION_NAME_EN
         FROM studies_in si
         INNER JOIN section s ON si.SECTION_ID = s.SECTION_ID
         WHERE si.STUDY_SESSION_ID = ?
@@ -97,7 +97,7 @@ while ($row = $result->fetch_assoc()) {
     $stmtSections->execute();
     $resSections = $stmtSections->get_result();
     while ($sec = $resSections->fetch_assoc()) {
-        $sections[] = $sec['SECTION_NAME'];
+        $sections[] = $sec['SECTION_NAME_EN'];
     }
     $stmtSections->close();
     
@@ -142,8 +142,8 @@ while ($row = $result->fetch_assoc()) {
             (CASE WHEN aro.OBSERVATION_ID IS NULL THEN 1 ELSE 0 END) as IS_NEW_FOR_ADMIN,
             st.STUDENT_FIRST_NAME_EN,
             st.STUDENT_LAST_NAME_EN,
-            t.TEACHER_FIRST_NAME,
-            t.TEACHER_LAST_NAME
+            t.TEACHER_FIRST_NAME_EN,
+            t.TEACHER_LAST_NAME_EN
         FROM teacher_makes_an_observation_for_a_student tmo
         INNER JOIN student st ON tmo.STUDENT_SERIAL_NUMBER = st.STUDENT_SERIAL_NUMBER
         INNER JOIN teacher t ON tmo.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
@@ -159,7 +159,7 @@ while ($row = $result->fetch_assoc()) {
         $observations[] = [
             'observation_id' => $obs['OBSERVATION_ID'],
             'student_name' => $obs['STUDENT_FIRST_NAME_EN'] . ' ' . $obs['STUDENT_LAST_NAME_EN'],
-            'teacher_name' => $obs['TEACHER_FIRST_NAME'] . ' ' . $obs['TEACHER_LAST_NAME'],
+            'teacher_name' => $obs['TEACHER_FIRST_NAME_EN'] . ' ' . $obs['TEACHER_LAST_NAME_EN'],
             'observation_time' => date('H:i', strtotime($obs['OBSERVATION_DATE_AND_TIME'])),
             'motif' => $obs['OBSERVATION_MOTIF'] ?? '',
             'note' => $obs['OBSERVATION_NOTE'] ?? '',
@@ -173,8 +173,8 @@ while ($row = $result->fetch_assoc()) {
         'session_date' => date('d/m/Y', strtotime($row['STUDY_SESSION_DATE'])),
         'start_time' => substr($row['STUDY_SESSION_START_TIME'], 0, 5),
         'end_time' => substr($row['STUDY_SESSION_END_TIME'], 0, 5),
-        'class_name' => $row['CLASS_NAME'],
-        'teacher_name' => $row['TEACHER_FIRST_NAME'] . ' ' . $row['TEACHER_LAST_NAME'],
+        'class_name' => $row['CLASS_NAME_EN'],
+        'teacher_name' => $row['TEACHER_FIRST_NAME_EN'] . ' ' . $row['TEACHER_LAST_NAME_EN'],
         'sections' => $sections,
         'absences' => $absences,
         'observations' => $observations
