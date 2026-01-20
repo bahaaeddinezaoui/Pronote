@@ -76,7 +76,6 @@ if ($role === 'Teacher') {
         $photoData = $row['ADMINISTRATOR_PHOTO'];
     }
     $stmt->close();
-    $stmt->close();
 } elseif ($role === 'Secretary') {
     $stmt = $conn->prepare("
         SELECT SECRETARY_FIRST_NAME_EN, SECRETARY_LAST_NAME_EN, SECRETARY_GRADE, SECRETARY_POSITION, SECRETARY_PHOTO

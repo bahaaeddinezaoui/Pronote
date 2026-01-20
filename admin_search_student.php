@@ -582,9 +582,16 @@ $conn->close();
                 <p>Loading student records...</p>
             </div>
 
-            <div class="results-section" id="resultsSection">
+            <div class="results-section" id="resultsSection" style="margin-top: 20px;">
                 <div id="studentInfo" style="display: none;"></div>
+
+                <div class="view-toggles" id="viewToggles" style="display:none; margin: 20px 0; gap: 10px;">
+                    <button class="btn btn-primary" id="btnRecords" onclick="switchView('records')">📂 Student Records</button>
+                    <button class="btn btn-secondary" id="btnFullInfo" onclick="switchView('fullInfo')">👤 Full Information</button>
+                </div>
+
                 <div id="recordsContainer"></div>
+                <div id="fullInfoContainer" style="display: none;"></div>
             </div>
         </div>
     </div>
@@ -713,8 +720,37 @@ $conn->close();
             }
         }
 
+        let currentStudentData = null;
+
+        function switchView(view) {
+            const btnRecords = document.getElementById('btnRecords');
+            const btnFullInfo = document.getElementById('btnFullInfo');
+            const recordsContainer = document.getElementById('recordsContainer');
+            const fullInfoContainer = document.getElementById('fullInfoContainer');
+
+            if (view === 'records') {
+                btnRecords.className = 'btn btn-primary';
+                btnFullInfo.className = 'btn btn-secondary';
+                recordsContainer.style.display = 'grid'; // Restore grid layout
+                fullInfoContainer.style.display = 'none';
+            } else {
+                btnRecords.className = 'btn btn-secondary';
+                btnFullInfo.className = 'btn btn-primary';
+                recordsContainer.style.display = 'none';
+                fullInfoContainer.style.display = 'block';
+            }
+        }
+
         function displayResults(student, absences, observations) {
-            // Display student info
+            currentStudentData = student;
+            
+            // Show toggles
+            document.getElementById('viewToggles').style.display = 'flex';
+            
+            // Default to records view
+            switchView('records');
+
+            // Display student info header
             const studentInfoHtml = `
                 <div class="student-info">
                     <h3>📋 ${student.first_name} ${student.last_name}</h3>
@@ -742,8 +778,8 @@ $conn->close();
             document.getElementById('studentInfo').innerHTML = studentInfoHtml;
             document.getElementById('studentInfo').style.display = 'block';
 
-            // Display records
-            let recordsHtml = '<div class="records-container">';
+            // --- Render Records (Absences/Observations) ---
+            let recordsHtml = ''; // Grid container is the parent div now
 
             // Absences
             recordsHtml += `
@@ -780,9 +816,121 @@ $conn->close();
                     ` : `<div class="empty-message">No observations recorded in this period</div>`}
                 </div>
             `;
-
-            recordsHtml += '</div>';
+            // Keep the grid structure logic for records
             document.getElementById('recordsContainer').innerHTML = recordsHtml;
+
+            // --- Render Full Info ---
+            renderFullInfo(student);
+        }
+
+        function renderFullInfo(s) {
+            const createSection = (title, content) => `
+                <div class="record-section" style="margin-bottom: 20px;">
+                    <h4>${title}</h4>
+                    <div class="info-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                        ${content}
+                    </div>
+                </div>
+            `;
+            
+            const item = (label, value) => `
+                <div class="info-item" style="border-left-color: #3b82f6;">
+                    <div class="info-label">${label}</div>
+                    <div class="info-value">${value || '-'}</div>
+                </div>
+            `;
+
+            let html = '';
+
+            // 1. Personal Details
+            html += createSection('👤 Personal Details', `
+                ${item('First Name (EN)', s.first_name)}
+                ${item('Last Name (EN)', s.last_name)}
+                ${item('First Name (AR)', s.first_name_ar)}
+                ${item('Last Name (AR)', s.last_name_ar)}
+                ${item('Sex', s.sex)}
+                ${item('Birth Date', s.birth_date)}
+                ${item('Blood Type', s.blood_type)}
+                ${item('Phone', s.personal_phone)}
+                ${item('Height', s.height_cm + ' cm')}
+                ${item('Weight', s.weight_kg + ' kg')}
+                ${item('Foreign Student', s.is_foreign)}
+            `);
+
+            // 2. Academic
+            html += createSection('🎓 Academic Info', `
+                ${item('Speciality', s.speciality)}
+                ${item('Level', s.academic_level)}
+                ${item('Average', s.academic_average)}
+                ${item('Bac Number', s.bac_number)}
+                ${item('Category', s.category_name)}
+                ${item('Grade', s.grade)}
+                ${item('Army', s.army_name)}
+            `);
+
+            // 3. Parents & Family
+            html += createSection('👪 Family Information', `
+                ${item('Father Name (EN)', s.father_name_en)}
+                ${item('Father Name (AR)', s.father_name_ar)}
+                ${item('Father Profession (EN)', s.father_profession)}
+                ${item('Father Profession (AR)', s.father_profession_ar)}
+                
+                ${item('Mother Name (EN)', s.mother_name_en)}
+                ${item('Mother Name (AR)', s.mother_name_ar)}
+                ${item('Mother Profession (EN)', s.mother_profession)}
+                ${item('Mother Profession (AR)', s.mother_profession_ar)}
+                
+                ${item('Orphan Status', s.orphans_status)}
+                ${item('Parents Situation', s.parents_situation)}
+                
+                ${item('Siblings Count', s.siblings_count)}
+                ${item('Sisters Count', s.sisters_count)}
+                ${item('Order among Siblings', s.order_among_siblings)}
+            `);
+
+            // 4. Addresses
+            html += createSection('📍 Addresses', `
+                <div style="grid-column: span 2;">
+                    ${item('Birth Place Address', s.birth_place)}
+                </div>
+                <div style="grid-column: span 2;">
+                    ${item('Personal Address', s.personal_address)}
+                </div>
+            `);
+            
+            // 5. Uniforms
+            if (s.uniforms) {
+                 html += createSection('🪖 Combat Outfit', `
+                    ${item('Outfit 1 (Num/Size)', s.uniforms.combat.outfit1)}
+                    ${item('Outfit 2 (Num/Size)', s.uniforms.combat.outfit2)}
+                    ${item('Shoe Size', s.uniforms.combat.shoe)}
+                `);
+
+                 html += createSection('👔 Parade Uniform', `
+                    ${item('Summer Jacket', s.uniforms.parade.summer_jacket)}
+                    ${item('Winter Jacket', s.uniforms.parade.winter_jacket)}
+                    ${item('Summer Trousers', s.uniforms.parade.summer_trousers)}
+                    ${item('Winter Trousers', s.uniforms.parade.winter_trousers)}
+                    ${item('Summer Shirt', s.uniforms.parade.summer_shirt)}
+                    ${item('Winter Shirt', s.uniforms.parade.winter_shirt)}
+                    ${item('Summer Hat', s.uniforms.parade.summer_hat)}
+                    ${item('Winter Hat', s.uniforms.parade.winter_hat)}
+                    ${s.sex === 'Female' ? item('Summer Skirt', s.uniforms.parade.summer_skirt) : ''}
+                    ${s.sex === 'Female' ? item('Winter Skirt', s.uniforms.parade.winter_skirt) : ''}
+                `);
+            }
+
+            // 6. Documents & Misc
+            html += createSection('📄 Documents & Misc', `
+                ${item('ID Card', s.id_card_num)}
+                ${item('Birth Cert', s.birth_cert_num)}
+                ${item('School Card', s.school_sub_card)}
+                ${item('Laptop Serial', s.laptop_serial)}
+                ${item('Postal Account', s.postal_account)}
+                ${item('Mil. Necklace', s.mil_necklace)}
+            `);
+
+            document.getElementById('fullInfoContainer').innerHTML = html;
         }
 
         function clearSearch() {
