@@ -408,6 +408,36 @@ $conn->close();
         .emergency-section .form-section-title {
              color: #dc2626; border-color: #fee2e2; margin-top: 0;
         }
+
+        /* Wizard */
+        .wizard-steps {
+            display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem;
+            padding: 0.75rem; background: var(--bg-secondary); border-radius: var(--radius-lg);
+        }
+        .wizard-step-dot {
+            width: 2rem; height: 2rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; font-weight: 700; color: #6b7280; background: #e5e7eb;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .wizard-step-dot:hover { background: #d1d5db; color: #374151; }
+        .wizard-step-dot.active { background: var(--primary-color); color: white; }
+        .wizard-step-dot.done { background: #10b981; color: white; }
+        .wizard-panels { position: relative; min-height: 320px; }
+        .wizard-panel { display: none; }
+        .wizard-panel.active { display: block; animation: fadeIn 0.25s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .wizard-actions {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color); gap: 1rem; flex-wrap: wrap;
+        }
+        .wizard-actions .btn-prev, .wizard-actions .btn-next {
+            padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer;
+            border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary);
+        }
+        .wizard-actions .btn-prev:hover, .wizard-actions .btn-next:hover { background: #e5e7eb; }
+        .wizard-actions .btn-next { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .wizard-actions .btn-next:hover { background: var(--primary-hover); }
+        .wizard-actions .btn-submit { margin-left: auto; }
     </style>
 </head>
 <body>
@@ -434,41 +464,50 @@ $conn->close();
     <?php endif; ?>
 
     <div class="form-card">
-        <form method="POST" action="secretary_home.php">
+        <form method="POST" action="secretary_home.php" id="wizardForm">
             <input type="hidden" name="action" value="add_student">
-            
-            <div class="form-grid">
-                
-                <!-- Identification -->
-                <div class="form-section-title">Identification & Classification</div>
-                
-                <div class="form-group">
-                    <label>Serial Number (Required) *</label>
-                    <input type="text" name="STUDENT_SERIAL_NUMBER" required placeholder="e.g. 20260001">
+            <div class="wizard-steps">
+                <div class="wizard-step-dot active" data-step="1" title="Identification &amp; Classification">1</div>
+                <div class="wizard-step-dot" data-step="2" title="Personal Details">2</div>
+                <div class="wizard-step-dot" data-step="3" title="Academic Info">3</div>
+                <div class="wizard-step-dot" data-step="4" title="Other Details">4</div>
+                <div class="wizard-step-dot" data-step="5" title="Uniforms">5</div>
+                <div class="wizard-step-dot" data-step="6" title="Family Information">6</div>
+                <div class="wizard-step-dot" data-step="7" title="Emergency Contact">7</div>
+            </div>
+            <div class="wizard-panels">
+                <div class="wizard-panel active" data-step="1">
+                    <div class="form-grid">
+                        <div class="form-section-title">Identification &amp; Classification</div>
+                        <div class="form-group">
+                            <label>Serial Number (Required) *</label>
+                            <input type="text" name="STUDENT_SERIAL_NUMBER" required placeholder="e.g. 20260001">
+                        </div>
+                        <div class="form-group">
+                            <label>Category *</label>
+                            <select id="CATEGORY_ID" name="CATEGORY_ID" required>
+                                <option value="">Select...</option>
+                                <?php foreach ($categories as $c): ?>
+                                    <option value="<?php echo $c['CATEGORY_ID']; ?>"><?php echo htmlspecialchars($c['CATEGORY_NAME_EN']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Section *</label>
+                            <select id="SECTION_ID" name="SECTION_ID" required>
+                                <option value="">Select...</option>
+                                <?php foreach ($sections as $s): ?>
+                                    <option value="<?php echo $s['SECTION_ID']; ?>" data-category="<?php echo $s['CATEGORY_ID']; ?>">
+                                        <?php echo htmlspecialchars($s['SECTION_NAME_EN']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Category *</label>
-                    <select id="CATEGORY_ID" name="CATEGORY_ID" required>
-                        <option value="">Select...</option>
-                        <?php foreach ($categories as $c): ?>
-                            <option value="<?php echo $c['CATEGORY_ID']; ?>"><?php echo htmlspecialchars($c['CATEGORY_NAME_EN']); ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Section *</label>
-                    <select id="SECTION_ID" name="SECTION_ID" required>
-                        <option value="">Select...</option>
-                        <?php foreach ($sections as $s): ?>
-                            <option value="<?php echo $s['SECTION_ID']; ?>" data-category="<?php echo $s['CATEGORY_ID']; ?>">
-                                <?php echo htmlspecialchars($s['SECTION_NAME_EN']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                
-                <!-- Personal Info -->
-                <div class="form-section-title">Personal Information</div>
+                <div class="wizard-panel" data-step="2">
+                    <div class="form-grid">
+                        <div class="form-section-title">Personal Details</div>
 
                 <div class="form-group"><label>First Name (EN) *</label><input type="text" name="STUDENT_FIRST_NAME_EN" required></div>
                 <div class="form-group"><label>Last Name (EN) *</label><input type="text" name="STUDENT_LAST_NAME_EN" required></div>
@@ -578,11 +617,12 @@ $conn->close();
                         <option value="O+">O+</option><option value="O-">O-</option>
                     </select>
                 </div>
-
-                <!-- Academic Info -->
-                <div class="form-section-title">Academic Details</div>
-
-                <div class="form-group"><label>Grade / Rank</label>
+                    </div>
+                </div>
+                <div class="wizard-panel" data-step="3">
+                    <div class="form-grid">
+                        <div class="form-section-title">Academic Info</div>
+                        <div class="form-group"><label>Grade / Rank</label>
                     <select name="STUDENT_GRADE_ID">
                         <option value="">Select Grade...</option>
                         <?php foreach($grades as $g): ?>
@@ -614,10 +654,12 @@ $conn->close();
                         </div>
                     </div>
                 </div>
-
-                <!-- Other Fields (Condensed for brevity but still saving all) -->
-                <div class="form-section-title">Other Details</div>
-                <div class="form-group"><label>Height (cm)</label><input type="number" step="0.01" name="STUDENT_HEIGHT_CM"></div>
+                    </div>
+                </div>
+                <div class="wizard-panel" data-step="4">
+                    <div class="form-grid">
+                        <div class="form-section-title">Other Details</div>
+                        <div class="form-group"><label>Height (cm)</label><input type="number" step="0.01" name="STUDENT_HEIGHT_CM"></div>
                 <div class="form-group"><label>Weight (kg)</label><input type="number" step="0.01" name="STUDENT_WEIGHT_KG"></div>
                 <div class="form-group"><label>Is Foreign?</label>
                    <select id="IS_FOREIGN_SELECT" name="STUDENT_IS_FOREIGN" onchange="toggleForeignFields()">
@@ -665,9 +707,11 @@ $conn->close();
                  <!-- Siblings Details -->
                  <div class="form-group"><label>Num Sisters</label><input type="number" name="STUDENT_NUMBER_OF_SISTERS"></div>
                  <div class="form-group"><label>Order among Siblings</label><input type="number" name="STUDENT_ORDER_AMONG_SIBLINGS"></div>
-
-                 <!-- Combat Outfit -->
-                 <div class="form-section-title">Combat Outfit</div>
+                    </div>
+                </div>
+                <div class="wizard-panel" data-step="5">
+                    <div class="form-grid">
+                        <div class="form-section-title">Combat Outfit</div>
                  <div class="form-group"><label>1st Outfit Number</label><input type="text" name="FIRST_OUTFIT_NUMBER"></div>
                  <div class="form-group"><label>1st Outfit Size</label><input type="text" name="FIRST_OUTFIT_SIZE" placeholder="e.g. M, L, XL"></div>
                  <div class="form-group"><label>2nd Outfit Number</label><input type="text" name="SECOND_OUTFIT_NUMBER"></div>
@@ -687,9 +731,11 @@ $conn->close();
                  <!-- Skirt sizes (Female only) -->
                  <div class="form-group skirt-field" style="display:none;"><label>Summer Skirt Size</label><input type="text" name="SUMMER_SKIRT_SIZE"></div>
                  <div class="form-group skirt-field" style="display:none;"><label>Winter Skirt Size</label><input type="text" name="WINTER_SKIRT_SIZE"></div>
-
-                 <!-- Parent Info -->
-                 <div class="form-section-title">Parent Information</div>
+                    </div>
+                </div>
+                <div class="wizard-panel" data-step="6">
+                    <div class="form-grid">
+                        <div class="form-section-title">Family Information</div>
                  <div class="form-group"><label>Father First Name (EN)</label><input type="text" name="FATHER_FIRST_NAME_EN"></div>
                  <div class="form-group"><label>Father Last Name (EN)</label><input type="text" name="FATHER_LAST_NAME_EN"></div>
                  <div class="form-group"><label>Father First Name (AR)</label><input type="text" name="FATHER_FIRST_NAME_AR" dir="rtl"></div>
@@ -702,10 +748,11 @@ $conn->close();
                  <div class="form-group"><label>Mother Last Name (AR)</label><input type="text" name="MOTHER_LAST_NAME_AR" dir="rtl"></div>
                  <div class="form-group"><label>Mother Profession (EN)</label><input type="text" name="MOTHER_PROFESSION_EN"></div>
                  <div class="form-group"><label>Mother Profession (AR)</label><input type="text" name="MOTHER_PROFESSION_AR" dir="rtl"></div>
-
-                 <!-- Emergency Contact -->
-                 <!-- Emergency Contact -->
-                 <div class="emergency-section">
+                    </div>
+                </div>
+                <div class="wizard-panel" data-step="7">
+                    <div class="form-grid">
+                        <div class="emergency-section">
                      <div class="form-section-title">Emergency Contact</div>
                      <div class="form-grid" style="gap: 1.5rem;">
                          <div class="form-group"><label>Contact Phone Number</label><input type="text" name="CONTACT_PHONE_NUMBER"></div>
@@ -766,10 +813,14 @@ $conn->close();
                          </div>
                      </div>
                  </div>
-
+                    </div>
+                </div>
             </div>
-
-            <button type="submit" class="btn-submit">Add Student Record</button>
+            <div class="wizard-actions">
+                <button type="button" class="btn-prev" id="wizardPrev">Previous</button>
+                <button type="button" class="btn-next" id="wizardNext">Next</button>
+                <button type="submit" class="btn-submit" id="wizardSubmit" style="display:none;">Add Student Record</button>
+            </div>
         </form>
     </div>
 </div>
@@ -812,8 +863,35 @@ function toggleForeignFields() {
     }
 }
 
+// --- Wizard ---
+const TOTAL_STEPS = 7;
+let currentStep = 1;
 
+function showStep(step) {
+    currentStep = step;
+    document.querySelectorAll('.wizard-panel').forEach(p => { p.classList.remove('active'); });
+    document.querySelectorAll('.wizard-step-dot').forEach(d => { d.classList.remove('active','done'); });
+    const panel = document.querySelector('.wizard-panel[data-step="' + step + '"]');
+    if (panel) panel.classList.add('active');
+    const dot = document.querySelector('.wizard-step-dot[data-step="' + step + '"]');
+    if (dot) dot.classList.add('active');
+    document.querySelectorAll('.wizard-step-dot').forEach(d => {
+        const n = parseInt(d.getAttribute('data-step'), 10);
+        if (n < step) d.classList.add('done');
+    });
+    document.getElementById('wizardPrev').style.display = (step === 1) ? 'none' : 'inline-block';
+    document.getElementById('wizardNext').style.display = (step === TOTAL_STEPS) ? 'none' : 'inline-block';
+    document.getElementById('wizardSubmit').style.display = (step === TOTAL_STEPS) ? 'inline-block' : 'none';
+    if (step === 5) toggleSkirtFields();
+    if (step === 7) toggleForeignFields();
+}
 
+document.getElementById('wizardPrev').onclick = function() { if (currentStep > 1) showStep(currentStep - 1); };
+document.getElementById('wizardNext').onclick = function() { if (currentStep < TOTAL_STEPS) showStep(currentStep + 1); };
+document.querySelectorAll('.wizard-step-dot').forEach(d => {
+    d.addEventListener('click', function() { showStep(parseInt(this.getAttribute('data-step'), 10)); });
+});
+showStep(1);
 
 // Cascading Locations (Generic)
 function fetchLocations(type, parentParam, parentId, targetSelect, placeholder) {
