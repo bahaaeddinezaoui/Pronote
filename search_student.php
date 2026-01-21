@@ -24,23 +24,31 @@ if (empty($query) || empty($sections)) {
 
 $placeholders = implode(',', array_fill(0, count($sections), '?'));
 $types = str_repeat('i', count($sections));
-$sql = "SELECT STUDENT_FIRST_NAME_EN, STUDENT_LAST_NAME_EN
+$sql = "SELECT STUDENT_SERIAL_NUMBER, STUDENT_FIRST_NAME_EN, STUDENT_LAST_NAME_EN, STUDENT_FIRST_NAME_AR, STUDENT_LAST_NAME_AR
         FROM student
         WHERE SECTION_ID IN ($placeholders)
           AND (STUDENT_FIRST_NAME_EN LIKE CONCAT('%', ?, '%')
-               OR STUDENT_LAST_NAME_EN LIKE CONCAT('%', ?, '%'))";
+               OR STUDENT_LAST_NAME_EN LIKE CONCAT('%', ?, '%')
+               OR STUDENT_FIRST_NAME_AR LIKE CONCAT('%', ?, '%')
+               OR STUDENT_LAST_NAME_AR LIKE CONCAT('%', ?, '%'))";
 
 $stmt = $conn->prepare($sql);
-$params = [...$sections, $query, $query];
-$stmt->bind_param($types . 'ss', ...$params);
+$params = [...$sections, $query, $query, $query, $query];
+$stmt->bind_param($types . 'ssss', ...$params);
 $stmt->execute();
 $result = $stmt->get_result();
 
 $students = [];
 while ($row = $result->fetch_assoc()) {
+    $label = $row['STUDENT_FIRST_NAME_EN'] . ' ' . $row['STUDENT_LAST_NAME_EN'];
+    if (!empty($row['STUDENT_FIRST_NAME_AR'])) {
+        $label .= ' (' . $row['STUDENT_FIRST_NAME_AR'] . ' ' . $row['STUDENT_LAST_NAME_AR'] . ')';
+    }
     $students[] = [
+        'serial_number' => $row['STUDENT_SERIAL_NUMBER'],
         'first_name' => $row['STUDENT_FIRST_NAME_EN'],
-        'last_name' => $row['STUDENT_LAST_NAME_EN']
+        'last_name' => $row['STUDENT_LAST_NAME_EN'],
+        'label' => $label
     ];
 }
 

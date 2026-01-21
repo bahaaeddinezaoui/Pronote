@@ -26,12 +26,11 @@ if (!$major_id || !$teacher_serial) {
 // Get sections that study the selected major and belong to the category that studies that major
 $sql = $conn->prepare("
     SELECT DISTINCT SE.SECTION_ID, SE.SECTION_NAME_EN
-    FROM TEACHER T
-    INNER JOIN TEACHES TH ON T.TEACHER_SERIAL_NUMBER = TH.TEACHER_SERIAL_NUMBER
-    INNER JOIN MAJOR M ON TH.MAJOR_ID = M.MAJOR_ID
-    INNER JOIN STUDIES SD ON M.MAJOR_ID = SD.MAJOR_ID
-    INNER JOIN SECTION SE ON SD.SECTION_ID = SE.SECTION_ID
-    WHERE T.TEACHER_SERIAL_NUMBER = ? AND M.MAJOR_ID = ?
+    FROM SECTION SE
+    INNER JOIN STUDIES SD ON SE.SECTION_ID = SD.SECTION_ID
+    INNER JOIN MAJOR M ON SD.MAJOR_ID = M.MAJOR_ID
+    INNER JOIN TEACHES TH ON M.MAJOR_ID = TH.MAJOR_ID
+    WHERE TH.TEACHER_SERIAL_NUMBER = ? AND M.MAJOR_ID = ?
 ");
 $sql->bind_param("ss", $teacher_serial, $major_id);
 $sql->execute();

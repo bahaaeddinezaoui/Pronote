@@ -54,11 +54,12 @@ if (isset($_GET['action']) && $_GET['action'] === 'search_students') {
     $study_session_id = $_SESSION['current_study_session_id'] ?? 0;
     if (!empty($study_session_id)) {
         $sql = "
-            SELECT DISTINCT s.STUDENT_SERIAL_NUMBER, s.STUDENT_FIRST_NAME_EN, s.STUDENT_LAST_NAME_EN
+            SELECT DISTINCT s.STUDENT_SERIAL_NUMBER, s.STUDENT_FIRST_NAME_EN, s.STUDENT_LAST_NAME_EN, s.STUDENT_FIRST_NAME_AR, s.STUDENT_LAST_NAME_AR
             FROM student s
             INNER JOIN section se ON s.SECTION_ID = se.SECTION_ID
             INNER JOIN studies_in si ON se.SECTION_ID = si.SECTION_ID AND si.STUDY_SESSION_ID = ?
-            WHERE (s.STUDENT_FIRST_NAME_EN LIKE ? OR s.STUDENT_LAST_NAME_EN LIKE ?)
+            WHERE (s.STUDENT_FIRST_NAME_EN LIKE ? OR s.STUDENT_LAST_NAME_EN LIKE ? 
+                   OR s.STUDENT_FIRST_NAME_AR LIKE ? OR s.STUDENT_LAST_NAME_AR LIKE ?)
             AND NOT EXISTS (
                 SELECT 1 FROM student_gets_absent sga
                 INNER JOIN absence a ON sga.ABSENCE_ID = a.ABSENCE_ID AND a.STUDY_SESSION_ID = ?
@@ -68,31 +69,32 @@ if (isset($_GET['action']) && $_GET['action'] === 'search_students') {
         ";
         $stmt = $conn->prepare($sql);
         $like = '%' . $query . '%';
-        $stmt->bind_param('isss', $study_session_id, $like, $like, $study_session_id);
+        $stmt->bind_param('isssss', $study_session_id, $like, $like, $like, $like, $study_session_id);
     } else {
         $sql = "
-            SELECT DISTINCT s.STUDENT_SERIAL_NUMBER, s.STUDENT_FIRST_NAME_EN, s.STUDENT_LAST_NAME_EN
+            SELECT DISTINCT s.STUDENT_SERIAL_NUMBER, s.STUDENT_FIRST_NAME_EN, s.STUDENT_LAST_NAME_EN, s.STUDENT_FIRST_NAME_AR, s.STUDENT_LAST_NAME_AR
             FROM student s
-            INNER JOIN section se ON s.SECTION_ID = se.SECTION_ID
-            INNER JOIN studies st ON se.SECTION_ID = st.SECTION_ID
-            INNER JOIN teaches th ON st.MAJOR_ID = th.MAJOR_ID
-            INNER JOIN teacher t ON th.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
-            WHERE t.USER_ID = ? AND (s.STUDENT_FIRST_NAME_EN LIKE ? OR s.STUDENT_LAST_NAME_EN LIKE ?)
+            WHERE (s.STUDENT_FIRST_NAME_EN LIKE ? OR s.STUDENT_LAST_NAME_EN LIKE ?
+                   OR s.STUDENT_FIRST_NAME_AR LIKE ? OR s.STUDENT_LAST_NAME_AR LIKE ?)
             LIMIT 10
         ";
         $stmt = $conn->prepare($sql);
         $like = '%' . $query . '%';
-        $stmt->bind_param('iss', $_SESSION['user_id'], $like, $like);
+        $stmt->bind_param('ssss', $like, $like, $like, $like);
     }
     $stmt->execute();
     $res = $stmt->get_result();
     $out = [];
     while ($r = $res->fetch_assoc()) {
+        $label = $r['STUDENT_FIRST_NAME_EN'] . ' ' . $r['STUDENT_LAST_NAME_EN'];
+        if (!empty($r['STUDENT_FIRST_NAME_AR'])) {
+            $label .= ' (' . $r['STUDENT_FIRST_NAME_AR'] . ' ' . $r['STUDENT_LAST_NAME_AR'] . ')';
+        }
         $out[] = [
             'serial' => $r['STUDENT_SERIAL_NUMBER'],
             'first_name' => $r['STUDENT_FIRST_NAME_EN'],
             'last_name' => $r['STUDENT_LAST_NAME_EN'],
-            'label' => $r['STUDENT_FIRST_NAME_EN'] . ' ' . $r['STUDENT_LAST_NAME_EN']
+            'label' => $label
         ];
     }
     echo json_encode($out);
@@ -268,16 +270,10 @@ $show_abs_initially = !$show_obs_initially;
 $teacher_categories = [];
 if (!empty($logged_in_teacher_serial)) {
     $sql_categories = $conn->prepare("
-        SELECT DISTINCT C.CATEGORY_ID, C.CATEGORY_NAME_EN
-        FROM TEACHER T
-        INNER JOIN TEACHES TH ON T.TEACHER_SERIAL_NUMBER = TH.TEACHER_SERIAL_NUMBER
-        INNER JOIN MAJOR M ON TH.MAJOR_ID = M.MAJOR_ID
-        INNER JOIN STUDIES SD ON M.MAJOR_ID = SD.MAJOR_ID
-        INNER JOIN SECTION SE ON SD.SECTION_ID = SE.SECTION_ID
-        INNER JOIN CATEGORY C ON SE.CATEGORY_ID = C.CATEGORY_ID
-        WHERE T.TEACHER_SERIAL_NUMBER = ?
+        SELECT CATEGORY_ID, CATEGORY_NAME_EN
+        FROM CATEGORY
+        ORDER BY CATEGORY_NAME_EN
     ");
-    $sql_categories->bind_param("s", $logged_in_teacher_serial);
     $sql_categories->execute();
     $result_categories = $sql_categories->get_result();
 
@@ -317,15 +313,148 @@ if ($class_q) {
     <link rel="stylesheet" href="styles.css" />
     <title><?php echo t('absentees_observations'); ?> - <?php echo t('app_name'); ?></title>
     <style>
-        .tab-buttons { display:none; } /* Hidden as moved to navbar */
-        .form-section { display:none; }
+        .form-section { display:none; animation: fadeIn 0.3s ease-out; }
         .form-section.active { display:block; }
-        .suggestions-list { position: absolute; background:#fff; border:1px solid #ccc; max-height:150px; overflow:auto; width:100%; z-index:1000; padding:0; margin:0; list-style:none; }
-        .suggestions-list li { padding:6px; cursor:pointer; }
-        .suggestions-list li:hover { background:#eee; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .suggestions-list { 
+            position: absolute; 
+            background: #fff; 
+            border: 1px solid var(--border-color); 
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            max-height: 200px; 
+            overflow: auto; 
+            width: 100%; 
+            z-index: 1000; 
+            padding: 0.5rem 0; 
+            margin-top: 0.25rem; 
+            list-style: none; 
+        }
+        .suggestions-list li { 
+            padding: 0.75rem 1rem; 
+            cursor: pointer; 
+            transition: background 0.2s;
+            font-size: 0.95rem;
+        }
+        .suggestions-list li:hover { background: var(--bg-tertiary); color: var(--primary-color); }
+
         .navbar_buttons.active {
             background: var(--primary-color);
             color: white;
+        }
+
+        .card {
+            background: var(--surface-color);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .section-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .section-item:hover {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .section-item input[type="checkbox"] {
+            width: 1.2rem;
+            height: 1.2rem;
+            cursor: pointer;
+        }
+
+        .stats-card-mini {
+            text-align: center;
+            padding: 1.25rem;
+            background: #fff;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s;
+        }
+
+        .stats-card-mini:hover { transform: translateY(-2px); }
+
+        .stats-value-mini {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stats-label-mini {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: #fff;
+            transition: all 0.2s;
+        }
+
+        .btn-edit { color: var(--primary-color); }
+        .btn-edit:hover { background: var(--primary-light); border-color: var(--primary-color); }
+        .btn-delete { color: var(--danger-color); }
+        .btn-delete:hover { background: #fee2e2; border-color: var(--danger-color); }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
     </style>
 </head>
@@ -334,19 +463,16 @@ if ($class_q) {
 <div class="app-layout">
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
-        <fieldset id="form_fill">
-            <legend id="form_legend"><?php echo t('absentees_observations'); ?></legend>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <span>📅</span> <?php echo t('absentees_observations'); ?>
+                </h2>
                 <?php if ($existing_session_found): ?>
-                    <div style="color: #d97706; font-weight: bold; font-size: 0.9em;">
+                    <div class="status-badge status-warning" style="font-size: 0.85rem;">
                         ⚠️ <?php echo $session_status_message; ?>
                     </div>
-                <?php else: ?>
-                    <div></div>
                 <?php endif; ?>
-
-                <!-- Tab buttons moved to navbar -->
             </div>
 
             <!-- ABSENCES -->
@@ -356,124 +482,133 @@ if ($class_q) {
                     
                     <input type="hidden" name="session_date" value="<?php echo $server_date_value; ?>">
                     <input type="hidden" name="time_slot" value="<?php echo htmlspecialchars($selected_slot_value); ?>">
-                    <!-- NEW: Class selector -->
-                    <div>
-                        <label for="class_select"><?php echo t('select_class'); ?>:</label>
-                        <select id="class_select" name="class_id" required>
-                            <option value=""><?php echo t('select_class_placeholder'); ?></option>
-                            <?php
-                            if (!empty($classes)) {
-                                foreach ($classes as $c) {
-                                    echo '<option value="' . htmlspecialchars($c['id']) . '">' . htmlspecialchars($c['name']) . '</option>';
-                                }
-                            } else {
-                                echo '<option value="" disabled>' . t('no_classes_found') . '</option>';
-                            }
-                            ?>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label for="categories"><?php echo t('select_category_to_teach'); ?>:</label>
-                        <select name="categories" id="categories" required onchange="loadMajors()">
-                            <option value="" disabled selected><?php echo t('choose_category'); ?></option>
-                            <?php
-                            if (!empty($teacher_categories)) {
-                                foreach ($teacher_categories as $category) {
-                                    echo '<option value="' . htmlspecialchars($category['id']) . '">' . htmlspecialchars($category['name']) . '</option>';
-                                }
-                            } else {
-                                if (empty($logged_in_teacher_serial)) {
-                                    echo '<option value="" disabled>' . t('please_login_as_teacher') . '</option>';
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="class_select"><?php echo t('select_class'); ?></label>
+                            <select id="class_select" name="class_id" class="form-input" required>
+                                <option value=""><?php echo t('select_class_placeholder'); ?></option>
+                                <?php
+                                if (!empty($classes)) {
+                                    foreach ($classes as $c) {
+                                        echo '<option value="' . htmlspecialchars($c['id']) . '">' . htmlspecialchars($c['name']) . '</option>';
+                                    }
                                 } else {
-                                    echo '<option value="" disabled>' . t('no_categories_found') . '</option>';
+                                    echo '<option value="" disabled>' . t('no_classes_found') . '</option>';
                                 }
-                            }
-                            ?>
-                        </select>
-                    </div>
+                                ?>
+                            </select>
+                        </div>
 
-                    <div>
-                        <label for="sections"><?php echo t('select_major_to_teach'); ?>:</label>
-                        <select name="sections" id="sections" required onchange="loadSections()">
-                            <option value="" disabled selected><?php echo t('choose_category_first'); ?></option>
-                        </select>
+                        <div class="form-group">
+                            <label class="form-label" for="categories"><?php echo t('select_category_to_teach'); ?></label>
+                            <select name="categories" id="categories" class="form-input" required onchange="loadMajors()">
+                                <option value="" disabled selected><?php echo t('choose_category'); ?></option>
+                                <?php
+                                if (!empty($teacher_categories)) {
+                                    foreach ($teacher_categories as $category) {
+                                        echo '<option value="' . htmlspecialchars($category['id']) . '">' . htmlspecialchars($category['name']) . '</option>';
+                                    }
+                                } else {
+                                    if (empty($logged_in_teacher_serial)) {
+                                        echo '<option value="" disabled>' . t('please_login_as_teacher') . '</option>';
+                                    } else {
+                                        echo '<option value="" disabled>' . t('no_categories_found') . '</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="major_select"><?php echo t('select_major_to_teach'); ?></label>
+                            <select name="major_id" id="major_select" class="form-input" required onchange="loadSections()">
+                                <option value="" disabled selected><?php echo t('choose_category_first'); ?></option>
+                            </select>
+                        </div>
                     </div>
 
                     <div id="select_sections"></div>
 
                     <div id="student_table_container">
-                        <div id="stats_container" style="margin-bottom:15px; display:none; width: 100%; gap: 15px;">
-                            <div style="flex: 1; text-align: center; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                                <span id="total_students" style="display:block; font-size: 2.5rem; font-weight: 800; color: #4f46e5; line-height: 1.1; margin-bottom: 4px;">0</span>
-                                <span style="display:block; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;"><?php echo t('total_students'); ?></span>
+                        <div id="stats_container" style="margin-bottom:1.5rem; display:none; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <div class="stats-card-mini" style="border-top: 4px solid var(--primary-color);">
+                                <span id="total_students" class="stats-value-mini" style="color: var(--primary-color);">0</span>
+                                <span class="stats-label-mini"><?php echo t('total_students'); ?></span>
                             </div>
-                            <div style="flex: 1; text-align: center; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                                <span id="presentees" style="display:block; font-size: 2.5rem; font-weight: 800; color: #10b981; line-height: 1.1; margin-bottom: 4px;">0</span>
-                                <span style="display:block; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;"><?php echo t('presentees'); ?></span>
+                            <div class="stats-card-mini" style="border-top: 4px solid var(--success-color);">
+                                <span id="presentees" class="stats-value-mini" style="color: var(--success-color);">0</span>
+                                <span class="stats-label-mini"><?php echo t('presentees'); ?></span>
                             </div>
-                            <div style="flex: 1; text-align: center; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                                <span id="absentees" style="display:block; font-size: 2.5rem; font-weight: 800; color: #ef4444; line-height: 1.1; margin-bottom: 4px;">0</span>
-                                <span style="display:block; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;"><?php echo t('absentees'); ?></span>
+                            <div class="stats-card-mini" style="border-top: 4px solid var(--danger-color);">
+                                <span id="absentees" class="stats-value-mini" style="color: var(--danger-color);">0</span>
+                                <span class="stats-label-mini"><?php echo t('absentees'); ?></span>
                             </div>
                         </div>
-                        <table id="student_table">
-                            <thead>
-                                <tr>
-                                    <th><?php echo t('last_name'); ?></th>
-                                    <th><?php echo t('first_name'); ?></th>
-                                    <th><?php echo t('motif'); ?></th>
-                                    <th><?php echo t('observation'); ?></th>
-                                    <th><?php echo t('actions'); ?></th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
 
-                        <div id="add_row_container" style="margin-top:10px; display:none;">
-                            <button type="button" onclick="addStudentRow()"><?php echo t('add_student'); ?></button>
+                        <div class="table-container">
+                            <table id="student_table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th><?php echo t('last_name'); ?></th>
+                                        <th><?php echo t('first_name'); ?></th>
+                                        <th><?php echo t('motif'); ?></th>
+                                        <th><?php echo t('observation'); ?></th>
+                                        <th style="width: 150px; text-align: center;"><?php echo t('actions'); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
 
-
+                        <div id="add_row_container" style="margin-top:1.5rem; display:none;">
+                            <button type="button" class="btn btn-primary" style="width: auto;" onclick="addStudentRow()">
+                                <span>➕</span> <?php echo t('add_student'); ?>
+                            </button>
+                        </div>
                     </div>
 
-                    <div style="margin-top:12px;">
-                        <button type="submit" id="submit_button"><?php echo t('submit_absences'); ?></button>
+                    <div style="margin-top:2rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                        <button type="submit" id="submit_button" class="btn btn-primary"><?php echo t('submit_absences'); ?></button>
                     </div>
                 </form>
             </div>
 
             <!-- OBSERVATIONS -->
             <div id="observations_section" class="form-section <?php echo $existing_session_found ? 'active' : ''; ?>">
-                <h3><?php echo t('record_observation'); ?></h3>
+                <h3 style="margin-top:0; margin-bottom:1.5rem; color:var(--text-primary); font-size:1.1rem; font-weight:600;">
+                    <?php echo t('record_observation'); ?>
+                </h3>
 
-                <div style="position:relative; max-width:420px;">
-                    <label for="obs_student_input"><?php echo t('student'); ?> (<?php echo t('first_name'); ?> / <?php echo t('last_name'); ?>):</label><br>
-                    <input type="text" id="obs_student_input" placeholder="<?php echo t('student_search_placeholder'); ?>" autocomplete="off" style="width:100%;">
-                    <ul id="obs_suggestions" class="suggestions-list" style="display:none;"></ul>
-                    <input type="hidden" id="obs_student_serial" name="obs_student_serial">
+                <div class="form-row">
+                    <div class="form-group" style="position:relative;">
+                        <label class="form-label" for="obs_student_input"><?php echo t('student'); ?> (<?php echo t('first_name'); ?> / <?php echo t('last_name'); ?>)</label>
+                        <input type="text" id="obs_student_input" class="form-input" placeholder="<?php echo t('student_search_placeholder'); ?>" autocomplete="off">
+                        <ul id="obs_suggestions" class="suggestions-list" style="display:none;"></ul>
+                        <input type="hidden" id="obs_student_serial" name="obs_student_serial">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="obs_motif"><?php echo t('motif_max'); ?></label>
+                        <input type="text" id="obs_motif" class="form-input" maxlength="30">
+                    </div>
                 </div>
 
-                <div style="margin-top:8px;">
-                    <label for="obs_motif"><?php echo t('motif_max'); ?></label><br>
-                    <input type="text" id="obs_motif" maxlength="30" style="width:100%;">
+                <div class="form-group">
+                    <label class="form-label" for="obs_note"><?php echo t('note_optional'); ?></label>
+                    <textarea id="obs_note" class="form-input" maxlength="256" rows="4" style="resize: vertical;"></textarea>
                 </div>
 
-                <div style="margin-top:8px;">
-                    <label for="obs_note"><?php echo t('note_optional'); ?></label><br>
-                    <textarea id="obs_note" maxlength="256" rows="4" style="width:100%;"></textarea>
+                <div style="margin-top:1.5rem;">
+                    <button type="button" id="obs_submit_btn" class="btn btn-primary" style="width: auto; min-width: 200px;">
+                        <?php echo t('submit_observation'); ?>
+                    </button>
                 </div>
 
-                <div style="margin-top:10px;">
-                    <button type="button" id="obs_submit_btn"><?php echo t('submit_observation'); ?></button>
-                </div>
-
-                <div id="obs_response" style="margin-top:8px; font-weight:bold;"></div>
+                <div id="obs_response" style="margin-top:1rem; font-weight:600; color:var(--success-color);"></div>
             </div>
 
-        </fieldset>
+        </div>
     </div>
-
 </div>
 
 </div>
@@ -481,13 +616,17 @@ if ($class_q) {
 </div>
 
 <script>
+// ===== Global Translation Object =====
+const T = <?php echo json_encode($T); ?>;
+
 // ===== Absence JS (kept) =====
 function loadMajors() {
     const categorySelect = document.getElementById('categories');
-    const majorSelect = document.getElementById('sections');
+    const majorSelect = document.getElementById('major_select');
     const sectionContainer = document.getElementById('select_sections');
     const studentTableBody = document.querySelector('#student_table tbody');
     const categoryId = categorySelect.value;
+    const teacherSerial = '<?php echo $logged_in_teacher_serial; ?>';
 
     majorSelect.innerHTML = '<option value="" disabled selected>' + (T.loading || 'Loading...') + '</option>';
     sectionContainer.innerHTML = '';
@@ -495,7 +634,7 @@ function loadMajors() {
 
     if (!categoryId) return;
 
-    fetch('get_majors.php?category_id=' + encodeURIComponent(categoryId) + '&teacher_serial=<?php echo $logged_in_teacher_serial; ?>')
+    fetch('get_majors.php?category_id=' + encodeURIComponent(categoryId) + '&teacher_serial=' + encodeURIComponent(teacherSerial))
         .then(res => res.json())
         .then(data => {
             majorSelect.innerHTML = '<option value="" disabled selected>Choose a major</option>';
@@ -531,7 +670,7 @@ function updateAbsenteesAndPresentees() {
 }
 
 function loadSections() {
-    const majorSelect = document.getElementById('sections');
+    const majorSelect = document.getElementById('major_select');
     const sectionContainer = document.getElementById('select_sections');
     const studentTableBody = document.querySelector('#student_table tbody');
     const majorId = majorSelect.value;
@@ -540,8 +679,9 @@ function loadSections() {
     studentTableBody.innerHTML = '';
 
     if (!majorId) return;
+    const teacherSerial = '<?php echo $logged_in_teacher_serial; ?>';
 
-    fetch('get_sections.php?major_id=' + encodeURIComponent(majorId) + '&teacher_serial=<?php echo $logged_in_teacher_serial; ?>')
+    fetch('get_sections.php?major_id=' + encodeURIComponent(majorId) + '&teacher_serial=' + encodeURIComponent(teacherSerial))
         .then(res => res.json())
         .then(data => {
             if (data.success && data.sections.length > 0) {
@@ -594,7 +734,7 @@ function loadStudents() {
     }
 
     addRowContainer.style.display = 'block';
-    statsContainer.style.display = 'flex';
+    statsContainer.style.display = 'grid';
 
     const sectionIds = Array.from(checkedBoxes).map(cb => cb.value);
 
@@ -633,18 +773,18 @@ function addStudentRow() {
 
     const row = document.createElement('tr');
     row.innerHTML = `
-        <td><input type="text" name="last_name[]" class="last_name" readonly></td>
+        <td><input type="text" name="last_name[]" class="last_name form-input" readonly></td>
         <td>
             <div style="position: relative; width: 100%;">
-                <input type="text" name="first_name[]" class="first_name" oninput="searchStudent(this)" placeholder="Search student...">
+                <input type="text" name="first_name[]" class="first_name form-input" oninput="searchStudent(this)" placeholder="Search student...">
                 <div class="suggestions"></div>
             </div>
         </td>
-        <td><input type="text" name="motif[]" ></td>
-        <td><input type="text" name="observation[]" ></td>
-        <td>
-            <button type="button" onclick="editStudentRow(this)">Edit</button>
-            <button type="button" onclick="removeStudentRow(this)">Delete</button>
+        <td><input type="text" name="motif[]" class="form-input"></td>
+        <td><input type="text" name="observation[]" class="form-input"></td>
+        <td style="text-align: center; white-space: nowrap;">
+            <button type="button" class="action-btn btn-edit" onclick="editStudentRow(this)">Edit</button>
+            <button type="button" class="action-btn btn-delete" onclick="removeStudentRow(this)">Delete</button>
         </td>
     `;
     tableBody.appendChild(row);
@@ -689,10 +829,10 @@ function searchStudent(inputElement) {
     .then(data => {
         if (!data.success || !data.students) return;
         const ul = document.createElement('ul');
-        ul.style = 'position:absolute; list-style:none; margin:0; padding:4px; background:#fff; border:1px solid #ccc; width:100%; max-height:140px; overflow:auto; z-index:999';
+        ul.className = 'suggestions-list';
         data.students.forEach(student => {
             const li = document.createElement('li');
-            li.textContent = student.first_name + ' ' + student.last_name;
+            li.textContent = student.label;
             li.onclick = () => {
                 const firstName = student.first_name.trim();
                 const lastName = student.last_name.trim();
@@ -812,26 +952,6 @@ document.getElementById('obs_submit_btn').addEventListener('click', function() {
     });
 });
 
-// ===== Tabs =====
-<?php if (!$existing_session_found): ?>
-document.getElementById('tabAbs').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('absences_section').classList.add('active');
-    document.getElementById('observations_section').classList.remove('active');
-    this.classList.add('active');
-    document.getElementById('tabObs').classList.remove('active');
-});
-<?php endif; ?>
-
-document.getElementById('tabObs').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('observations_section').classList.add('active');
-    document.getElementById('absences_section').classList.remove('active');
-    this.classList.add('active');
-    const absBtn = document.getElementById('tabAbs');
-    if(absBtn) absBtn.classList.remove('active');
-});
-
 // ===== Absence Form Submit Handler (AJAX) =====
 document.getElementById('absence_main_form').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -867,10 +987,13 @@ document.getElementById('absence_main_form').addEventListener('submit', function
             document.getElementById('stats_container').style.display = 'none';
             document.getElementById('select_sections').innerHTML = '';
             
-            // Switch to Observations tab
-            document.getElementById('tabObs').click();
+            // Redirect to Observations view to continue workflow
+            window.location.href = '<?php echo basename(__FILE__); ?>?tab=observations';
         } else {
             alert(data.message || (T.error_submitting || 'Error submitting form.'));
+            if (data.message && String(data.message).toLowerCase().includes('session already exists')) {
+                window.location.href = '<?php echo basename(__FILE__); ?>?tab=observations';
+            }
         }
     })
     .catch(err => {
