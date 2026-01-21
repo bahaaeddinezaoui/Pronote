@@ -8,7 +8,15 @@ $response = [
 
 if (isset($_SESSION['user_id'], $_SESSION['role'])) {
     $response['loggedIn'] = true;
-    $response['home'] = ($_SESSION['role'] === 'Admin') ? 'admin_dashboard.php' : 'fill_form.php';
+    if ($_SESSION['role'] === 'Admin') {
+        $response['home'] = 'admin_home.php';
+    } elseif ($_SESSION['role'] === 'Secretary') {
+        $response['home'] = 'secretary_home.php';
+    } elseif ($_SESSION['role'] === 'Teacher') {
+        $response['home'] = 'teacher_home.php';
+    } else {
+        $response['home'] = 'fill_form.php';
+    }
 }
 
 header('Content-Type: application/json');

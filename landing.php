@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/lang/i18n.php';
 
 // If already authenticated, send user to their home
 if (isset($_SESSION['user_id'], $_SESSION['role'])) {
@@ -12,11 +13,11 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pronote - Educational Management System</title>
+    <title><?php echo t('app_name'); ?> - <?php echo t('title_suffix'); ?></title>
     <style>
         * {
             margin: 0;
@@ -441,6 +442,8 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             color: #6f42c1;
         }
 
+        .lang-switcher{display:inline-flex;align-items:center;gap:.25rem;font-size:.875rem}.lang-switcher a{color:#6b7280;text-decoration:none;padding:.25rem .5rem}.lang-switcher a:hover{color:#6f42c1}.lang-switcher a.active{color:#6f42c1;font-weight:600}.lang-sep{color:#9ca3af}
+
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
@@ -476,80 +479,81 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
 <!-- Navigation Bar -->
 <nav class="navbar">
-    <a href="#" class="navbar-brand">📚 Pronote</a>
+    <a href="#" class="navbar-brand">📚 <?php echo t('app_name'); ?></a>
     <div class="navbar-links">
-        <a href="#features">Features</a>
-        <a href="#how-it-works">How It Works</a>
-        <a href="#use-cases">For Teams</a>
-        <a href="login.php" class="btn-login">Login</a>
+        <a href="#features"><?php echo t('nav_features'); ?></a>
+        <a href="#how-it-works"><?php echo t('nav_how_it_works'); ?></a>
+        <a href="#use-cases"><?php echo t('nav_for_teams'); ?></a>
+        <?php include __DIR__ . '/lang/switcher.php'; ?>
+        <a href="login.php" class="btn-login"><?php echo t('login'); ?></a>
     </div>
 </nav>
 
 <!-- Hero Section -->
 <section class="hero">
     <div class="hero-content">
-        <h1>Welcome to Pronote</h1>
-        <p>A Modern Educational Management System for Teachers and Administrators</p>
-        <p style="font-size: 16px; opacity: 0.9;">Manage absences, observations, student records, and class sessions with ease</p>
+        <h1><?php echo t('hero_title'); ?></h1>
+        <p><?php echo t('hero_subtitle'); ?></p>
+        <p style="font-size: 16px; opacity: 0.9;"><?php echo t('hero_subtitle2'); ?></p>
         <div class="hero-buttons">
-            <a href="login.php" class="btn-primary">Get Started</a>
-            <a href="#features" class="btn-secondary">Learn More</a>
+            <a href="login.php" class="btn-primary"><?php echo t('get_started'); ?></a>
+            <a href="#features" class="btn-secondary"><?php echo t('learn_more'); ?></a>
         </div>
     </div>
 </section>
 
 <!-- Features Section -->
 <section class="features" id="features">
-    <h2 class="section-title">✨ Main Features</h2>
-    <p class="section-subtitle">Everything you need to manage your educational institution</p>
+    <h2 class="section-title"><?php echo t('section_main_features'); ?></h2>
+    <p class="section-subtitle"><?php echo t('section_main_features_sub'); ?></p>
     
     <div class="features-grid">
         <div class="feature-card">
             <div class="feature-icon">👨‍🎓</div>
-            <h3>Student Management</h3>
-            <p>Complete student database with categories, sections, and academic grades. Track all student information in one centralized location.</p>
+            <h3><?php echo t('feature_student_mgmt'); ?></h3>
+            <p><?php echo t('feature_student_mgmt_desc'); ?></p>
         </div>
 
         <div class="feature-card">
             <div class="feature-icon">📝</div>
-            <h3>Observation Tracking</h3>
-            <p>Teachers can make detailed observations about student performance. Admins receive real-time notifications for new observations.</p>
+            <h3><?php echo t('feature_observations'); ?></h3>
+            <p><?php echo t('feature_observations_desc'); ?></p>
         </div>
 
         <div class="feature-card">
             <div class="feature-icon">❌</div>
-            <h3>Absence Management</h3>
-            <p>Record and track student absences with dates, times, and motifs. Generate reports and monitor attendance patterns.</p>
+            <h3><?php echo t('feature_absences'); ?></h3>
+            <p><?php echo t('feature_absences_desc'); ?></p>
         </div>
 
         <div class="feature-card">
             <div class="feature-icon">⏰</div>
-            <h3>Study Session Scheduling</h3>
-            <p>Schedule classes and study sessions with specific time slots. Associate teachers, sections, and majors with each session.</p>
+            <h3><?php echo t('feature_sessions'); ?></h3>
+            <p><?php echo t('feature_sessions_desc'); ?></p>
         </div>
 
         <div class="feature-card">
             <div class="feature-icon">📚</div>
-            <h3>Multi-Category Support</h3>
-            <p>Organize students into multiple categories (EOA 1, EOA 2, Master, etc.) and track different educational programs.</p>
+            <h3><?php echo t('feature_categories'); ?></h3>
+            <p><?php echo t('feature_categories_desc'); ?></p>
         </div>
 
         <div class="feature-card">
             <div class="feature-icon">🔔</div>
-            <h3>Real-Time Notifications</h3>
-            <p>Stay updated with instant notifications for new observations and important events in your institution.</p>
+            <h3><?php echo t('feature_notifications'); ?></h3>
+            <p><?php echo t('feature_notifications_desc'); ?></p>
         </div>
 
         <div class="feature-card">
             <div class="feature-icon">🏛️</div>
-            <h3>Section Organization</h3>
-            <p>Organize students into sections within each category for better classroom management and tracking.</p>
+            <h3><?php echo t('feature_sections'); ?></h3>
+            <p><?php echo t('feature_sections_desc'); ?></p>
         </div>
 
         <div class="feature-card">
             <div class="feature-icon">📊</div>
-            <h3>Admin Dashboard</h3>
-            <p>Comprehensive dashboard with statistics, recent activities, and quick search for study sessions and records.</p>
+            <h3><?php echo t('feature_dashboard'); ?></h3>
+            <p><?php echo t('feature_dashboard_desc'); ?></p>
         </div>
     </div>
 </section>
@@ -557,40 +561,40 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 <!-- How It Works Section -->
 <section class="tutorial" id="how-it-works">
     <div class="tutorial-container">
-        <h2 class="section-title">🎯 How It Works</h2>
+        <h2 class="section-title"><?php echo t('section_how_it_works'); ?></h2>
         
         <div class="tutorial-content">
             <div class="tutorial-text">
-                <h3>Quick Start Guide</h3>
+                <h3><?php echo t('quick_start_guide'); ?></h3>
                 
                 <ul class="tutorial-steps">
                     <li>
-                        <strong>1. Login to Your Account</strong>
-                        <span>Use your credentials to access the system as a Teacher or Administrator</span>
+                        <strong><?php echo t('step1_title'); ?></strong>
+                        <span><?php echo t('step1_desc'); ?></span>
                     </li>
                     <li>
-                        <strong>2. Navigate Your Dashboard</strong>
-                        <span>View your personalized dashboard with key statistics and recent activities</span>
+                        <strong><?php echo t('step2_title'); ?></strong>
+                        <span><?php echo t('step2_desc'); ?></span>
                     </li>
                     <li>
-                        <strong>3. Manage Records</strong>
-                        <span>Create observations, record absences, and manage student information</span>
+                        <strong><?php echo t('step3_title'); ?></strong>
+                        <span><?php echo t('step3_desc'); ?></span>
                     </li>
                     <li>
-                        <strong>4. Search & Filter</strong>
-                        <span>Use advanced search to find specific study sessions, students, or records</span>
+                        <strong><?php echo t('step4_title'); ?></strong>
+                        <span><?php echo t('step4_desc'); ?></span>
                     </li>
                     <li>
-                        <strong>5. Stay Informed</strong>
-                        <span>Receive notifications for important events and maintain your profile</span>
+                        <strong><?php echo t('step5_title'); ?></strong>
+                        <span><?php echo t('step5_desc'); ?></span>
                     </li>
                 </ul>
             </div>
 
             <div class="tutorial-visual">
                 <div class="tutorial-visual-icon">🚀</div>
-                <h4>Ready to Get Started?</h4>
-                <p>Login to access the full power of Pronote and streamline your educational management</p>
+                <h4><?php echo t('ready_to_start'); ?></h4>
+                <p><?php echo t('ready_to_start_desc'); ?></p>
             </div>
         </div>
     </div>
@@ -598,23 +602,23 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
 <!-- Use Cases Section -->
 <section class="use-cases" id="use-cases">
-    <h2 class="section-title">👥 For Different Roles</h2>
-    <p class="section-subtitle">Designed with different user roles in mind</p>
+    <h2 class="section-title"><?php echo t('section_for_roles'); ?></h2>
+    <p class="section-subtitle"><?php echo t('section_for_roles_sub'); ?></p>
     
     <div class="use-cases-grid">
         <div class="use-case-card">
-            <h4>👨‍🏫 Teachers</h4>
-            <p>Record observations about student performance, track absences during your classes, and view your schedule of study sessions. Keep detailed notes on each student's progress.</p>
+            <h4><?php echo t('for_teachers'); ?></h4>
+            <p><?php echo t('for_teachers_desc'); ?></p>
         </div>
 
         <div class="use-case-card">
-            <h4>👔 Administrators</h4>
-            <p>Oversee all educational operations with a comprehensive dashboard. Manage students, teachers, classes, and receive real-time notifications about observations and absences.</p>
+            <h4><?php echo t('for_admins'); ?></h4>
+            <p><?php echo t('for_admins_desc'); ?></p>
         </div>
 
         <div class="use-case-card">
-            <h4>📊 Analytics & Insights</h4>
-            <p>Track institution-wide metrics including total students, teachers, classes, and sessions. Monitor trends in observations and absences to improve educational outcomes.</p>
+            <h4><?php echo t('analytics_insights'); ?></h4>
+            <p><?php echo t('analytics_insights_desc'); ?></p>
         </div>
     </div>
 </section>
@@ -622,23 +626,23 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 <!-- CTA Section -->
 <section class="cta">
     <div class="cta-content">
-        <h2>Ready to Transform Your Educational Management?</h2>
-        <p>Join educators and administrators using Pronote to streamline their operations and improve student outcomes.</p>
-        <a href="login.php" class="btn-primary" style="background: white; color: #6f42c1;">Login Now</a>
+        <h2><?php echo t('cta_title'); ?></h2>
+        <p><?php echo t('cta_sub'); ?></p>
+        <a href="login.php" class="btn-primary" style="background: white; color: #6f42c1;"><?php echo t('login_now'); ?></a>
     </div>
 </section>
 
 <!-- Footer -->
 <footer class="footer">
-    <p>&copy; 2025 Pronote - Educational Management System. All rights reserved.</p>
+    <p><?php echo t('footer_copyright'); ?></p>
     <div class="footer-links">
-        <a href="#">Privacy Policy</a>
+        <a href="#"><?php echo t('footer_privacy'); ?></a>
         <span>•</span>
-        <a href="#">Terms of Service</a>
+        <a href="#"><?php echo t('footer_terms'); ?></a>
         <span>•</span>
-        <a href="#">Contact Support</a>
+        <a href="#"><?php echo t('footer_contact'); ?></a>
     </div>
-    <p>Empowering Education Through Technology</p>
+    <p><?php echo t('footer_tagline'); ?></p>
 </footer>
 
 </body>

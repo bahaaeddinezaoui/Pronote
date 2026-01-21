@@ -1,6 +1,7 @@
 <?php
 // Start the session at the very top of the script
 session_start();
+require_once __DIR__ . '/lang/i18n.php';
 
 // Ensure the script only runs when the form is submitted via POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -21,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Check connection
     if ($conn->connect_error) {
-        echo json_encode(['success' => false, 'message' => 'Database connection failed']);
+        echo json_encode(['success' => false, 'message' => t('db_connection_failed')]);
         exit;
     }
 
@@ -43,18 +44,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_id'] = $user_id;
             $_SESSION['role'] = $role;
 
-            $redirect = ($role === 'Teacher') ? 'teacher_home.php' : 'admin_home.php';
+            $redirect = 'admin_home.php';
+            if ($role === 'Teacher') {
+                $redirect = 'teacher_home.php';
+            } elseif ($role === 'Secretary') {
+                $redirect = 'secretary_home.php';
+            }
+
             echo json_encode(['success' => true, 'redirect' => $redirect]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Invalid username or password.']);
+            echo json_encode(['success' => false, 'message' => t('invalid_credentials')]);
         }
     } else {
-        echo json_encode(['success' => false, 'message' => 'Invalid username or password.']);
+        echo json_encode(['success' => false, 'message' => t('invalid_credentials')]);
     }
 
     $stmt->close();
     $conn->close();
 } else {
-    echo "Access denied.";
+    echo t('access_denied');
 }
 ?>

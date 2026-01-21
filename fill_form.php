@@ -2,6 +2,7 @@
 // fill_form.php (merged absences + observations) – updated to include CLASS selector
 session_start();
 date_default_timezone_set('Africa/Algiers');
+require_once __DIR__ . '/lang/i18n.php';
 
 // --- DATABASE CONNECTION SETUP ---
 $servername = "localhost";
@@ -251,7 +252,7 @@ if ($slot_found && !empty($logged_in_teacher_serial)) {
             $existing_session_id = $res->fetch_assoc()['STUDY_SESSION_ID'];
             // Store in session for usage in submit_observation
             $_SESSION['current_study_session_id'] = $existing_session_id;
-            $session_status_message = "Session already exists for this slot. You can only record observations.";
+            $session_status_message = t('session_exists_note');
         }
                 $chk->close();
     }
@@ -309,12 +310,12 @@ if ($class_q) {
 // Render HTML
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="styles.css" />
-    <title>Fill Form (Absences & Observations)</title>
+    <title><?php echo t('absentees_observations'); ?> - <?php echo t('app_name'); ?></title>
     <style>
         .tab-buttons { display:none; } /* Hidden as moved to navbar */
         .form-section { display:none; }
@@ -330,29 +331,11 @@ if ($class_q) {
 </head>
 <body>
 
-<div class="parent">
-    <div class="div1" id="navbar">
-        <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
-            <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
-            <div style="display:flex; align-items:center; gap:12px;">
-                <a href="teacher_home.php" id="home" class="navbar_buttons">Home</a>
-                
-                <?php if (!$existing_session_found): ?>
-                    <a href="?tab=absences" id="tabAbs" class="navbar_buttons <?php echo $show_abs_initially ? 'active' : ''; ?>">Absences</a>
-                <?php else: ?>
-                    <a href="#" class="navbar_buttons" style="opacity:0.5; cursor:not-allowed;">Absences (Done)</a>
-                <?php endif; ?>
-                <a href="?tab=observations" id="tabObs" class="navbar_buttons <?php echo $show_obs_initially ? 'active' : ''; ?>">Observations</a>
-    
-                <a href="profile.php" class="navbar_buttons">Profile</a>
-            </div>
-            <a href="logout.php" class="navbar_buttons logout-btn" style="margin-left:auto;">Logout</a>
-        </div>
-    </div>
-
-    <div class="div2" id="left_side">
+<div class="app-layout">
+    <?php include 'sidebar.php'; ?>
+    <div class="main-content">
         <fieldset id="form_fill">
-            <legend id="form_legend">Absentees and Observations</legend>
+            <legend id="form_legend"><?php echo t('absentees_observations'); ?></legend>
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                 <?php if ($existing_session_found): ?>
@@ -375,25 +358,25 @@ if ($class_q) {
                     <input type="hidden" name="time_slot" value="<?php echo htmlspecialchars($selected_slot_value); ?>">
                     <!-- NEW: Class selector -->
                     <div>
-                        <label for="class_select">Select Class:</label>
+                        <label for="class_select"><?php echo t('select_class'); ?>:</label>
                         <select id="class_select" name="class_id" required>
-                            <option value="">-- Select a Class --</option>
+                            <option value=""><?php echo t('select_class_placeholder'); ?></option>
                             <?php
                             if (!empty($classes)) {
                                 foreach ($classes as $c) {
                                     echo '<option value="' . htmlspecialchars($c['id']) . '">' . htmlspecialchars($c['name']) . '</option>';
                                 }
                             } else {
-                                echo '<option value="" disabled>No classes found</option>';
+                                echo '<option value="" disabled>' . t('no_classes_found') . '</option>';
                             }
                             ?>
                         </select>
                     </div>
 
                     <div>
-                        <label for="categories">Select category to teach:</label>
+                        <label for="categories"><?php echo t('select_category_to_teach'); ?>:</label>
                         <select name="categories" id="categories" required onchange="loadMajors()">
-                            <option value="" disabled selected>Choose a category</option>
+                            <option value="" disabled selected><?php echo t('choose_category'); ?></option>
                             <?php
                             if (!empty($teacher_categories)) {
                                 foreach ($teacher_categories as $category) {
@@ -401,9 +384,9 @@ if ($class_q) {
                                 }
                             } else {
                                 if (empty($logged_in_teacher_serial)) {
-                                    echo '<option value="" disabled>Please log in as a teacher</option>';
+                                    echo '<option value="" disabled>' . t('please_login_as_teacher') . '</option>';
                                 } else {
-                                    echo '<option value="" disabled>No categories found for this teacher</option>';
+                                    echo '<option value="" disabled>' . t('no_categories_found') . '</option>';
                                 }
                             }
                             ?>
@@ -411,9 +394,9 @@ if ($class_q) {
                     </div>
 
                     <div>
-                        <label for="sections">Select major to teach:</label>
+                        <label for="sections"><?php echo t('select_major_to_teach'); ?>:</label>
                         <select name="sections" id="sections" required onchange="loadSections()">
-                            <option value="" disabled selected>Choose a category first</option>
+                            <option value="" disabled selected><?php echo t('choose_category_first'); ?></option>
                         </select>
                     </div>
 
@@ -423,66 +406,66 @@ if ($class_q) {
                         <div id="stats_container" style="margin-bottom:15px; display:none; width: 100%; gap: 15px;">
                             <div style="flex: 1; text-align: center; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                                 <span id="total_students" style="display:block; font-size: 2.5rem; font-weight: 800; color: #4f46e5; line-height: 1.1; margin-bottom: 4px;">0</span>
-                                <span style="display:block; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Total Students</span>
+                                <span style="display:block; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;"><?php echo t('total_students'); ?></span>
                             </div>
                             <div style="flex: 1; text-align: center; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                                 <span id="presentees" style="display:block; font-size: 2.5rem; font-weight: 800; color: #10b981; line-height: 1.1; margin-bottom: 4px;">0</span>
-                                <span style="display:block; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Presentees</span>
+                                <span style="display:block; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;"><?php echo t('presentees'); ?></span>
                             </div>
                             <div style="flex: 1; text-align: center; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                                 <span id="absentees" style="display:block; font-size: 2.5rem; font-weight: 800; color: #ef4444; line-height: 1.1; margin-bottom: 4px;">0</span>
-                                <span style="display:block; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;">Absentees</span>
+                                <span style="display:block; font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em;"><?php echo t('absentees'); ?></span>
                             </div>
                         </div>
                         <table id="student_table">
                             <thead>
                                 <tr>
-                                    <th>Last Name</th>
-                                    <th>First Name</th>
-                                    <th>Motif</th>
-                                    <th>Observation</th>
-                                    <th>Actions</th>
+                                    <th><?php echo t('last_name'); ?></th>
+                                    <th><?php echo t('first_name'); ?></th>
+                                    <th><?php echo t('motif'); ?></th>
+                                    <th><?php echo t('observation'); ?></th>
+                                    <th><?php echo t('actions'); ?></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
 
                         <div id="add_row_container" style="margin-top:10px; display:none;">
-                            <button type="button" onclick="addStudentRow()">➕ Add Student</button>
+                            <button type="button" onclick="addStudentRow()"><?php echo t('add_student'); ?></button>
                         </div>
 
 
                     </div>
 
                     <div style="margin-top:12px;">
-                        <button type="submit" id="submit_button">Submit Absences</button>
+                        <button type="submit" id="submit_button"><?php echo t('submit_absences'); ?></button>
                     </div>
                 </form>
             </div>
 
             <!-- OBSERVATIONS -->
             <div id="observations_section" class="form-section <?php echo $existing_session_found ? 'active' : ''; ?>">
-                <h3>Record an Observation (one student)</h3>
+                <h3><?php echo t('record_observation'); ?></h3>
 
                 <div style="position:relative; max-width:420px;">
-                    <label for="obs_student_input">Student (type first or last name):</label><br>
-                    <input type="text" id="obs_student_input" placeholder="Search student..." autocomplete="off" style="width:100%;">
+                    <label for="obs_student_input"><?php echo t('student'); ?> (<?php echo t('first_name'); ?> / <?php echo t('last_name'); ?>):</label><br>
+                    <input type="text" id="obs_student_input" placeholder="<?php echo t('student_search_placeholder'); ?>" autocomplete="off" style="width:100%;">
                     <ul id="obs_suggestions" class="suggestions-list" style="display:none;"></ul>
                     <input type="hidden" id="obs_student_serial" name="obs_student_serial">
                 </div>
 
                 <div style="margin-top:8px;">
-                    <label for="obs_motif">Motif (max 30 chars)</label><br>
+                    <label for="obs_motif"><?php echo t('motif_max'); ?></label><br>
                     <input type="text" id="obs_motif" maxlength="30" style="width:100%;">
                 </div>
 
                 <div style="margin-top:8px;">
-                    <label for="obs_note">Note (optional)</label><br>
+                    <label for="obs_note"><?php echo t('note_optional'); ?></label><br>
                     <textarea id="obs_note" maxlength="256" rows="4" style="width:100%;"></textarea>
                 </div>
 
                 <div style="margin-top:10px;">
-                    <button type="button" id="obs_submit_btn">Submit Observation</button>
+                    <button type="button" id="obs_submit_btn"><?php echo t('submit_observation'); ?></button>
                 </div>
 
                 <div id="obs_response" style="margin-top:8px; font-weight:bold;"></div>
@@ -491,6 +474,10 @@ if ($class_q) {
         </fieldset>
     </div>
 
+</div>
+
+</div>
+</div>
 </div>
 
 <script>
@@ -502,7 +489,7 @@ function loadMajors() {
     const studentTableBody = document.querySelector('#student_table tbody');
     const categoryId = categorySelect.value;
 
-    majorSelect.innerHTML = '<option value="" disabled selected>Loading...</option>';
+    majorSelect.innerHTML = '<option value="" disabled selected>' + (T.loading || 'Loading...') + '</option>';
     sectionContainer.innerHTML = '';
     studentTableBody.innerHTML = '';
 
@@ -534,7 +521,7 @@ function updateAbsenteesAndPresentees() {
     const presenteesLabel = document.getElementById('presentees');
 
     if (absentees > total) {
-        alert('⚠️ You cannot have more absentees than the total number of students.');
+        alert('⚠️ ' + (T.cannot_more_absentees_than_total || 'You cannot have more absentees than the total number of students.'));
         tableBody.lastElementChild?.remove();
         return updateAbsenteesAndPresentees();
     }
@@ -549,7 +536,7 @@ function loadSections() {
     const studentTableBody = document.querySelector('#student_table tbody');
     const majorId = majorSelect.value;
 
-    sectionContainer.innerHTML = '<p>Loading sections...</p>';
+    sectionContainer.innerHTML = '<p>' + (T.loading_sections || 'Loading sections...') + '</p>';
     studentTableBody.innerHTML = '';
 
     if (!majorId) return;
@@ -583,10 +570,10 @@ function loadSections() {
                 });
                 sectionContainer.appendChild(gridDiv);
             } else {
-                sectionContainer.innerHTML = '<p>No sections found for this major.</p>';
+                sectionContainer.innerHTML = '<p>' + (T.no_sections_found || 'No sections found for this major.') + '</p>';
             }
         })
-        .catch(() => sectionContainer.innerHTML = '<p>Error loading sections.</p>');
+        .catch(() => sectionContainer.innerHTML = '<p>' + (T.error_loading || 'Error loading sections.') + '</p>');
 }
 
 function loadStudents() {
@@ -638,7 +625,7 @@ function addStudentRow() {
     const currentAbsentees = document.querySelectorAll('#student_table tbody tr').length;
 
     if (currentAbsentees >= total) {
-        alert('⚠️ All students in the selected section(s) are already marked. You cannot add more absentees.');
+        alert('⚠️ ' + (T.all_students_marked || 'All students in the selected section(s) are already marked. You cannot add more absentees.'));
         return;
     }
 
@@ -718,7 +705,7 @@ function searchStudent(inputElement) {
                 });
 
                 if (alreadyExists) {
-                    alert('⚠️ This student is already added to the table.');
+                    alert('⚠️ ' + (T.student_already_added || 'This student is already added to the table.'));
                     suggestionBox.innerHTML = '';
                     inputElement.value = '';
                     const currentRow = inputElement.closest('tr');
@@ -795,8 +782,8 @@ document.getElementById('obs_submit_btn').addEventListener('click', function() {
     const note = document.getElementById('obs_note').value.trim();
     const resp = document.getElementById('obs_response');
 
-    if (!serial) { resp.textContent = 'Please select a student from suggestions.'; return; }
-    if (!motif) { resp.textContent = 'Motif is required.'; return; }
+    if (!serial) { resp.textContent = (T.please_select_student || 'Please select a student from suggestions.'); return; }
+    if (!motif) { resp.textContent = (T.motif_required || 'Motif is required.'); return; }
 
     const fd = new FormData();
     fd.append('action', 'submit_observation');
@@ -816,12 +803,12 @@ document.getElementById('obs_submit_btn').addEventListener('click', function() {
             document.getElementById('obs_motif').value = '';
             document.getElementById('obs_note').value = '';
         } else {
-            alert(obj.message || 'Error saving observation.');
+            alert(obj.message || (T.error_saving_observation || 'Error saving observation.'));
         }
     })
     .catch(err => {
         console.error('Observation submit error', err);
-        alert('Error contacting server.');
+        alert(T.error_contacting_server || 'Error contacting server.');
     });
 });
 
@@ -862,7 +849,7 @@ document.getElementById('absence_main_form').addEventListener('submit', function
     const formData = new FormData(this);
     const submitBtn = document.getElementById('submit_button');
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting...';
+    submitBtn.textContent = (T.submitting || 'Submitting...');
     
     fetch('submit_form.php', {
         method: 'POST',
@@ -883,16 +870,16 @@ document.getElementById('absence_main_form').addEventListener('submit', function
             // Switch to Observations tab
             document.getElementById('tabObs').click();
         } else {
-            alert(data.message || 'Error submitting form.');
+            alert(data.message || (T.error_submitting || 'Error submitting form.'));
         }
     })
     .catch(err => {
         console.error('Error submitting absence form:', err);
-        alert('Error submitting form. Please try again.');
+        alert(T.error_submitting_please_retry || 'Error submitting form. Please try again.');
     })
     .finally(() => {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit Absences';
+        submitBtn.textContent = T.submit_absences || 'Submit Absences';
     });
 });
 </script>

@@ -2,6 +2,7 @@
 // admin_dashboard.php - Admin view to see sessions by date and time slot
 session_start();
 date_default_timezone_set('Africa/Algiers');
+require_once __DIR__ . '/lang/i18n.php';
 
 // Check if user is logged in as Admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
@@ -49,12 +50,12 @@ $time_slots = [
 $conn->close();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>Admin Dashboard</title>
+    <title><?php echo t('search'); ?> - <?php echo t('app_name'); ?></title>
     <style>
         /* Match fill_form look & feel */
         body {
@@ -69,37 +70,6 @@ $conn->close();
             max-width: 1200px;
             margin: 20px auto;
             padding: 0 20px 30px;
-        }
-        
-        .navbar-admin {
-            background: #fff;
-            padding: 1rem 2rem;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .navbar-admin a {
-            text-decoration: none;
-            color: #6b7280;
-            padding: 0.5rem 1rem;
-            margin-left: 1rem;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .navbar-admin a:hover {
-            background: #f3f4f6;
-            color: #4f46e5;
         }
         
         .filters-section, .sessions-section {
@@ -354,102 +324,7 @@ $conn->close();
             background-color: #f7f9fc;
         }
 
-        /* Notification styles */
-        .notification-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: #dc2626;
-            color: white;
-            border-radius: 50%;
-            min-width: 24px;
-            height: 24px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-left: 8px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .notification-bell {
-            cursor: pointer;
-            font-size: 20px;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .notifications-panel {
-            display: none;
-            position: absolute;
-            top: 50px;
-            right: 0;
-            width: 400px;
-            max-height: 500px;
-            overflow-y: auto;
-            background: #fff;
-            border: 1px solid #bbb;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
-
-        .notifications-panel.active {
-            display: block;
-        }
-
-        .notification-item {
-            padding: 12px;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            background-color: #fef3c7;
-            border-left: 4px solid #f59e0b;
-        }
-
-        .notification-item:hover {
-            background-color: #fde68a;
-        }
-
-        .notification-item.new {
-            background-color: #dbeafe;
-            border-left-color: #3b82f6;
-            font-weight: 500;
-        }
-
-        .notification-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 6px;
-        }
-
-        .notification-item-student {
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 14px;
-        }
-
-        .notification-item-time {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        .notification-item-details {
-            font-size: 13px;
-            color: #374151;
-            margin-top: 4px;
-        }
-
-        .notification-empty {
-            padding: 20px;
-            text-align: center;
-            color: #9ca3af;
-        }
+        /* Notification styles removed (centralized in sidebar.php) */
 
         /* Highlight new observations in modal */
         .observation-item.new-observation {
@@ -561,44 +436,23 @@ $conn->close();
 </head>
 <body>
 
-<div class="navbar-admin">
-    <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
-        <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
-        <div style="display:flex; align-items:center;">
-            <a href="admin_home.php" class="navbar_buttons">Home</a>
-            <a href="admin_dashboard.php" class="navbar_buttons active">Search</a>
-            <a href="admin_search_student.php" class="navbar_buttons">Student Records</a>
-            <a href="profile.php" class="navbar_buttons">Profile</a>
-        </div>
-        <div style="display:flex; align-items:center; gap:16px; margin-left:auto;">
-            <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
-                🔔
-                <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
-                <div class="notifications-panel" id="notificationsPanel">
-                    <div style="padding:16px; border-bottom:1px solid #e5e7eb; font-weight:600; background:#f9fafb;">
-                        New Observations
-                    </div>
-                    <div id="notificationsContent"></div>
-                </div>
-            </div>
-            <a href="logout.php" class="navbar_buttons logout-btn">Logout</a>
-        </div>
-    </div>
-</div>
+<div class="app-layout">
+    <?php include 'sidebar.php'; ?>
+    <div class="main-content">
 
 <div class="admin-container">
     <div class="filters-section">
-        <h2>Search Study Sessions</h2>
+        <h2><?php echo t('search_study_sessions'); ?></h2>
         
         <div class="filter-group">
-            <label for="session_date">Select Date:</label>
+            <label for="session_date"><?php echo t('select_date'); ?></label>
             <input type="date" id="session_date" value="<?php echo $current_date; ?>">
         </div>
         
         <div class="filter-group">
-            <label for="time_slot">Select Time Slot:</label>
+            <label for="time_slot"><?php echo t('select_time_slot'); ?></label>
             <select id="time_slot">
-                <option value="">-- All Time Slots --</option>
+                <option value=""><?php echo t('all_time_slots'); ?></option>
                 <?php foreach ($time_slots as $slot): ?>
                     <option value="<?php echo htmlspecialchars($slot['start'] . '|' . $slot['end']); ?>">
                         <?php echo htmlspecialchars($slot['value']); ?>
@@ -607,18 +461,18 @@ $conn->close();
             </select>
         </div>
         
-        <button class="search-btn" onclick="searchSessions()">🔍 Search Sessions</button>
+        <button class="search-btn" onclick="searchSessions()"><?php echo t('search_sessions'); ?></button>
     </div>
     
     <div class="sessions-section">
-        <h2>Study Sessions</h2>
+        <h2><?php echo t('study_sessions'); ?></h2>
         <div id="sessions_container">
-            <p class="no-data">Please select a date and click "Search Sessions" to view study sessions.</p>
+            <p class="no-data"><?php echo t('please_select_date_search'); ?></p>
         </div>
     </div>
 
     <div class="absence-summary-section" id="absenceSummarySection" style="display:none;">
-        <h2>📊 Absence Summary</h2>
+        <h2><?php echo t('absence_summary'); ?></h2>
         <div id="absenceSummaryContainer"></div>
     </div>
 </div>
@@ -626,23 +480,22 @@ $conn->close();
 <div id="session_modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="session_modal_title">
     <div class="modal-card">
         <div class="modal-header">
-            <h3 id="session_modal_title" style="margin:0; font-size:18px; color:#6f42c1;">Session details</h3>
-            <button class="modal-close" aria-label="Close" onclick="closeSessionModal()">&times;</button>
+            <h3 id="session_modal_title" style="margin:0; font-size:18px; color:#6f42c1;"><?php echo t('session_details'); ?></h3>
+            <button class="modal-close" aria-label="<?php echo t('close'); ?>" onclick="closeSessionModal()">&times;</button>
         </div>
         <div id="modal_body"></div>
     </div>
 </div>
+</div>
+
+</div>
+</div>
+</div>
 
 <script>
+var T = <?php echo json_encode($T); ?>;
 let latestSessions = [];
-let newNotifications = [];
 
-function toggleNotificationsPanel() {
-    const panel = document.getElementById('notificationsPanel');
-    if (panel) {
-        panel.classList.toggle('active');
-    }
-}
 
 function markObservationRead(observationId) {
     fetch('mark_observation_read.php', {
@@ -652,93 +505,7 @@ function markObservationRead(observationId) {
     }).catch(err => console.error('Error marking observation as read:', err));
 }
 
-function fetchNotifications() {
-    fetch('get_new_notifications.php')
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                newNotifications = data.notifications;
-                updateNotificationDisplay();
-            }
-        })
-        .catch(err => console.error('Error fetching notifications:', err));
-}
 
-function updateNotificationDisplay() {
-    const countBadge = document.getElementById('notificationCount');
-    const content = document.getElementById('notificationsContent');
-    
-    if (newNotifications.length > 0) {
-        countBadge.textContent = newNotifications.length;
-        countBadge.style.display = 'flex';
-        
-        let html = '';
-        newNotifications.forEach((notif, idx) => {
-            html += `<div class="notification-item new" onclick="handleNotificationClick(${idx})">
-                <div class="notification-item-header">
-                    <span class="notification-item-student">${notif.student_name}</span>
-                    <span class="notification-item-time">${notif.observation_time}</span>
-                </div>
-                <div class="notification-item-details">
-                    <div><strong>Teacher:</strong> ${notif.teacher_name}</div>
-                    <div><strong>Session:</strong> ${notif.session_date} (${notif.session_time})</div>
-                    <div><strong>Motif:</strong> ${notif.motif}</div>
-                </div>
-            </div>`;
-        });
-        content.innerHTML = html;
-    } else {
-        countBadge.style.display = 'none';
-        content.innerHTML = '<div class="notification-empty">No new observations</div>';
-    }
-}
-
-function handleNotificationClick(notifIndex) {
-    const notif = newNotifications[notifIndex];
-    if (!notif) return;
-
-    // Close notifications panel
-    const panel = document.getElementById('notificationsPanel');
-    if (panel) panel.classList.remove('active');
-
-    // Fetch this specific session to get fresh data (including the new observation)
-    // We reuse searchSessions logic but pointing to a specific ID
-    fetch('get_admin_sessions.php?number=' + encodeURIComponent(notif.session_id))
-        .then(res => res.json())
-        .then(data => {
-            if (data.success && data.sessions && data.sessions.length > 0) {
-                // Update our latestSessions list with this fresh session 
-                // (or just use it directly, but updating list keeps state consistent if we view others)
-                const freshSession = data.sessions[0];
-                
-                // Check if it's already in our list, if so replace it, otherwise add it
-                const existingIdx = latestSessions.findIndex(s => s.session_id == freshSession.session_id);
-                if (existingIdx >= 0) {
-                    latestSessions[existingIdx] = freshSession;
-                    openSessionModal(existingIdx);
-                } else {
-                    latestSessions.push(freshSession);
-                    openSessionModal(latestSessions.length - 1);
-                }
-            } else {
-                alert('Session details could not be loaded.');
-            }
-        })
-        .catch(err => {
-            console.error('Error fetching session details:', err);
-            alert('Error loading session details.');
-        });
-}
-
-// Close notifications panel when clicking outside
-document.addEventListener('click', function(event) {
-    const notifBell = document.getElementById('notificationBell');
-    const panel = document.getElementById('notificationsPanel');
-    
-    if (notifBell && panel && !notifBell.contains(event.target)) {
-        panel.classList.remove('active');
-    }
-});
 
 function closeSessionModal() {
     const modal = document.getElementById('session_modal');
@@ -757,15 +524,15 @@ function openSessionModal(index) {
     html += '<h3>Session #' + session.session_id + '</h3>';
 
     html += '<div class="session-info">';
-    html += '<div class="session-info-item"><strong>Teacher:</strong> ' + session.teacher_name + '</div>';
-    html += '<div class="session-info-item"><strong>Class:</strong> ' + (session.class_name || 'N/A') + '</div>';
-    html += '<div class="session-info-item"><strong>Date:</strong> ' + session.session_date + '</div>';
-    html += '<div class="session-info-item"><strong>Time:</strong> ' + session.start_time + ' - ' + session.end_time + '</div>';
+    html += '<div class="session-info-item"><strong>' + (T.teacher_label||'Teacher') + ':</strong> ' + session.teacher_name + '</div>';
+    html += '<div class="session-info-item"><strong>' + (T.class_label||'Class') + ':</strong> ' + (session.class_name || 'N/A') + '</div>';
+    html += '<div class="session-info-item"><strong>' + (T.date||'Date') + ':</strong> ' + session.session_date + '</div>';
+    html += '<div class="session-info-item"><strong>' + (T.time||'Time') + ':</strong> ' + session.start_time + ' - ' + session.end_time + '</div>';
     html += '</div>';
 
     if (session.sections && session.sections.length > 0) {
         html += '<div class="sections-list">';
-        html += '<h4>Sections:</h4>';
+        html += '<h4>' + (T.sections||'Sections') + '</h4>';
         html += '<ul style="margin: 0; padding-left: 20px;">';
         session.sections.forEach(sec => {
             html += '<li>' + sec + '</li>';
@@ -776,9 +543,9 @@ function openSessionModal(index) {
 
     if (session.absences && session.absences.length > 0) {
         html += '<div class="absences-list">';
-        html += '<h4>Absences (' + session.absences.length + '):</h4>';
+        html += '<h4>' + (T.absences_count || 'Absences').replace('%s', session.absences.length) + '</h4>';
         html += '<table class="detail-table">';
-        html += '<tr><th>Student</th><th>Time</th><th>Motif</th><th>Observation</th></tr>';
+        html += '<tr><th>' + (T.student||'Student') + '</th><th>' + (T.time||'Time') + '</th><th>' + (T.motif_label||'Motif') + '</th><th>' + (T.observation||'Observation') + '</th></tr>';
         session.absences.forEach(abs => {
             html += '<tr>';
             html += '<td>' + abs.student_name + '</td>';
@@ -790,14 +557,14 @@ function openSessionModal(index) {
         html += '</table>';
         html += '</div>';
     } else {
-        html += '<div class="absences-list"><p class="no-data">No absences recorded</p></div>';
+        html += '<div class="absences-list"><p class="no-data">' + (T.no_absences_recorded||'No absences recorded') + '</p></div>';
     }
 
     if (session.observations && session.observations.length > 0) {
         html += '<div class="observations-list">';
-        html += '<h4>Observations (' + session.observations.length + '):</h4>';
+        html += '<h4>' + (T.observations_count || 'Observations').replace('%s', session.observations.length) + '</h4>';
         html += '<table class="detail-table">';
-        html += '<tr><th>Student</th><th>Teacher</th><th>Time</th><th>Motif</th><th>Note</th></tr>';
+        html += '<tr><th>' + (T.student||'Student') + '</th><th>' + (T.teacher||'Teacher') + '</th><th>' + (T.time||'Time') + '</th><th>' + (T.motif_label||'Motif') + '</th><th>' + (T.note||'Note') + '</th></tr>';
         session.observations.forEach(obs => {
             const isNew = obs.is_new_for_admin ? 'class="new-observation-row"' : '';
             html += '<tr ' + isNew + '>';
@@ -815,7 +582,7 @@ function openSessionModal(index) {
         html += '</table>';
         html += '</div>';
     } else {
-        html += '<div class="observations-list"><p class="no-data">No observations recorded</p></div>';
+        html += '<div class="observations-list"><p class="no-data">' + (T.no_observations_recorded||'No observations recorded') + '</p></div>';
     }
 
     html += '</div>'; // session-card
@@ -847,7 +614,7 @@ function searchSessions() {
         return;
     }
     
-    container.innerHTML = '<p class="loading">Loading sessions...</p>';
+    container.innerHTML = '<p class="loading">' + (T.loading_sessions || 'Loading sessions...') + '</p>';
     
     let url = 'get_admin_sessions.php?date=' + encodeURIComponent(date);
     if (timeSlot) {
@@ -864,7 +631,7 @@ function searchSessions() {
             }
             
             if (!data.sessions || data.sessions.length === 0) {
-                container.innerHTML = '<p class="no-data">No sessions found for the selected date/time.</p>';
+                container.innerHTML = '<p class="no-data">' + (T.no_sessions_found || 'No sessions found for the selected date/time.') + '</p>';
                 document.getElementById('absenceSummarySection').style.display = 'none';
                 return;
             }
@@ -888,7 +655,7 @@ function searchSessions() {
         })
         .catch(err => {
             console.error('Error fetching sessions:', err);
-            container.innerHTML = '<p class="no-data">Error loading sessions. Please try again.</p>';
+            container.innerHTML = '<p class="no-data">' + (T.error_loading_sessions || 'Error loading sessions. Please try again.') + '</p>';
             document.getElementById('absenceSummarySection').style.display = 'none';
         });
 }
@@ -920,7 +687,7 @@ function displayAbsenceSummary(data) {
     const container = document.getElementById('absenceSummaryContainer');
 
     if (!data.absences || data.absences.length === 0) {
-        container.innerHTML = '<div class="no-absences-message">✓ No absences recorded for the selected date and time</div>';
+        container.innerHTML = '<div class="no-absences-message">' + (T.no_absences_for_date || '✓ No absences recorded for the selected date and time') + '</div>';
         section.style.display = 'block';
         return;
     }
@@ -942,17 +709,17 @@ function displayAbsenceSummary(data) {
     // Stats cards
     html += '<div class="absence-stats-grid">';
     html += '<div class="absence-stat-card">';
-    html += '<div class="absence-stat-label">Total Absences</div>';
+    html += '<div class="absence-stat-label">' + (T.total_absences||'Total Absences') + '</div>';
     html += '<div class="absence-stat-number">' + totalAbsences + '</div>';
     html += '</div>';
     
     html += '<div class="absence-stat-card">';
-    html += '<div class="absence-stat-label">Students Absent</div>';
+    html += '<div class="absence-stat-label">' + (T.students_absent||'Students Absent') + '</div>';
     html += '<div class="absence-stat-number">' + uniqueStudents + '</div>';
     html += '</div>';
     
     html += '<div class="absence-stat-card">';
-    html += '<div class="absence-stat-label">Most Common Motif</div>';
+    html += '<div class="absence-stat-label">' + (T.most_common_motif||'Most Common Motif') + '</div>';
     html += '<div class="absence-stat-number" style="font-size: 16px; overflow: hidden; text-overflow: ellipsis;">' + mostCommonMotif + '</div>';
     html += '</div>';
     html += '</div>';
@@ -960,11 +727,11 @@ function displayAbsenceSummary(data) {
     // Detailed absence table
     html += '<table class="absence-details-table">';
     html += '<thead><tr>';
-    html += '<th>Student Name</th>';
-    html += '<th>Date</th>';
-    html += '<th>Time</th>';
-    html += '<th>Motif</th>';
-    html += '<th>Observation</th>';
+    html += '<th>' + (T.student_name||'Student Name') + '</th>';
+    html += '<th>' + (T.date||'Date') + '</th>';
+    html += '<th>' + (T.time||'Time') + '</th>';
+    html += '<th>' + (T.motif_label||'Motif') + '</th>';
+    html += '<th>' + (T.observation||'Observation') + '</th>';
     html += '</tr></thead>';
     html += '<tbody>';
     
@@ -989,10 +756,7 @@ window.addEventListener('DOMContentLoaded', function() {
     // Small delay to ensure the date input is properly set
     setTimeout(function() {
         searchSessions();
-        fetchNotifications();
-        
-        // Fetch notifications every 5 seconds for real-time updates
-        setInterval(fetchNotifications, 5000);
+        // Notifications are handled by sidebar.php
     }, 100);
 });
 </script>

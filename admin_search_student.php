@@ -2,6 +2,7 @@
 // admin_search_student.php - Search for students and view their records
 session_start();
 date_default_timezone_set('Africa/Algiers');
+require_once __DIR__ . '/lang/i18n.php';
 
 // Check if user is logged in as Admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
@@ -37,11 +38,11 @@ if (isset($_SESSION['user_id'])) {
 $conn->close();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Student Records - Admin</title>
+    <title><?php echo t('student_records'); ?> - <?php echo t('app_name'); ?></title>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -58,41 +59,6 @@ $conn->close();
             padding: 0 20px 30px;
         }
         
-        .navbar-admin {
-            background: #fff;
-            padding: 1rem 2rem;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .navbar-admin a {
-            text-decoration: none;
-            color: #6b7280;
-            padding: 0.5rem 1rem;
-            margin-left: 1rem;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .navbar-admin a:hover {
-            background: #f3f4f6;
-            color: #4f46e5;
-        }
-
-        .navbar-admin a.active {
-            color: #6f42c1;
-            font-weight: 600;
-        }
 
         .search-section {
             background: #fff;
@@ -398,102 +364,7 @@ $conn->close();
             border-bottom: none;
         }
 
-        /* Notification styles */
-        .notification-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: #dc2626;
-            color: white;
-            border-radius: 50%;
-            min-width: 24px;
-            height: 24px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-left: 8px;
-            animation: pulse 2s infinite;
-        }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .notification-bell {
-            cursor: pointer;
-            font-size: 20px;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .notifications-panel {
-            display: none;
-            position: absolute;
-            top: 50px;
-            right: 0;
-            width: 400px;
-            max-height: 500px;
-            overflow-y: auto;
-            background: #fff;
-            border: 1px solid #bbb;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
-
-        .notifications-panel.active {
-            display: block;
-        }
-
-        .notification-item {
-            padding: 12px;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            background-color: #fef3c7;
-            border-left: 4px solid #f59e0b;
-        }
-
-        .notification-item:hover {
-            background-color: #fde68a;
-        }
-
-        .notification-item.new {
-            background-color: #dbeafe;
-            border-left-color: #3b82f6;
-            font-weight: 500;
-        }
-
-        .notification-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 6px;
-        }
-
-        .notification-item-student {
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 14px;
-        }
-
-        .notification-item-time {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        .notification-item-details {
-            font-size: 13px;
-            color: #374151;
-            margin-top: 4px;
-        }
-
-        .notification-empty {
-            padding: 20px;
-            text-align: center;
-            color: #9ca3af;
-        }
 
         @media (max-width: 768px) {
             .form-row {
@@ -512,30 +383,9 @@ $conn->close();
 </head>
 <body>
 
-<div class="navbar-admin">
-    <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
-        <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
-        <div style="display:flex; align-items:center;">
-            <a href="admin_home.php" class="navbar_buttons">Home</a>
-            <a href="admin_dashboard.php" class="navbar_buttons">Search</a>
-            <a href="admin_search_student.php" class="navbar_buttons active">Student Records</a>
-            <a href="profile.php" class="navbar_buttons">Profile</a>
-        </div>
-        <div style="display:flex; align-items:center; gap:20px; margin-left:auto;">
-            <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
-                🔔
-                <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
-                <div class="notifications-panel" id="notificationsPanel">
-                    <div style="padding:12px; border-bottom:1px solid #e5e7eb; font-weight:600; background:#f9fafb;">
-                        New Observations
-                    </div>
-                    <div id="notificationsContent"></div>
-                </div>
-            </div>
-            <a href="logout.php" class="navbar_buttons logout-btn">Logout</a>
-        </div>
-    </div>
-</div>
+<div class="app-layout">
+    <?php include 'sidebar.php'; ?>
+    <div class="main-content">
 
 <div class="admin-container">
 
@@ -543,29 +393,29 @@ $conn->close();
         <div class="success-message" id="successMessage"></div>
 
         <div class="search-section">
-                <h2>🔍 Search Student</h2>
+                <h2>🔍 <?php echo t('search_students'); ?></h2>
                 
                 <div class="form-row full">
                     <div class="form-group">
-                        <label for="searchInput">Student Name (First or Last Name)</label>
-                        <input type="text" id="searchInput" placeholder="Enter student name..." autocomplete="off">
+                        <label for="searchInput"><?php echo t('search_student_name_label'); ?></label>
+                        <input type="text" id="searchInput" placeholder="<?php echo t('student_search_placeholder'); ?>" autocomplete="off">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="startDate">Start Date</label>
+                        <label for="startDate"><?php echo t('start_date'); ?></label>
                         <input type="date" id="startDate">
                     </div>
                     <div class="form-group">
-                        <label for="endDate">End Date</label>
+                        <label for="endDate"><?php echo t('end_date'); ?></label>
                         <input type="date" id="endDate">
                     </div>
                     <div class="form-group">
                         <label>&nbsp;</label>
                         <div class="button-group">
-                            <button class="btn btn-primary" onclick="searchStudent()">🔍 Search</button>
-                            <button class="btn btn-secondary" onclick="clearSearch()">Clear</button>
+                            <button class="btn btn-primary" onclick="searchStudent()"><?php echo t('search_btn'); ?></button>
+                            <button class="btn btn-secondary" onclick="clearSearch()"><?php echo t('clear'); ?></button>
                         </div>
                     </div>
                 </div>
@@ -579,24 +429,33 @@ $conn->close();
 
             <div class="loader" id="loader">
                 <div class="spinner"></div>
-                <p>Loading student records...</p>
+                <p><?php echo t('loading_student_records'); ?></p>
             </div>
 
             <div class="results-section" id="resultsSection" style="margin-top: 20px;">
                 <div id="studentInfo" style="display: none;"></div>
 
                 <div class="view-toggles" id="viewToggles" style="display:none; margin: 20px 0; gap: 10px;">
-                    <button class="btn btn-primary" id="btnRecords" onclick="switchView('records')">📂 Student Records</button>
-                    <button class="btn btn-secondary" id="btnFullInfo" onclick="switchView('fullInfo')">👤 Full Information</button>
+                    <button class="btn btn-primary" id="btnRecords" onclick="switchView('records')"><?php echo t('btn_student_records'); ?></button>
+                    <button class="btn btn-secondary" id="btnFullInfo" onclick="switchView('fullInfo')"><?php echo t('btn_full_information'); ?></button>
                 </div>
 
                 <div id="recordsContainer"></div>
                 <div id="fullInfoContainer" style="display: none;"></div>
             </div>
-        </div>
     </div>
+</div>
+</div>
+</div>
 
-    <script>
+    </div>
+</div>
+</div>
+
+<script>
+        const T = <?php echo json_encode($T); ?>;
+        const t = (key) => T[key] || key;
+
         let selectedStudent = null;
         let allStudents = [];
 
@@ -675,7 +534,7 @@ $conn->close();
 
         async function searchStudent() {
             if (!selectedStudent) {
-                showError('Please select a student from the suggestions');
+                showError(t('msg_select_student_suggestion'));
                 return;
             }
 
@@ -683,12 +542,12 @@ $conn->close();
             const endDate = document.getElementById('endDate').value;
 
             if (!startDate || !endDate) {
-                showError('Please select both start and end dates');
+                showError(t('msg_select_both_dates'));
                 return;
             }
 
             if (new Date(startDate) > new Date(endDate)) {
-                showError('Start date must be before end date');
+                showError(t('msg_start_before_end'));
                 return;
             }
 
@@ -710,13 +569,13 @@ $conn->close();
                 if (data.success) {
                     displayResults(data.student, data.absences, data.observations);
                     document.getElementById('resultsSection').classList.add('active');
-                    showSuccess('Student records loaded successfully');
+                    showSuccess(t('msg_records_loaded_success'));
                 } else {
-                    showError(data.message || 'Failed to load student records');
+                    showError(data.message || t('msg_failed_load_records'));
                 }
             } catch (error) {
                 document.getElementById('loader').classList.remove('active');
-                showError('Error searching student: ' + error.message);
+                showError(t('msg_error_searching') + error.message);
             }
         }
 
@@ -756,19 +615,19 @@ $conn->close();
                     <h3>📋 ${student.first_name} ${student.last_name}</h3>
                     <div class="info-grid">
                         <div class="info-item">
-                            <div class="info-label">Serial Number</div>
+                            <div class="info-label">${t('serial_number')}</div>
                             <div class="info-value">${student.serial_number}</div>
                         </div>
                         <div class="info-item">
-                            <div class="info-label">Section</div>
+                            <div class="info-label">${t('section')}</div>
                             <div class="info-value">${student.section_name}</div>
                         </div>
                         <div class="info-item">
-                            <div class="info-label">Category</div>
+                            <div class="info-label">${t('category')}</div>
                             <div class="info-value">${student.category_name}</div>
                         </div>
                         <div class="info-item">
-                            <div class="info-label">Grade</div>
+                            <div class="info-label">${t('grade_level')}</div>
                             <div class="info-value">${student.grade || 'N/A'}</div>
                         </div>
                     </div>
@@ -784,36 +643,36 @@ $conn->close();
             // Absences
             recordsHtml += `
                 <div class="record-section">
-                    <h4><span class="record-icon">⚠️</span>Absences (${absences.length})</h4>
+                    <h4><span class="record-icon">⚠️</span>${t('absences')} (${absences.length})</h4>
                     ${absences.length > 0 ? `
                         <ul class="records-list">
                             ${absences.map(absence => `
                                 <li class="record-item">
-                                    <div class="record-date">${new Date(absence.absence_date_and_time).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
-                                    <div class="record-motif">Motif: ${absence.absence_motif || 'Not specified'}</div>
-                                    ${absence.absence_observation ? `<div class="record-note"><strong>Note:</strong> ${absence.absence_observation}</div>` : ''}
+                                    <div class="record-date">${new Date(absence.absence_date_and_time).toLocaleDateString('<?php echo $LANG === 'ar' ? 'ar-EG' : 'en-US'; ?>', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+                                    <div class="record-motif">${t('motif')}: ${absence.absence_motif || t('not_specified')}</div>
+                                    ${absence.absence_observation ? `<div class="record-note"><strong>${t('observation')}:</strong> ${absence.absence_observation}</div>` : ''}
                                 </li>
                             `).join('')}
                         </ul>
-                    ` : `<div class="empty-message">No absences recorded in this period</div>`}
+                    ` : `<div class="empty-message">${t('no_absences_period')}</div>`}
                 </div>
             `;
 
             // Observations
             recordsHtml += `
                 <div class="record-section">
-                    <h4><span class="record-icon">📝</span>Observations (${observations.length})</h4>
+                    <h4><span class="record-icon">📝</span>${t('observations')} (${observations.length})</h4>
                     ${observations.length > 0 ? `
                         <ul class="records-list">
                             ${observations.map(obs => `
                                 <li class="record-item">
-                                    <div class="record-date">${new Date(obs.observation_date_and_time).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} - ${obs.teacher_name}</div>
-                                    <div class="record-motif">Motif: ${obs.observation_motif || 'Not specified'}</div>
-                                    ${obs.observation_note ? `<div class="record-note"><strong>Note:</strong> ${obs.observation_note}</div>` : ''}
+                                    <div class="record-date">${new Date(obs.observation_date_and_time).toLocaleDateString('<?php echo $LANG === 'ar' ? 'ar-EG' : 'en-US'; ?>', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} - ${obs.teacher_name}</div>
+                                    <div class="record-motif">${t('motif')}: ${obs.observation_motif || t('not_specified')}</div>
+                                    ${obs.observation_note ? `<div class="record-note"><strong>${t('observation')}:</strong> ${obs.observation_note}</div>` : ''}
                                 </li>
                             `).join('')}
                         </ul>
-                    ` : `<div class="empty-message">No observations recorded in this period</div>`}
+                    ` : `<div class="empty-message">${t('no_observations_period')}</div>`}
                 </div>
             `;
             // Keep the grid structure logic for records
@@ -842,105 +701,105 @@ $conn->close();
 
             let html = '';
 
-            // 1. Personal Details
-            html += createSection('👤 Personal Details', `
-                ${item('First Name (EN)', s.first_name)}
-                ${item('Last Name (EN)', s.last_name)}
-                ${item('First Name (AR)', s.first_name_ar)}
-                ${item('Last Name (AR)', s.last_name_ar)}
-                ${item('Sex', s.sex)}
-                ${item('Birth Date', s.birth_date)}
-                ${item('Blood Type', s.blood_type)}
-                ${item('Phone', s.personal_phone)}
-                ${item('Height', s.height_cm + ' cm')}
-                ${item('Weight', s.weight_kg + ' kg')}
-                ${item('Foreign Student', s.is_foreign)}
+             // 1. Personal Details
+            html += createSection('👤 ' + t('step_personal_details'), `
+                ${item(t('label_first_name_en'), s.first_name)}
+                ${item(t('label_last_name_en'), s.last_name)}
+                ${item(t('label_first_name_ar'), s.first_name_ar)}
+                ${item(t('label_last_name_ar'), s.last_name_ar)}
+                ${item(t('label_sex'), t(s.sex.toLowerCase()))}
+                ${item(t('label_birth_date'), s.birth_date)}
+                ${item(t('label_blood_type'), s.blood_type)}
+                ${item(t('label_phone'), s.personal_phone)}
+                ${item(t('label_height'), s.height_cm + ' cm')}
+                ${item(t('label_weight'), s.weight_kg + ' kg')}
+                ${item(t('label_is_foreign'), t(s.is_foreign.toLowerCase()))}
             `);
 
             // 2. Academic
-            html += createSection('🎓 Academic Info', `
-                ${item('Speciality', s.speciality)}
-                ${item('Level', s.academic_level)}
-                ${item('Average', s.academic_average)}
-                ${item('Bac Number', s.bac_number)}
-                ${item('Category', s.category_name)}
-                ${item('Grade', s.grade)}
-                ${item('Army', s.army_name)}
+            html += createSection('🎓 ' + t('step_academic_info'), `
+                ${item(t('label_speciality'), s.speciality)}
+                ${item(t('label_academic_level'), s.academic_level)}
+                ${item(t('label_academic_average'), s.academic_average)}
+                ${item(t('label_bac_number'), s.bac_number)}
+                ${item(t('category'), s.category_name)}
+                ${item(t('grade_level'), s.grade)}
+                ${item(t('army'), s.army_name)}
             `);
 
             // 3. Parents & Family
-            html += createSection('👪 Family Information', `
-                ${item('Father Name (EN)', s.father_name_en)}
-                ${item('Father Name (AR)', s.father_name_ar)}
-                ${item('Father Profession (EN)', s.father_profession)}
-                ${item('Father Profession (AR)', s.father_profession_ar)}
+            html += createSection('👪 ' + t('step_family_info'), `
+                ${item(t('label_father_name_en'), s.father_name_en)}
+                ${item(t('label_father_name_ar'), s.father_name_ar)}
+                ${item(t('label_father_prof_en'), s.father_profession)}
+                ${item(t('label_father_prof_ar'), s.father_profession_ar)}
                 
-                ${item('Mother Name (EN)', s.mother_name_en)}
-                ${item('Mother Name (AR)', s.mother_name_ar)}
-                ${item('Mother Profession (EN)', s.mother_profession)}
-                ${item('Mother Profession (AR)', s.mother_profession_ar)}
+                ${item(t('label_mother_name_en'), s.mother_name_en)}
+                ${item(t('label_mother_name_ar'), s.mother_name_ar)}
+                ${item(t('label_mother_prof_en'), s.mother_profession)}
+                ${item(t('label_mother_prof_ar'), s.mother_profession_ar)}
                 
-                ${item('Orphan Status', s.orphans_status)}
-                ${item('Parents Situation', s.parents_situation)}
+                ${item(t('label_orphan_status'), t('orphan_' + s.orphans_status.toLowerCase()))}
+                ${item(t('label_parents_situation'), t(s.parents_situation.toLowerCase()))}
                 
-                ${item('Siblings Count', s.siblings_count)}
-                ${item('Sisters Count', s.sisters_count)}
-                ${item('Order among Siblings', s.order_among_siblings)}
+                ${item(t('label_siblings_count'), s.siblings_count)}
+                ${item(t('label_sisters_count'), s.sisters_count)}
+                ${item(t('label_order_among_siblings'), s.order_among_siblings)}
             `);
 
             // 4. Addresses
-            html += createSection('📍 Addresses', `
+            html += createSection('📍 ' + t('nav_search'), `
                 <div style="grid-column: span 2;">
-                    ${item('Birth Place Address', s.birth_place)}
+                    ${item(t('label_birth_place_address'), s.birth_place)}
                 </div>
                 <div style="grid-column: span 2;">
-                    ${item('Personal Address', s.personal_address)}
+                    ${item(t('label_personal_address'), s.personal_address)}
                 </div>
             `);
             
             // 5. Uniforms
             if (s.uniforms) {
-                 html += createSection('🪖 Combat Outfit', `
-                    ${item('Outfit 1 (Num/Size)', s.uniforms.combat.outfit1)}
-                    ${item('Outfit 2 (Num/Size)', s.uniforms.combat.outfit2)}
-                    ${item('Shoe Size', s.uniforms.combat.shoe)}
+                 html += createSection('🪖 ' + t('combat_outfit'), `
+                    ${item(t('1st_outfit_number') + '/' + t('1st_outfit_size'), s.uniforms.combat.outfit1)}
+                    ${item(t('2nd_outfit_number') + '/' + t('2nd_outfit_size'), s.uniforms.combat.outfit2)}
+                    ${item(t('combat_shoe_size'), s.uniforms.combat.shoe)}
                 `);
 
-                 html += createSection('👔 Parade Uniform', `
-                    ${item('Summer Jacket', s.uniforms.parade.summer_jacket)}
-                    ${item('Winter Jacket', s.uniforms.parade.winter_jacket)}
-                    ${item('Summer Trousers', s.uniforms.parade.summer_trousers)}
-                    ${item('Winter Trousers', s.uniforms.parade.winter_trousers)}
-                    ${item('Summer Shirt', s.uniforms.parade.summer_shirt)}
-                    ${item('Winter Shirt', s.uniforms.parade.winter_shirt)}
-                    ${item('Summer Hat', s.uniforms.parade.summer_hat)}
-                    ${item('Winter Hat', s.uniforms.parade.winter_hat)}
-                    ${s.sex === 'Female' ? item('Summer Skirt', s.uniforms.parade.summer_skirt) : ''}
-                    ${s.sex === 'Female' ? item('Winter Skirt', s.uniforms.parade.winter_skirt) : ''}
+                 html += createSection('👔 ' + t('parade_uniform'), `
+                    ${item(t('summer_jacket_size'), s.uniforms.parade.summer_jacket)}
+                    ${item(t('winter_jacket_size'), s.uniforms.parade.winter_jacket)}
+                    ${item(t('summer_trousers_size'), s.uniforms.parade.summer_trousers)}
+                    ${item(t('winter_trousers_size'), s.uniforms.parade.winter_trousers)}
+                    ${item(t('summer_shirt_size'), s.uniforms.parade.summer_shirt)}
+                    ${item(t('winter_shirt_size'), s.uniforms.parade.winter_shirt)}
+                    ${item(t('summer_hat_size'), s.uniforms.parade.summer_hat)}
+                    ${item(t('winter_hat_size'), s.uniforms.parade.winter_hat)}
+                    ${s.sex === 'Female' ? item(t('summer_skirt_size'), s.uniforms.parade.summer_skirt) : ''}
+                    ${s.sex === 'Female' ? item(t('winter_skirt_size'), s.uniforms.parade.winter_skirt) : ''}
                 `);
             }
 
             // 6. Documents & Misc
-            html += createSection('📄 Documents & Misc', `
-                ${item('ID Card', s.id_card_num)}
-                ${item('Birth Cert', s.birth_cert_num)}
-                ${item('School Card', s.school_sub_card)}
-                ${item('Laptop Serial', s.laptop_serial)}
-                ${item('Postal Account', s.postal_account)}
-                ${item('Mil. Necklace', s.mil_necklace)}
+            html += createSection('📄 ' + t('step_other_details'), `
+                ${item(t('label_id_card_num'), s.id_card_num)}
+                ${item(t('label_birth_cert_num'), s.birth_cert_num)}
+                ${item(t('label_school_sub_card'), s.school_sub_card)}
+                ${item(t('label_laptop_serial'), s.laptop_serial)}
+                ${item(t('label_postal_account'), s.postal_account)}
+                ${item(t('label_mil_necklace'), s.mil_necklace)}
             `);
             
             // 7. Emergency Contact
             if (s.emergency_contact) {
-                html += createSection('🚨 Emergency Contact', `
-                    ${item('Contact Name (EN)', (s.emergency_contact.first_name_en || '') + ' ' + (s.emergency_contact.last_name_en || ''))}
-                    ${item('Contact Name (AR)', (s.emergency_contact.first_name_ar || '') + ' ' + (s.emergency_contact.last_name_ar || ''))}
-                    ${item('Relation (EN)', s.emergency_contact.relation_en)}
-                    ${item('Relation (AR)', s.emergency_contact.relation_ar)}
-                    ${item('Phone Number', s.emergency_contact.phone)}
-                    ${s.emergency_contact.consulate_number ? item('Consulate Number', s.emergency_contact.consulate_number) : ''}
+                html += createSection('🚨 ' + t('step_emergency_contact'), `
+                    ${item(t('contact_name_en'), (s.emergency_contact.first_name_en || '') + ' ' + (s.emergency_contact.last_name_en || ''))}
+                    ${item(t('contact_name_ar'), (s.emergency_contact.first_name_ar || '') + ' ' + (s.emergency_contact.last_name_ar || ''))}
+                    ${item(t('label_relation_en'), s.emergency_contact.relation_en)}
+                    ${item(t('label_relation_ar'), s.emergency_contact.relation_ar)}
+                    ${item(t('label_contact_phone'), s.emergency_contact.phone)}
+                    ${s.emergency_contact.consulate_number ? item(t('label_consulate_number'), s.emergency_contact.consulate_number) : ''}
                     <div style="grid-column: span 2;">
-                        ${item('Contact Address', s.emergency_contact.address)}
+                        ${item(t('contact_address'), s.emergency_contact.address)}
                     </div>
                 `);
             }
@@ -962,7 +821,6 @@ $conn->close();
         window.addEventListener('load', function() {
             initializeDates();
             fetchAllStudents();
-            fetchNotifications(); // Initial fetch
         });
 
         // Close suggestions when clicking outside
@@ -972,69 +830,7 @@ $conn->close();
             }
         });
 
-        /* --- Notification Logic --- */
-        let newNotifications = [];
 
-        function toggleNotificationsPanel() {
-            const panel = document.getElementById('notificationsPanel');
-            if (panel) {
-                panel.classList.toggle('active');
-            }
-        }
-
-        function fetchNotifications() {
-            fetch('get_new_notifications.php')
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        newNotifications = data.notifications;
-                        updateNotificationDisplay();
-                    }
-                })
-                .catch(err => console.error('Error fetching notifications:', err));
-        }
-
-        function updateNotificationDisplay() {
-            const countBadge = document.getElementById('notificationCount');
-            const content = document.getElementById('notificationsContent');
-            
-            if (newNotifications.length > 0) {
-                countBadge.textContent = newNotifications.length;
-                countBadge.style.display = 'flex';
-                
-                let html = '';
-                newNotifications.forEach((notif) => {
-                    html += `<div class="notification-item new">
-                        <div class="notification-item-header">
-                            <span class="notification-item-student">${notif.student_name}</span>
-                            <span class="notification-item-time">${notif.observation_time}</span>
-                        </div>
-                        <div class="notification-item-details">
-                            <div><strong>Teacher:</strong> ${notif.teacher_name}</div>
-                            <div><strong>Session:</strong> ${notif.session_date} (${notif.session_time})</div>
-                            <div><strong>Motif:</strong> ${notif.motif}</div>
-                        </div>
-                    </div>`;
-                });
-                content.innerHTML = html;
-            } else {
-                countBadge.style.display = 'none';
-                content.innerHTML = '<div class="notification-empty">No new observations</div>';
-            }
-        }
-
-        // Close notifications panel when clicking outside
-        document.addEventListener('click', function(event) {
-            const notifBell = document.getElementById('notificationBell');
-            const panel = document.getElementById('notificationsPanel');
-            
-            if (notifBell && panel && !notifBell.contains(event.target)) {
-                panel.classList.remove('active');
-            }
-        });
-
-        // Refresh notifications every 30 seconds
-        setInterval(fetchNotifications, 30000);
     </script>
 </body>
 </html>

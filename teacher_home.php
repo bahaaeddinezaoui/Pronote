@@ -1,6 +1,7 @@
 <?php
 session_start();
 date_default_timezone_set('Africa/Algiers');
+require_once __DIR__ . '/lang/i18n.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.html");
@@ -84,12 +85,12 @@ if ($teacher_serial) {
 $conn->close();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="styles.css" />
-    <title>Teacher Home</title>
+    <title><?php echo t('home'); ?> - <?php echo t('app_name'); ?></title>
     <style>
         .home-container {
             max-width: 1000px;
@@ -188,29 +189,15 @@ $conn->close();
 </head>
 <body>
 
-<div class="parent">
-    <div class="div1" id="navbar">
-        <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
-            <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
-            <div style="display:flex; align-items:center; gap:12px;">
-                <a href="teacher_home.php" id="home" class="navbar_buttons active">Home</a>
-                
-                <a href="fill_form.php?tab=absences" class="navbar_buttons">Absences</a>
-                <a href="fill_form.php?tab=observations" class="navbar_buttons">Observations</a>
-
-                <a href="profile.php" class="navbar_buttons">Profile</a>
-            </div>
-            <a href="logout.php" class="navbar_buttons logout-btn" style="margin-left:auto;">Logout</a>
-        </div>
-    </div>
-
-    <div class="div2">
+<div class="app-layout">
+    <?php include 'sidebar.php'; ?>
+    <div class="main-content">
         <div class="home-container">
             <!-- Hero Welcome -->
             <div class="hero-section">
                 <div class="hero-content">
-                    <h1>Welcome back, <?php echo htmlspecialchars($teacher_last); ?>!</h1>
-                    <p>Ready to manage your classroom today?</p>
+                    <h1><?php echo t('welcome_back', htmlspecialchars($teacher_last)); ?></h1>
+                    <p><?php echo t('ready_to_manage'); ?></p>
                     <div class="hero-date">
                         📅 <?php echo $display_date; ?>
                     </div>
@@ -220,18 +207,18 @@ $conn->close();
             <!-- Stats / Info -->
             <div class="info-card">
                 <div>
-                    <h3>Total Observations</h3>
+                    <h3><?php echo t('total_observations'); ?></h3>
                     <div class="stat-value"><?php echo $obs_count; ?></div>
-                    <div class="stat-label">Recorded Student Observations</div>
+                    <div class="stat-label"><?php echo t('recorded_observations'); ?></div>
                 </div>
                 <div style="margin-top: 2rem;">
-                     <a href="fill_form.php?tab=observations" style="text-decoration:none; color:var(--primary-color); font-weight:600;">Record New &rarr;</a>
+                     <a href="fill_form.php?tab=observations" style="text-decoration:none; color:var(--primary-color); font-weight:600;"><?php echo t('record_new'); ?></a>
                 </div>
             </div>
 
             <div class="info-card">
                 <div>
-                    <h3>Your Majors</h3>
+                    <h3><?php echo t('your_majors'); ?></h3>
                     <div style="margin-top:0.5rem;">
                         <?php if (count($assigned_classes) > 0): ?>
                             <div class="quick-actions">
@@ -240,12 +227,12 @@ $conn->close();
                                 <?php endforeach; ?>
                             </div>
                         <?php else: ?>
-                            <p style="color:var(--text-secondary); font-style:italic;">No majors assigned yet.</p>
+                            <p style="color:var(--text-secondary); font-style:italic;"><?php echo t('no_majors_assigned'); ?></p>
                         <?php endif; ?>
                     </div>
                 </div>
                 <div style="margin-top: 2rem;">
-                    <a href="fill_form.php?tab=absences" style="text-decoration:none; color:var(--primary-color); font-weight:600;">Start Attendance &rarr;</a>
+                    <a href="fill_form.php?tab=absences" style="text-decoration:none; color:var(--primary-color); font-weight:600;"><?php echo t('start_attendance'); ?></a>
                 </div>
             </div>
 

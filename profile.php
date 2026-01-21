@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/lang/i18n.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.html");
@@ -115,12 +116,12 @@ $homeUrl = ($role === 'Admin') ? 'admin_dashboard.php' : (($role === 'Teacher') 
 $conn->close();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>User Profile</title>
+    <title><?php echo t('user_profile'); ?> - <?php echo t('app_name'); ?></title>
     <style>
         /* Modern Profile Styles */
         body {
@@ -131,116 +132,6 @@ $conn->close();
             padding: 0;
         }
 
-        .navbar-admin, .div1 {
-            background: #fff;
-            padding: 1rem 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .navbar-admin a, .navbar_buttons {
-            text-decoration: none;
-            color: #6b7280;
-            padding: 0.5rem 1rem;
-            margin-left: 0.5rem;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            display: inline-block;
-        }
-        
-        .navbar-admin a:hover, .navbar_buttons:hover {
-            background: #f3f4f6;
-            color: #4f46e5;
-        }
-
-        .navbar-admin a.active, .navbar_buttons.active {
-            color: #6f42c1;
-            font-weight: 600;
-            background: #f3f4f6;
-        }
-
-        .notification-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: #dc2626;
-            color: white;
-            border-radius: 50%;
-            min-width: 20px;
-            height: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            margin-left: -8px;
-            margin-top: -8px;
-            position: relative;
-        }
-
-        .notification-bell {
-            cursor: pointer;
-            font-size: 20px;
-            padding: 8px;
-            border-radius: 50%;
-            transition: background 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .notification-bell:hover {
-            background: #f3f4f6;
-        }
-
-        .notifications-panel {
-            display: none;
-            position: absolute;
-            top: 60px;
-            right: 2rem;
-            width: 380px;
-            max-height: 480px;
-            overflow-y: auto;
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            z-index: 1000;
-        }
-
-        .notifications-panel.active { display: block; }
-
-        .notification-item {
-            padding: 12px 16px;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-            transition: background 0.2s;
-            background: #fff9db; /* Light yellow for unread */
-            border-left: 4px solid #f59e0b;
-        }
-
-        .notification-item:hover { background: #fff3bf; }
-        
-        .notification-item-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 4px;
-            font-size: 14px;
-        }
-        
-        .notification-item-student { font-weight: 600; color: #1f2937; }
-        .notification-item-time { font-size: 12px; color: #6b7280; }
-        .notification-item-details { font-size: 13px; color: #4b5563; }
-        .notification-empty { padding: 24px; text-align: center; color: #9ca3af; }
-
-        /* Profile Specific Styles */
         .profile-container {
             max-width: 800px;
             margin: 40px auto;
@@ -379,51 +270,9 @@ $conn->close();
 </head>
 <body>
     
-    <?php if ($role === 'Admin'): ?>
-        <!-- Admin Navbar -->
-        <div class="navbar-admin">
-            <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
-                <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
-                <div style="display:flex; align-items:center;">
-                    <a href="admin_home.php">Home</a>
-                    <a href="admin_dashboard.php">Search</a>
-                    <a href="admin_search_student.php">Student Records</a>
-                    <a href="profile.php" class="active">Profile</a>
-                </div>
-                <div style="display:flex; align-items:center; gap:16px; margin-left:auto;">
-                    <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
-                        🔔
-                        <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
-                        <div class="notifications-panel" id="notificationsPanel">
-                            <div style="padding:16px; border-bottom:1px solid #e5e7eb; font-weight:600; background:#f9fafb;">
-                                New Observations
-                            </div>
-                            <div id="notificationsContent"></div>
-                        </div>
-                    </div>
-                    <a href="logout.php" style="color: #dc2626;">Logout</a>
-                </div>
-            </div>
-        </div>
-    <?php else: ?>
-        <!-- Teacher/Other Navbar (Consistent with fill_form.php) -->
-        <div class="div1" id="navbar">
-            <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
-                <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <a href="<?php echo $homeUrl; ?>" class="navbar_buttons">Home</a>
-                    
-                    <?php if ($role === 'Teacher'): ?>
-                        <a href="fill_form.php?tab=absences" class="navbar_buttons">Absences</a>
-                        <a href="fill_form.php?tab=observations" class="navbar_buttons">Observations</a>
-                    <?php endif; ?>
-
-                    <a href="profile.php" class="navbar_buttons active">Profile</a>
-                </div>
-                <a href="logout.php" class="navbar_buttons logout-btn" style="margin-left:auto;">Logout</a>
-            </div>
-        </div>
-    <?php endif; ?>
+    <div class="app-layout">
+    <?php include 'sidebar.php'; ?>
+    <div class="main-content">
 
     <div class="profile-container">
         <div class="profile-card">
@@ -448,7 +297,7 @@ $conn->close();
                     <div class="info-card">
                         <div class="info-icon">🆔</div>
                         <div class="info-text">
-                            <label>User ID</label>
+                            <label><?php echo t('user_id'); ?></label>
                             <div>#<?php echo $userId; ?></div>
                         </div>
                     </div>
@@ -457,7 +306,7 @@ $conn->close();
                     <div class="info-card">
                         <div class="info-icon">🎓</div>
                         <div class="info-text">
-                            <label>Grade / Level</label>
+                            <label><?php echo t('grade_level'); ?></label>
                             <div><?php echo $grade; ?></div>
                         </div>
                     </div>
@@ -467,7 +316,7 @@ $conn->close();
                     <div class="info-card">
                         <div class="info-icon">💼</div>
                         <div class="info-text">
-                            <label>Position</label>
+                            <label><?php echo t('position'); ?></label>
                             <div><?php echo $position; ?></div>
                         </div>
                     </div>
@@ -476,84 +325,26 @@ $conn->close();
                     <div class="info-card">
                         <div class="info-icon">🛡️</div>
                         <div class="info-text">
-                            <label>Access Level</label>
-                            <div><?php echo $safeRole; ?> Privileges</div>
+                            <label><?php echo t('access_level'); ?></label>
+                            <div><?php echo $safeRole; ?> <?php echo t('privileges_suffix'); ?></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
+</div>
+
+</div>
+</div>
+</div>
 
 <script>
+var T = <?php echo json_encode($T); ?>;
 let newNotifications = [];
 
-// Only initialize admin notifications if user is admin
-<?php if ($role === 'Admin'): ?>
-function toggleNotificationsPanel() {
-    const panel = document.getElementById('notificationsPanel');
-    if (panel) {
-        panel.classList.toggle('active');
-    }
-}
 
-function fetchNotifications() {
-    fetch('get_new_notifications.php')
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                newNotifications = data.notifications;
-                updateNotificationDisplay();
-            }
-        })
-        .catch(err => console.error('Error fetching notifications:', err));
-}
-
-function updateNotificationDisplay() {
-    const countBadge = document.getElementById('notificationCount');
-    const content = document.getElementById('notificationsContent');
-    
-    if (newNotifications.length > 0) {
-        countBadge.textContent = newNotifications.length;
-        countBadge.style.display = 'flex';
-        
-        let html = '';
-        newNotifications.forEach((notif) => {
-            html += `<div class="notification-item new">
-                <div class="notification-item-header">
-                    <span class="notification-item-student">${notif.student_name}</span>
-                    <span class="notification-item-time">${notif.observation_time}</span>
-                </div>
-                <div class="notification-item-details">
-                    <div><strong>Teacher:</strong> ${notif.teacher_name}</div>
-                    <div><strong>Session:</strong> ${notif.session_date} (${notif.session_time})</div>
-                    <div><strong>Motif:</strong> ${notif.motif}</div>
-                </div>
-            </div>`;
-        });
-        content.innerHTML = html;
-    } else {
-        countBadge.style.display = 'none';
-        content.innerHTML = '<div class="notification-empty">No new observations</div>';
-    }
-}
-
-// Close notifications panel when clicking outside
-document.addEventListener('click', function(event) {
-    const notifBell = document.getElementById('notificationBell');
-    const panel = document.getElementById('notificationsPanel');
-    
-    if (notifBell && panel && !notifBell.contains(event.target)) {
-        panel.classList.remove('active');
-    }
-});
-
-// Fetch notifications on page load
-fetchNotifications();
-
-// Refresh notifications every 30 seconds
-setInterval(fetchNotifications, 30000);
-<?php endif; ?>
 </script>
 
 </body>

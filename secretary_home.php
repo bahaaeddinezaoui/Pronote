@@ -1,6 +1,7 @@
 <?php
 session_start();
 date_default_timezone_set('Africa/Algiers');
+require_once __DIR__ . '/lang/i18n.php';
 
 // 1. Authentication Check
 if (!isset($_SESSION['user_id'])) {
@@ -189,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     $stmt_outfit->close();
                 }
                 
-                // --- F. Insert Parade Uniform ---
+                // --- F. Insert parade_uniform ---
                 $summer_jacket = $_POST['SUMMER_JACKET_SIZE'] ?? '';
                 $winter_jacket = $_POST['WINTER_JACKET_SIZE'] ?? '';
                 $summer_trousers = $_POST['SUMMER_TROUSERS_SIZE'] ?? '';
@@ -312,13 +313,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 
                 
-                $message = "Student record created successfully!";
+                $message = t('student_created_success');
                 $msg_type = "success";
             } else {
                 if ($conn->errno == 1062) {
-                        $message = "Error: Serial Number '$serial' already exists.";
+                        $message = t('error_serial_exists', $serial);
                 } else {
-                        $message = "Error inserting record: " . $stmt->error;
+                        $message = t('error_insert', $stmt->error);
                 }
                 $msg_type = "error";
             }
@@ -363,12 +364,12 @@ if ($res) {
 $conn->close();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="styles.css" />
-    <title>Secretary Dashboard</title>
+    <title><?php echo t('insert_student'); ?> - <?php echo t('app_name'); ?></title>
     <style>
         .home-container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
         .form-card {
@@ -442,21 +443,14 @@ $conn->close();
 </head>
 <body>
 
-<div class="div1" id="navbar">
-    <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
-        <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
-        <div style="display:flex; align-items:center; gap:12px;">
-            <a href="secretary_home.php" class="navbar_buttons active">Insert Student</a>
-            <a href="profile.php" class="navbar_buttons">Profile</a>
-        </div>
-        <a href="logout.php" class="navbar_buttons logout-btn" style="margin-left:auto;">Logout</a>
-    </div>
-</div>
+<div class="app-layout">
+    <?php include 'sidebar.php'; ?>
+    <div class="main-content">
 
 <div class="home-container">
     <div style="margin-bottom: 2rem;">
-        <h1>Welcome, <?php echo htmlspecialchars($secretary_name); ?></h1>
-        <p style="color: var(--text-secondary);">Register a new student by filling out the form below.</p>
+        <h1><?php echo t('welcome_secretary', htmlspecialchars($secretary_name)); ?></h1>
+        <p style="color: var(--text-secondary);"><?php echo t('register_student_sub'); ?></p>
     </div>
 
     <?php if ($message): ?>
@@ -467,35 +461,35 @@ $conn->close();
         <form method="POST" action="secretary_home.php" id="wizardForm">
             <input type="hidden" name="action" value="add_student">
             <div class="wizard-steps">
-                <div class="wizard-step-dot active" data-step="1" title="Identification &amp; Classification">1</div>
-                <div class="wizard-step-dot" data-step="2" title="Personal Details">2</div>
-                <div class="wizard-step-dot" data-step="3" title="Academic Info">3</div>
-                <div class="wizard-step-dot" data-step="4" title="Other Details">4</div>
-                <div class="wizard-step-dot" data-step="5" title="Uniforms">5</div>
-                <div class="wizard-step-dot" data-step="6" title="Family Information">6</div>
-                <div class="wizard-step-dot" data-step="7" title="Emergency Contact">7</div>
+                <div class="wizard-step-dot active" data-step="1" title="<?php echo t('step_identification'); ?>">1</div>
+                <div class="wizard-step-dot" data-step="2" title="<?php echo t('step_personal_details'); ?>">2</div>
+                <div class="wizard-step-dot" data-step="3" title="<?php echo t('step_academic_info'); ?>">3</div>
+                <div class="wizard-step-dot" data-step="4" title="<?php echo t('step_other_details'); ?>">4</div>
+                <div class="wizard-step-dot" data-step="5" title="<?php echo t('step_uniforms_labels'); ?>">5</div>
+                <div class="wizard-step-dot" data-step="6" title="<?php echo t('step_family_info'); ?>">6</div>
+                <div class="wizard-step-dot" data-step="7" title="<?php echo t('step_emergency_contact'); ?>">7</div>
             </div>
             <div class="wizard-panels">
                 <div class="wizard-panel active" data-step="1">
                     <div class="form-grid">
-                        <div class="form-section-title">Identification &amp; Classification</div>
+                        <div class="form-section-title"><?php echo t('step_ident'); ?></div>
                         <div class="form-group">
-                            <label>Serial Number (Required) *</label>
-                            <input type="text" name="STUDENT_SERIAL_NUMBER" required placeholder="e.g. 20260001">
+                            <label><?php echo t('serial_number'); ?></label>
+                            <input type="text" name="STUDENT_SERIAL_NUMBER" required placeholder="<?php echo t('serial_placeholder'); ?>">
                         </div>
                         <div class="form-group">
-                            <label>Category *</label>
+                            <label><?php echo t('category'); ?></label>
                             <select id="CATEGORY_ID" name="CATEGORY_ID" required>
-                                <option value="">Select...</option>
+                                <option value=""><?php echo t('select'); ?></option>
                                 <?php foreach ($categories as $c): ?>
                                     <option value="<?php echo $c['CATEGORY_ID']; ?>"><?php echo htmlspecialchars($c['CATEGORY_NAME_EN']); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Section *</label>
+                            <label><?php echo t('section'); ?></label>
                             <select id="SECTION_ID" name="SECTION_ID" required>
-                                <option value="">Select...</option>
+                                <option value=""><?php echo t('select'); ?></option>
                                 <?php foreach ($sections as $s): ?>
                                     <option value="<?php echo $s['SECTION_ID']; ?>" data-category="<?php echo $s['CATEGORY_ID']; ?>">
                                         <?php echo htmlspecialchars($s['SECTION_NAME_EN']); ?>
@@ -507,59 +501,59 @@ $conn->close();
                 </div>
                 <div class="wizard-panel" data-step="2">
                     <div class="form-grid">
-                        <div class="form-section-title">Personal Details</div>
+                        <div class="form-section-title"><?php echo t('step_personal_details'); ?></div>
 
-                <div class="form-group"><label>First Name (EN) *</label><input type="text" name="STUDENT_FIRST_NAME_EN" required></div>
-                <div class="form-group"><label>Last Name (EN) *</label><input type="text" name="STUDENT_LAST_NAME_EN" required></div>
-                <div class="form-group"><label>First Name (AR)</label><input type="text" name="STUDENT_FIRST_NAME_AR" dir="rtl"></div>
-                <div class="form-group"><label>Last Name (AR)</label><input type="text" name="STUDENT_LAST_NAME_AR" dir="rtl"></div>
+                <div class="form-group"><label><?php echo t('label_first_name_en'); ?></label><input type="text" name="STUDENT_FIRST_NAME_EN" required></div>
+                <div class="form-group"><label><?php echo t('label_last_name_en'); ?></label><input type="text" name="STUDENT_LAST_NAME_EN" required></div>
+                <div class="form-group"><label><?php echo t('label_first_name_ar'); ?></label><input type="text" name="STUDENT_FIRST_NAME_AR" dir="rtl"></div>
+                <div class="form-group"><label><?php echo t('label_last_name_ar'); ?></label><input type="text" name="STUDENT_LAST_NAME_AR" dir="rtl"></div>
                 
-                <div class="form-group"><label>Sex</label>
+                <div class="form-group"><label><?php echo t('label_sex'); ?></label>
                     <select id="SEX_SELECT" name="STUDENT_SEX" onchange="toggleSkirtFields()">
-                        <option value="">Select...</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
+                        <option value=""><?php echo t('select'); ?></option>
+                        <option value="Male"><?php echo t('male'); ?></option>
+                        <option value="Female"><?php echo t('female'); ?></option>
                     </select>
                 </div>
-                <div class="form-group"><label>Birth Date</label><input type="date" name="STUDENT_BIRTH_DATE"></div>
+                <div class="form-group"><label><?php echo t('label_birth_date'); ?></label><input type="date" name="STUDENT_BIRTH_DATE"></div>
                 
                 <!-- BIRTH PLACE ADDRESS -->
                  <div class="sub-group">
-                    <label style="color:var(--primary-color); font-weight:700;">Birth Place Address</label>
+                    <label style="color:var(--primary-color); font-weight:700;"><?php echo t('label_birth_place_address'); ?></label>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top:0.5rem;">
                         <div>
-                             <label style="font-size:0.8rem;">Street (EN)</label>
-                             <input type="text" name="BP_STREET_EN" placeholder="Street Name">
+                             <label style="font-size:0.8rem;"><?php echo t('label_street_en'); ?></label>
+                             <input type="text" name="BP_STREET_EN" placeholder="<?php echo t('placeholder_street'); ?>">
                         </div>
                         <div>
-                             <label style="font-size:0.8rem;">Street (AR)</label>
-                             <input type="text" name="BP_STREET_AR" dir="rtl" placeholder="اسم الشارع">
+                             <label style="font-size:0.8rem;"><?php echo t('label_street_ar'); ?></label>
+                             <input type="text" name="BP_STREET_AR" dir="rtl" placeholder="<?php echo t('placeholder_street'); ?>">
                         </div>
                         <div>
-                            <label style="font-size:0.8rem;">Country</label>
+                            <label style="font-size:0.8rem;"><?php echo t('label_country'); ?></label>
                             <select class="country-select" data-prefix="BP_" name="BP_COUNTRY_ID">
-                                <option value="">Select Country...</option>
+                                <option value=""><?php echo t('option_select_country'); ?></option>
                                 <?php foreach ($countries as $c): ?>
                                     <option value="<?php echo $c['COUNTRY_ID']; ?>"><?php echo htmlspecialchars($c['COUNTRY_NAME_EN']); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div>
-                            <label style="font-size:0.8rem;">Wilaya</label>
+                            <label style="font-size:0.8rem;"><?php echo t('label_wilaya'); ?></label>
                             <select id="BP_WILAYA_ID" name="BP_WILAYA_ID" class="wilaya-select" data-prefix="BP_" disabled>
-                                <option value="">Select Country First</option>
+                                <option value=""><?php echo t('option_select_wilaya_first'); ?></option>
                             </select>
                         </div>
                         <div>
-                            <label style="font-size:0.8rem;">Daira</label>
+                            <label style="font-size:0.8rem;"><?php echo t('label_daira'); ?></label>
                             <select id="BP_DAIRA_ID" name="BP_DAIRA_ID" class="daira-select" data-prefix="BP_" disabled>
-                                <option value="">Select Wilaya First</option>
+                                <option value=""><?php echo t('option_select_daira_first'); ?></option>
                             </select>
                         </div>
                         <div>
-                            <label style="font-size:0.8rem;">Commune</label>
+                            <label style="font-size:0.8rem;"><?php echo t('label_commune'); ?></label>
                             <select id="BP_COMMUNE_ID" name="BP_COMMUNE_ID" disabled>
-                                <option value="">Select Daira First</option>
+                                <option value=""><?php echo t('option_select_commune_first'); ?></option>
                             </select>
                         </div>
                     </div>
@@ -567,50 +561,50 @@ $conn->close();
 
                 <!-- PERSONAL ADDRESS -->
                  <div class="sub-group">
-                    <label style="color:var(--primary-color); font-weight:700;">Personal Address</label>
+                    <label style="color:var(--primary-color); font-weight:700;"><?php echo t('label_personal_address'); ?></label>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top:0.5rem;">
                         <div>
-                             <label style="font-size:0.8rem;">Street (EN)</label>
-                             <input type="text" name="PERS_STREET_EN" placeholder="Street Name">
+                             <label style="font-size:0.8rem;"><?php echo t('label_street_en'); ?></label>
+                             <input type="text" name="PERS_STREET_EN" placeholder="<?php echo t('placeholder_street'); ?>">
                         </div>
                         <div>
-                             <label style="font-size:0.8rem;">Street (AR)</label>
-                             <input type="text" name="PERS_STREET_AR" dir="rtl" placeholder="اسم الشارع">
+                             <label style="font-size:0.8rem;"><?php echo t('label_street_ar'); ?></label>
+                             <input type="text" name="PERS_STREET_AR" dir="rtl" placeholder="<?php echo t('placeholder_street'); ?>">
                         </div>
                         <div>
-                            <label style="font-size:0.8rem;">Country</label>
+                            <label style="font-size:0.8rem;"><?php echo t('label_country'); ?></label>
                             <select class="country-select" data-prefix="PERS_" name="PERS_COUNTRY_ID">
-                                <option value="">Select Country...</option>
+                                <option value=""><?php echo t('option_select_country'); ?></option>
                                 <?php foreach ($countries as $c): ?>
                                     <option value="<?php echo $c['COUNTRY_ID']; ?>"><?php echo htmlspecialchars($c['COUNTRY_NAME_EN']); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         <div>
-                            <label style="font-size:0.8rem;">Wilaya</label>
+                            <label style="font-size:0.8rem;"><?php echo t('label_wilaya'); ?></label>
                             <select id="PERS_WILAYA_ID" name="PERS_WILAYA_ID" class="wilaya-select" data-prefix="PERS_" disabled>
-                                <option value="">Select Country First</option>
+                                <option value=""><?php echo t('option_select_wilaya_first'); ?></option>
                             </select>
                         </div>
                         <div>
-                            <label style="font-size:0.8rem;">Daira</label>
+                            <label style="font-size:0.8rem;"><?php echo t('label_daira'); ?></label>
                             <select id="PERS_DAIRA_ID" name="PERS_DAIRA_ID" class="daira-select" data-prefix="PERS_" disabled>
-                                <option value="">Select Wilaya First</option>
+                                <option value=""><?php echo t('option_select_daira_first'); ?></option>
                             </select>
                         </div>
                         <div>
-                            <label style="font-size:0.8rem;">Commune</label>
+                            <label style="font-size:0.8rem;"><?php echo t('label_commune'); ?></label>
                             <select id="PERS_COMMUNE_ID" name="PERS_COMMUNE_ID" disabled>
-                                <option value="">Select Daira First</option>
+                                <option value=""><?php echo t('option_select_commune_first'); ?></option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group"><label>Personal Phone</label><input type="text" name="STUDENT_PERSONAL_PHONE"></div>
-                <div class="form-group"><label>Blood Type</label>
+                <div class="form-group"><label><?php echo t('label_phone'); ?></label><input type="text" name="STUDENT_PERSONAL_PHONE"></div>
+                <div class="form-group"><label><?php echo t('label_blood_type'); ?></label>
                     <select name="STUDENT_BLOOD_TYPE">
-                        <option value="">Select...</option>
+                        <option value=""><?php echo t('select'); ?></option>
                         <option value="A+">A+</option><option value="A-">A-</option>
                         <option value="B+">B+</option><option value="B-">B-</option>
                         <option value="AB+">AB+</option><option value="AB-">AB-</option>
@@ -621,28 +615,28 @@ $conn->close();
                 </div>
                 <div class="wizard-panel" data-step="3">
                     <div class="form-grid">
-                        <div class="form-section-title">Academic Info</div>
-                        <div class="form-group"><label>Grade / Rank</label>
+                        <div class="form-section-title"><?php echo t('step_academic_info'); ?></div>
+                        <div class="form-group"><label><?php echo t('grade_level'); ?></label>
                     <select name="STUDENT_GRADE_ID">
-                        <option value="">Select Grade...</option>
+                        <option value=""><?php echo t('option_select_grade'); ?></option>
                         <?php foreach($grades as $g): ?>
                             <option value="<?php echo $g['GRADE_ID']; ?>"><?php echo htmlspecialchars($g['GRADE_NAME_EN']); ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
-                <div class="form-group"><label>Academic Average</label><input type="number" step="0.01" name="STUDENT_ACADEMIC_AVERAGE"></div>
-                <div class="form-group"><label>Speciality</label><input type="text" name="STUDENT_SPECIALITY"></div>
-                <div class="form-group"><label>Academic Level</label><input type="text" name="STUDENT_ACADEMIC_LEVEL"></div>
-                <div class="form-group"><label>Bac Number</label><input type="text" name="STUDENT_BACCALAUREATE_SUB_NUMBER"></div>
+                <div class="form-group"><label><?php echo t('label_academic_average'); ?></label><input type="number" step="0.01" name="STUDENT_ACADEMIC_AVERAGE"></div>
+                <div class="form-group"><label><?php echo t('label_speciality'); ?></label><input type="text" name="STUDENT_SPECIALITY"></div>
+                <div class="form-group"><label><?php echo t('label_academic_level'); ?></label><input type="text" name="STUDENT_ACADEMIC_LEVEL"></div>
+                <div class="form-group"><label><?php echo t('label_bac_number'); ?></label><input type="text" name="STUDENT_BACCALAUREATE_SUB_NUMBER"></div>
                 
                 <!-- Recruitment Source -->
                  <div class="sub-group">
-                    <label style="color:var(--primary-color); font-weight:700;">Recruitment Source</label>
+                    <label style="color:var(--primary-color); font-weight:700;"><?php echo t('recruitment_source'); ?></label>
                     <div style="margin-top:0.5rem;">
                         <div class="form-group">
-                            <label style="font-size:0.8rem;">Select Recruitment Source</label>
+                            <label style="font-size:0.8rem;"><?php echo t('select_recruitment_source'); ?></label>
                             <select id="RECRUITMENT_SOURCE_ID" name="RECRUITMENT_SOURCE_ID" onchange="toggleECN()">
-                                <option value="">Select...</option>
+                                <option value=""><?php echo t('select'); ?></option>
                                 <?php foreach ($recruitmentSources as $rs): ?>
                                     <?php 
                                         $label = $rs['RECRUITMENT_TYPE_EN'];
@@ -658,46 +652,56 @@ $conn->close();
                 </div>
                 <div class="wizard-panel" data-step="4">
                     <div class="form-grid">
-                        <div class="form-section-title">Other Details</div>
-                        <div class="form-group"><label>Height (cm)</label><input type="number" step="0.01" name="STUDENT_HEIGHT_CM"></div>
-                <div class="form-group"><label>Weight (kg)</label><input type="number" step="0.01" name="STUDENT_WEIGHT_KG"></div>
-                <div class="form-group"><label>Is Foreign?</label>
+                        <div class="form-section-title"><?php echo t('step_other_details'); ?></div>
+                        <div class="form-group"><label><?php echo t('label_height'); ?></label><input type="number" step="0.01" name="STUDENT_HEIGHT_CM"></div>
+                <div class="form-group"><label><?php echo t('label_weight'); ?></label><input type="number" step="0.01" name="STUDENT_WEIGHT_KG"></div>
+                <div class="form-group"><label><?php echo t('label_is_foreign'); ?></label>
                    <select id="IS_FOREIGN_SELECT" name="STUDENT_IS_FOREIGN" onchange="toggleForeignFields()">
-                       <option value="No">No</option>
-                       <option value="Yes">Yes</option>
+                       <option value="No"><?php echo t('no'); ?></option>
+                       <option value="Yes"><?php echo t('yes'); ?></option>
                    </select>
                 </div>
-                <div class="form-group"><label>School Sub Date</label><input type="date" name="STUDENT_SCHOOL_SUB_DATE"></div>
+                <div class="form-group"><label><?php echo t('label_school_sub_date'); ?></label><input type="date" name="STUDENT_SCHOOL_SUB_DATE"></div>
 
-                <div class="form-group"><label>Parents Situation</label>
-                    <select name="STUDENT_PARENTS_SITUATION"><option value="Married">Married</option><option value="Divorced">Divorced</option><option value="Separated">Separated</option><option value="Widowed">Widowed</option></select>
+                <div class="form-group"><label><?php echo t('label_parents_situation'); ?></label>
+                    <select name="STUDENT_PARENTS_SITUATION">
+                        <option value="Married"><?php echo t('married'); ?></option>
+                        <option value="Divorced"><?php echo t('divorced'); ?></option>
+                        <option value="Separated"><?php echo t('separated'); ?></option>
+                        <option value="Widowed"><?php echo t('widowed'); ?></option>
+                    </select>
                 </div>
-                <div class="form-group"><label>Orphan Status</label>
-                    <select name="STUDENT_ORPHAN_STATUS"><option value="None">None</option><option value="Father">Father</option><option value="Mother">Mother</option><option value="Both">Both</option></select>
+                <div class="form-group"><label><?php echo t('label_orphan_status'); ?></label>
+                    <select name="STUDENT_ORPHAN_STATUS">
+                        <option value="None"><?php echo t('none'); ?></option>
+                        <option value="Father"><?php echo t('orphan_father'); ?></option>
+                        <option value="Mother"><?php echo t('orphan_mother'); ?></option>
+                        <option value="Both"><?php echo t('orphan_both'); ?></option>
+                    </select>
                 </div>
-                <div class="form-group"><label>Num Siblings</label><input type="number" name="STUDENT_NUMBER_OF_SIBLINGS"></div>
+                <div class="form-group"><label><?php echo t('label_siblings_count'); ?></label><input type="number" name="STUDENT_NUMBER_OF_SIBLINGS"></div>
                 
                 <!-- ... Remaining text fields implied by saving logic ... -->
                 <!-- For brevity in this long file update, I'll ensure key structure is correct. -->
                 <!-- Documents & Admin Extras -->
-                 <div class="form-group"><label>School Card Number</label><input type="text" name="STUDENT_SCHOOL_SUB_CARD_NUMBER"></div>
-                 <div class="form-group"><label>Laptop Serial</label><input type="text" name="STUDENT_LAPTOP_SERIAL_NUMBER"></div>
-                 <div class="form-group"><label>ID Card Number</label><input type="text" name="STUDENT_ID_CARD_NUMBER"></div>
-                 <div class="form-group"><label>Birth Cert Number</label><input type="text" name="STUDENT_BIRTHDATE_CERTIFICATE_NUMBER"></div>
-                 <div class="form-group"><label>Postal Account</label><input type="text" name="STUDENT_POSTAL_ACCOUNT_NUMBER"></div>
+                 <div class="form-group"><label><?php echo t('label_school_sub_card'); ?></label><input type="text" name="STUDENT_SCHOOL_SUB_CARD_NUMBER"></div>
+                 <div class="form-group"><label><?php echo t('label_laptop_serial'); ?></label><input type="text" name="STUDENT_LAPTOP_SERIAL_NUMBER"></div>
+                 <div class="form-group"><label><?php echo t('label_id_card_num'); ?></label><input type="text" name="STUDENT_ID_CARD_NUMBER"></div>
+                 <div class="form-group"><label><?php echo t('label_birth_cert_num'); ?></label><input type="text" name="STUDENT_BIRTHDATE_CERTIFICATE_NUMBER"></div>
+                 <div class="form-group"><label><?php echo t('label_postal_account'); ?></label><input type="text" name="STUDENT_POSTAL_ACCOUNT_NUMBER"></div>
                  
-                 <div class="form-group" style="grid-column: span 2;"><label>Educational Certificates</label><textarea name="STUDENT_EDUCATIONAL_CERTIFICATES" rows="2"></textarea></div>
-                 <div class="form-group" style="grid-column: span 2;"><label>Military Certificates</label><textarea name="STUDENT_MILITARY_CERTIFICATES" rows="2"></textarea></div>
-                 <div class="form-group" style="grid-column: span 2;"><label>Hobbies</label><textarea name="STUDENT_HOBBIES" rows="2"></textarea></div>
+                 <div class="form-group" style="grid-column: span 2;"><label><?php echo t('label_edu_certificates'); ?></label><textarea name="STUDENT_EDUCATIONAL_CERTIFICATES" rows="2"></textarea></div>
+                 <div class="form-group" style="grid-column: span 2;"><label><?php echo t('label_mil_certificates'); ?></label><textarea name="STUDENT_MILITARY_CERTIFICATES" rows="2"></textarea></div>
+                 <div class="form-group" style="grid-column: span 2;"><label><?php echo t('label_hobbies'); ?></label><textarea name="STUDENT_HOBBIES" rows="2"></textarea></div>
                  
                  <!-- Health & Military Status -->
-                 <div class="form-group" style="grid-column: span 2;"><label>Health Status</label><textarea name="STUDENT_HEALTH_STATUS" rows="2"></textarea></div>
-                 <div class="form-group"><label>Military Necklace?</label>
-                    <select name="STUDENT_MILITARY_NECKLACE"><option value="No">No</option><option value="Yes">Yes</option></select>
+                 <div class="form-group" style="grid-column: span 2;"><label><?php echo t('label_health_status'); ?></label><textarea name="STUDENT_HEALTH_STATUS" rows="2"></textarea></div>
+                 <div class="form-group"><label><?php echo t('label_mil_necklace'); ?>?</label>
+                    <select name="STUDENT_MILITARY_NECKLACE"><option value="No"><?php echo t('no'); ?></option><option value="Yes"><?php echo t('yes'); ?></option></select>
                  </div>
-                 <div class="form-group"><label>Army</label>
+                 <div class="form-group"><label><?php echo t('army'); ?></label>
                     <select name="STUDENT_ARMY_ID">
-                        <option value="">Select Army...</option>
+                        <option value=""><?php echo t('option_select_army'); ?></option>
                         <?php foreach ($armies as $a): ?>
                             <option value="<?php echo $a['ARMY_ID']; ?>"><?php echo htmlspecialchars($a['ARMY_NAME_EN']); ?></option>
                         <?php endforeach; ?>
@@ -705,99 +709,99 @@ $conn->close();
                  </div>
 
                  <!-- Siblings Details -->
-                 <div class="form-group"><label>Num Sisters</label><input type="number" name="STUDENT_NUMBER_OF_SISTERS"></div>
-                 <div class="form-group"><label>Order among Siblings</label><input type="number" name="STUDENT_ORDER_AMONG_SIBLINGS"></div>
+                 <div class="form-group"><label><?php echo t('label_sisters_count'); ?></label><input type="number" name="STUDENT_NUMBER_OF_SISTERS"></div>
+                 <div class="form-group"><label><?php echo t('label_order_among_siblings'); ?></label><input type="number" name="STUDENT_ORDER_AMONG_SIBLINGS"></div>
                     </div>
                 </div>
                 <div class="wizard-panel" data-step="5">
                     <div class="form-grid">
-                        <div class="form-section-title">Combat Outfit</div>
-                 <div class="form-group"><label>1st Outfit Number</label><input type="text" name="FIRST_OUTFIT_NUMBER"></div>
-                 <div class="form-group"><label>1st Outfit Size</label><input type="text" name="FIRST_OUTFIT_SIZE" placeholder="e.g. M, L, XL"></div>
-                 <div class="form-group"><label>2nd Outfit Number</label><input type="text" name="SECOND_OUTFIT_NUMBER"></div>
-                 <div class="form-group"><label>2nd Outfit Size</label><input type="text" name="SECOND_OUTFIT_SIZE" placeholder="e.g. M, L, XL"></div>
-                 <div class="form-group"><label>Combat Shoe Size</label><input type="text" name="COMBAT_SHOE_SIZE" placeholder="e.g. 42, 43"></div>
+                        <div class="form-section-title"><?php echo t('combat_outfit'); ?></div>
+                 <div class="form-group"><label><?php echo t('outfit1_number'); ?></label><input type="text" name="FIRST_OUTFIT_NUMBER"></div>
+                 <div class="form-group"><label><?php echo t('outfit1_size'); ?></label><input type="text" name="FIRST_OUTFIT_SIZE" placeholder="e.g. M, L, XL"></div>
+                 <div class="form-group"><label><?php echo t('outfit2_number'); ?></label><input type="text" name="SECOND_OUTFIT_NUMBER"></div>
+                 <div class="form-group"><label><?php echo t('outfit2_size'); ?></label><input type="text" name="SECOND_OUTFIT_SIZE" placeholder="e.g. M, L, XL"></div>
+                 <div class="form-group"><label><?php echo t('shoe_size'); ?></label><input type="text" name="COMBAT_SHOE_SIZE" placeholder="e.g. 42, 43"></div>
 
-                 <!-- Parade Uniform -->
-                 <div class="form-section-title">Parade Uniform</div>
-                 <div class="form-group"><label>Summer Jacket Size</label><input type="text" name="SUMMER_JACKET_SIZE"></div>
-                 <div class="form-group"><label>Winter Jacket Size</label><input type="text" name="WINTER_JACKET_SIZE"></div>
-                 <div class="form-group"><label>Summer Trousers Size</label><input type="text" name="SUMMER_TROUSERS_SIZE"></div>
-                 <div class="form-group"><label>Winter Trousers Size</label><input type="text" name="WINTER_TROUSERS_SIZE"></div>
-                 <div class="form-group"><label>Summer Shirt Size</label><input type="text" name="SUMMER_SHIRT_SIZE"></div>
-                 <div class="form-group"><label>Winter Shirt Size</label><input type="text" name="WINTER_SHIRT_SIZE"></div>
-                 <div class="form-group"><label>Summer Hat Size</label><input type="text" name="SUMMER_HAT_SIZE"></div>
-                 <div class="form-group"><label>Winter Hat Size</label><input type="text" name="WINTER_HAT_SIZE"></div>
+                 <!-- <?php echo t('parade_uniform'); ?> -->
+                 <div class="form-section-title"><?php echo t('parade_uniform'); ?></div>
+                 <div class="form-group"><label><?php echo t('summer_jacket_size'); ?></label><input type="text" name="SUMMER_JACKET_SIZE"></div>
+                 <div class="form-group"><label><?php echo t('winter_jacket_size'); ?></label><input type="text" name="WINTER_JACKET_SIZE"></div>
+                 <div class="form-group"><label><?php echo t('summer_trousers_size'); ?></label><input type="text" name="SUMMER_TROUSERS_SIZE"></div>
+                 <div class="form-group"><label><?php echo t('winter_trousers_size'); ?></label><input type="text" name="WINTER_TROUSERS_SIZE"></div>
+                 <div class="form-group"><label><?php echo t('summer_shirt_size'); ?></label><input type="text" name="SUMMER_SHIRT_SIZE"></div>
+                 <div class="form-group"><label><?php echo t('winter_shirt_size'); ?></label><input type="text" name="WINTER_SHIRT_SIZE"></div>
+                 <div class="form-group"><label><?php echo t('summer_hat_size'); ?></label><input type="text" name="SUMMER_HAT_SIZE"></div>
+                 <div class="form-group"><label><?php echo t('winter_hat_size'); ?></label><input type="text" name="WINTER_HAT_SIZE"></div>
                  <!-- Skirt sizes (Female only) -->
-                 <div class="form-group skirt-field" style="display:none;"><label>Summer Skirt Size</label><input type="text" name="SUMMER_SKIRT_SIZE"></div>
-                 <div class="form-group skirt-field" style="display:none;"><label>Winter Skirt Size</label><input type="text" name="WINTER_SKIRT_SIZE"></div>
+                 <div class="form-group skirt-field" style="display:none;"><label><?php echo t('summer_skirt_size'); ?></label><input type="text" name="SUMMER_SKIRT_SIZE"></div>
+                 <div class="form-group skirt-field" style="display:none;"><label><?php echo t('winter_skirt_size'); ?></label><input type="text" name="WINTER_SKIRT_SIZE"></div>
                     </div>
                 </div>
                 <div class="wizard-panel" data-step="6">
                     <div class="form-grid">
-                        <div class="form-section-title">Family Information</div>
-                 <div class="form-group"><label>Father First Name (EN)</label><input type="text" name="FATHER_FIRST_NAME_EN"></div>
-                 <div class="form-group"><label>Father Last Name (EN)</label><input type="text" name="FATHER_LAST_NAME_EN"></div>
-                 <div class="form-group"><label>Father First Name (AR)</label><input type="text" name="FATHER_FIRST_NAME_AR" dir="rtl"></div>
-                 <div class="form-group"><label>Father Last Name (AR)</label><input type="text" name="FATHER_LAST_NAME_AR" dir="rtl"></div>
-                 <div class="form-group"><label>Father Profession (EN)</label><input type="text" name="FATHER_PROFESSION_EN"></div>
-                 <div class="form-group"><label>Father Profession (AR)</label><input type="text" name="FATHER_PROFESSION_AR" dir="rtl"></div>
-                 <div class="form-group"><label>Mother First Name (EN)</label><input type="text" name="MOTHER_FIRST_NAME_EN"></div>
-                 <div class="form-group"><label>Mother Last Name (EN)</label><input type="text" name="MOTHER_LAST_NAME_EN"></div>
-                 <div class="form-group"><label>Mother First Name (AR)</label><input type="text" name="MOTHER_FIRST_NAME_AR" dir="rtl"></div>
-                 <div class="form-group"><label>Mother Last Name (AR)</label><input type="text" name="MOTHER_LAST_NAME_AR" dir="rtl"></div>
-                 <div class="form-group"><label>Mother Profession (EN)</label><input type="text" name="MOTHER_PROFESSION_EN"></div>
-                 <div class="form-group"><label>Mother Profession (AR)</label><input type="text" name="MOTHER_PROFESSION_AR" dir="rtl"></div>
+                        <div class="form-section-title"><?php echo t('step_family_info'); ?></div>
+                 <div class="form-group"><label><?php echo t('label_father_first_en'); ?></label><input type="text" name="FATHER_FIRST_NAME_EN"></div>
+                 <div class="form-group"><label><?php echo t('label_father_last_en'); ?></label><input type="text" name="FATHER_LAST_NAME_EN"></div>
+                 <div class="form-group"><label><?php echo t('label_father_first_ar'); ?></label><input type="text" name="FATHER_FIRST_NAME_AR" dir="rtl"></div>
+                 <div class="form-group"><label><?php echo t('label_father_last_ar'); ?></label><input type="text" name="FATHER_LAST_NAME_AR" dir="rtl"></div>
+                 <div class="form-group"><label><?php echo t('label_father_prof_en'); ?></label><input type="text" name="FATHER_PROFESSION_EN"></div>
+                 <div class="form-group"><label><?php echo t('label_father_prof_ar'); ?></label><input type="text" name="FATHER_PROFESSION_AR" dir="rtl"></div>
+                 <div class="form-group"><label><?php echo t('label_mother_first_en'); ?></label><input type="text" name="MOTHER_FIRST_NAME_EN"></div>
+                 <div class="form-group"><label><?php echo t('label_mother_last_en'); ?></label><input type="text" name="MOTHER_LAST_NAME_EN"></div>
+                 <div class="form-group"><label><?php echo t('label_mother_first_ar'); ?></label><input type="text" name="MOTHER_FIRST_NAME_AR" dir="rtl"></div>
+                 <div class="form-group"><label><?php echo t('label_mother_last_ar'); ?></label><input type="text" name="MOTHER_LAST_NAME_AR" dir="rtl"></div>
+                 <div class="form-group"><label><?php echo t('label_mother_prof_en'); ?></label><input type="text" name="MOTHER_PROFESSION_EN"></div>
+                 <div class="form-group"><label><?php echo t('label_mother_prof_ar'); ?></label><input type="text" name="MOTHER_PROFESSION_AR" dir="rtl"></div>
                     </div>
                 </div>
                 <div class="wizard-panel" data-step="7">
                     <div class="form-grid">
                         <div class="emergency-section">
-                     <div class="form-section-title">Emergency Contact</div>
+                     <div class="form-section-title"><?php echo t('step_emergency_contact'); ?></div>
                      <div class="form-grid" style="gap: 1.5rem;">
-                         <div class="form-group"><label>Contact Phone Number</label><input type="text" name="CONTACT_PHONE_NUMBER"></div>
+                         <div class="form-group"><label><?php echo t('label_contact_phone'); ?></label><input type="text" name="CONTACT_PHONE_NUMBER"></div>
                          
                          <!-- Local Contact Fields (Hidden if Foreign) -->
                          <div id="LOCAL_CONTACT_FIELDS" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-                             <div class="form-group"><label>First Name (EN)</label><input type="text" name="CONTACT_FIRST_NAME_EN"></div>
-                             <div class="form-group"><label>Last Name (EN)</label><input type="text" name="CONTACT_LAST_NAME_EN"></div>
-                             <div class="form-group"><label>Relation (EN)</label><input type="text" name="CONTACT_RELATION_EN" placeholder="e.g. Father, Uncle"></div>
-                             <div class="form-group"><label>First Name (AR)</label><input type="text" name="CONTACT_FIRST_NAME_AR" dir="rtl"></div>
-                             <div class="form-group"><label>Last Name (AR)</label><input type="text" name="CONTACT_LAST_NAME_AR" dir="rtl"></div>
-                             <div class="form-group"><label>Relation (AR)</label><input type="text" name="CONTACT_RELATION_AR" dir="rtl" placeholder="مثل الأب"></div>
+                             <div class="form-group"><label><?php echo t('label_first_name_en'); ?></label><input type="text" name="CONTACT_FIRST_NAME_EN"></div>
+                             <div class="form-group"><label><?php echo t('label_last_name_en'); ?></label><input type="text" name="CONTACT_LAST_NAME_EN"></div>
+                             <div class="form-group"><label><?php echo t('label_relation_en'); ?></label><input type="text" name="CONTACT_RELATION_EN" placeholder="e.g. Father, Uncle"></div>
+                             <div class="form-group"><label><?php echo t('label_first_name_ar'); ?></label><input type="text" name="CONTACT_FIRST_NAME_AR" dir="rtl"></div>
+                             <div class="form-group"><label><?php echo t('label_last_name_ar'); ?></label><input type="text" name="CONTACT_LAST_NAME_AR" dir="rtl"></div>
+                             <div class="form-group"><label><?php echo t('label_relation_ar'); ?></label><input type="text" name="CONTACT_RELATION_AR" dir="rtl" placeholder="مثل الأب"></div>
                              
-                             <!-- Contact Address -->
+                             <!-- <?php echo t('label_contact_address'); ?> -->
                              <div class="sub-group">
-                                <label style="color:var(--primary-color); font-weight:700;">Contact Address</label>
+                                <label style="color:var(--primary-color); font-weight:700;"><?php echo t('label_contact_address'); ?></label>
                                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top:0.5rem;">
-                                    <div class="form-group"><label style="font-size:0.8rem;">Street (EN)</label><input type="text" name="CONTACT_STREET_EN"></div>
-                                    <div class="form-group"><label style="font-size:0.8rem;">Street (AR)</label><input type="text" name="CONTACT_STREET_AR" dir="rtl"></div>
+                                    <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_street_en'); ?></label><input type="text" name="CONTACT_STREET_EN"></div>
+                                    <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_street_ar'); ?></label><input type="text" name="CONTACT_STREET_AR" dir="rtl"></div>
                                     
                                     <div>
-                                        <label style="font-size:0.8rem;">Country</label>
+                                        <label style="font-size:0.8rem;"><?php echo t('label_country'); ?></label>
                                         <select class="country-select" data-prefix="CONTACT_" name="CONTACT_COUNTRY_ID">
-                                            <option value="">Select Country...</option>
+                                            <option value=""><?php echo t('option_select_country'); ?></option>
                                             <?php foreach ($countries as $c): ?>
                                                 <option value="<?php echo $c['COUNTRY_ID']; ?>"><?php echo htmlspecialchars($c['COUNTRY_NAME_EN']); ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
                                     <div>
-                                        <label style="font-size:0.8rem;">Wilaya</label>
+                                        <label style="font-size:0.8rem;"><?php echo t('label_wilaya'); ?></label>
                                         <select id="CONTACT_WILAYA_ID" name="CONTACT_WILAYA_ID" class="wilaya-select" data-prefix="CONTACT_" disabled>
-                                            <option value="">Select Country First</option>
+                                            <option value=""><?php echo t('option_select_country_first'); ?></option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label style="font-size:0.8rem;">Daira</label>
+                                        <label style="font-size:0.8rem;"><?php echo t('label_daira'); ?></label>
                                         <select id="CONTACT_DAIRA_ID" name="CONTACT_DAIRA_ID" class="daira-select" data-prefix="CONTACT_" disabled>
-                                            <option value="">Select Wilaya First</option>
+                                            <option value=""><?php echo t('option_select_wilaya_first'); ?></option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label style="font-size:0.8rem;">Commune</label>
+                                        <label style="font-size:0.8rem;"><?php echo t('label_commune'); ?></label>
                                         <select id="CONTACT_COMMUNE_ID" name="CONTACT_COMMUNE_ID" disabled>
-                                            <option value="">Select Daira First</option>
+                                            <option value=""><?php echo t('option_select_daira_first'); ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -808,7 +812,7 @@ $conn->close();
                          <div id="FOREIGN_CONTACT_FIELDS" style="grid-column: 1 / -1; display:none; grid-template-columns: 1fr 1fr; gap: 1rem;">
                              <div class="form-group"><label>Consulate Number</label><input type="text" name="CONSULATE_NUMBER"></div>
                              <div class="form-group" style="grid-column: span 2;">
-                                <p style="font-size:0.9rem; color:#666;">* Relation will be automatically set to "<b>[Birth Country]'s consulate</b>"</p>
+                                <p style="font-size:0.9rem; color:#666;">* Relation will be automatically set to "<b>[Birth <?php echo t('label_country'); ?>]'s consulate</b>"</p>
                              </div>
                          </div>
                      </div>
@@ -817,15 +821,20 @@ $conn->close();
                 </div>
             </div>
             <div class="wizard-actions">
-                <button type="button" class="btn-prev" id="wizardPrev">Previous</button>
-                <button type="button" class="btn-next" id="wizardNext">Next</button>
-                <button type="submit" class="btn-submit" id="wizardSubmit" style="display:none;">Add Student Record</button>
+                <button type="button" class="btn-prev" id="wizardPrev"><?php echo t('previous'); ?></button>
+                <button type="button" class="btn-next" id="wizardNext"><?php echo t('next'); ?></button>
+                <button type="submit" class="btn-submit" id="wizardSubmit" style="display:none;"><?php echo t('add_student_record'); ?></button>
             </div>
         </form>
     </div>
 </div>
 
+</div>
+</div>
+</div>
+
 <script>
+var T = <?php echo json_encode($T); ?>;
 // Toggle ECN Section
 function toggleECN() {
     const type = document.getElementById('RECRUITMENT_SOURCE_ID').value;
@@ -895,7 +904,7 @@ showStep(1);
 
 // Cascading Locations (Generic)
 function fetchLocations(type, parentParam, parentId, targetSelect, placeholder) {
-    targetSelect.innerHTML = '<option value="">Loading...</option>';
+    targetSelect.innerHTML = '<option value="">' + (T.loading || 'Loading...') + '</option>';
     targetSelect.disabled = true;
     
     fetch(`get_locations.php?type=${type}&${parentParam}=${parentId}`)
@@ -917,16 +926,16 @@ function fetchLocations(type, parentParam, parentId, targetSelect, placeholder) 
         })
         .catch(err => {
             console.error(err);
-            targetSelect.innerHTML = '<option value="">Error or None</option>';
+            targetSelect.innerHTML = '<option value="">' + (T.error_loading || 'Error or None') + '</option>';
         });
 }
 
-// Bind Events for Country/Wilaya/Daira/Commune classes
+// Bind Events for country/wilaya/daira/commune classes
 document.querySelectorAll('.country-select').forEach(sel => {
     sel.addEventListener('change', function() {
         const prefix = this.getAttribute('data-prefix');
         const wilayaSel = document.getElementById(prefix + 'WILAYA_ID');
-        if(this.value) fetchLocations('wilayas', 'country_id', this.value, wilayaSel, 'Select Wilaya...');
+        if(this.value) fetchLocations('wilayas', 'country_id', this.value, wilayaSel, T.select_wilaya_opt || 'Select Wilaya...');
     });
 });
 
@@ -934,7 +943,7 @@ document.querySelectorAll('.wilaya-select').forEach(sel => {
     sel.addEventListener('change', function() {
         const prefix = this.getAttribute('data-prefix');
         const dairaSel = document.getElementById(prefix + 'DAIRA_ID');
-        if(this.value) fetchLocations('dairas', 'wilaya_id', this.value, dairaSel, 'Select Daira...');
+        if(this.value) fetchLocations('dairas', 'wilaya_id', this.value, dairaSel, T.select_daira_opt || 'Select Daira...');
     });
 });
 
@@ -942,7 +951,7 @@ document.querySelectorAll('.daira-select').forEach(sel => {
     sel.addEventListener('change', function() {
         const prefix = this.getAttribute('data-prefix');
         const communeSel = document.getElementById(prefix + 'COMMUNE_ID');
-        if(this.value) fetchLocations('communes', 'daira_id', this.value, communeSel, 'Select Commune...');
+        if(this.value) fetchLocations('communes', 'daira_id', this.value, communeSel, T.select_commune_opt || 'Select Commune...');
     });
 });
 </script>

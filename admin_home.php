@@ -2,6 +2,7 @@
 // admin_home.php - Welcome page for Admin showing basic dashboard statistics
 session_start();
 date_default_timezone_set('Africa/Algiers');
+require_once __DIR__ . '/lang/i18n.php';
 
 // Check if user is logged in as Admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
@@ -151,161 +152,22 @@ if ($result && $result->num_rows > 0) {
 $conn->close();
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>Admin Home - Welcome</title>
+    <title><?php echo t('home'); ?> - <?php echo t('app_name'); ?></title>
     <style>
         /* Match admin_dashboard.php look & feel */
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f9fafb;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-
         .admin-container {
             max-width: 1200px;
             margin: 20px auto;
             padding: 0 20px 30px;
         }
-        
-        .navbar-admin {
-            background: #fff;
-            padding: 1rem 2rem;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .navbar-admin a {
-            text-decoration: none;
-            color: #6b7280;
-            padding: 0.5rem 1rem;
-            margin-left: 1rem;
-            border-radius: 8px;
-            border: none;
-            background: transparent;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .navbar-admin a:hover {
-            background: #f3f4f6;
-            color: #4f46e5;
-        }
-
-        .navbar-admin a.active {
-            color: #6f42c1;
-            font-weight: 600;
-        }
-
-        .notification-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: #dc2626;
-            color: white;
-            border-radius: 50%;
-            min-width: 24px;
-            height: 24px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-left: 8px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .notification-bell {
-            cursor: pointer;
-            font-size: 20px;
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .notifications-panel {
-            display: none;
-            position: absolute;
-            top: 50px;
-            right: 0;
-            width: 400px;
-            max-height: 500px;
-            overflow-y: auto;
-            background: #fff;
-            border: 1px solid #bbb;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
-
-        .notifications-panel.active {
-            display: block;
-        }
-
-        .notification-item {
-            padding: 12px;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            background-color: #fef3c7;
-            border-left: 4px solid #f59e0b;
-        }
-
-        .notification-item:hover {
-            background-color: #fde68a;
-        }
-
-        .notification-item.new {
-            background-color: #dbeafe;
-            border-left-color: #3b82f6;
-            font-weight: 500;
-        }
-
-        .notification-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 6px;
-        }
-
-        .notification-item-student {
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 14px;
-        }
-
-        .notification-item-time {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        .notification-item-details {
-            font-size: 13px;
-            color: #374151;
-            margin-top: 4px;
-        }
-
-        .notification-empty {
-            padding: 20px;
-            text-align: center;
-            color: #9ca3af;
-        }
 
         .welcome-section {
+
             background: linear-gradient(135deg, #6f42c1 0%, #8c63d9 100%);
             color: white;
             padding: 30px;
@@ -422,78 +284,57 @@ $conn->close();
 </head>
 <body>
 
-<div class="navbar-admin">
-    <div style="font-family: sans-serif; display:flex; align-items:center; width:100%;">
-        <div style="font-weight: 700; font-size: 1.25rem; color: #111; margin-right: 2rem;">📚 Pronote</div>
-        <div style="display:flex; align-items:center;">
-            <a href="admin_home.php" class="navbar_buttons active">Home</a>
-            <a href="admin_dashboard.php" class="navbar_buttons">Search</a>
-            <a href="admin_search_student.php" class="navbar_buttons">Student Records</a>
-            <a href="profile.php" class="navbar_buttons">Profile</a>
-        </div>
-        <div style="display:flex; align-items:center; gap:20px; margin-left:auto;">
-            <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
-                🔔
-                <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
-                <div class="notifications-panel" id="notificationsPanel">
-                    <div style="padding:12px; border-bottom:1px solid #e5e7eb; font-weight:600; background:#f9fafb;">
-                        New Observations
-                    </div>
-                    <div id="notificationsContent"></div>
-                </div>
-            </div>
-            <a href="logout.php" class="navbar_buttons logout-btn">Logout</a>
-        </div>
-    </div>
-</div>
+<div class="app-layout">
+    <?php include 'sidebar.php'; ?>
+    <div class="main-content">
 
 <div class="admin-container">
     <!-- Welcome Section -->
     <div class="welcome-section">
-        <h1>Welcome, <?php echo $admin_position; ?>! 👋</h1>
-        <p>Here's an overview of the educational management system</p>
+        <h1><?php echo t('welcome_admin', $admin_position); ?></h1>
+        <p><?php echo t('welcome_admin_sub'); ?></p>
     </div>
 
     <!-- Statistics Cards -->
     <div class="stats-grid">
         <div class="stat-card">
             <div style="font-size: 24px;">👨‍🎓</div>
-            <div class="stat-label">Total Students</div>
+            <div class="stat-label"><?php echo t('stat_total_students'); ?></div>
             <div class="stat-number"><?php echo $total_students; ?></div>
         </div>
         <div class="stat-card">
             <div style="font-size: 24px;">👨‍🏫</div>
-            <div class="stat-label">Total Teachers</div>
+            <div class="stat-label"><?php echo t('stat_total_teachers'); ?></div>
             <div class="stat-number"><?php echo $total_teachers; ?></div>
         </div>
         <div class="stat-card">
             <div style="font-size: 24px;">📚</div>
-            <div class="stat-label">Total Classes</div>
+            <div class="stat-label"><?php echo t('stat_total_classes'); ?></div>
             <div class="stat-number"><?php echo $total_classes; ?></div>
         </div>
         <div class="stat-card">
             <div style="font-size: 24px;">📖</div>
-            <div class="stat-label">Total Majors</div>
+            <div class="stat-label"><?php echo t('stat_total_majors'); ?></div>
             <div class="stat-number"><?php echo $total_majors; ?></div>
         </div>
         <div class="stat-card">
             <div style="font-size: 24px;">🏛️</div>
-            <div class="stat-label">Total Sections</div>
+            <div class="stat-label"><?php echo t('stat_total_sections'); ?></div>
             <div class="stat-number"><?php echo $total_sections; ?></div>
         </div>
         <div class="stat-card">
             <div style="font-size: 24px;">⏰</div>
-            <div class="stat-label">Study Sessions</div>
+            <div class="stat-label"><?php echo t('stat_study_sessions'); ?></div>
             <div class="stat-number"><?php echo $total_sessions; ?></div>
         </div>
         <div class="stat-card">
             <div style="font-size: 24px;">❌</div>
-            <div class="stat-label">Total Absences</div>
+            <div class="stat-label"><?php echo t('stat_total_absences'); ?></div>
             <div class="stat-number"><?php echo $total_absences; ?></div>
         </div>
         <div class="stat-card">
             <div style="font-size: 24px;">📝</div>
-            <div class="stat-label">Total Observations</div>
+            <div class="stat-label"><?php echo t('stat_total_observations'); ?></div>
             <div class="stat-number"><?php echo $total_observations; ?></div>
         </div>
     </div>
@@ -502,14 +343,14 @@ $conn->close();
     <div class="grid-2">
         <!-- Recent Observations -->
         <div class="info-section">
-            <h2>Recent Observations</h2>
+            <h2><?php echo t('recent_observations'); ?></h2>
             <?php if (count($recent_observations) > 0): ?>
                 <ul class="info-list">
                     <?php foreach ($recent_observations as $obs): ?>
                         <li>
                             <div>
                                 <strong><?php echo htmlspecialchars($obs['STUDENT_FIRST_NAME_EN'] . ' ' . $obs['STUDENT_LAST_NAME_EN']); ?></strong>
-                                <div style="font-size: 12px; color: #6b7280;">By <?php echo htmlspecialchars($obs['TEACHER_FIRST_NAME_EN'] . ' ' . $obs['TEACHER_LAST_NAME_EN']); ?></div>
+                                <div style="font-size: 12px; color: #6b7280;"><?php echo t('by'); ?> <?php echo htmlspecialchars($obs['TEACHER_FIRST_NAME_EN'] . ' ' . $obs['TEACHER_LAST_NAME_EN']); ?></div>
                             </div>
                             <div>
                                 <span class="highlight"><?php echo htmlspecialchars($obs['OBSERVATION_MOTIF']); ?></span>
@@ -521,20 +362,20 @@ $conn->close();
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
-                <p class="no-data">No recent observations</p>
+                <p class="no-data"><?php echo t('no_recent_observations'); ?></p>
             <?php endif; ?>
         </div>
 
         <!-- Recent Absences -->
         <div class="info-section">
-            <h2>Recent Absences</h2>
+            <h2><?php echo t('recent_absences'); ?></h2>
             <?php if (count($recent_absences) > 0): ?>
                 <ul class="info-list">
                     <?php foreach ($recent_absences as $abs): ?>
                         <li>
                             <div>
                                 <strong><?php echo htmlspecialchars($abs['STUDENT_FIRST_NAME_EN'] . ' ' . $abs['STUDENT_LAST_NAME_EN']); ?></strong>
-                                <div style="font-size: 12px; color: #6b7280;">Session: <?php echo date('d/m/Y', strtotime($abs['STUDY_SESSION_DATE'])); ?></div>
+                                <div style="font-size: 12px; color: #6b7280;"><?php echo t('session_label'); ?>: <?php echo date('d/m/Y', strtotime($abs['STUDY_SESSION_DATE'])); ?></div>
                             </div>
                             <div>
                                 <span class="highlight"><?php echo htmlspecialchars($abs['ABSENCE_MOTIF']); ?></span>
@@ -546,78 +387,18 @@ $conn->close();
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
-                <p class="no-data">No recent absences</p>
+                <p class="no-data"><?php echo t('no_recent_absences'); ?></p>
             <?php endif; ?>
         </div>
     </div>
 </div>
 
+</div>
+</div>
+</div>
+
 <script>
-let newNotifications = [];
-
-function toggleNotificationsPanel() {
-    const panel = document.getElementById('notificationsPanel');
-    if (panel) {
-        panel.classList.toggle('active');
-    }
-}
-
-function fetchNotifications() {
-    fetch('get_new_notifications.php')
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                newNotifications = data.notifications;
-                updateNotificationDisplay();
-            }
-        })
-        .catch(err => console.error('Error fetching notifications:', err));
-}
-
-function updateNotificationDisplay() {
-    const countBadge = document.getElementById('notificationCount');
-    const content = document.getElementById('notificationsContent');
-    
-    if (newNotifications.length > 0) {
-        countBadge.textContent = newNotifications.length;
-        countBadge.style.display = 'flex';
-        
-        let html = '';
-        newNotifications.forEach((notif) => {
-            html += `<div class="notification-item new">
-                <div class="notification-item-header">
-                    <span class="notification-item-student">${notif.student_name}</span>
-                    <span class="notification-item-time">${notif.observation_time}</span>
-                </div>
-                <div class="notification-item-details">
-                    <div><strong>Teacher:</strong> ${notif.teacher_name}</div>
-                    <div><strong>Session:</strong> ${notif.session_date} (${notif.session_time})</div>
-                    <div><strong>Motif:</strong> ${notif.motif}</div>
-                </div>
-            </div>`;
-        });
-        content.innerHTML = html;
-    } else {
-        countBadge.style.display = 'none';
-        content.innerHTML = '<div class="notification-empty">No new observations</div>';
-    }
-}
-
-// Close notifications panel when clicking outside
-document.addEventListener('click', function(event) {
-    const notifBell = document.getElementById('notificationBell');
-    const panel = document.getElementById('notificationsPanel');
-    
-    if (notifBell && panel && !notifBell.contains(event.target)) {
-        panel.classList.remove('active');
-    }
-});
-
-// Fetch notifications on page load
-fetchNotifications();
-
-// Refresh notifications every 30 seconds
-setInterval(fetchNotifications, 30000);
+    // Any page-specific scripts can go here
 </script>
 
 </body>
