@@ -334,13 +334,13 @@ $conn->close();
         #suggestionsContainer {
             display: none;
             margin-bottom: 20px;
-            background: white;
+            background: #f8f9fa;
             border: 1px solid #bbb;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            max-height: 400px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            max-height: 500px;
             overflow-y: auto;
-            padding: 15px;
+            padding: 20px;
         }
 
         #suggestionsList {
@@ -348,65 +348,81 @@ $conn->close();
             padding: 0;
             margin: 0;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
         }
 
         .student-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 15px;
+            position: relative;
+            width: 100%;
+            height: 220px;
+            border-radius: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .student-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(111, 66, 193, 0.2);
-            border-color: #6f42c1;
-            background: linear-gradient(135deg, #f3e8ff 0%, #fff 100%);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(111, 66, 193, 0.35);
         }
 
-        .student-card-photo {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #6f42c1;
-            margin-bottom: 10px;
-            background: #e5e7eb;
+        .student-card-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
         }
 
-        .student-card-photo.placeholder {
+        .student-card-bg.placeholder {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            color: #9ca3af;
-            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+        }
+
+        .student-card-bg.placeholder::after {
+            content: '👤';
+            font-size: 60px;
+            opacity: 0.5;
+        }
+
+        .student-card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 15px 15px;
+            background: linear-gradient(to top, 
+                rgba(0, 0, 0, 0.9) 0%, 
+                rgba(0, 0, 0, 0.7) 40%, 
+                rgba(0, 0, 0, 0.3) 70%,
+                transparent 100%);
         }
 
         .student-card-name {
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 14px;
-            margin-bottom: 5px;
+            font-weight: 700;
+            color: #ffffff;
+            font-size: 15px;
+            margin-bottom: 6px;
             line-height: 1.3;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .student-card-id {
-            font-size: 11px;
-            color: #6b7280;
-            background: #f3f4f6;
-            padding: 3px 8px;
-            border-radius: 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(111, 66, 193, 0.8);
+            padding: 4px 10px;
+            border-radius: 12px;
             font-family: monospace;
+            display: inline-block;
+            backdrop-filter: blur(4px);
         }
 
 
@@ -544,15 +560,18 @@ $conn->close();
             if (matches.length > 0) {
                 const suggestionsList = document.getElementById('suggestionsList');
                 suggestionsList.innerHTML = matches.slice(0, 12).map(student => {
-                    const photoHtml = student.photo 
-                        ? `<img src="data:image/jpeg;base64,${student.photo}" class="student-card-photo" alt="${student.first_name}">`
-                        : `<div class="student-card-photo placeholder">👤</div>`;
+                    const bgStyle = student.photo 
+                        ? `style="background-image: url('data:image/jpeg;base64,${student.photo}');"`
+                        : '';
+                    const bgClass = student.photo ? '' : 'placeholder';
                     
                     return `
                         <li class="student-card" onclick="selectStudent('${student.serial_number}', '${student.first_name}', '${student.last_name}')">
-                            ${photoHtml}
-                            <div class="student-card-name">${student.first_name} ${student.last_name}</div>
-                            <div class="student-card-id">${student.serial_number}</div>
+                            <div class="student-card-bg ${bgClass}" ${bgStyle}></div>
+                            <div class="student-card-overlay">
+                                <div class="student-card-name">${student.first_name} ${student.last_name}</div>
+                                <div class="student-card-id">${student.serial_number}</div>
+                            </div>
                         </li>
                     `;
                 }).join('');
@@ -745,7 +764,7 @@ $conn->close();
             const item = (label, value) => `
                 <div class="info-item" style="border-left-color: #3b82f6;">
                     <div class="info-label">${label}</div>
-                    <div class="info-value">${value || '-'}</div>
+                    <div class="info-value">${value || 'N/A'}</div>
                 </div>
             `;
 

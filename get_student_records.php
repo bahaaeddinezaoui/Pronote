@@ -67,10 +67,10 @@ try {
             s.STUDENT_ORDER_AMONG_SIBLINGS,
             s.STUDENT_ORPHAN_STATUS, s.STUDENT_PARENTS_SITUATION,
             
-            g.GRADE_NAME_EN,
-            sec.SECTION_NAME_EN,
-            cat.CATEGORY_NAME_EN,
-            a.ARMY_NAME_EN,
+            g.GRADE_NAME_EN, g.GRADE_NAME_AR,
+            sec.SECTION_NAME_EN, sec.SECTION_NAME_AR,
+            cat.CATEGORY_NAME_EN, cat.CATEGORY_NAME_AR,
+            a.ARMY_NAME_EN, a.ARMY_NAME_AR,
 
             -- Parent Info
             spi.FATHER_FIRST_NAME_EN, spi.FATHER_LAST_NAME_EN, spi.FATHER_PROFESSION_EN,
@@ -91,14 +91,14 @@ try {
             spu.SUMMER_SKIRT_SIZE, spu.WINTER_SKIRT_SIZE,
 
             -- Birth Place Address
-            addr_bp.ADDRESS_STREET_EN AS BP_STREET,
-            c_bp.COUNTRY_NAME_EN AS BP_COUNTRY,
-            w_bp.WILAYA_NAME_EN AS BP_WILAYA,
+            addr_bp.ADDRESS_STREET_EN AS BP_STREET_EN, addr_bp.ADDRESS_STREET_AR AS BP_STREET_AR,
+            c_bp.COUNTRY_NAME_EN AS BP_COUNTRY_EN, c_bp.COUNTRY_NAME_AR AS BP_COUNTRY_AR,
+            w_bp.WILAYA_NAME_EN AS BP_WILAYA_EN, w_bp.WILAYA_NAME_AR AS BP_WILAYA_AR,
 
             -- Personal Address
-            addr_p.ADDRESS_STREET_EN AS PERS_STREET,
-            c_p.COUNTRY_NAME_EN AS PERS_COUNTRY,
-            w_p.WILAYA_NAME_EN AS PERS_WILAYA,
+            addr_p.ADDRESS_STREET_EN AS PERS_STREET_EN, addr_p.ADDRESS_STREET_AR AS PERS_STREET_AR,
+            c_p.COUNTRY_NAME_EN AS PERS_COUNTRY_EN, c_p.COUNTRY_NAME_AR AS PERS_COUNTRY_AR,
+            w_p.WILAYA_NAME_EN AS PERS_WILAYA_EN, w_p.WILAYA_NAME_AR AS PERS_WILAYA_AR,
 
             -- Emergency Contact
             sec_emg.CONTACT_FIRST_NAME_EN, sec_emg.CONTACT_LAST_NAME_EN,
@@ -106,9 +106,9 @@ try {
             sec_emg.CONTACT_RELATION_EN, sec_emg.CONTACT_RELATION_AR,
             sec_emg.CONTACT_PHONE_NUMBER AS EMG_PHONE,
             sec_emg.CONSULATE_NUMBER,
-            addr_emg.ADDRESS_STREET_EN AS EMG_STREET,
-            c_emg.COUNTRY_NAME_EN AS EMG_COUNTRY,
-            w_emg.WILAYA_NAME_EN AS EMG_WILAYA
+            addr_emg.ADDRESS_STREET_EN AS EMG_STREET_EN, addr_emg.ADDRESS_STREET_AR AS EMG_STREET_AR,
+            c_emg.COUNTRY_NAME_EN AS EMG_COUNTRY_EN, c_emg.COUNTRY_NAME_AR AS EMG_COUNTRY_AR,
+            w_emg.WILAYA_NAME_EN AS EMG_WILAYA_EN, w_emg.WILAYA_NAME_AR AS EMG_WILAYA_AR
 
         FROM student s
         LEFT JOIN section sec ON s.SECTION_ID = sec.SECTION_ID
@@ -247,6 +247,28 @@ try {
     }
     $stmt->close();
 
+    // Prepare dynamic values based on language
+    $grade = ($lang === 'ar') ? $student['GRADE_NAME_AR'] : $student['GRADE_NAME_EN'];
+    $section = ($lang === 'ar') ? $student['SECTION_NAME_AR'] : $student['SECTION_NAME_EN'];
+    $category = ($lang === 'ar') ? $student['CATEGORY_NAME_AR'] : $student['CATEGORY_NAME_EN'];
+    $army = ($lang === 'ar') ? $student['ARMY_NAME_AR'] : $student['ARMY_NAME_EN'];
+
+    // Addresses Localization
+    $bp_street = ($lang === 'ar') ? $student['BP_STREET_AR'] : $student['BP_STREET_EN'];
+    $bp_wilaya = ($lang === 'ar') ? $student['BP_WILAYA_AR'] : $student['BP_WILAYA_EN'];
+    $bp_country = ($lang === 'ar') ? $student['BP_COUNTRY_AR'] : $student['BP_COUNTRY_EN'];
+    $birth_place = trim(($bp_street ?? '') . ' ' . ($bp_wilaya ?? '') . ' ' . ($bp_country ?? ''));
+
+    $p_street = ($lang === 'ar') ? $student['PERS_STREET_AR'] : $student['PERS_STREET_EN'];
+    $p_wilaya = ($lang === 'ar') ? $student['PERS_WILAYA_AR'] : $student['PERS_WILAYA_EN'];
+    $p_country = ($lang === 'ar') ? $student['PERS_COUNTRY_AR'] : $student['PERS_COUNTRY_EN'];
+    $personal_address = trim(($p_street ?? '') . ' ' . ($p_wilaya ?? '') . ' ' . ($p_country ?? ''));
+
+    $emg_street = ($lang === 'ar') ? $student['EMG_STREET_AR'] : $student['EMG_STREET_EN'];
+    $emg_wilaya = ($lang === 'ar') ? $student['EMG_WILAYA_AR'] : $student['EMG_WILAYA_EN'];
+    $emg_country = ($lang === 'ar') ? $student['EMG_COUNTRY_AR'] : $student['EMG_COUNTRY_EN'];
+    $emg_address = trim(($emg_street ?? '') . ' ' . ($emg_wilaya ?? '') . ' ' . ($emg_country ?? ''));
+
     // Return results
     echo json_encode([
         'success' => true,
@@ -279,10 +301,10 @@ try {
             'health_status' => htmlspecialchars($student['STUDENT_HEALTH_STATUS'] ?? ''),
             'mil_necklace' => htmlspecialchars($student['STUDENT_MILITARY_NECKLACE'] ?? ''),
             
-            'grade' => htmlspecialchars($student['GRADE_NAME_EN'] ?? ''),
-            'section_name' => htmlspecialchars($student['SECTION_NAME_EN'] ?? ''),
-            'category_name' => htmlspecialchars($student['CATEGORY_NAME_EN'] ?? ''),
-            'army_name' => htmlspecialchars($student['ARMY_NAME_EN'] ?? ''),
+            'grade' => htmlspecialchars($grade ?? ''),
+            'section_name' => htmlspecialchars($section ?? ''),
+            'category_name' => htmlspecialchars($category ?? ''),
+            'army_name' => htmlspecialchars($army ?? ''),
 
             // Parents
             'father_name_en' => htmlspecialchars(($student['FATHER_FIRST_NAME_EN'] ?? '') . ' ' . ($student['FATHER_LAST_NAME_EN'] ?? '')),
@@ -300,9 +322,9 @@ try {
             'sisters_count' => htmlspecialchars($student['STUDENT_NUMBER_OF_SISTERS'] ?? ''),
             'order_among_siblings' => htmlspecialchars($student['STUDENT_ORDER_AMONG_SIBLINGS'] ?? ''),
 
-            // Addresses
-            'birth_place' => htmlspecialchars(($student['BP_STREET'] ?? '') . ', ' . ($student['BP_WILAYA'] ?? '') . ', ' . ($student['BP_COUNTRY'] ?? '')),
-            'personal_address' => htmlspecialchars(($student['PERS_STREET'] ?? '') . ', ' . ($student['PERS_WILAYA'] ?? '') . ', ' . ($student['PERS_COUNTRY'] ?? '')),
+            // Addresses - Now Localized
+            'birth_place' => htmlspecialchars($birth_place),
+            'personal_address' => htmlspecialchars($personal_address),
 
             // Uniforms (sending raw object might be cleaner but flat mapping is safer for sanitized HTML output simplicity)
             'uniforms' => [
@@ -325,7 +347,7 @@ try {
                 ]
             ],
             
-            // Emergency Contact
+            // Emergency Contact - Address Localized
             'emergency_contact' => [
                 'first_name_en' => htmlspecialchars($student['CONTACT_FIRST_NAME_EN'] ?? ''),
                 'last_name_en' => htmlspecialchars($student['CONTACT_LAST_NAME_EN'] ?? ''),
@@ -335,7 +357,7 @@ try {
                 'relation_ar' => htmlspecialchars($student['CONTACT_RELATION_AR'] ?? ''),
                 'phone' => htmlspecialchars($student['EMG_PHONE'] ?? ''),
                 'consulate_number' => htmlspecialchars($student['CONSULATE_NUMBER'] ?? ''),
-                'address' => htmlspecialchars(($student['EMG_STREET'] ?? '') . ', ' . ($student['EMG_WILAYA'] ?? '') . ', ' . ($student['EMG_COUNTRY'] ?? ''))
+                'address' => htmlspecialchars($emg_address)
             ]
         ],
         'absences' => $absences,
