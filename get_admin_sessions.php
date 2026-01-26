@@ -103,16 +103,20 @@ while ($row = $result->fetch_assoc()) {
     
     // Get absences for this session
     $absences = [];
+    $lang = $_SESSION['lang'] ?? 'en';
+    $motif_col_abs = ($lang === 'ar') ? "am.ABSENCE_MOTIF_AR" : "am.ABSENCE_MOTIF_EN";
+
     $stmtAbs = $conn->prepare("
         SELECT 
             a.ABSENCE_DATE_AND_TIME,
-            a.ABSENCE_MOTIF,
+            $motif_col_abs AS ABSENCE_MOTIF,
             a.ABSENCE_OBSERVATION,
             st.STUDENT_FIRST_NAME_EN,
             st.STUDENT_LAST_NAME_EN
         FROM absence a
         INNER JOIN student_gets_absent sga ON a.ABSENCE_ID = sga.ABSENCE_ID
         INNER JOIN student st ON sga.STUDENT_SERIAL_NUMBER = st.STUDENT_SERIAL_NUMBER
+        LEFT JOIN absence_motif am ON a.ABSENCE_MOTIF_ID = am.ABSENCE_MOTIF_ID
         WHERE a.STUDY_SESSION_ID = ?
         ORDER BY a.ABSENCE_DATE_AND_TIME
     ");
@@ -129,15 +133,15 @@ while ($row = $result->fetch_assoc()) {
     }
     $stmtAbs->close();
     
-    // Get observations for this session
-    $observations = [];
     // Get observations for this session, checking read status for THIS admin
     $observations = [];
+    $motif_col_obs = ($lang === 'ar') ? "om.OBSERVATION_MOTIF_AR" : "om.OBSERVATION_MOTIF_EN";
+
     $stmtObs = $conn->prepare("
         SELECT 
             tmo.OBSERVATION_ID,
             tmo.OBSERVATION_DATE_AND_TIME,
-            tmo.OBSERVATION_MOTIF,
+            $motif_col_obs AS OBSERVATION_MOTIF,
             tmo.OBSERVATION_NOTE,
             (CASE WHEN aro.OBSERVATION_ID IS NULL THEN 1 ELSE 0 END) as IS_NEW_FOR_ADMIN,
             st.STUDENT_FIRST_NAME_EN,
@@ -147,6 +151,7 @@ while ($row = $result->fetch_assoc()) {
         FROM teacher_makes_an_observation_for_a_student tmo
         INNER JOIN student st ON tmo.STUDENT_SERIAL_NUMBER = st.STUDENT_SERIAL_NUMBER
         INNER JOIN teacher t ON tmo.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
+        LEFT JOIN observation_motif om ON tmo.OBSERVATION_MOTIF_ID = om.OBSERVATION_MOTIF_ID
         LEFT JOIN admin_read_observation aro ON tmo.OBSERVATION_ID = aro.OBSERVATION_ID 
             AND aro.ADMINISTRATOR_ID = (SELECT ADMINISTRATOR_ID FROM administrator WHERE USER_ID = ?)
         WHERE tmo.STUDY_SESSION_ID = ?

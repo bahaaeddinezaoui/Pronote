@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 
     $student_serial = trim($_POST['student_serial'] ?? '');
-    $motif = trim($_POST['motif'] ?? '');
+    $motif = trim($_POST['motif_id'] ?? '');
     $note = trim($_POST['note'] ?? '');
 
     if ($student_serial === '' || $motif === '') {
@@ -141,10 +141,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         $stmtInsert = $conn->prepare("
             INSERT INTO teacher_makes_an_observation_for_a_student
-            (STUDENT_SERIAL_NUMBER, OBSERVATION_ID, TEACHER_SERIAL_NUMBER, STUDY_SESSION_ID, OBSERVATION_DATE_AND_TIME, OBSERVATION_MOTIF, OBSERVATION_NOTE)
+            (STUDENT_SERIAL_NUMBER, OBSERVATION_ID, TEACHER_SERIAL_NUMBER, STUDY_SESSION_ID, OBSERVATION_DATE_AND_TIME, OBSERVATION_MOTIF_ID, OBSERVATION_NOTE)
             VALUES (?, ?, ?, ?, NOW(), ?, ?)
         ");
-        $stmtInsert->bind_param('sisiss', $student_serial, $obs_id, $teacher_serial, $study_session_id, $motif, $note);
+        $motif_id_int = (int)$motif;
+        $stmtInsert->bind_param('sisiis', $student_serial, $obs_id, $teacher_serial, $study_session_id, $motif_id_int, $note);
         $ok = $stmtInsert->execute();
 
         if (!$ok) {
@@ -292,6 +293,24 @@ if (!empty($logged_in_teacher_serial)) {
     if ($debug_mode) error_log("Teacher serial number is empty - cannot retrieve categories");
 }
 
+// Lookup motifs
+$absence_motif_options_html = '';
+$resAbsMotif = $conn->query("SELECT ABSENCE_MOTIF_ID, ABSENCE_MOTIF_EN, ABSENCE_MOTIF_AR FROM absence_motif ORDER BY ABSENCE_MOTIF_EN");
+if ($resAbsMotif && $resAbsMotif->num_rows > 0) {
+    while ($m = $resAbsMotif->fetch_assoc()) {
+        $label = $LANG === 'ar' ? $m['ABSENCE_MOTIF_AR'] : $m['ABSENCE_MOTIF_EN'];
+        $absence_motif_options_html .= '<option value="' . htmlspecialchars($m['ABSENCE_MOTIF_ID']) . '">' . htmlspecialchars($label) . '</option>';
+    }
+}
+$observation_motif_options_html = '';
+$resObsMotif = $conn->query("SELECT OBSERVATION_MOTIF_ID, OBSERVATION_MOTIF_EN, OBSERVATION_MOTIF_AR FROM observation_motif ORDER BY OBSERVATION_MOTIF_EN");
+if ($resObsMotif && $resObsMotif->num_rows > 0) {
+    while ($m = $resObsMotif->fetch_assoc()) {
+        $label = $LANG === 'ar' ? $m['OBSERVATION_MOTIF_AR'] : $m['OBSERVATION_MOTIF_EN'];
+        $observation_motif_options_html .= '<option value="' . htmlspecialchars($m['OBSERVATION_MOTIF_ID']) . '">' . htmlspecialchars($label) . '</option>';
+    }
+}
+
 // ----------------------
 // NEW: load classes to populate the Class dropdown
 // ----------------------
@@ -334,6 +353,8 @@ if ($class_q) {
             padding: 0.5rem 0; 
             margin-top: 0.25rem; 
             list-style: none; 
+            top: 100%;
+            left: 0;
         }
         .suggestions-list li { 
             padding: 0.75rem 1rem; 
@@ -342,6 +363,9 @@ if ($class_q) {
             font-size: 0.95rem;
         }
         .suggestions-list li:hover { background: var(--bg-tertiary); color: var(--primary-color); }
+        .table-container { overflow: visible; }
+        .data-table { overflow: visible; }
+        .data-table td { position: relative; overflow: visible; }
 
         .navbar_buttons.active {
             background: var(--primary-color);
@@ -588,8 +612,11 @@ if ($class_q) {
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="obs_motif"><?php echo t('motif_max'); ?></label>
-                        <input type="text" id="obs_motif" class="form-input" maxlength="30">
+                        <label class="form-label" for="obs_motif_id"><?php echo t('motif'); ?></label>
+                        <select id="obs_motif_id" class="form-input" required>
+                            <option value=""><?php echo t('choose_observation_motif'); ?></option>
+                            <?php echo $observation_motif_options_html; ?>
+                        </select>
                     </div>
                 </div>
 
@@ -618,6 +645,7 @@ if ($class_q) {
 <script>
 // ===== Global Translation Object =====
 const T = <?php echo json_encode($T); ?>;
+const ABSENCE_MOTIF_OPTIONS_HTML = <?php echo json_encode($absence_motif_options_html); ?>;
 
 // ===== Absence JS (kept) =====
 function loadMajors() {
@@ -637,7 +665,7 @@ function loadMajors() {
     fetch('get_majors.php?category_id=' + encodeURIComponent(categoryId) + '&teacher_serial=' + encodeURIComponent(teacherSerial))
         .then(res => res.json())
         .then(data => {
-            majorSelect.innerHTML = '<option value="" disabled selected>Choose a major</option>';
+            majorSelect.innerHTML = '<option value="" disabled selected>' + (T.choose_major || 'Choose a major') + '</option>';
             if (data.success && data.majors.length > 0) {
                 data.majors.forEach(major => {
                     const option = document.createElement('option');
@@ -646,10 +674,10 @@ function loadMajors() {
                     majorSelect.appendChild(option);
                 });
             } else {
-                majorSelect.innerHTML = '<option value="" disabled>No majors found</option>';
+                majorSelect.innerHTML = '<option value="" disabled>' + (T.no_majors_found || 'No majors found') + '</option>';
             }
         })
-        .catch(() => majorSelect.innerHTML = '<option>Error loading majors</option>');
+        .catch(() => majorSelect.innerHTML = '<option>' + (T.error_loading || 'Error loading majors') + '</option>');
 }
 
 function updateAbsenteesAndPresentees() {
@@ -685,7 +713,7 @@ function loadSections() {
         .then(res => res.json())
         .then(data => {
             if (data.success && data.sections.length > 0) {
-                sectionContainer.innerHTML = '<label class="section-group-label">Select Sections:</label>';
+                sectionContainer.innerHTML = '<label class="section-group-label">' + (T.select_sections || 'Select Sections:') + '</label>';
                 const gridDiv = document.createElement('div');
                 gridDiv.className = 'section-grid';
                 
@@ -780,7 +808,12 @@ function addStudentRow() {
                 <div class="suggestions"></div>
             </div>
         </td>
-        <td><input type="text" name="motif[]" class="form-input"></td>
+        <td>
+            <select name="motif_id[]" class="form-input" required>
+                <option value=""><?php echo t('choose_absence_motif'); ?></option>
+                ${ABSENCE_MOTIF_OPTIONS_HTML}
+            </select>
+        </td>
         <td><input type="text" name="observation[]" class="form-input"></td>
         <td style="text-align: center; white-space: nowrap;">
             <button type="button" class="action-btn btn-edit" onclick="editStudentRow(this)">Edit</button>
@@ -918,7 +951,7 @@ document.getElementById('obs_student_input').addEventListener('input', function(
 
 document.getElementById('obs_submit_btn').addEventListener('click', function() {
     const serial = document.getElementById('obs_student_serial').value.trim();
-    const motif = document.getElementById('obs_motif').value.trim();
+    const motif = document.getElementById('obs_motif_id').value.trim();
     const note = document.getElementById('obs_note').value.trim();
     const resp = document.getElementById('obs_response');
 
@@ -928,7 +961,7 @@ document.getElementById('obs_submit_btn').addEventListener('click', function() {
     const fd = new FormData();
     fd.append('action', 'submit_observation');
     fd.append('student_serial', serial);
-    fd.append('motif', motif);
+    fd.append('motif_id', motif);
     fd.append('note', note);
 
     fetch('<?php echo basename(__FILE__); ?>', { method: 'POST', body: fd })
@@ -940,7 +973,7 @@ document.getElementById('obs_submit_btn').addEventListener('click', function() {
             
             document.getElementById('obs_student_input').value = '';
             document.getElementById('obs_student_serial').value = '';
-            document.getElementById('obs_motif').value = '';
+            document.getElementById('obs_motif_id').value = '';
             document.getElementById('obs_note').value = '';
         } else {
             alert(obj.message || (T.error_saving_observation || 'Error saving observation.'));
@@ -960,8 +993,13 @@ document.getElementById('absence_main_form').addEventListener('submit', function
     for (const row of rows) {
         const first = row.querySelector('.first_name')?.value.trim() || '';
         const last = row.querySelector('.last_name')?.value.trim() || '';
+        const motifSel = row.querySelector('select[name="motif_id[]"]')?.value.trim() || '';
         if (!first || !last) {
             alert('Please fill first and last name for every added student row.');
+            return;
+        }
+        if (!motifSel) {
+            alert(T.motif_required || 'Motif is required.');
             return;
         }
     }

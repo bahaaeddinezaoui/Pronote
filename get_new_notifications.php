@@ -22,11 +22,14 @@ if ($conn->connect_error) {
 }
 
 // Fetch obs where NOT EXISTS in admin_read_observation for this admin
+$lang = $_SESSION['lang'] ?? 'en';
+$motif_col = ($lang === 'ar') ? "om.OBSERVATION_MOTIF_AR" : "om.OBSERVATION_MOTIF_EN";
+
 $sql = "
     SELECT 
         tmo.OBSERVATION_ID,
         tmo.OBSERVATION_DATE_AND_TIME,
-        tmo.OBSERVATION_MOTIF,
+        $motif_col AS OBSERVATION_MOTIF,
         tmo.STUDY_SESSION_ID,
         st.STUDENT_FIRST_NAME_EN,
         st.STUDENT_LAST_NAME_EN,
@@ -39,6 +42,7 @@ $sql = "
     INNER JOIN student st ON tmo.STUDENT_SERIAL_NUMBER = st.STUDENT_SERIAL_NUMBER
     INNER JOIN teacher t ON tmo.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
     INNER JOIN study_session ss ON tmo.STUDY_SESSION_ID = ss.STUDY_SESSION_ID
+    LEFT JOIN observation_motif om ON tmo.OBSERVATION_MOTIF_ID = om.OBSERVATION_MOTIF_ID
     WHERE NOT EXISTS (
         SELECT 1 
         FROM admin_read_observation aro 

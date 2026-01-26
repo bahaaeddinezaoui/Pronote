@@ -57,143 +57,153 @@ $conn->close();
     <link rel="stylesheet" href="styles.css">
     <title><?php echo t('search'); ?> - <?php echo t('app_name'); ?></title>
     <style>
-        /* Match fill_form look & feel */
+        /* Standardize look & feel */
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f9fafb;
-            color: #333;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--background-color);
+            color: var(--text-primary);
             margin: 0;
             padding: 0;
         }
 
         .admin-container {
             max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px 30px;
+            margin: 2rem auto;
+            padding: 0 1.5rem 2rem;
         }
         
         .filters-section, .sessions-section {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #bbb;
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
         }
 
         .filters-section {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
         
         .filters-section h2, .sessions-section h2 {
             margin-top: 0;
-            font-weight: 600;
-            color: #1f1f1f;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
         }
         
         .filter-group {
-            margin-bottom: 15px;
+            margin-bottom: 1.25rem;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 1rem;
         }
         
         .filter-group label {
             min-width: 150px;
             font-weight: 600;
-            color: #444;
+            color: var(--text-secondary);
         }
         
         .filter-group input, .filter-group select {
-            padding: 9px 10px;
-            border-radius: 6px;
-            border: 1px solid #bbb;
-            font-size: 14px;
-            background: #f2f2f2;
+            padding: 0.6rem 0.75rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            background: var(--background-color);
+            transition: all 0.2s;
         }
         
         .filter-group input:focus, .filter-group select:focus {
             outline: none;
-            border-color: #6f42c1;
-            box-shadow: 0 0 0 2px rgba(111,66,193,0.15);
-            background: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-light);
+            background: var(--surface-color);
         }
         
         .search-btn {
-            background-color: #6f42c1;
+            background-color: var(--primary-color);
             color: white;
-            padding: 10px 18px;
-            border: 1px solid #6f42c1;
-            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
             cursor: pointer;
-            font-size: 15px;
+            font-size: 0.95rem;
             font-weight: 600;
-            transition: transform 0.12s ease;
+            transition: all 0.2s ease;
         }
         
         .search-btn:hover {
+            background-color: var(--primary-hover);
             transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
         
         .sessions-section {
-            margin-top: 10px;
+            margin-top: 0.5rem;
         }
 
         .sessions-grid {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
             align-items: start;
         }
 
         .session-entry {
-            margin-bottom: 12px;
+            margin-bottom: 0;
         }
         
         .session-btn {
             width: 100%;
             text-align: left;
-            background: linear-gradient(90deg, #6f42c1, #8c63d9);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
             color: #fff;
-            border: 1px solid #6f42c1;
-            border-radius: 8px;
-            padding: 12px 14px;
-            font-size: 15px;
+            border: none;
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 6px 14px rgba(111,66,193,0.18);
-            transition: transform 0.12s ease, box-shadow 0.2s ease;
+            box-shadow: var(--shadow-md);
+            transition: all 0.2s ease;
         }
         
+        [dir="rtl"] .session-btn { text-align: right; }
+
         .session-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 20px rgba(111,66,193,0.22);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
         
         .session-btn small {
             display: block;
+            margin-top: 0.25rem;
             font-weight: 400;
             opacity: 0.9;
+            font-size: 0.85rem;
         }
         
         .session-card {
-            background: #fff;
-            border: 1px solid #bbb;
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow-sm);
         }
         
         .session-card h3 {
-            margin: 0 0 10px 0;
-            color: #6f42c1;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 8px;
-            font-size: 18px;
+            margin: 0 0 0.75rem 0;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+            font-size: 1.125rem;
         }
         
         .session-details {
             display: none;
-            margin-top: 8px;
+            margin-top: 0.5rem;
         }
         
         .session-details.active {
@@ -205,45 +215,55 @@ $conn->close();
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.35);
+            background: rgba(15, 23, 42, 0.5); /* Slate 900 blur effect */
+            backdrop-filter: blur(4px);
             z-index: 2000;
             justify-content: center;
             align-items: center;
-            padding: 18px;
+            padding: 1.5rem;
         }
         .modal-backdrop.active { display: flex; }
         .modal-card {
-            background: #fff;
-            border-radius: 10px;
+            background: var(--surface-color);
+            border-radius: var(--radius-lg);
             max-width: 900px;
             width: 100%;
             max-height: 90vh;
             overflow: auto;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-            border: 1px solid #bbb;
-            padding: 18px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
         }
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 1.5rem;
         }
         .modal-close {
-            background: none;
+            background: var(--bg-tertiary);
             border: none;
-            font-size: 22px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
             cursor: pointer;
-            color: #666;
+            color: var(--text-secondary);
+            transition: all 0.2s;
         }
-        .modal-close:hover { color: #000; }
+        .modal-close:hover { background: var(--border-color); color: var(--text-primary); }
 
         /* Modal text accents */
         .modal-card h4 {
-            color: #6f42c1;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.1rem;
         }
         .modal-card .session-info-item strong {
-            color: #6f42c1;
+            color: var(--primary-color);
         }
         
         .session-info {
@@ -272,7 +292,7 @@ $conn->close();
         
         .sections-list h4, .absences-list h4, .observations-list h4 {
             margin: 0 0 10px 0;
-            color: #1f5fbf;
+            color: var(--primary-color);
             font-size: 15px;
         }
         
@@ -316,7 +336,7 @@ $conn->close();
         }
         
         .detail-table th {
-            background-color: #6f42c1;
+            background-color: var(--primary-color);
             color: white;
         }
         
@@ -344,93 +364,103 @@ $conn->close();
 
         /* Absence Summary Styles */
         .absence-summary-section {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #bbb;
-            margin-top: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            margin-top: 1.5rem;
+            box-shadow: var(--shadow-sm);
         }
 
         .absence-summary-section h2 {
-            margin: 0 0 15px 0;
-            font-weight: 600;
-            color: #1f1f1f;
+            margin: 0 0 1.25rem 0;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1.25rem;
         }
 
         .absence-stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
         .absence-stat-card {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #fcd34d;
+            background: var(--background-color);
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
             text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .absence-stat-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-sm);
         }
 
         .absence-stat-number {
-            font-size: 28px;
-            font-weight: 700;
-            color: #d97706;
-            margin: 5px 0;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 0.25rem 0;
         }
 
         .absence-stat-label {
-            font-size: 12px;
-            color: #92400e;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .absence-details-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 13px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
         }
 
         .absence-details-table th, .absence-details-table td {
-            border: 1px solid #e2e8f0;
-            padding: 10px;
+            border: 1px solid var(--border-color);
+            padding: 1rem;
             text-align: left;
         }
+        
+        [dir="rtl"] .absence-details-table th,
+        [dir="rtl"] .absence-details-table td { text-align: right; }
 
         .absence-details-table th {
-            background-color: #f59e0b;
-            color: white;
-            font-weight: 600;
-        }
-
-        .absence-details-table tr:nth-child(even) {
-            background-color: #fffbeb;
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary-color);
         }
 
         .absence-details-table tr:hover {
-            background-color: #fef3c7;
+            background-color: var(--bg-tertiary);
         }
 
         .absence-motif-badge {
             display: inline-block;
-            background: #fed7aa;
-            color: #92400e;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
         }
 
         .no-absences-message {
-            padding: 20px;
+            padding: 3rem;
             text-align: center;
-            color: #9ca3af;
-            font-style: italic;
-            background: #fafafa;
-            border-radius: 8px;
-            border: 1px dashed #e5e7eb;
+            color: var(--text-secondary);
+            background: var(--background-color);
+            border-radius: var(--radius-lg);
+            border: 2px dashed var(--border-color);
+            font-weight: 500;
         }
     </style>
 </head>
@@ -480,7 +510,7 @@ $conn->close();
 <div id="session_modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="session_modal_title">
     <div class="modal-card">
         <div class="modal-header">
-            <h3 id="session_modal_title" style="margin:0; font-size:18px; color:#6f42c1;"><?php echo t('session_details'); ?></h3>
+            <h3 id="session_modal_title" style="margin:0; font-size:18px; color:var(--primary-color);"><?php echo t('session_details'); ?></h3>
             <button class="modal-close" aria-label="<?php echo t('close'); ?>" onclick="closeSessionModal()">&times;</button>
         </div>
         <div id="modal_body"></div>
@@ -609,7 +639,7 @@ function searchSessions() {
     const container = document.getElementById('sessions_container');
     
     if (!date) {
-        container.innerHTML = '<p class="no-data">Please select a date.</p>';
+        container.innerHTML = '<p class="no-data">' + (T.msg_please_select_date || 'Please select a date.') + '</p>';
         document.getElementById('absenceSummarySection').style.display = 'none';
         return;
     }
@@ -755,7 +785,23 @@ function displayAbsenceSummary(data) {
 window.addEventListener('DOMContentLoaded', function() {
     // Small delay to ensure the date input is properly set
     setTimeout(function() {
-        searchSessions();
+        const params = new URLSearchParams(window.location.search);
+        const sessionParam = params.get('session');
+        if (sessionParam) {
+            fetch('get_admin_sessions.php?number=' + encodeURIComponent(sessionParam))
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success && Array.isArray(data.sessions) && data.sessions.length > 0) {
+                        latestSessions = data.sessions;
+                        openSessionModal(0);
+                    } else {
+                        searchSessions();
+                    }
+                })
+                .catch(() => searchSessions());
+        } else {
+            searchSessions();
+        }
         // Notifications are handled by sidebar.php
     }, 100);
 });

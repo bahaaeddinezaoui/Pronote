@@ -43,8 +43,8 @@ if (!is_array($sections)) $sections = [$sections];
 
 $session_date = $_POST['session_date'] ?? date('Y-m-d');
 
-$motifs = $_POST['motif'] ?? [];
-if (!is_array($motifs)) $motifs = [$motifs];
+$motif_ids = $_POST['motif_id'] ?? [];
+if (!is_array($motif_ids)) $motif_ids = [$motif_ids];
 
 $observations = $_POST['observation'] ?? [];
 if (!is_array($observations)) $observations = [$observations];
@@ -127,7 +127,7 @@ try {
 
     // 4️⃣ Insert absences
     $stmtAbs = $conn->prepare("INSERT INTO absence 
-        (ABSENCE_ID, STUDY_SESSION_ID, ABSENCE_DATE_AND_TIME, ABSENCE_MOTIF, ABSENCE_OBSERVATION)
+        (ABSENCE_ID, STUDY_SESSION_ID, ABSENCE_DATE_AND_TIME, ABSENCE_MOTIF_ID, ABSENCE_OBSERVATION)
         VALUES (?, ?, ?, ?, ?)");
     $stmtStudentAbs = $conn->prepare("INSERT INTO student_gets_absent 
         (STUDENT_SERIAL_NUMBER, ABSENCE_ID) VALUES (?, ?)");
@@ -151,11 +151,11 @@ try {
 
         // New absence ID
         $absence_id = nextId($conn, 'absence', 'ABSENCE_ID');
-        $motif = $motifs[$i] ?? '';
+        $motif_id = (int)($motif_ids[$i] ?? 0);
         $obs = $observations[$i] ?? '';
 
         // Insert absence
-        $stmtAbs->bind_param("iisss", $absence_id, $session_id, $absence_date, $motif, $obs);
+        $stmtAbs->bind_param("iisis", $absence_id, $session_id, $absence_date, $motif_id, $obs);
         if (!$stmtAbs->execute()) {
             throw new Exception("Failed to insert absence: " . $stmtAbs->error);
         }

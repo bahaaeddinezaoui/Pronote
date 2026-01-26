@@ -38,6 +38,9 @@ $absences = [];
 
 try {
     // Build the query to get absences for the specified date
+    $lang = $_SESSION['lang'] ?? 'en';
+    $motif_col = ($lang === 'ar') ? "am.ABSENCE_MOTIF_AR" : "am.ABSENCE_MOTIF_EN";
+
     if ($time_slot) {
         // Parse time slot (format: "start|end")
         $timeSlotParts = explode('|', $time_slot);
@@ -51,13 +54,14 @@ try {
                     s.STUDENT_FIRST_NAME_EN,
                     s.STUDENT_LAST_NAME_EN,
                     a.ABSENCE_DATE_AND_TIME,
-                    a.ABSENCE_MOTIF,
+                    $motif_col AS ABSENCE_MOTIF,
                     a.ABSENCE_OBSERVATION,
                     ss.STUDY_SESSION_DATE
                 FROM absence a
                 JOIN study_session ss ON a.STUDY_SESSION_ID = ss.STUDY_SESSION_ID
                 JOIN student_gets_absent sga ON a.ABSENCE_ID = sga.ABSENCE_ID
                 JOIN student s ON sga.STUDENT_SERIAL_NUMBER = s.STUDENT_SERIAL_NUMBER
+                LEFT JOIN absence_motif am ON a.ABSENCE_MOTIF_ID = am.ABSENCE_MOTIF_ID
                 WHERE ss.STUDY_SESSION_DATE = ?
                 AND ss.STUDY_SESSION_START_TIME >= ?
                 AND ss.STUDY_SESSION_END_TIME <= ?
@@ -78,13 +82,14 @@ try {
                 s.STUDENT_FIRST_NAME_EN,
                 s.STUDENT_LAST_NAME_EN,
                 a.ABSENCE_DATE_AND_TIME,
-                a.ABSENCE_MOTIF,
+                $motif_col AS ABSENCE_MOTIF,
                 a.ABSENCE_OBSERVATION,
                 ss.STUDY_SESSION_DATE
             FROM absence a
             JOIN study_session ss ON a.STUDY_SESSION_ID = ss.STUDY_SESSION_ID
             JOIN student_gets_absent sga ON a.ABSENCE_ID = sga.ABSENCE_ID
             JOIN student s ON sga.STUDENT_SERIAL_NUMBER = s.STUDENT_SERIAL_NUMBER
+            LEFT JOIN absence_motif am ON a.ABSENCE_MOTIF_ID = am.ABSENCE_MOTIF_ID
             WHERE ss.STUDY_SESSION_DATE = ?
             ORDER BY a.ABSENCE_DATE_AND_TIME DESC
         ";

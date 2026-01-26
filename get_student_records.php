@@ -159,16 +159,20 @@ try {
     $stmt->close();
 
     // 2. Get absences for the student within the date range
+    $lang = $_SESSION['lang'] ?? 'en';
+    $motif_col_abs = ($lang === 'ar') ? "am.ABSENCE_MOTIF_AR" : "am.ABSENCE_MOTIF_EN";
+
     $absencesQuery = "
         SELECT 
             a.ABSENCE_ID,
             a.ABSENCE_DATE_AND_TIME,
-            a.ABSENCE_MOTIF,
+            $motif_col_abs AS ABSENCE_MOTIF,
             a.ABSENCE_OBSERVATION,
             ss.STUDY_SESSION_DATE
         FROM absence a
         JOIN study_session ss ON a.STUDY_SESSION_ID = ss.STUDY_SESSION_ID
         JOIN student_gets_absent sga ON a.ABSENCE_ID = sga.ABSENCE_ID
+        LEFT JOIN absence_motif am ON a.ABSENCE_MOTIF_ID = am.ABSENCE_MOTIF_ID
         WHERE sga.STUDENT_SERIAL_NUMBER = ?
         AND DATE(a.ABSENCE_DATE_AND_TIME) >= ?
         AND DATE(a.ABSENCE_DATE_AND_TIME) <= ?
@@ -199,11 +203,12 @@ try {
     $stmt->close();
 
     // 3. Get observations for the student within the date range
+    $motif_col_obs = ($lang === 'ar') ? "om.OBSERVATION_MOTIF_AR" : "om.OBSERVATION_MOTIF_EN";
     $observationsQuery = "
         SELECT 
             tmao.OBSERVATION_ID,
             tmao.OBSERVATION_DATE_AND_TIME,
-            tmao.OBSERVATION_MOTIF,
+            $motif_col_obs AS OBSERVATION_MOTIF,
             tmao.OBSERVATION_NOTE,
             t.TEACHER_FIRST_NAME_EN,
             t.TEACHER_LAST_NAME_EN,
@@ -211,6 +216,7 @@ try {
         FROM teacher_makes_an_observation_for_a_student tmao
         JOIN teacher t ON tmao.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
         JOIN study_session ss ON tmao.STUDY_SESSION_ID = ss.STUDY_SESSION_ID
+        LEFT JOIN observation_motif om ON tmao.OBSERVATION_MOTIF_ID = om.OBSERVATION_MOTIF_ID
         WHERE tmao.STUDENT_SERIAL_NUMBER = ?
         AND DATE(tmao.OBSERVATION_DATE_AND_TIME) >= ?
         AND DATE(tmao.OBSERVATION_DATE_AND_TIME) <= ?

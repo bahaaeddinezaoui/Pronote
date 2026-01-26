@@ -45,7 +45,7 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
         <?php endif; ?>
         
         <?php if ($role === 'Secretary'): ?>
-             <a href="secretary_home.php" class="sidebar-link <?php echo ($current_page == 'secretary_home.php') ? 'active' : ''; ?>">
+             <a href="insert_student.php" class="sidebar-link <?php echo ($current_page == 'insert_student.php') ? 'active' : ''; ?>">
                 <span class="icon">➕</span>
                 <span class="text"><?php echo t('insert_student'); ?></span>
             </a>
@@ -62,27 +62,28 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
             <?php include __DIR__ . '/lang/switcher.php'; ?>
         </div>
         
-        <!-- Notifications for Admin -->
-        <?php if ($role === 'Admin'): ?>
-            <div class="notification-container" style="margin: 1rem 0;">
-                <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
-                    🔔
-                    <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
-                </div>
-                <div class="notifications-panel" id="notificationsPanel">
-                    <div style="padding:12px; border-bottom:1px solid #e5e7eb; font-weight:600; background:#f9fafb;">
-                        <?php echo t('new_observations'); ?>
-                    </div>
-                    <div id="notificationsContent"></div>
-                </div>
-            </div>
-        <?php endif; ?>
 
         <a href="logout.php" class="sidebar-link logout-btn">
             <span class="icon">🚪</span>
             <span class="text"><?php echo t('nav_logout'); ?></span>
         </a>
     </div>
+
+    <!-- Floating Notifications for Admin -->
+    <?php if ($role === 'Admin'): ?>
+        <div class="notification-container">
+            <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
+                🔔
+                <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
+            </div>
+            <div class="notifications-panel" id="notificationsPanel">
+                <div style="padding:12px; border-bottom:1px solid #e5e7eb; font-weight:600; background:#f9fafb;">
+                    <?php echo t('new_observations'); ?>
+                </div>
+                <div id="notificationsContent"></div>
+            </div>
+        </div>
+    <?php endif; ?>
 </div>
 
 <?php if ($role === 'Admin'): ?>
@@ -121,8 +122,9 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
             countBadge.style.display = 'flex';
             
             let html = '';
-            newNotifications.forEach((notif) => {
-                html += `<div class="notification-item new">
+            newNotifications.forEach((notif, idx) => {
+                html += `<a class="notification-item new" href="admin_dashboard.php?session=${encodeURIComponent(notif.session_id)}" 
+                             onclick="try{fetch('mark_observation_read.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({observation_id:${notif.observation_id}})});}catch(e){}">
                     <div class="notification-item-header">
                         <span class="notification-item-student">${notif.student_name}</span>
                         <span class="notification-item-time">${notif.observation_time}</span>
@@ -132,7 +134,7 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
                         <div><strong>${T.session_label || 'Session'}:</strong> ${notif.session_date} (${notif.session_time})</div>
                         <div><strong>${T.motif_label || 'Motif'}:</strong> ${notif.motif}</div>
                     </div>
-                </div>`;
+                </a>`;
             });
             content.innerHTML = html;
         } else {

@@ -8,6 +8,18 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Teacher') {
     exit;
 }
 
+// --- DATABASE CONNECTION ---
+$servername = "localhost";
+$username_db = "root";
+$password_db = "";
+$dbname = "test_class_edition";
+
+$conn = new mysqli($servername, $username_db, $password_db, $dbname);
+if ($conn->connect_error) {
+    echo json_encode(['success' => false, 'message' => 'Database connection failed']);
+    exit;
+}
+
 $teacher_serial = null;
 $stmtT = null;
 // Lookup teacher serial from teacher table using logged in user id
@@ -23,12 +35,14 @@ if ($stmtT) {
 }
 if (empty($teacher_serial)) {
     echo json_encode(['success' => false, 'message' => 'Teacher record not found for this account.']);
+    $conn->close();
     exit;
 }
 $session_id = $_SESSION['current_study_session_id'] ?? null;
 
 if (!$session_id) {
     echo json_encode(['success' => false, 'message' => 'No active session found. Please submit attendance first.']);
+    $conn->close();
     exit;
 }
 
@@ -39,18 +53,7 @@ $note = $input['note'] ?? '';
 
 if (empty($student_serial) || empty($motif)) {
     echo json_encode(['success' => false, 'message' => 'Student and motif are required.']);
-    exit;
-}
-
-// --- DATABASE CONNECTION ---
-$servername = "localhost";
-$username_db = "root";
-$password_db = "";
-$dbname = "test_class_edition";
-
-$conn = new mysqli($servername, $username_db, $password_db, $dbname);
-if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'message' => 'Database connection failed']);
+    $conn->close();
     exit;
 }
 
@@ -63,13 +66,13 @@ function nextId($conn, $table, $column) {
 
 $observation_id = nextId($conn, 'teacher_makes_an_observation_for_a_student', 'OBSERVATION_ID');
 $date_time = date('Y-m-d H:i:s');
-$is_new = 1;
 
+$motif_id_int = (int)$motif;
 $stmt = $conn->prepare("INSERT INTO teacher_makes_an_observation_for_a_student 
-    (STUDENT_SERIAL_NUMBER, OBSERVATION_ID, TEACHER_SERIAL_NUMBER, STUDY_SESSION_ID, OBSERVATION_DATE_AND_TIME, OBSERVATION_MOTIF, OBSERVATION_NOTE)
+    (STUDENT_SERIAL_NUMBER, OBSERVATION_ID, TEACHER_SERIAL_NUMBER, STUDY_SESSION_ID, OBSERVATION_DATE_AND_TIME, OBSERVATION_MOTIF_ID, OBSERVATION_NOTE)
     VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-$stmt->bind_param("sisisss", $student_serial, $observation_id, $teacher_serial, $session_id, $date_time, $motif, $note);
+$stmt->bind_param("sisisis", $student_serial, $observation_id, $teacher_serial, $session_id, $date_time, $motif_id_int, $note);
 
 if ($stmt->execute()) {
     echo json_encode(['success' => true, 'message' => 'Observation submitted successfully!']);

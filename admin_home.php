@@ -23,7 +23,7 @@ if ($conn->connect_error) {
 
 // Get admin info
 $admin_name = "Admin";
-$admin_position = "Administrator";
+$admin_position = t('administrator');
 if (isset($_SESSION['user_id'])) {
     $stmt = $conn->prepare("SELECT ADMINISTRATOR_FIRST_NAME_EN, ADMINISTRATOR_LAST_NAME_EN, ADMINISTRATOR_POSITION FROM administrator WHERE USER_ID = ?");
     $stmt->bind_param("i", $_SESSION['user_id']);
@@ -105,19 +105,21 @@ if ($result) {
 
 // Get recent observations (last 5)
 $recent_observations = [];
+$motif_col = ($LANG === 'ar') ? "om.OBSERVATION_MOTIF_AR" : "om.OBSERVATION_MOTIF_EN";
 $result = $conn->query("
     SELECT 
         s.STUDENT_FIRST_NAME_EN,
         s.STUDENT_LAST_NAME_EN,
         t.TEACHER_FIRST_NAME_EN,
         t.TEACHER_LAST_NAME_EN,
-        tmoas.OBSERVATION_MOTIF,
+        $motif_col AS OBSERVATION_MOTIF,
         tmoas.OBSERVATION_DATE_AND_TIME,
         ss.STUDY_SESSION_DATE
     FROM teacher_makes_an_observation_for_a_student tmoas
     JOIN student s ON tmoas.STUDENT_SERIAL_NUMBER = s.STUDENT_SERIAL_NUMBER
     JOIN teacher t ON tmoas.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
     JOIN study_session ss ON tmoas.STUDY_SESSION_ID = ss.STUDY_SESSION_ID
+    LEFT JOIN observation_motif om ON tmoas.OBSERVATION_MOTIF_ID = om.OBSERVATION_MOTIF_ID
     ORDER BY tmoas.OBSERVATION_DATE_AND_TIME DESC
     LIMIT 5
 ");
@@ -129,17 +131,19 @@ if ($result && $result->num_rows > 0) {
 
 // Get recent absences (last 5)
 $recent_absences = [];
+$motif_col_abs = ($LANG === 'ar') ? "am.ABSENCE_MOTIF_AR" : "am.ABSENCE_MOTIF_EN";
 $result = $conn->query("
     SELECT 
         s.STUDENT_FIRST_NAME_EN,
         s.STUDENT_LAST_NAME_EN,
-        a.ABSENCE_MOTIF,
+        $motif_col_abs AS ABSENCE_MOTIF,
         a.ABSENCE_DATE_AND_TIME,
         ss.STUDY_SESSION_DATE
     FROM student_gets_absent sga
     JOIN student s ON sga.STUDENT_SERIAL_NUMBER = s.STUDENT_SERIAL_NUMBER
     JOIN absence a ON sga.ABSENCE_ID = a.ABSENCE_ID
     JOIN study_session ss ON a.STUDY_SESSION_ID = ss.STUDY_SESSION_ID
+    LEFT JOIN absence_motif am ON a.ABSENCE_MOTIF_ID = am.ABSENCE_MOTIF_ID
     ORDER BY a.ABSENCE_DATE_AND_TIME DESC
     LIMIT 5
 ");
@@ -167,13 +171,12 @@ $conn->close();
         }
 
         .welcome-section {
-
-            background: linear-gradient(135deg, #6f42c1 0%, #8c63d9 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
             color: white;
             padding: 30px;
             border-radius: 10px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(111, 66, 193, 0.2);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
         }
 
         .welcome-section h1 {
@@ -212,7 +215,7 @@ $conn->close();
         .stat-number {
             font-size: 32px;
             font-weight: 700;
-            color: #6f42c1;
+            color: var(--primary-color);
             margin: 10px 0;
         }
 
@@ -233,7 +236,7 @@ $conn->close();
 
         .info-section h2 {
             margin: 0 0 15px 0;
-            color: #6f42c1;
+            color: var(--primary-color);
             font-size: 18px;
             border-bottom: 2px solid #e5e7eb;
             padding-bottom: 10px;

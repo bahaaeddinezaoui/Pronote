@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/lang/i18n.php';
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
@@ -7,37 +8,37 @@ if (!isset($_SESSION['user_id'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
 <meta charset="UTF-8">
-<title>Make Observation</title>
+<title><?php echo t('observations'); ?></title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="parent">
     <div class="div1" id="navbar">
-        <div style="font-weight:bold; font-size:20px;">Teacher Panel</div>
-        <a href="fill_form.php">⬅ Back to Absences</a>
-        <a href="logout.php" class="logout-btn">Logout</a>
+        <div style="font-weight:bold; font-size:20px;"><?php echo t('teacher_label'); ?> Panel</div>
+        <a href="fill_form.php">⬅ <?php echo t('previous'); ?></a>
+        <a href="logout.php" class="logout-btn"><?php echo t('logout'); ?></a>
     </div>
 
     <div class="div2">
-        <h2>Make an Observation</h2>
+        <h2><?php echo t('record_observation'); ?></h2>
 
         <form id="observationForm">
-            <label for="student">Student Name</label><br>
-            <input type="text" id="student" name="student" placeholder="Type student name..." autocomplete="off" required>
+            <label for="student"><?php echo t('student_name'); ?></label><br>
+            <input type="text" id="student" name="student" placeholder="<?php echo t('placeholder_type_student_name'); ?>" autocomplete="off" required>
             <div id="studentList"></div>
             <br>
 
-            <label for="motif">Observation Motif</label><br>
+            <label for="motif"><?php echo t('observation_motif'); ?></label><br>
             <input type="text" id="motif" name="motif" maxlength="30" required><br><br>
 
-            <label for="note">Observation Note</label><br>
+            <label for="note"><?php echo t('observation_note'); ?></label><br>
             <textarea id="note" name="note" maxlength="256" rows="4"></textarea><br><br>
 
-            <button type="submit">Submit Observation</button>
+            <button type="submit"><?php echo t('submit_observation'); ?></button>
         </form>
 
         <div id="responseMsg"></div>
