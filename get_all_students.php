@@ -30,7 +30,8 @@ $query = "
         STUDENT_SERIAL_NUMBER,
         STUDENT_FIRST_NAME_EN,
         STUDENT_LAST_NAME_EN,
-        SECTION_ID
+        SECTION_ID,
+        STUDENT_PHOTO
     FROM student
     ORDER BY STUDENT_FIRST_NAME_EN, STUDENT_LAST_NAME_EN
 ";
@@ -40,11 +41,18 @@ $result = $conn->query($query);
 $students = [];
 if ($result) {
     while ($row = $result->fetch_assoc()) {
+        // Convert photo blob to base64 if exists
+        $photoBase64 = null;
+        if (!empty($row['STUDENT_PHOTO'])) {
+            $photoBase64 = base64_encode($row['STUDENT_PHOTO']);
+        }
+        
         $students[] = [
             'serial_number' => $row['STUDENT_SERIAL_NUMBER'],
             'first_name' => htmlspecialchars($row['STUDENT_FIRST_NAME_EN']),
             'last_name' => htmlspecialchars($row['STUDENT_LAST_NAME_EN']),
-            'section_id' => $row['SECTION_ID']
+            'section_id' => $row['SECTION_ID'],
+            'photo' => $photoBase64
         ];
     }
 }

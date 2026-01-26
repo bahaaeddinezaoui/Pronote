@@ -336,32 +336,77 @@ $conn->close();
             margin-bottom: 20px;
             background: white;
             border: 1px solid #bbb;
-            border-radius: 6px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
-            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-height: 400px;
             overflow-y: auto;
+            padding: 15px;
         }
 
         #suggestionsList {
             list-style: none;
             padding: 0;
             margin: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
         }
 
-        #suggestionsList li {
-            padding: 12px;
-            border-bottom: 1px solid #f0f0f0;
+        .student-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
-        #suggestionsList li:hover {
-            background-color: #f3f4f6;
-            color: #6f42c1;
+        .student-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(111, 66, 193, 0.2);
+            border-color: #6f42c1;
+            background: linear-gradient(135deg, #f3e8ff 0%, #fff 100%);
         }
 
-        #suggestionsList li:last-child {
-            border-bottom: none;
+        .student-card-photo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #6f42c1;
+            margin-bottom: 10px;
+            background: #e5e7eb;
+        }
+
+        .student-card-photo.placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #9ca3af;
+            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+        }
+
+        .student-card-name {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 14px;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .student-card-id {
+            font-size: 11px;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-family: monospace;
         }
 
 
@@ -421,10 +466,8 @@ $conn->close();
                 </div>
             </div>
 
-            <div id="suggestionsContainer" style="display: none; margin-bottom: 20px;">
-                <div style="background: white; border: 1px solid #ddd; border-radius: 5px; max-height: 300px; overflow-y: auto;">
-                    <ul id="suggestionsList" style="list-style: none; padding: 0; margin: 0;"></ul>
-                </div>
+            <div id="suggestionsContainer">
+                <ul id="suggestionsList"></ul>
             </div>
 
             <div class="loader" id="loader">
@@ -494,18 +537,25 @@ $conn->close();
             const matches = allStudents.filter(s => 
                 s.first_name.toLowerCase().includes(query) ||
                 s.last_name.toLowerCase().includes(query) ||
-                (s.first_name + ' ' + s.last_name).toLowerCase().includes(query)
+                (s.first_name + ' ' + s.last_name).toLowerCase().includes(query) ||
+                s.serial_number.toLowerCase().includes(query)
             );
 
             if (matches.length > 0) {
                 const suggestionsList = document.getElementById('suggestionsList');
-                suggestionsList.innerHTML = matches.slice(0, 10).map(student => `
-                    <li style="padding: 12px; border-bottom: 1px solid #eee; cursor: pointer;" 
-                        onclick="selectStudent('${student.serial_number}', '${student.first_name}', '${student.last_name}')">
-                        <strong>${student.first_name} ${student.last_name}</strong>
-                        <br><small style="color: #999;">ID: ${student.serial_number}</small>
-                    </li>
-                `).join('');
+                suggestionsList.innerHTML = matches.slice(0, 12).map(student => {
+                    const photoHtml = student.photo 
+                        ? `<img src="data:image/jpeg;base64,${student.photo}" class="student-card-photo" alt="${student.first_name}">`
+                        : `<div class="student-card-photo placeholder">👤</div>`;
+                    
+                    return `
+                        <li class="student-card" onclick="selectStudent('${student.serial_number}', '${student.first_name}', '${student.last_name}')">
+                            ${photoHtml}
+                            <div class="student-card-name">${student.first_name} ${student.last_name}</div>
+                            <div class="student-card-id">${student.serial_number}</div>
+                        </li>
+                    `;
+                }).join('');
                 document.getElementById('suggestionsContainer').style.display = 'block';
             } else {
                 document.getElementById('suggestionsContainer').style.display = 'none';

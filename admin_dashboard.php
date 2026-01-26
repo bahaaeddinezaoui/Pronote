@@ -89,48 +89,66 @@ $conn->close();
             color: #1f1f1f;
         }
         
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            align-items: end;
+        }
+
         .filter-group {
-            margin-bottom: 15px;
             display: flex;
-            align-items: center;
-            gap: 12px;
+            flex-direction: column;
+            gap: 0.5rem;
         }
         
         .filter-group label {
-            min-width: 150px;
-            font-weight: 600;
-            color: #444;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         
         .filter-group input, .filter-group select {
-            padding: 9px 10px;
-            border-radius: 6px;
-            border: 1px solid #bbb;
-            font-size: 14px;
-            background: #f2f2f2;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            font-size: 0.95rem;
+            background: #fff;
+            transition: all 0.2s ease;
+            width: 100%;
+            height: 45px;
         }
         
         .filter-group input:focus, .filter-group select:focus {
             outline: none;
-            border-color: #6f42c1;
-            box-shadow: 0 0 0 2px rgba(111,66,193,0.15);
-            background: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-light);
         }
         
         .search-btn {
-            background-color: #6f42c1;
+            background-color: var(--primary-color);
             color: white;
-            padding: 10px 18px;
-            border: 1px solid #6f42c1;
-            border-radius: 6px;
+            padding: 0 1.5rem;
+            height: 45px;
+            border: none;
+            border-radius: var(--radius-md);
             cursor: pointer;
             font-size: 15px;
             font-weight: 600;
-            transition: transform 0.12s ease;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .search-btn:hover {
+            background-color: var(--primary-hover);
             transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
         
         .sessions-section {
@@ -442,26 +460,30 @@ $conn->close();
 
 <div class="admin-container">
     <div class="filters-section">
-        <h2><?php echo t('search_study_sessions'); ?></h2>
+        <h2>🔍 <?php echo t('search_study_sessions'); ?></h2>
         
-        <div class="filter-group">
-            <label for="session_date"><?php echo t('select_date'); ?></label>
-            <input type="date" id="session_date" value="<?php echo $current_date; ?>">
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label for="session_date"><?php echo t('select_date'); ?></label>
+                <input type="date" id="session_date" value="<?php echo $current_date; ?>">
+            </div>
+            
+            <div class="filter-group">
+                <label for="time_slot"><?php echo t('select_time_slot'); ?></label>
+                <select id="time_slot">
+                    <option value=""><?php echo t('all_time_slots'); ?></option>
+                    <?php foreach ($time_slots as $slot): ?>
+                        <option value="<?php echo htmlspecialchars($slot['start'] . '|' . $slot['end']); ?>">
+                            <?php echo htmlspecialchars($slot['value']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            
+            <button class="search-btn" onclick="searchSessions()">
+                <span>🔍</span> <?php echo t('search_sessions'); ?>
+            </button>
         </div>
-        
-        <div class="filter-group">
-            <label for="time_slot"><?php echo t('select_time_slot'); ?></label>
-            <select id="time_slot">
-                <option value=""><?php echo t('all_time_slots'); ?></option>
-                <?php foreach ($time_slots as $slot): ?>
-                    <option value="<?php echo htmlspecialchars($slot['start'] . '|' . $slot['end']); ?>">
-                        <?php echo htmlspecialchars($slot['value']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        
-        <button class="search-btn" onclick="searchSessions()"><?php echo t('search_sessions'); ?></button>
     </div>
     
     <div class="sessions-section">
