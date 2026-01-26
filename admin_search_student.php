@@ -46,46 +46,46 @@ $conn->close();
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: var(--background-color);
-            color: var(--text-primary);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f9fafb;
+            color: #333;
             margin: 0;
             padding: 0;
         }
 
         .admin-container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1.5rem 2rem;
+            margin: 20px auto;
+            padding: 0 20px 30px;
         }
+        
 
         .search-section {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-sm);
+            background: #fff;
+            border: 1px solid #bbb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
         }
 
         .search-section h2 {
-            margin: 0 0 1.5rem 0;
-            color: var(--primary-color);
-            font-size: 1.25rem;
-            font-weight: 700;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 0.75rem;
+            margin: 0 0 15px 0;
+            color: #6f42c1;
+            font-size: 18px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
         }
 
         .form-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 20px;
         }
 
         .form-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
         .form-row.full {
@@ -94,146 +94,115 @@ $conn->close();
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 0.875rem;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
         }
 
         input[type="text"],
-        input[type="date"] {
+        input[type="date"],
+        select {
             width: 100%;
-            padding: 0.6rem 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            font-size: 0.95rem;
-            background: var(--background-color);
-            transition: all 0.2s;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
         }
 
         input[type="text"]:focus,
-        input[type="date"]:focus {
+        input[type="date"]:focus,
+        select:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px var(--primary-light);
-            background: var(--surface-color);
+            border-color: #6f42c1;
+            box-shadow: 0 0 3px rgba(111, 66, 193, 0.1);
         }
 
-        .btn-group {
+        .button-group {
             display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+            gap: 10px;
         }
 
         .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.2s;
+            padding: 10px 20px;
             border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .btn-primary {
-            background-color: var(--primary-color);
+            background: #6f42c1;
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: var(--primary-hover);
+            background: #5d3fa3;
             transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 2px 8px rgba(111, 66, 193, 0.3);
         }
 
         .btn-secondary {
-            background-color: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
+            background: #e5e7eb;
+            color: #333;
         }
 
         .btn-secondary:hover {
-            background-color: var(--border-color);
+            background: #d1d5db;
         }
 
-        /* Results table */
         .results-section {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: 1.5rem;
-            box-shadow: var(--shadow-sm);
+            display: none;
         }
 
-        .results-section h2 {
-            margin: 0 0 1.5rem 0;
-            color: var(--primary-color);
-            font-size: 1.25rem;
-            font-weight: 700;
+        .results-section.active {
+            display: block;
         }
 
-        .results-table {
-            width: 100%;
-            border-collapse: collapse;
+        .student-info {
+            background: #fff;
+            border: 1px solid #bbb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
         }
 
-        .results-table th {
-            text-align: left;
-            padding: 1rem;
-            background: var(--background-color);
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 0.875rem;
-            border-bottom: 2px solid var(--border-color);
+        .student-info h3 {
+            font-size: 20px;
+            color: #6f42c1;
+            margin: 0 0 15px 0;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
         }
 
-        [dir="rtl"] .results-table th { text-align: right; }
-
-        .results-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-primary);
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
         }
 
-        .results-table tr:hover {
-            background: var(--bg-tertiary);
+        .info-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #6f42c1;
         }
 
-        .action-btns {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .action-btn {
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            font-size: 0.85rem;
+        .info-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 5px;
             font-weight: 500;
-            transition: all 0.2s;
         }
 
-        .btn-records {
-            background: var(--primary-light);
-            color: var(--primary-color);
-        }
-
-        .btn-records:hover {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .btn-info {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-info:hover {
-            background: var(--border-color);
+        .info-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
         }
 
         .records-container {
@@ -251,7 +220,7 @@ $conn->close();
         }
 
         .record-section h4 {
-            color: var(--primary-color);
+            color: #6f42c1;
             margin: 0 0 15px 0;
             font-size: 16px;
             border-bottom: 2px solid #e5e7eb;
@@ -271,7 +240,7 @@ $conn->close();
             padding: 12px;
             margin-bottom: 10px;
             border-radius: 6px;
-            border-left: 3px solid var(--primary-color);
+            border-left: 3px solid #6f42c1;
         }
 
         .record-item:last-child {
