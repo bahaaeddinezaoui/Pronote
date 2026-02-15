@@ -407,6 +407,30 @@ if ($class_q) {
             margin-top: 1rem;
         }
 
+        .section-btn {
+            padding: 0.75rem 1.25rem;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .section-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        .section-btn.selected {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
         .section-item {
             display: flex;
             align-items: center;
@@ -633,7 +657,7 @@ if ($class_q) {
 
                     <div id="select_sections"></div>
 
-                    <div id="student_table_container">
+                    <div id="student_table_container" style="margin-top: 2rem;">
                         <div id="stats_container" style="margin-bottom:1.5rem; display:none; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
                             <div class="stats-card-mini" style="border-top: 4px solid var(--primary-color);">
                                 <span id="total_students" class="stats-value-mini" style="color: var(--primary-color);">0</span>
@@ -799,23 +823,17 @@ function loadSections() {
                 gridDiv.className = 'section-grid';
                 
                 data.sections.forEach(section => {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'section-item';
-                    
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.value = section.id;
-                    checkbox.id = 'section_' + section.id;
-                    checkbox.name = 'sections[]';  // ✅ FIX: Added name attribute
-                    checkbox.addEventListener('change', loadStudents);
-
-                    const label = document.createElement('label');
-                    label.htmlFor = checkbox.id;
-                    label.textContent = section.name;
-
-                    wrapper.appendChild(checkbox);
-                    wrapper.appendChild(label);
-                    gridDiv.appendChild(wrapper);
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'section-btn';
+                    btn.value = section.id;
+                    btn.dataset.sectionId = section.id;
+                    btn.textContent = section.name;
+                    btn.addEventListener('click', function() {
+                        this.classList.toggle('selected');
+                        loadStudents();
+                    });
+                    gridDiv.appendChild(btn);
                 });
                 sectionContainer.appendChild(gridDiv);
             } else {
@@ -826,7 +844,7 @@ function loadSections() {
 }
 
 function loadStudents() {
-    const checkedBoxes = document.querySelectorAll('#select_sections input[type="checkbox"]:checked');
+    const selectedBtns = document.querySelectorAll('#select_sections .section-btn.selected');
     const addRowContainer = document.getElementById('add_row_container');
     const statsContainer = document.getElementById('stats_container');
     const totalStudentsLabel = document.getElementById('total_students');
@@ -836,7 +854,7 @@ function loadStudents() {
 
     tableBody.innerHTML = '';
 
-    if (checkedBoxes.length === 0) {
+    if (selectedBtns.length === 0) {
         addRowContainer.style.display = 'none';
         statsContainer.style.display = 'none';
         return;
@@ -845,7 +863,7 @@ function loadStudents() {
     addRowContainer.style.display = 'block';
     statsContainer.style.display = 'grid';
 
-    const sectionIds = Array.from(checkedBoxes).map(cb => cb.value);
+    const sectionIds = Array.from(selectedBtns).map(btn => btn.dataset.sectionId);
 
     fetch('get_total_students.php', {
         method: 'POST',
@@ -867,8 +885,8 @@ function loadStudents() {
 }
 
 function addStudentRow() {
-    const checkedBoxes = document.querySelectorAll('#select_sections input[type="checkbox"]:checked');
-    if (checkedBoxes.length === 0) return;
+    const selectedBtns = document.querySelectorAll('#select_sections .section-btn.selected');
+    if (selectedBtns.length === 0) return;
 
     const total = parseInt(document.getElementById('total_students').textContent) || 0;
     const currentAbsentees = document.querySelectorAll('#student_table tbody tr').length;
@@ -934,10 +952,10 @@ function removeStudentRow(btn) {
 }
 
 function searchStudent(inputElement) {
-    const checkedBoxes = document.querySelectorAll('#select_sections input[type="checkbox"]:checked');
-    if (checkedBoxes.length === 0) return;
+    const selectedBtns = document.querySelectorAll('#select_sections .section-btn.selected');
+    if (selectedBtns.length === 0) return;
 
-    const sectionIds = Array.from(checkedBoxes).map(cb => cb.value);
+    const sectionIds = Array.from(selectedBtns).map(btn => btn.dataset.sectionId);
     const query = inputElement.value.trim();
 
     const suggestionBox = inputElement.nextElementSibling;
