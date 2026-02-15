@@ -1,6 +1,6 @@
 <?php
 /**
- * Internationalization (i18n) for Pronote – English & Arabic
+ * Internationalization (i18n) for eNote – English & Arabic
  * Include after session_start(). Sets $LANG, $T, and t().
  */
 if (session_status() === PHP_SESSION_NONE) {

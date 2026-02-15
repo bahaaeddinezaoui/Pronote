@@ -160,4 +160,8 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
     setInterval(fetchNotifications, 30000);
 })();
 </script>
+<script src="effects.js"></script>
+<?php endif; ?>
+<?php if ($role !== 'Admin'): ?>
+<script src="effects.js"></script>
 <?php endif; ?>

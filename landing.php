@@ -473,6 +473,295 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
                 max-width: 250px;
             }
         }
+        /* ============================================
+           EFFECTS & TRANSITIONS
+           ============================================ */
+        
+        /* Page Load Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* Scroll Reveal Base State */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Stagger Delays */
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+        .stagger-5 { transition-delay: 0.5s; }
+        .stagger-6 { transition-delay: 0.6s; }
+        .stagger-7 { transition-delay: 0.7s; }
+        .stagger-8 { transition-delay: 0.8s; }
+
+        /* Enhanced Card Hover Effects */
+        .feature-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(111, 66, 193, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card .feature-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        /* Enhanced Button Effects */
+        .btn-primary, .btn-secondary, .btn-login {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after, .btn-secondary::after, .btn-login::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+        }
+
+        .btn-primary:active::after, .btn-secondary:active::after, .btn-login:active::after {
+            width: 200%;
+            height: 200%;
+        }
+
+        /* Tutorial Steps Animation */
+        .tutorial-steps li {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.5s ease;
+        }
+
+        .tutorial-steps li.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .tutorial-steps li::before {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tutorial-steps li:hover::before {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(111, 66, 193, 0.4);
+        }
+
+        /* Use Case Cards Enhanced */
+        .use-case-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .use-case-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #6f42c1, #8c63d9);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .use-case-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Navbar Link Hover Effect */
+        .navbar-links a:not(.btn-login) {
+            position: relative;
+        }
+
+        .navbar-links a:not(.btn-login)::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #6f42c1;
+            transition: width 0.3s ease;
+        }
+
+        .navbar-links a:not(.btn-login):hover::after {
+            width: 100%;
+        }
+
+        /* Hero Content Animation on Load */
+        .hero-content > * {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .hero-content h1 { animation-delay: 0.1s; }
+        .hero-content p { animation-delay: 0.2s; }
+        .hero-content .hero-buttons { animation-delay: 0.3s; }
+
+        /* CTA Section Pulse */
+        .cta .btn-primary {
+            animation: pulse 2s infinite;
+        }
+
+        .cta .btn-primary:hover {
+            animation: none;
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #6f42c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5a34a1;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            html {
+                scroll-behavior: auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -504,53 +793,53 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
 <!-- Features Section -->
 <section class="features" id="features">
-    <h2 class="section-title"><?php echo t('section_main_features'); ?></h2>
-    <p class="section-subtitle"><?php echo t('section_main_features_sub'); ?></p>
+    <h2 class="section-title reveal"><?php echo t('section_main_features'); ?></h2>
+    <p class="section-subtitle reveal stagger-1"><?php echo t('section_main_features_sub'); ?></p>
     
     <div class="features-grid">
-        <div class="feature-card">
+        <div class="feature-card reveal stagger-1">
             <div class="feature-icon">👨‍🎓</div>
             <h3><?php echo t('feature_student_mgmt'); ?></h3>
             <p><?php echo t('feature_student_mgmt_desc'); ?></p>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal stagger-2">
             <div class="feature-icon">📝</div>
             <h3><?php echo t('feature_observations'); ?></h3>
             <p><?php echo t('feature_observations_desc'); ?></p>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal stagger-3">
             <div class="feature-icon">❌</div>
             <h3><?php echo t('feature_absences'); ?></h3>
             <p><?php echo t('feature_absences_desc'); ?></p>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal stagger-4">
             <div class="feature-icon">⏰</div>
             <h3><?php echo t('feature_sessions'); ?></h3>
             <p><?php echo t('feature_sessions_desc'); ?></p>
         </div>
 
-        <div class="feature-card">
-            <div class="feature-icon">📚</div>
-            <h3><?php echo t('feature_categories'); ?></h3>
-            <p><?php echo t('feature_categories_desc'); ?></p>
+        <div class="feature-card reveal stagger-5">
+            <div class="feature-icon">📷</div>
+            <h3><?php echo t('feature_photo_mgmt'); ?></h3>
+            <p><?php echo t('feature_photo_mgmt_desc'); ?></p>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal stagger-6">
             <div class="feature-icon">🔔</div>
             <h3><?php echo t('feature_notifications'); ?></h3>
             <p><?php echo t('feature_notifications_desc'); ?></p>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal stagger-7">
             <div class="feature-icon">🏛️</div>
             <h3><?php echo t('feature_sections'); ?></h3>
             <p><?php echo t('feature_sections_desc'); ?></p>
         </div>
 
-        <div class="feature-card">
+        <div class="feature-card reveal stagger-8">
             <div class="feature-icon">📊</div>
             <h3><?php echo t('feature_dashboard'); ?></h3>
             <p><?php echo t('feature_dashboard_desc'); ?></p>
@@ -561,10 +850,10 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 <!-- How It Works Section -->
 <section class="tutorial" id="how-it-works">
     <div class="tutorial-container">
-        <h2 class="section-title"><?php echo t('section_how_it_works'); ?></h2>
+        <h2 class="section-title reveal"><?php echo t('section_how_it_works'); ?></h2>
         
         <div class="tutorial-content">
-            <div class="tutorial-text">
+            <div class="tutorial-text reveal-left">
                 <h3><?php echo t('quick_start_guide'); ?></h3>
                 
                 <ul class="tutorial-steps">
@@ -591,7 +880,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
                 </ul>
             </div>
 
-            <div class="tutorial-visual">
+            <div class="tutorial-visual reveal-right">
                 <div class="tutorial-visual-icon">🚀</div>
                 <h4><?php echo t('ready_to_start'); ?></h4>
                 <p><?php echo t('ready_to_start_desc'); ?></p>
@@ -602,21 +891,26 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
 <!-- Use Cases Section -->
 <section class="use-cases" id="use-cases">
-    <h2 class="section-title"><?php echo t('section_for_roles'); ?></h2>
-    <p class="section-subtitle"><?php echo t('section_for_roles_sub'); ?></p>
+    <h2 class="section-title reveal"><?php echo t('section_for_roles'); ?></h2>
+    <p class="section-subtitle reveal stagger-1"><?php echo t('section_for_roles_sub'); ?></p>
     
     <div class="use-cases-grid">
-        <div class="use-case-card">
+        <div class="use-case-card reveal stagger-1">
             <h4><?php echo t('for_teachers'); ?></h4>
             <p><?php echo t('for_teachers_desc'); ?></p>
         </div>
 
-        <div class="use-case-card">
+        <div class="use-case-card reveal stagger-2">
             <h4><?php echo t('for_admins'); ?></h4>
             <p><?php echo t('for_admins_desc'); ?></p>
         </div>
 
-        <div class="use-case-card">
+        <div class="use-case-card reveal stagger-3">
+            <h4><?php echo t('for_secretaries'); ?></h4>
+            <p><?php echo t('for_secretaries_desc'); ?></p>
+        </div>
+
+        <div class="use-case-card reveal stagger-4">
             <h4><?php echo t('analytics_insights'); ?></h4>
             <p><?php echo t('analytics_insights_desc'); ?></p>
         </div>
@@ -625,7 +919,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
 <!-- CTA Section -->
 <section class="cta">
-    <div class="cta-content">
+    <div class="cta-content reveal-scale">
         <h2><?php echo t('cta_title'); ?></h2>
         <p><?php echo t('cta_sub'); ?></p>
         <a href="login.php" class="btn-primary" style="background: white; color: #6f42c1;"><?php echo t('login_now'); ?></a>
@@ -644,6 +938,101 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
     </div>
     <p><?php echo t('footer_tagline'); ?></p>
 </footer>
+
+<script>
+    // Intersection Observer for Scroll Animations
+    (function() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px 0px -50px 0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all reveal elements
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Tutorial steps animation
+        const stepsObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 150);
+                    stepsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.tutorial-steps li').forEach(li => {
+            stepsObserver.observe(li);
+        });
+
+        // Button ripple effect
+        document.querySelectorAll('.btn-primary, .btn-secondary, .btn-login').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const ripple = document.createElement('span');
+                ripple.style.cssText = `
+                    position: absolute;
+                    background: rgba(255, 255, 255, 0.5);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                    left: ${x}px;
+                    top: ${y}px;
+                    width: 20px;
+                    height: 20px;
+                    margin-left: -10px;
+                    margin-top: -10px;
+                `;
+
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Add ripple keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(15);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    })();
+</script>
 
 </body>
 </html>
