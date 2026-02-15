@@ -7,8 +7,8 @@ require_once __DIR__ . '/lang/i18n.php';
 // --- DATABASE CONNECTION SETUP ---
 $servername = "localhost";
 $username_db = "root";
-$password_db = "";
-$dbname = "test_class_edition";
+$password_db = "08212001";
+$dbname = "edutrack";
 
 $conn = new mysqli($servername, $username_db, $password_db, $dbname);
 if ($conn->connect_error) {
@@ -480,6 +480,86 @@ if ($class_q) {
             gap: 1.5rem;
             margin-bottom: 1.5rem;
         }
+
+        .student-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .photo-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .photo-bubble {
+            position: absolute;
+            top: -190px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 180px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border: 4px solid white;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            overflow: hidden;
+            display: none;
+        }
+
+        .photo-bubble img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block !important;
+            opacity: 1 !important;
+        }
+
+        .photo-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid white;
+        }
+
+        .photo-container:hover .photo-bubble {
+            display: block !important;
+            opacity: 1 !important;
+        }
+
+        .student-photo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+
+        .photo-cell {
+            text-align: center;
+            width: 80px;
+            padding: 8px;
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr:hover .student-photo {
+            border-color: var(--primary-color);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -573,6 +653,7 @@ if ($class_q) {
                             <table id="student_table" class="data-table">
                                 <thead>
                                     <tr>
+                                        <th><?php echo t('student_photo'); ?></th>
                                         <th><?php echo t('last_name'); ?></th>
                                         <th><?php echo t('first_name'); ?></th>
                                         <th><?php echo t('motif'); ?></th>
@@ -801,6 +882,17 @@ function addStudentRow() {
 
     const row = document.createElement('tr');
     row.innerHTML = `
+        <td class="photo-cell">
+            <div class="photo-container">
+                <img src="" alt="Student Photo" class="student-photo" style="display: none;" onerror="this.style.display='none'; this.nextElementSibling.nextElementSibling.style.display='flex';">
+                <div class="photo-bubble">
+                    <img src="" alt="Student Photo Large" onerror="this.style.display='none'; this.parentElement.style.display='none';">
+                </div>
+                <div class="photo-placeholder" style="display: none; width: 60px; height: 60px; border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin: 0 auto;">
+                    👤
+                </div>
+            </div>
+        </td>
         <td><input type="text" name="last_name[]" class="last_name form-input" readonly></td>
         <td>
             <div style="position: relative; width: 100%;">
@@ -892,6 +984,36 @@ function searchStudent(inputElement) {
                 inputElement.value = firstName;
                 const lastNameInput = inputElement.closest('tr').querySelector('.last_name');
                 lastNameInput.value = lastName;
+                
+                // Update photo
+                const photoContainer = inputElement.closest('tr').querySelector('.photo-container');
+                const photoImg = photoContainer.querySelector('.student-photo');
+                const bubbleImg = photoContainer.querySelector('.photo-bubble img');
+                const photoBubble = photoContainer.querySelector('.photo-bubble');
+                const photoPlaceholder = photoContainer.querySelector('.photo-placeholder');
+                
+                if (student.photo && student.photo.trim() !== '') {
+                    console.log('Setting photo source:', student.photo);
+                    photoImg.src = student.photo;
+                    bubbleImg.src = student.photo;
+                    photoImg.style.display = 'block';
+                    photoBubble.style.display = 'none'; // Initially hidden, shown on hover
+                    photoPlaceholder.style.display = 'none';
+                    
+                    // Ensure bubble image loads
+                    bubbleImg.onload = function() {
+                        console.log('Bubble image loaded successfully');
+                    };
+                    bubbleImg.onerror = function() {
+                        console.log('Bubble image failed to load');
+                        photoBubble.style.display = 'none';
+                    };
+                } else {
+                    photoImg.style.display = 'none';
+                    photoBubble.style.display = 'none';
+                    photoPlaceholder.style.display = 'flex';
+                }
+                
                 suggestionBox.innerHTML = '';
             };
             ul.appendChild(li);

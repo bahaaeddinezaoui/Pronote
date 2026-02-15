@@ -4,8 +4,8 @@ header('Content-Type: application/json');
 // --- DATABASE CONNECTION ---
 $servername = "localhost";
 $username_db = "root";
-$password_db = "";
-$dbname = "test_class_edition";
+$password_db = "08212001";
+$dbname = "edutrack";
 
 $conn = new mysqli($servername, $username_db, $password_db, $dbname);
 if ($conn->connect_error) {

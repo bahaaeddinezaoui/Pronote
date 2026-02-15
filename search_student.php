@@ -4,8 +4,8 @@ header('Content-Type: application/json');
 // --- DATABASE CONNECTION ---
 $servername = "localhost";
 $username_db = "root";
-$password_db = "";
-$dbname = "test_class_edition";
+$password_db = "08212001";
+$dbname = "edutrack";
 
 $conn = new mysqli($servername, $username_db, $password_db, $dbname);
 if ($conn->connect_error) {
@@ -24,7 +24,7 @@ if (empty($query) || empty($sections)) {
 
 $placeholders = implode(',', array_fill(0, count($sections), '?'));
 $types = str_repeat('i', count($sections));
-$sql = "SELECT STUDENT_SERIAL_NUMBER, STUDENT_FIRST_NAME_EN, STUDENT_LAST_NAME_EN, STUDENT_FIRST_NAME_AR, STUDENT_LAST_NAME_AR
+$sql = "SELECT STUDENT_SERIAL_NUMBER, STUDENT_FIRST_NAME_EN, STUDENT_LAST_NAME_EN, STUDENT_FIRST_NAME_AR, STUDENT_LAST_NAME_AR, STUDENT_PHOTO
         FROM student
         WHERE SECTION_ID IN ($placeholders)
           AND (STUDENT_FIRST_NAME_EN LIKE CONCAT('%', ?, '%')
@@ -48,6 +48,7 @@ while ($row = $result->fetch_assoc()) {
         'serial_number' => $row['STUDENT_SERIAL_NUMBER'],
         'first_name' => $row['STUDENT_FIRST_NAME_EN'],
         'last_name' => $row['STUDENT_LAST_NAME_EN'],
+        'photo' => $row['STUDENT_PHOTO'],
         'label' => $label
     ];
 }

@@ -15,8 +15,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
 // --- DATABASE CONNECTION ---
 $servername = "localhost";
 $username_db = "root";
-$password_db = "";
-$dbname = "test_class_edition";
+$password_db = "08212001";
+$dbname = "edutrack";
 
 $conn = new mysqli($servername, $username_db, $password_db, $dbname);
 if ($conn->connect_error) {
@@ -66,6 +66,7 @@ try {
             s.STUDENT_NUMBER_OF_SIBLINGS, s.STUDENT_NUMBER_OF_SISTERS,
             s.STUDENT_ORDER_AMONG_SIBLINGS,
             s.STUDENT_ORPHAN_STATUS, s.STUDENT_PARENTS_SITUATION,
+            s.STUDENT_PHOTO,
             
             g.GRADE_NAME_EN, g.GRADE_NAME_AR,
             sec.SECTION_NAME_EN, sec.SECTION_NAME_AR,
@@ -156,6 +157,20 @@ try {
     }
 
     $student = $studentResult->fetch_assoc();
+    
+    // Handle photo - check if it's a file path or blob data
+    $photoData = null;
+    if (!empty($student['STUDENT_PHOTO'])) {
+        // Check if it's a file path (new format) or blob data (old format)
+        if (filter_var($student['STUDENT_PHOTO'], FILTER_VALIDATE_URL) || file_exists(__DIR__ . '/' . $student['STUDENT_PHOTO'])) {
+            // It's a file path
+            $photoData = $student['STUDENT_PHOTO'];
+        } else {
+            // It's blob data (legacy)
+            $photoData = base64_encode($student['STUDENT_PHOTO']);
+        }
+    }
+    
     $stmt->close();
 
     // 2. Get absences for the student within the date range
@@ -305,6 +320,7 @@ try {
             'section_name' => htmlspecialchars($section ?? ''),
             'category_name' => htmlspecialchars($category ?? ''),
             'army_name' => htmlspecialchars($army ?? ''),
+            'photo' => $photoData,
 
             // Parents
             'father_name_en' => htmlspecialchars(($student['FATHER_FIRST_NAME_EN'] ?? '') . ' ' . ($student['FATHER_LAST_NAME_EN'] ?? '')),

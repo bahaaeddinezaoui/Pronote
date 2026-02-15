@@ -13,8 +13,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
 // --- DATABASE CONNECTION ---
 $servername = "localhost";
 $username_db = "root";
-$password_db = "";
-$dbname = "test_class_edition";
+$password_db = "08212001";
+$dbname = "edutrack";
 
 $conn = new mysqli($servername, $username_db, $password_db, $dbname);
 if ($conn->connect_error) {
@@ -560,10 +560,24 @@ $conn->close();
             if (matches.length > 0) {
                 const suggestionsList = document.getElementById('suggestionsList');
                 suggestionsList.innerHTML = matches.slice(0, 12).map(student => {
-                    const bgStyle = student.photo 
-                        ? `style="background-image: url('data:image/jpeg;base64,${student.photo}');"`
-                        : '';
-                    const bgClass = student.photo ? '' : 'placeholder';
+                    let bgStyle = '';
+                    let bgClass = 'placeholder';
+                    
+                    if (student.photo) {
+                        // Check if photo is a URL/path or base64 data
+                        if (student.photo.startsWith('data:') || student.photo.startsWith('http')) {
+                            bgStyle = `style="background-image: url('${student.photo}');"`;
+                            bgClass = '';
+                        } else if (student.photo.includes('/')) {
+                            // It's a file path
+                            bgStyle = `style="background-image: url('${student.photo}');"`;
+                            bgClass = '';
+                        } else {
+                            // It's base64 data
+                            bgStyle = `style="background-image: url('data:image/jpeg;base64,${student.photo}');"`;
+                            bgClass = '';
+                        }
+                    }
                     
                     return `
                         <li class="student-card" onclick="selectStudent('${student.serial_number}', '${student.first_name}', '${student.last_name}')">

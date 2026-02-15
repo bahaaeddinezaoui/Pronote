@@ -10,8 +10,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 1. Database Connection Details
     $servername = "localhost";
     $username_db = "root";
-    $password_db = "";
-    $dbname = "test_class_edition";
+    $password_db = "08212001";
+    $dbname = "edutrack";
 
     // Get user input from the POST request
     $username = htmlspecialchars($_POST['username'] ?? '');

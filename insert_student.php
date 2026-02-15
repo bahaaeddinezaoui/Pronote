@@ -18,8 +18,8 @@ if ($role !== 'Secretary') {
 // 2. Database Connection
 $servername = "localhost";
 $username_db = "root";
-$password_db = "";
-$dbname = "test_class_edition";
+$password_db = "08212001";
+$dbname = "edutrack";
 
 $conn = new mysqli($servername, $username_db, $password_db, $dbname);
 if ($conn->connect_error) {
@@ -158,13 +158,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $msg_type = "error";
         } else {
             // Handle Photo
-            $photo = null;
+            $photo_path = null;
             if (isset($_FILES['STUDENT_PHOTO']) && $_FILES['STUDENT_PHOTO']['error'] === UPLOAD_ERR_OK) {
-                $photo = file_get_contents($_FILES['STUDENT_PHOTO']['tmp_name']);
+                $upload_dir = __DIR__ . '/resources/photos/';
+                $file_extension = strtolower(pathinfo($_FILES['STUDENT_PHOTO']['name'], PATHINFO_EXTENSION));
+                $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+                
+                if (in_array($file_extension, $allowed_extensions)) {
+                    $unique_filename = 'student_' . $serial . '_' . time() . '.' . $file_extension;
+                    $upload_path = $upload_dir . $unique_filename;
+                    
+                    if (move_uploaded_file($_FILES['STUDENT_PHOTO']['tmp_name'], $upload_path)) {
+                        $photo_path = 'resources/photos/' . $unique_filename;
+                    }
+                }
             }
 
-            // Build type string explicitly: 40 params (added photo as 'b')
-            $types = "sii" . "ssss" . "i" . "ssss" . "dd" . "s" . "d" . "ssssssssssssss" . "iii" . "i" . "ssb" . "iii";
+            // Build type string explicitly: 40 params (photo as string path)
+            $types = "sii" . "ssss" . "i" . "ssss" . "dd" . "s" . "d" . "ssssssssssssss" . "iii" . "i" . "sss" . "iii";
             
             $stmt->bind_param($types, 
                 $serial, $category_id, $section_id,
@@ -177,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $birth_cert_num, $id_card_num, $postal_num,
                 $hobbies, $health, $mil_necklace,
                 $siblings_cnt, $sisters_cnt, $order_siblings,
-                $army_id, $orphan, $parents, $photo,
+                $army_id, $orphan, $parents, $photo_path,
                 $birth_place_id, $personal_address_id, $recruit_source_id
             );
 

@@ -80,7 +80,7 @@ $T = [
     'footer_tagline' => 'Empowering Education Through Technology',
 
     // Login
-    'login_welcome' => 'Welcome to Pronote!',
+    'login_welcome' => 'Welcome to eNote!',
     'username' => 'Username:',
     'password' => 'Password:',
     'username_placeholder' => 'Enter your username',

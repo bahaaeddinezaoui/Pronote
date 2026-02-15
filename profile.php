@@ -9,8 +9,8 @@ if (!isset($_SESSION['user_id'])) {
 
 $servername = "localhost";
 $username_db = "root";
-$password_db = "";
-$dbname = "test_class_edition";
+$password_db = "08212001";
+$dbname = "edutrack";
 
 $conn = new mysqli($servername, $username_db, $password_db, $dbname);
 if ($conn->connect_error) {
@@ -282,7 +282,11 @@ $conn->close();
                 <div class="profile-avatar">
                     <div class="profile-avatar-inner">
                         <?php if (!empty($photoData)): ?>
-                            <img src="data:image/jpeg;base64,<?php echo base64_encode($photoData); ?>" alt="Profile Photo" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                            <?php if (filter_var($photoData, FILTER_VALIDATE_URL) || file_exists(__DIR__ . '/' . $photoData)): ?>
+                                <img src="<?php echo htmlspecialchars($photoData); ?>" alt="Profile Photo" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                            <?php else: ?>
+                                <img src="data:image/jpeg;base64,<?php echo base64_encode($photoData); ?>" alt="Profile Photo" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                            <?php endif; ?>
                         <?php else: ?>
                             <?php echo strtoupper(substr($fullName, 0, 1)); ?>
                         <?php endif; ?>
