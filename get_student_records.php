@@ -161,13 +161,20 @@ try {
     // Handle photo - check if it's a file path or blob data
     $photoData = null;
     if (!empty($student['STUDENT_PHOTO'])) {
-        // Check if it's a file path (new format) or blob data (old format)
-        if (filter_var($student['STUDENT_PHOTO'], FILTER_VALIDATE_URL) || file_exists(__DIR__ . '/' . $student['STUDENT_PHOTO'])) {
-            // It's a file path
-            $photoData = $student['STUDENT_PHOTO'];
+        $rawPhoto = $student['STUDENT_PHOTO'];
+        $normalizedPhoto = is_string($rawPhoto) ? ltrim(str_replace('\\', '/', $rawPhoto), '/') : $rawPhoto;
+        if (is_string($normalizedPhoto) && filter_var($normalizedPhoto, FILTER_VALIDATE_URL)) {
+            $photoData = $normalizedPhoto;
+        } elseif (is_string($normalizedPhoto) && file_exists(__DIR__ . '/' . $normalizedPhoto)) {
+            $photoData = $normalizedPhoto;
+        } elseif (is_string($normalizedPhoto) && file_exists(__DIR__ . '/resources/photos/students/' . $normalizedPhoto)) {
+            $photoData = 'resources/photos/students/' . $normalizedPhoto;
+        } elseif (is_string($normalizedPhoto) && file_exists(__DIR__ . '/resources/photos/' . $normalizedPhoto)) {
+            $photoData = 'resources/photos/' . $normalizedPhoto;
+        } elseif (is_string($normalizedPhoto) && preg_match('/\.(jpe?g|png|gif|webp)$/i', $normalizedPhoto)) {
+            $photoData = 'resources/photos/students/' . $normalizedPhoto;
         } else {
-            // It's blob data (legacy)
-            $photoData = base64_encode($student['STUDENT_PHOTO']);
+            $photoData = base64_encode($rawPhoto);
         }
     }
     

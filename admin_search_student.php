@@ -379,6 +379,17 @@ $conn->close();
             background-repeat: no-repeat;
         }
 
+        .student-card-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+        }
+
         .student-card-bg.placeholder {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
@@ -562,26 +573,29 @@ $conn->close();
                 suggestionsList.innerHTML = matches.slice(0, 12).map(student => {
                     let bgStyle = '';
                     let bgClass = 'placeholder';
+                    const isImageFilename = (value) => typeof value === 'string' && /\.(jpe?g|png|gif|webp)$/i.test(value);
+                    const resolvePhotoUrl = (value) => {
+                        if (!value) return null;
+                        value = String(value).replace(/\\/g, '/').replace(/^\/+/, '');
+                        if (value.startsWith('data:') || value.startsWith('http')) return value;
+                        if (value.includes('/')) return value;
+                        if (isImageFilename(value)) return `resources/photos/students/${value}`;
+                        return `data:image/jpeg;base64,${value}`;
+                    };
+
+                    const photoUrl = student.photo ? resolvePhotoUrl(student.photo) : null;
+                    const photoImg = photoUrl
+                        ? `<img class="student-card-img" src="${photoUrl}" onerror="this.onerror=null;this.src='assets/placeholder-student.png';" />`
+                        : '';
                     
                     if (student.photo) {
-                        // Check if photo is a URL/path or base64 data
-                        if (student.photo.startsWith('data:') || student.photo.startsWith('http')) {
-                            bgStyle = `style="background-image: url('${student.photo}');"`;
-                            bgClass = '';
-                        } else if (student.photo.includes('/')) {
-                            // It's a file path
-                            bgStyle = `style="background-image: url('${student.photo}');"`;
-                            bgClass = '';
-                        } else {
-                            // It's base64 data
-                            bgStyle = `style="background-image: url('data:image/jpeg;base64,${student.photo}');"`;
-                            bgClass = '';
-                        }
+                        bgStyle = `style="background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"`;
                     }
                     
                     return `
                         <li class="student-card" onclick="selectStudent('${student.serial_number}', '${student.first_name}', '${student.last_name}')">
                             <div class="student-card-bg ${bgClass}" ${bgStyle}></div>
+                            ${photoImg}
                             <div class="student-card-overlay">
                                 <div class="student-card-name">${student.first_name} ${student.last_name}</div>
                                 <div class="student-card-id">${student.serial_number}</div>
