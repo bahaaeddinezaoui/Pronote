@@ -63,6 +63,11 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
         </div>
         
 
+        <a href="options.php" class="sidebar-link">
+            <span class="icon">⚙️</span>
+            <span class="text"><?php echo t('nav_options'); ?></span>
+        </a>
+
         <a href="logout.php" class="sidebar-link logout-btn">
             <span class="icon">🚪</span>
             <span class="text"><?php echo t('nav_logout'); ?></span>

@@ -378,8 +378,23 @@ $T = [
     'nav_search' => 'البحث',
     'nav_student_records' => 'سجلات الطلاب',
     'nav_profile' => 'الملف الشخصي',
+    'nav_options' => 'الإعدادات',
     'nav_logout' => 'تسجيل الخروج',
     'nav_login' => 'تسجيل الدخول',
+
+    'options_coming_soon' => 'ستتوفر الإعدادات قريبًا.',
+
+    'change_password' => 'تغيير كلمة المرور',
+    'old_password' => 'كلمة المرور القديمة',
+    'new_password' => 'كلمة المرور الجديدة',
+    'confirm_new_password' => 'تأكيد كلمة المرور الجديدة',
+    'update_password' => 'تحديث كلمة المرور',
+    'fields_required' => 'جميع الحقول مطلوبة.',
+    'password_mismatch' => 'كلمتا المرور الجديدتان غير متطابقتين.',
+    'old_password_incorrect' => 'كلمة المرور القديمة غير صحيحة.',
+    'password_change_failed' => 'فشل تغيير كلمة المرور.',
+    'password_updated_logout' => 'تم تحديث كلمة المرور بنجاح. سيتم تسجيل خروجك الآن.',
+    'unauthorized' => 'غير مصرح.',
 
     // Stats Labels (Admin Home)
     'stat_total_students' => 'إجمالي الطلاب',

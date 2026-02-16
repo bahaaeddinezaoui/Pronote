@@ -378,8 +378,23 @@ $T = [
     'nav_search' => 'Search',
     'nav_student_records' => 'Student Records',
     'nav_profile' => 'Profile',
+    'nav_options' => 'Options',
     'nav_logout' => 'Logout',
     'nav_login' => 'Login',
+
+    'options_coming_soon' => 'Options will be available soon.',
+
+    'change_password' => 'Change Password',
+    'old_password' => 'Old Password',
+    'new_password' => 'New Password',
+    'confirm_new_password' => 'Confirm New Password',
+    'update_password' => 'Update Password',
+    'fields_required' => 'All fields are required.',
+    'password_mismatch' => 'The new passwords do not match.',
+    'old_password_incorrect' => 'Old password is incorrect.',
+    'password_change_failed' => 'Password change failed.',
+    'password_updated_logout' => 'Password updated successfully. You will be logged out now.',
+    'unauthorized' => 'Unauthorized.',
 
     // Stats Labels (Admin Home)
     'stat_total_students' => 'Total Students',
