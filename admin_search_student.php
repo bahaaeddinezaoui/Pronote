@@ -205,6 +205,26 @@ $conn->close();
             color: #1f2937;
         }
 
+        .student-photo-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border-radius: 50%;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto;
+        }
+
+        .student-photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
         .records-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -438,6 +458,8 @@ $conn->close();
 
 
 
+
+
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -474,19 +496,9 @@ $conn->close();
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-row full">
                     <div class="form-group">
-                        <label for="startDate"><?php echo t('start_date'); ?></label>
-                        <input type="date" id="startDate">
-                    </div>
-                    <div class="form-group">
-                        <label for="endDate"><?php echo t('end_date'); ?></label>
-                        <input type="date" id="endDate">
-                    </div>
-                    <div class="form-group">
-                        <label>&nbsp;</label>
                         <div class="button-group">
-                            <button class="btn btn-primary" onclick="searchStudent()"><?php echo t('search_btn'); ?></button>
                             <button class="btn btn-secondary" onclick="clearSearch()"><?php echo t('clear'); ?></button>
                         </div>
                     </div>
@@ -504,6 +516,26 @@ $conn->close();
 
             <div class="results-section" id="resultsSection" style="margin-top: 20px;">
                 <div id="studentInfo" style="display: none;"></div>
+
+                <div class="record-section" id="dateFilterSection" style="display:none; margin-bottom: 20px;">
+                    <h4>🗓️ <?php echo t('select_date'); ?></h4>
+                    <div class="form-row" style="margin-bottom: 0;">
+                        <div class="form-group">
+                            <label for="startDate"><?php echo t('start_date'); ?></label>
+                            <input type="date" id="startDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate"><?php echo t('end_date'); ?></label>
+                            <input type="date" id="endDate">
+                        </div>
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <div class="button-group">
+                                <button class="btn btn-secondary" onclick="clearSearch()"><?php echo t('clear'); ?></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="view-toggles" id="viewToggles" style="display:none; margin: 20px 0; gap: 10px;">
                     <button class="btn btn-primary" id="btnRecords" onclick="switchView('records')"><?php echo t('btn_student_records'); ?></button>
@@ -528,6 +560,18 @@ $conn->close();
 
         let selectedStudent = null;
         let allStudents = [];
+        let autoSearchDebounceTimer = null;
+        let lastAutoSearchKey = null;
+
+        const isImageFilename = (value) => typeof value === 'string' && /\.(jpe?g|png|gif|webp)$/i.test(value);
+        const resolvePhotoUrl = (value) => {
+            if (!value) return null;
+            value = String(value).replace(/\\/g, '/').replace(/^\/+/, '');
+            if (value.startsWith('data:') || value.startsWith('http')) return value;
+            if (value.includes('/')) return value;
+            if (isImageFilename(value)) return `resources/photos/students/${value}`;
+            return `data:image/jpeg;base64,${value}`;
+        };
 
         // Initialize with today's date range
         function initializeDates() {
@@ -573,15 +617,6 @@ $conn->close();
                 suggestionsList.innerHTML = matches.slice(0, 12).map(student => {
                     let bgStyle = '';
                     let bgClass = 'placeholder';
-                    const isImageFilename = (value) => typeof value === 'string' && /\.(jpe?g|png|gif|webp)$/i.test(value);
-                    const resolvePhotoUrl = (value) => {
-                        if (!value) return null;
-                        value = String(value).replace(/\\/g, '/').replace(/^\/+/, '');
-                        if (value.startsWith('data:') || value.startsWith('http')) return value;
-                        if (value.includes('/')) return value;
-                        if (isImageFilename(value)) return `resources/photos/students/${value}`;
-                        return `data:image/jpeg;base64,${value}`;
-                    };
 
                     const photoUrl = student.photo ? resolvePhotoUrl(student.photo) : null;
                     const photoImg = photoUrl
@@ -613,6 +648,47 @@ $conn->close();
             selectedStudent = { serialNumber, firstName, lastName };
             document.getElementById('searchInput').value = firstName + ' ' + lastName;
             document.getElementById('suggestionsContainer').style.display = 'none';
+
+            const dateFilterSection = document.getElementById('dateFilterSection');
+            if (dateFilterSection) {
+                dateFilterSection.style.display = 'block';
+            }
+
+            const startDateEl = document.getElementById('startDate');
+            if (startDateEl && !startDateEl.value) {
+                startDateEl.focus();
+            }
+
+            scheduleAutoSearch();
+        }
+
+        function scheduleAutoSearch() {
+            if (autoSearchDebounceTimer) {
+                clearTimeout(autoSearchDebounceTimer);
+            }
+            autoSearchDebounceTimer = setTimeout(() => {
+                tryAutoSearch();
+            }, 200);
+        }
+
+        async function tryAutoSearch() {
+            if (!selectedStudent) return;
+
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            if (!startDate || !endDate) return;
+
+            if (new Date(startDate) > new Date(endDate)) {
+                showError(t('msg_start_before_end'));
+                return;
+            }
+
+            const searchKey = `${selectedStudent.serialNumber}|${startDate}|${endDate}`;
+            if (lastAutoSearchKey === searchKey) return;
+            lastAutoSearchKey = searchKey;
+
+            await searchStudent();
         }
 
         function showError(message) {
@@ -683,17 +759,27 @@ $conn->close();
             const btnFullInfo = document.getElementById('btnFullInfo');
             const recordsContainer = document.getElementById('recordsContainer');
             const fullInfoContainer = document.getElementById('fullInfoContainer');
+            const dateFilterSection = document.getElementById('dateFilterSection');
 
             if (view === 'records') {
                 btnRecords.className = 'btn btn-primary';
                 btnFullInfo.className = 'btn btn-secondary';
                 recordsContainer.style.display = 'grid'; // Restore grid layout
                 fullInfoContainer.style.display = 'none';
+                if (dateFilterSection) {
+                    dateFilterSection.style.display = 'block';
+                    if (dateFilterSection.parentElement !== recordsContainer) {
+                        recordsContainer.insertAdjacentElement('afterbegin', dateFilterSection);
+                    }
+                }
             } else {
                 btnRecords.className = 'btn btn-secondary';
                 btnFullInfo.className = 'btn btn-primary';
                 recordsContainer.style.display = 'none';
                 fullInfoContainer.style.display = 'block';
+                if (dateFilterSection) {
+                    dateFilterSection.style.display = 'none';
+                }
             }
         }
 
@@ -707,10 +793,17 @@ $conn->close();
             switchView('records');
 
             // Display student info header
+            const studentPhotoUrl = student.photo ? resolvePhotoUrl(student.photo) : null;
             const studentInfoHtml = `
                 <div class="student-info">
                     <h3>📋 ${student.first_name} ${student.last_name}</h3>
-                    <div class="info-grid">
+                    <div class="info-grid" style="grid-template-columns: 140px 1fr 1fr; gap: 20px; align-items: start;">
+                        <div class="info-item" style="grid-row: span 2; border-left-color: #10b981; padding: 15px;">
+                            <div class="info-label">${t('student_photo')}</div>
+                            <div class="student-photo-box" style="width: 110px; height: 110px; margin: 0;">
+                                <img src="${studentPhotoUrl || 'assets/placeholder-student.png'}" onerror="this.onerror=null;this.src='assets/placeholder-student.png';" alt="${t('student_photo')}">
+                            </div>
+                        </div>
                         <div class="info-item">
                             <div class="info-label">${t('serial_number')}</div>
                             <div class="info-value">${student.serial_number}</div>
@@ -773,7 +866,14 @@ $conn->close();
                 </div>
             `;
             // Keep the grid structure logic for records
-            document.getElementById('recordsContainer').innerHTML = recordsHtml;
+            const recordsContainer = document.getElementById('recordsContainer');
+            const dateFilterSection = document.getElementById('dateFilterSection');
+            recordsContainer.innerHTML = '';
+            if (dateFilterSection) {
+                dateFilterSection.style.display = 'block';
+                recordsContainer.appendChild(dateFilterSection);
+            }
+            recordsContainer.insertAdjacentHTML('beforeend', recordsHtml);
 
             // --- Render Full Info ---
             renderFullInfo(student);
@@ -911,8 +1011,15 @@ $conn->close();
             document.getElementById('resultsSection').classList.remove('active');
             document.getElementById('suggestionsContainer').style.display = 'none';
             selectedStudent = null;
+            const dateFilterSection = document.getElementById('dateFilterSection');
+            if (dateFilterSection) {
+                dateFilterSection.style.display = 'none';
+            }
             initializeDates();
         }
+
+        document.getElementById('startDate').addEventListener('change', scheduleAutoSearch);
+        document.getElementById('endDate').addEventListener('change', scheduleAutoSearch);
 
         // Initialize
         window.addEventListener('load', function() {
