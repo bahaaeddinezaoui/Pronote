@@ -66,14 +66,13 @@ try {
     $del->execute();
     $del->close();
 
-    $check = $conn->prepare("
-        SELECT 1
-        FROM STUDIES SD
-        WHERE SD.SECTION_ID = ?
-          AND SD.MAJOR_ID = ?
-        LIMIT 1
-    ");
-
+    // Validate that each major exists
+    $checkMajor = $conn->prepare("SELECT 1 FROM MAJOR WHERE MAJOR_ID = ? LIMIT 1");
+    // Validate that each section exists
+    $checkSection = $conn->prepare("SELECT 1 FROM SECTION WHERE SECTION_ID = ? LIMIT 1");
+    // Insert into STUDIES if the section+major pair doesn't exist yet
+    $insStudies = $conn->prepare("INSERT IGNORE INTO STUDIES (SECTION_ID, MAJOR_ID) VALUES (?, ?)");
+    // Insert into TEACHES
     $ins = $conn->prepare("INSERT INTO TEACHES (MAJOR_ID, TEACHER_SERIAL_NUMBER) VALUES (?, ?)");
 
     $majorsToInsert = [];
@@ -85,6 +84,14 @@ try {
             throw new Exception('Invalid assignment payload.');
         }
 
+        // Validate the major exists
+        $checkMajor->bind_param('s', $majorId);
+        $checkMajor->execute();
+        $resMajor = $checkMajor->get_result();
+        if (!$resMajor || $resMajor->num_rows === 0) {
+            throw new Exception('Invalid major selected.');
+        }
+
         $majorsToInsert[$majorId] = true;
 
         foreach ($sectionIds as $sectionId) {
@@ -93,12 +100,17 @@ try {
                 continue;
             }
 
-            $check->bind_param('is', $sectionId, $majorId);
-            $check->execute();
-            $resCheck = $check->get_result();
-            if (!$resCheck || $resCheck->num_rows === 0) {
-                throw new Exception('Invalid selection.');
+            // Validate the section exists
+            $checkSection->bind_param('i', $sectionId);
+            $checkSection->execute();
+            $resSection = $checkSection->get_result();
+            if (!$resSection || $resSection->num_rows === 0) {
+                throw new Exception('Invalid section selected.');
             }
+
+            // Create the STUDIES link if it doesn't exist
+            $insStudies->bind_param('is', $sectionId, $majorId);
+            $insStudies->execute();
         }
     }
 
@@ -107,7 +119,9 @@ try {
         $ins->execute();
     }
 
-    $check->close();
+    $checkMajor->close();
+    $checkSection->close();
+    $insStudies->close();
     $ins->close();
 
     $upd = $conn->prepare("UPDATE user_account SET LAST_LOGIN_AT = NOW() WHERE USER_ID = ?");
