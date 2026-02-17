@@ -8,8 +8,55 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Check role
 $role = $_SESSION['role'] ?? '';
+if ($role === 'Teacher') {
+    $servername = "localhost";
+    $username_db = "root";
+    $password_db = "08212001";
+    $dbname = "edutrack";
+
+    $conn_guard = new mysqli($servername, $username_db, $password_db, $dbname);
+    if (!$conn_guard->connect_error) {
+        $user_id_guard = (int)$_SESSION['user_id'];
+        $needs_onboarding_guard = !empty($_SESSION['needs_onboarding']);
+        $has_logged_in_before = !empty($_SESSION['last_login_at']);
+
+        if (!$needs_onboarding_guard && !$has_logged_in_before) {
+            $stmt_teacher_guard = $conn_guard->prepare("SELECT TEACHER_SERIAL_NUMBER FROM teacher WHERE USER_ID = ?");
+            if ($stmt_teacher_guard) {
+                $stmt_teacher_guard->bind_param('i', $user_id_guard);
+                $stmt_teacher_guard->execute();
+                $res_teacher_guard = $stmt_teacher_guard->get_result();
+                $row_teacher_guard = $res_teacher_guard ? $res_teacher_guard->fetch_assoc() : null;
+                $stmt_teacher_guard->close();
+
+                if (!$row_teacher_guard || empty($row_teacher_guard['TEACHER_SERIAL_NUMBER'])) {
+                    $needs_onboarding_guard = true;
+                } else {
+                    $teacher_serial_guard = $row_teacher_guard['TEACHER_SERIAL_NUMBER'];
+                    $stmt_has_guard = $conn_guard->prepare("SELECT 1 FROM TEACHES WHERE TEACHER_SERIAL_NUMBER = ? LIMIT 1");
+                    if ($stmt_has_guard) {
+                        $stmt_has_guard->bind_param('s', $teacher_serial_guard);
+                        $stmt_has_guard->execute();
+                        $res_has_guard = $stmt_has_guard->get_result();
+                        $needs_onboarding_guard = (!$res_has_guard || $res_has_guard->num_rows === 0);
+                        $stmt_has_guard->close();
+                    }
+                }
+            }
+        }
+
+        if ($needs_onboarding_guard) {
+            $_SESSION['needs_onboarding'] = true;
+            $conn_guard->close();
+            header('Location: teacher_onboarding.php');
+            exit;
+        }
+        $conn_guard->close();
+    }
+}
+
+// Check role
 if ($role !== 'Teacher') {
     // If not teacher, maybe redirect to their respective home? 
     // For now, just allow if they have a session, but typically we'd restrict.
@@ -75,8 +122,8 @@ if ($teacher_serial) {
     ");
     $stmt_classes->bind_param("s", $teacher_serial);
     $stmt_classes->execute();
-    $res_classes = $stmt_classes->get_result();
-    while ($r = $res_classes->fetch_assoc()) {
+    $result_classes = $stmt_classes->get_result();
+    while ($r = $result_classes->fetch_assoc()) {
         $assigned_classes[] = $r['MAJOR_NAME_EN'];
     }
     $stmt_classes->close();

@@ -13,7 +13,11 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
     } elseif ($_SESSION['role'] === 'Secretary') {
         $response['home'] = 'secretary_home.php';
     } elseif ($_SESSION['role'] === 'Teacher') {
-        $response['home'] = 'teacher_home.php';
+        if (!empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) {
+            $response['home'] = 'teacher_onboarding.php';
+        } else {
+            $response['home'] = 'teacher_home.php';
+        }
     } else {
         $response['home'] = 'fill_form.php';
     }

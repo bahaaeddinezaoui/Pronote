@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Feb 15, 2026 at 02:21 PM
+-- Generation Time: Feb 17, 2026 at 11:09 AM
 -- Server version: 9.1.0
 -- PHP Version: 8.3.14
 
@@ -276,20 +276,6 @@ CREATE TABLE IF NOT EXISTS `observation_motif` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `receives`
---
-
-DROP TABLE IF EXISTS `receives`;
-CREATE TABLE IF NOT EXISTS `receives` (
-  `NOTIFICATION_ID` int NOT NULL,
-  `ADMINISTRATOR_ID` int NOT NULL,
-  PRIMARY KEY (`NOTIFICATION_ID`,`ADMINISTRATOR_ID`),
-  KEY `FK_RECEIVE_ADMIN` (`ADMINISTRATOR_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `recruitment_source`
 --
 
@@ -341,20 +327,6 @@ CREATE TABLE IF NOT EXISTS `section` (
   `SECTION_NAME_AR` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`SECTION_ID`),
   KEY `FK_SECTION_CAT` (`CATEGORY_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `sends`
---
-
-DROP TABLE IF EXISTS `sends`;
-CREATE TABLE IF NOT EXISTS `sends` (
-  `NOTIFICATION_ID` int NOT NULL,
-  `CLASS_ID` int NOT NULL,
-  PRIMARY KEY (`NOTIFICATION_ID`,`CLASS_ID`),
-  KEY `FK_SEND_CLASS` (`CLASS_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -705,24 +677,10 @@ ALTER TABLE `observation`
   ADD CONSTRAINT `FK_OBS_SESSION` FOREIGN KEY (`STUDY_SESSION_ID`) REFERENCES `study_session` (`STUDY_SESSION_ID`);
 
 --
--- Constraints for table `receives`
---
-ALTER TABLE `receives`
-  ADD CONSTRAINT `FK_RECEIVE_ADMIN` FOREIGN KEY (`ADMINISTRATOR_ID`) REFERENCES `administrator` (`ADMINISTRATOR_ID`),
-  ADD CONSTRAINT `FK_RECEIVE_NOTIF` FOREIGN KEY (`NOTIFICATION_ID`) REFERENCES `notification` (`NOTIFICATION_ID`);
-
---
 -- Constraints for table `section`
 --
 ALTER TABLE `section`
   ADD CONSTRAINT `FK_SECTION_CAT` FOREIGN KEY (`CATEGORY_ID`) REFERENCES `category` (`CATEGORY_ID`);
-
---
--- Constraints for table `sends`
---
-ALTER TABLE `sends`
-  ADD CONSTRAINT `FK_SEND_CLASS` FOREIGN KEY (`CLASS_ID`) REFERENCES `class` (`CLASS_ID`),
-  ADD CONSTRAINT `FK_SEND_NOTIF` FOREIGN KEY (`NOTIFICATION_ID`) REFERENCES `notification` (`NOTIFICATION_ID`);
 
 --
 -- Constraints for table `student`

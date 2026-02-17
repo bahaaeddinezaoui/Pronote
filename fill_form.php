@@ -4,6 +4,13 @@ session_start();
 date_default_timezone_set('Africa/Algiers');
 require_once __DIR__ . '/lang/i18n.php';
 
+if (($_SESSION['role'] ?? '') === 'Teacher') {
+    if (!empty($_SESSION['needs_onboarding'])) {
+        header('Location: teacher_onboarding.php');
+        exit;
+    }
+}
+
 // --- DATABASE CONNECTION SETUP ---
 $servername = "localhost";
 $username_db = "root";
@@ -18,6 +25,44 @@ if ($conn->connect_error) {
         exit;
     } else {
         die("Connection failed: " . $conn->connect_error);
+    }
+}
+
+if (($_SESSION['role'] ?? '') === 'Teacher' && isset($_SESSION['user_id'])) {
+    $needs_onboarding_guard = !empty($_SESSION['needs_onboarding']);
+    $has_logged_in_before = !empty($_SESSION['last_login_at']);
+
+    if (!$needs_onboarding_guard && !$has_logged_in_before) {
+        $uid_guard = (int)$_SESSION['user_id'];
+        $stmt_teacher_guard = $conn->prepare("SELECT TEACHER_SERIAL_NUMBER FROM teacher WHERE USER_ID = ?");
+        if ($stmt_teacher_guard) {
+            $stmt_teacher_guard->bind_param('i', $uid_guard);
+            $stmt_teacher_guard->execute();
+            $res_teacher_guard = $stmt_teacher_guard->get_result();
+            $row_teacher_guard = $res_teacher_guard ? $res_teacher_guard->fetch_assoc() : null;
+            $stmt_teacher_guard->close();
+
+            if (!$row_teacher_guard || empty($row_teacher_guard['TEACHER_SERIAL_NUMBER'])) {
+                $needs_onboarding_guard = true;
+            } else {
+                $teacher_serial_guard = $row_teacher_guard['TEACHER_SERIAL_NUMBER'];
+                $stmt_has_guard = $conn->prepare("SELECT 1 FROM TEACHES WHERE TEACHER_SERIAL_NUMBER = ? LIMIT 1");
+                if ($stmt_has_guard) {
+                    $stmt_has_guard->bind_param('s', $teacher_serial_guard);
+                    $stmt_has_guard->execute();
+                    $res_has_guard = $stmt_has_guard->get_result();
+                    $needs_onboarding_guard = (!$res_has_guard || $res_has_guard->num_rows === 0);
+                    $stmt_has_guard->close();
+                }
+            }
+        }
+    }
+
+    if ($needs_onboarding_guard) {
+        $_SESSION['needs_onboarding'] = true;
+        $conn->close();
+        header('Location: teacher_onboarding.php');
+        exit;
     }
 }
 
@@ -267,16 +312,21 @@ $show_obs_initially = $existing_session_found || ($tab_param === 'observations')
 $show_abs_initially = !$show_obs_initially;
 
 
-// Teacher categories (existing)
-$teacher_categories = [];
-if (!empty($logged_in_teacher_serial)) {
-    $sql_categories = $conn->prepare("
-        SELECT CATEGORY_ID, CATEGORY_NAME_EN
-        FROM CATEGORY
-        ORDER BY CATEGORY_NAME_EN
-    ");
-    $sql_categories->execute();
-    $result_categories = $sql_categories->get_result();
+ // Teacher categories 
+ $teacher_categories = [];
+ if (!empty($logged_in_teacher_serial)) {
+     $sql_categories = $conn->prepare("
+        SELECT DISTINCT C.CATEGORY_ID, C.CATEGORY_NAME_EN
+        FROM CATEGORY C
+        INNER JOIN SECTION SE ON SE.CATEGORY_ID = C.CATEGORY_ID
+        INNER JOIN STUDIES SD ON SD.SECTION_ID = SE.SECTION_ID
+        INNER JOIN TEACHES TH ON TH.MAJOR_ID = SD.MAJOR_ID
+        WHERE TH.TEACHER_SERIAL_NUMBER = ?
+        ORDER BY C.CATEGORY_NAME_EN
+     ");
+    $sql_categories->bind_param('s', $logged_in_teacher_serial);
+     $sql_categories->execute();
+     $result_categories = $sql_categories->get_result();
 
     if ($result_categories->num_rows > 0) {
         while ($row = $result_categories->fetch_assoc()) {

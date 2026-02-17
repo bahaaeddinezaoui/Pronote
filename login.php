@@ -13,7 +13,11 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
     } elseif ($_SESSION['role'] === 'Secretary') {
         header('Location: secretary_home.php');
     } elseif ($_SESSION['role'] === 'Teacher') {
-        header('Location: teacher_home.php');
+        if (!empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) {
+            header('Location: teacher_onboarding.php');
+        } else {
+            header('Location: teacher_home.php');
+        }
     } else {
         header('Location: fill_form.php');
     }

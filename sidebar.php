@@ -7,7 +7,13 @@ $current_tab = $_GET['tab'] ?? '';
 // Determine Home Link
 $home_link = 'index.php';
 if ($role === 'Admin') $home_link = 'admin_home.php';
-if ($role === 'Teacher') $home_link = 'teacher_home.php';
+if ($role === 'Teacher') {
+    if (!empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) {
+        $home_link = 'teacher_onboarding.php';
+    } else {
+        $home_link = 'teacher_home.php';
+    }
+}
 if ($role === 'Secretary') $home_link = 'secretary_home.php';
 
 ?>
