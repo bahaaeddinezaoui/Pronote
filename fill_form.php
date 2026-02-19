@@ -1179,13 +1179,19 @@ document.getElementById('obs_submit_btn').addEventListener('click', function() {
 document.getElementById('absence_main_form').addEventListener('submit', function(e) {
     e.preventDefault();
     
+    const selectedSections = document.querySelectorAll('#select_sections .section-btn.selected');
+    if (selectedSections.length === 0) {
+        alert(T.please_select_at_least_one_section || 'Please select at least one section.');
+        return;
+    }
+
     const rows = document.querySelectorAll('#student_table tbody tr');
     for (const row of rows) {
         const first = row.querySelector('.first_name')?.value.trim() || '';
         const last = row.querySelector('.last_name')?.value.trim() || '';
         const motifSel = row.querySelector('select[name="motif_id[]"]')?.value.trim() || '';
         if (!first || !last) {
-            alert('Please fill first and last name for every added student row.');
+            alert(T.please_fill_names || 'Please fill first and last name for every added student row.');
             return;
         }
         if (!motifSel) {
@@ -1195,6 +1201,10 @@ document.getElementById('absence_main_form').addEventListener('submit', function
     }
 
     const formData = new FormData(this);
+    selectedSections.forEach(btn => {
+        formData.append('sections[]', btn.dataset.sectionId);
+    });
+
     const submitBtn = document.getElementById('submit_button');
     submitBtn.disabled = true;
     submitBtn.textContent = (T.submitting || 'Submitting...');

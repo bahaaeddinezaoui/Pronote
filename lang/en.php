@@ -321,6 +321,7 @@ $T = [
     'error_saving_observation' => 'Error saving observation.',
     'error_contacting_server' => 'Error contacting server.',
     'error_submitting_please_retry' => 'Error submitting form. Please try again.',
+    'please_select_at_least_one_section' => 'Please select at least one section.',
 
     // Profile
     'user_profile' => 'User Profile',

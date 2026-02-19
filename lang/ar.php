@@ -321,6 +321,7 @@ $T = [
     'error_saving_observation' => 'خطأ في حفظ الملاحظة.',
     'error_contacting_server' => 'خطأ في الاتصال بالخادم.',
     'error_submitting_please_retry' => 'خطأ في إرسال النموذج. يرجى المحاولة مرة أخرى.',
+    'please_select_at_least_one_section' => 'يرجى اختيار قسم واحد على الأقل.',
 
     // Profile
     'user_profile' => 'الملف الشخصي',
