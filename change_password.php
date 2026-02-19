@@ -28,6 +28,11 @@ if ($newPassword !== $confirmPassword) {
     exit;
 }
 
+if ($oldPassword === $newPassword) {
+    echo json_encode(['success' => false, 'message' => t('password_same_as_old')]);
+    exit;
+}
+
 $servername = "localhost";
 $username_db = "root";
 $password_db = "08212001";

@@ -386,14 +386,15 @@ $T = [
     'nav_login' => 'تسجيل الدخول',
 
     'options_coming_soon' => 'ستتوفر الإعدادات قريبًا.',
-
     'change_password' => 'تغيير كلمة المرور',
     'old_password' => 'كلمة المرور القديمة',
     'new_password' => 'كلمة المرور الجديدة',
     'confirm_new_password' => 'تأكيد كلمة المرور الجديدة',
     'update_password' => 'تحديث كلمة المرور',
-    'fields_required' => 'جميع الحقول مطلوبة.',
     'password_mismatch' => 'كلمتا المرور الجديدتان غير متطابقتين.',
+    'password_same_as_old' => 'يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمة المرور القديمة.',
+    'password_same_as_old_ar' => 'يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمة المرور القديمة.',
+    'fields_required' => 'جميع الحقول مطلوبة.',
     'old_password_incorrect' => 'كلمة المرور القديمة غير صحيحة.',
     'password_change_failed' => 'فشل تغيير كلمة المرور.',
     'password_updated_logout' => 'تم تحديث كلمة المرور بنجاح. سيتم تسجيل خروجك الآن.',
