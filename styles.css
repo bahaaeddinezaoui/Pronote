@@ -29,6 +29,95 @@
     box-sizing: border-box;
 }
 
+.tutorial-open {
+    overflow: hidden;
+}
+
+.tutorial-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    z-index: 10000;
+    display: none;
+}
+
+.tutorial-popover {
+    position: fixed;
+    z-index: 10001;
+    width: 320px;
+    max-width: calc(100vw - 24px);
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+    display: none;
+}
+
+.tutorial-popover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tutorial-popover-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.tutorial-close {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--text-secondary);
+    padding: 0;
+}
+
+.tutorial-popover-body {
+    padding: 12px 14px;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.tutorial-popover-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-top: 1px solid var(--border-color);
+    gap: 10px;
+}
+
+.tutorial-progress {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.tutorial-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.tutorial-actions .btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    width: auto;
+}
+
+.tutorial-highlight {
+    position: relative;
+    z-index: 10002;
+    outline: 3px solid rgba(79, 70, 229, 0.85);
+    outline-offset: 3px;
+    border-radius: 10px;
+    box-shadow: 0 0 0 6px rgba(79, 70, 229, 0.15);
+}
+
 body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     margin: 0;

@@ -23,58 +23,63 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
     </div>
     
     <nav class="sidebar-nav">
-        <a href="<?php echo $home_link; ?>" class="sidebar-link <?php echo ($current_page == basename($home_link)) ? 'active' : ''; ?>">
+        <a href="<?php echo $home_link; ?>" id="navHome" class="sidebar-link <?php echo ($current_page == basename($home_link)) ? 'active' : ''; ?>">
             <span class="icon">🏠</span>
             <span class="text"><?php echo t('nav_home'); ?></span>
         </a>
 
         <?php if ($role === 'Admin'): ?>
-            <a href="admin_dashboard.php" class="sidebar-link <?php echo ($current_page == 'admin_dashboard.php') ? 'active' : ''; ?>">
+            <a href="admin_dashboard.php" id="navSearchSessions" class="sidebar-link <?php echo ($current_page == 'admin_dashboard.php') ? 'active' : ''; ?>">
                 <span class="icon">🔍</span>
                 <span class="text"><?php echo t('nav_search'); ?></span>
             </a>
-            <a href="admin_search_student.php" class="sidebar-link <?php echo ($current_page == 'admin_search_student.php') ? 'active' : ''; ?>">
+            <a href="admin_search_student.php" id="navStudentRecords" class="sidebar-link <?php echo ($current_page == 'admin_search_student.php') ? 'active' : ''; ?>">
                 <span class="icon">📂</span>
                 <span class="text"><?php echo t('nav_student_records'); ?></span>
             </a>
         <?php endif; ?>
 
         <?php if ($role === 'Teacher'): ?>
-            <a href="fill_form.php?tab=absences" class="sidebar-link <?php echo ($current_page == 'fill_form.php' && ($current_tab == 'absences' || $current_tab == '')) ? 'active' : ''; ?>">
+            <a href="fill_form.php?tab=absences" id="navAbsences" class="sidebar-link <?php echo ($current_page == 'fill_form.php' && ($current_tab == 'absences' || $current_tab == '')) ? 'active' : ''; ?>">
                 <span class="icon">📅</span>
                 <span class="text"><?php echo t('absences'); ?></span>
             </a>
-            <a href="fill_form.php?tab=observations" class="sidebar-link <?php echo ($current_page == 'fill_form.php' && $current_tab == 'observations') ? 'active' : ''; ?>">
+            <a href="fill_form.php?tab=observations" id="navObservations" class="sidebar-link <?php echo ($current_page == 'fill_form.php' && $current_tab == 'observations') ? 'active' : ''; ?>">
                 <span class="icon">📝</span>
                 <span class="text"><?php echo t('observations'); ?></span>
             </a>
         <?php endif; ?>
         
         <?php if ($role === 'Secretary'): ?>
-             <a href="insert_student.php" class="sidebar-link <?php echo ($current_page == 'insert_student.php') ? 'active' : ''; ?>">
+             <a href="insert_student.php" id="navInsertStudent" class="sidebar-link <?php echo ($current_page == 'insert_student.php') ? 'active' : ''; ?>">
                 <span class="icon">➕</span>
                 <span class="text"><?php echo t('insert_student'); ?></span>
             </a>
         <?php endif; ?>
 
-        <a href="profile.php" class="sidebar-link <?php echo ($current_page == 'profile.php') ? 'active' : ''; ?>">
+        <a href="profile.php" id="navProfile" class="sidebar-link <?php echo ($current_page == 'profile.php') ? 'active' : ''; ?>">
             <span class="icon">👤</span>
             <span class="text"><?php echo t('nav_profile'); ?></span>
         </a>
     </nav>
 
     <div class="sidebar-footer">
-        <div class="lang-switcher-wrapper">
+        <div class="lang-switcher-wrapper" id="navLanguage">
             <?php include __DIR__ . '/lang/switcher.php'; ?>
         </div>
         
 
-        <a href="options.php" class="sidebar-link">
+        <a href="options.php" id="navOptions" class="sidebar-link">
             <span class="icon">⚙️</span>
             <span class="text"><?php echo t('nav_options'); ?></span>
         </a>
 
-        <a href="logout.php" class="sidebar-link logout-btn">
+        <a href="#" id="restartTutorial" class="sidebar-link">
+            <span class="icon">❔</span>
+            <span class="text"><?php echo t('nav_tutorial'); ?></span>
+        </a>
+
+        <a href="logout.php" id="navLogout" class="sidebar-link logout-btn">
             <span class="icon">🚪</span>
             <span class="text"><?php echo t('nav_logout'); ?></span>
         </a>
@@ -96,6 +101,36 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
         </div>
     <?php endif; ?>
 </div>
+
+<script>
+(function(){
+    window.EduTrackTutorialConfig = {
+        userId: <?php echo json_encode((string)($_SESSION['user_id'] ?? '')); ?>,
+        role: <?php echo json_encode((string)($role ?? '')); ?>,
+        lang: <?php echo json_encode((string)($LANG ?? 'en')); ?>,
+        t: <?php echo json_encode($T ?? []); ?>
+    };
+
+    function bindRestartTutorial() {
+        var btn = document.getElementById('restartTutorial');
+        if (!btn) return;
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (window.EduTrackTutorial && typeof window.EduTrackTutorial.restart === 'function') {
+                window.EduTrackTutorial.restart();
+            } else if (typeof window.startTutorial === 'function') {
+                window.startTutorial(true);
+            }
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bindRestartTutorial);
+    } else {
+        bindRestartTutorial();
+    }
+})();
+</script>
 
 <?php if ($role === 'Admin'): ?>
 <script>

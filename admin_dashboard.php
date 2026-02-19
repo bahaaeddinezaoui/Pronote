@@ -480,7 +480,7 @@ $conn->close();
                 </select>
             </div>
             
-            <button class="search-btn" onclick="searchSessions()">
+            <button class="search-btn" id="adminSearchSessionsBtn" onclick="searchSessions()">
                 <span>🔍</span> <?php echo t('search_sessions'); ?>
             </button>
         </div>

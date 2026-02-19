@@ -641,13 +641,13 @@ if ($class_q) {
 <div class="app-layout">
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
-        <div class="card">
+        <div class="card" id="fillFormCard">
             <div class="card-header">
                 <h2 class="card-title">
                     <span>📅</span> <?php echo t('absentees_observations'); ?>
                 </h2>
                 <?php if ($existing_session_found): ?>
-                    <div class="status-badge status-warning" style="font-size: 0.85rem;">
+                    <div class="status-badge status-warning" id="sessionStatusBadge" style="font-size: 0.85rem;">
                         ⚠️ <?php echo $session_status_message; ?>
                     </div>
                 <?php endif; ?>

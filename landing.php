@@ -645,11 +645,304 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             height: 200%;
         }
 
-        /* Tutorial Steps Animation */
-        .tutorial-steps li {
-            opacity: 0;
-            transform: translateX(-30px);
-            transition: all 0.5s ease;
+        /* Interactive Tutorial Styles */
+        .tutorial-step {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tutorial-step:hover {
+            border-color: #6f42c1;
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(111, 66, 193, 0.1);
+        }
+
+        .tutorial-step.active {
+            border-color: #6f42c1;
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(111, 66, 193, 0.15);
+        }
+
+        .tutorial-step.completed {
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+
+        .tutorial-step.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .tutorial-step-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .tutorial-step-number {
+            background: #6f42c1;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .tutorial-step.completed .tutorial-step-number {
+            background: #10b981;
+        }
+
+        .tutorial-step-title {
+            font-weight: 700;
+            color: #1f1f1f;
+            font-size: 16px;
+        }
+
+        .tutorial-step-preview {
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .tutorial-step-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            margin-left: 60px;
+        }
+
+        .tutorial-step.active .tutorial-step-content {
+            max-height: 500px;
+            padding-top: 16px;
+        }
+
+        .tutorial-step-details {
+            color: #4b5563;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .tutorial-step-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #6f42c1;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .tutorial-step-action:hover {
+            background: #5a34a1;
+            transform: translateY(-2px);
+        }
+
+        /* Progress Bar */
+        .tutorial-progress {
+            background: #f3f4f6;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .tutorial-progress-bar {
+            background: linear-gradient(90deg, #6f42c1, #8c63d9);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .tutorial-progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        /* Demo Simulator */
+        .demo-simulator {
+            background: #fff;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .demo-simulator.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .demo-title {
+            font-weight: 700;
+            color: #1f1f1f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .demo-close {
+            background: #f3f4f6;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .demo-close:hover {
+            background: #e5e7eb;
+        }
+
+        .demo-screen {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 200px;
+        }
+
+        .demo-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 12px;
+            transition: border-color 0.3s ease;
+        }
+
+        .demo-input:focus {
+            outline: none;
+            border-color: #6f42c1;
+        }
+
+        .demo-button {
+            background: #6f42c1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            background: #5a34a1;
+        }
+
+        .demo-feedback {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .demo-feedback.success {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #10b981;
+            display: block;
+        }
+
+        .demo-feedback.info {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #3b82f6;
+            display: block;
+        }
+
+        /* Interactive Checklist */
+        .tutorial-checklist {
+            list-style: none;
+            margin: 16px 0;
+        }
+
+        .tutorial-checklist li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .tutorial-checklist input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #6f42c1;
+            cursor: pointer;
+        }
+
+        /* Try Demo Button */
+        .try-demo-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #6f42c1, #8c63d9);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            text-decoration: none;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .try-demo-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(111, 66, 193, 0.3);
         }
 
         .tutorial-steps li.visible {
@@ -856,34 +1149,158 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             <div class="tutorial-text reveal-left">
                 <h3><?php echo t('quick_start_guide'); ?></h3>
                 
-                <ul class="tutorial-steps">
-                    <li>
-                        <strong><?php echo t('step1_title'); ?></strong>
-                        <span><?php echo t('step1_desc'); ?></span>
-                    </li>
-                    <li>
-                        <strong><?php echo t('step2_title'); ?></strong>
-                        <span><?php echo t('step2_desc'); ?></span>
-                    </li>
-                    <li>
-                        <strong><?php echo t('step3_title'); ?></strong>
-                        <span><?php echo t('step3_desc'); ?></span>
-                    </li>
-                    <li>
-                        <strong><?php echo t('step4_title'); ?></strong>
-                        <span><?php echo t('step4_desc'); ?></span>
-                    </li>
-                    <li>
-                        <strong><?php echo t('step5_title'); ?></strong>
-                        <span><?php echo t('step5_desc'); ?></span>
-                    </li>
+                <button class="try-demo-btn" id="tryDemoBtn">
+                    <span>🎮</span>
+                    <?php echo t('try_demo') ?: 'Try Interactive Demo'; ?>
+                </button>
+
+                <div class="demo-simulator" id="demoSimulator">
+                    <div class="demo-header">
+                        <div class="demo-title">
+                            <span>🎯</span>
+                            <span id="demoTitle"><?php echo t('demo_login_title') ?: 'Login Demo'; ?></span>
+                        </div>
+                        <button class="demo-close" id="closeDemo">×</button>
+                    </div>
+                    <div class="demo-screen" id="demoScreen">
+                        <!-- Demo content will be dynamically inserted here -->
+                    </div>
+                    <div class="demo-feedback" id="demoFeedback"></div>
+                </div>
+
+                <div class="tutorial-progress-text" id="progressText">
+                    <?php echo t('tutorial_progress') ?: 'Complete all 5 steps to finish the tutorial'; ?>
+                </div>
+                <div class="tutorial-progress">
+                    <div class="tutorial-progress-bar" id="progressBar"></div>
+                </div>
+                
+                <div class="interactive-tutorial" id="interactiveTutorial">
+                    <div class="tutorial-step" data-step="1">
+                        <div class="tutorial-step-header">
+                            <div class="tutorial-step-number">1</div>
+                            <div>
+                                <div class="tutorial-step-title"><?php echo t('step1_title'); ?></div>
+                                <div class="tutorial-step-preview"><?php echo t('step1_preview') ?: 'Click to learn about logging in'; ?></div>
+                            </div>
+                        </div>
+                        <div class="tutorial-step-content">
+                            <div class="tutorial-step-details"><?php echo t('step1_desc'); ?></div>
+                            <ul class="tutorial-checklist">
+                                <li><input type="checkbox" class="tutorial-check" data-check="1"> <?php echo t('check_username') ?: 'Enter your username'; ?></li>
+                                <li><input type="checkbox" class="tutorial-check" data-check="2"> <?php echo t('check_password') ?: 'Enter your secure password'; ?></li>
+                                <li><input type="checkbox" class="tutorial-check" data-check="3"> <?php echo t('check_role') ?: 'Select your role (Teacher/Admin)'; ?></li>
+                            </ul>
+                            <button class="tutorial-step-action" onclick="showDemo('login')">
+                                <span>▶</span> <?php echo t('try_it_now') ?: 'Try it now'; ?>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tutorial-step" data-step="2">
+                        <div class="tutorial-step-header">
+                            <div class="tutorial-step-number">2</div>
+                            <div>
+                                <div class="tutorial-step-title"><?php echo t('step2_title'); ?></div>
+                                <div class="tutorial-step-preview"><?php echo t('step2_preview') ?: 'Explore your personalized dashboard'; ?></div>
+                            </div>
+                        </div>
+                        <div class="tutorial-step-content">
+                            <div class="tutorial-step-details"><?php echo t('step2_desc'); ?></div>
+                            <ul class="tutorial-checklist">
+                                <li><input type="checkbox" class="tutorial-check" data-check="1"> <?php echo t('check_stats') ?: 'View key statistics'; ?></li>
+                                <li><input type="checkbox" class="tutorial-check" data-check="2"> <?php echo t('check_activities') ?: 'Review recent activities'; ?></li>
+                                <li><input type="checkbox" class="tutorial-check" data-check="3"> <?php echo t('check_navigation') ?: 'Navigate using the sidebar'; ?></li>
+                            </ul>
+                            <button class="tutorial-step-action" onclick="showDemo('dashboard')">
+                                <span>▶</span> <?php echo t('explore_demo') ?: 'Explore demo'; ?>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tutorial-step" data-step="3">
+                        <div class="tutorial-step-header">
+                            <div class="tutorial-step-number">3</div>
+                            <div>
+                                <div class="tutorial-step-title"><?php echo t('step3_title'); ?></div>
+                                <div class="tutorial-step-preview"><?php echo t('step3_preview') ?: 'Manage student records'; ?></div>
+                            </div>
+                        </div>
+                        <div class="tutorial-step-content">
+                            <div class="tutorial-step-details"><?php echo t('step3_desc'); ?></div>
+                            <ul class="tutorial-checklist">
+                                <li><input type="checkbox" class="tutorial-check" data-check="1"> <?php echo t('check_observations') ?: 'Create observations'; ?></li>
+                                <li><input type="checkbox" class="tutorial-check" data-check="2"> <?php echo t('check_absences') ?: 'Record absences'; ?></li>
+                                <li><input type="checkbox" class="tutorial-check" data-check="3"> <?php echo t('check_student_info') ?: 'Update student information'; ?></li>
+                            </ul>
+                            <button class="tutorial-step-action" onclick="showDemo('records')">
+                                <span>▶</span> <?php echo t('see_how') ?: 'See how it works'; ?>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tutorial-step" data-step="4">
+                        <div class="tutorial-step-header">
+                            <div class="tutorial-step-number">4</div>
+                            <div>
+                                <div class="tutorial-step-title"><?php echo t('step4_title'); ?></div>
+                                <div class="tutorial-step-preview"><?php echo t('step4_preview') ?: 'Find what you need quickly'; ?></div>
+                            </div>
+                        </div>
+                        <div class="tutorial-step-content">
+                            <div class="tutorial-step-details"><?php echo t('step4_desc'); ?></div>
+                            <ul class="tutorial-checklist">
+                                <li><input type="checkbox" class="tutorial-check" data-check="1"> <?php echo t('check_search_student') ?: 'Search by student name'; ?></li>
+                                <li><input type="checkbox" class="tutorial-check" data-check="2"> <?php echo t('check_filter_date') ?: 'Filter by date range'; ?></li>
+                                <li><input type="checkbox" class="tutorial-check" data-check="3"> <?php echo t('check_filter_section') ?: 'Filter by section/major'; ?></li>
+                            </ul>
+                            <button class="tutorial-step-action" onclick="showDemo('search')">
+                                <span>▶</span> <?php echo t('try_search') ?: 'Try search demo'; ?>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tutorial-step" data-step="5">
+                        <div class="tutorial-step-header">
+                            <div class="tutorial-step-number">5</div>
+                            <div>
+                                <div class="tutorial-step-title"><?php echo t('step5_title'); ?></div>
+                                <div class="tutorial-step-preview"><?php echo t('step5_preview') ?: 'Stay updated with notifications'; ?></div>
+                            </div>
+                        </div>
+                        <div class="tutorial-step-content">
+                            <div class="tutorial-step-details"><?php echo t('step5_desc'); ?></div>
+                            <ul class="tutorial-checklist">
+                                <li><input type="checkbox" class="tutorial-check" data-check="1"> <?php echo t('check_notifications') ?: 'View real-time notifications'; ?></li>
+                                <li><input type="checkbox" class="tutorial-check" data-check="2"> <?php echo t('check_profile') ?: 'Update your profile'; ?></li>
+                                <li><input type="checkbox" class="tutorial-check" data-check="3"> <?php echo t('check_ready') ?: 'Ready to get started!'; ?></li>
+                            </ul>
+                            <a href="login.php" class="tutorial-step-action" style="text-decoration: none;">
+                                <span>🚀</span> <?php echo t('get_started_now') ?: 'Get Started Now'; ?>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hidden original list for fallback -->
+                <ul class="tutorial-steps" style="display: none;">
+                    <li><strong><?php echo t('step1_title'); ?></strong><span><?php echo t('step1_desc'); ?></span></li>
+                    <li><strong><?php echo t('step2_title'); ?></strong><span><?php echo t('step2_desc'); ?></span></li>
+                    <li><strong><?php echo t('step3_title'); ?></strong><span><?php echo t('step3_desc'); ?></span></li>
+                    <li><strong><?php echo t('step4_title'); ?></strong><span><?php echo t('step4_desc'); ?></span></li>
+                    <li><strong><?php echo t('step5_title'); ?></strong><span><?php echo t('step5_desc'); ?></span></li>
                 </ul>
             </div>
 
             <div class="tutorial-visual reveal-right">
-                <div class="tutorial-visual-icon">🚀</div>
-                <h4><?php echo t('ready_to_start'); ?></h4>
-                <p><?php echo t('ready_to_start_desc'); ?></p>
+                <div class="tutorial-visual-icon" id="tutorialIcon">🚀</div>
+                <h4 id="tutorialStatus"><?php echo t('ready_to_start'); ?></h4>
+                <p id="tutorialStatusDesc"><?php echo t('ready_to_start_desc'); ?></p>
+                <div id="completionBadge" style="display: none; margin-top: 20px;">
+                    <div style="background: #10b981; color: white; padding: 12px 24px; border-radius: 50px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
+                        <span>🎉</span> <?php echo t('tutorial_complete') ?: 'Tutorial Complete!'; ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1017,6 +1434,327 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             }
         `;
         document.head.appendChild(style);
+
+        // Interactive Tutorial System
+        (function() {
+            const steps = document.querySelectorAll('.tutorial-step');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const completionBadge = document.getElementById('completionBadge');
+            const tutorialIcon = document.getElementById('tutorialIcon');
+            const tutorialStatus = document.getElementById('tutorialStatus');
+            const tutorialStatusDesc = document.getElementById('tutorialStatusDesc');
+            const demoSimulator = document.getElementById('demoSimulator');
+            const demoScreen = document.getElementById('demoScreen');
+            const demoTitle = document.getElementById('demoTitle');
+            const demoFeedback = document.getElementById('demoFeedback');
+            const tryDemoBtn = document.getElementById('tryDemoBtn');
+            const closeDemoBtn = document.getElementById('closeDemo');
+            
+            let completedSteps = new Set();
+            const STORAGE_KEY = 'enote_tutorial_progress';
+            
+            // Load saved progress
+            function loadProgress() {
+                try {
+                    const saved = localStorage.getItem(STORAGE_KEY);
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        completedSteps = new Set(data.completedSteps || []);
+                        
+                        // Restore checkboxes
+                        data.checkboxes?.forEach(check => {
+                            const checkbox = document.querySelector(`.tutorial-check[data-check="${check.check}"]`);
+                            if (checkbox && checkbox.closest('.tutorial-step').dataset.step === check.step) {
+                                checkbox.checked = check.checked;
+                            }
+                        });
+                        
+                        updateProgress();
+                        markCompletedSteps();
+                    }
+                } catch (e) {
+                    console.log('Could not load tutorial progress');
+                }
+            }
+            
+            // Save progress
+            function saveProgress() {
+                try {
+                    const checkboxes = [];
+                    document.querySelectorAll('.tutorial-check').forEach(cb => {
+                        checkboxes.push({
+                            step: cb.closest('.tutorial-step').dataset.step,
+                            check: cb.dataset.check,
+                            checked: cb.checked
+                        });
+                    });
+                    
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                        completedSteps: Array.from(completedSteps),
+                        checkboxes: checkboxes
+                    }));
+                } catch (e) {
+                    // Ignore storage errors
+                }
+            }
+            
+            // Update progress bar
+            function updateProgress() {
+                const percent = (completedSteps.size / steps.length) * 100;
+                progressBar.style.width = percent + '%';
+                progressText.textContent = `Step ${completedSteps.size} of ${steps.length} completed`;
+                
+                if (completedSteps.size === steps.length) {
+                    completionBadge.style.display = 'block';
+                    tutorialIcon.textContent = '🎉';
+                    tutorialStatus.textContent = 'Congratulations!';
+                    tutorialStatusDesc.textContent = 'You\'ve completed the tutorial. You\'re ready to use eNote!';
+                    progressText.textContent = 'Tutorial Complete! 🎉';
+                }
+            }
+            
+            // Mark completed steps visually
+            function markCompletedSteps() {
+                steps.forEach(step => {
+                    const stepNum = step.dataset.step;
+                    if (completedSteps.has(stepNum)) {
+                        step.classList.add('completed');
+                    }
+                });
+            }
+            
+            // Check if step is complete (all checkboxes checked)
+            function checkStepCompletion(step) {
+                const checkboxes = step.querySelectorAll('.tutorial-check');
+                const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                
+                if (allChecked && checkboxes.length > 0) {
+                    step.classList.add('completed');
+                    completedSteps.add(step.dataset.step);
+                    saveProgress();
+                    updateProgress();
+                    
+                    // Auto-expand next step
+                    const nextStep = document.querySelector(`.tutorial-step[data-step="${parseInt(step.dataset.step) + 1}"]`);
+                    if (nextStep && !completedSteps.has(nextStep.dataset.step)) {
+                        setTimeout(() => {
+                            steps.forEach(s => s.classList.remove('active'));
+                            nextStep.classList.add('active');
+                            nextStep.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }, 500);
+                    }
+                }
+            }
+            
+            // Step click handlers
+            steps.forEach(step => {
+                step.addEventListener('click', function(e) {
+                    // Don't collapse if clicking inside content
+                    if (e.target.closest('.tutorial-step-content') && !e.target.closest('.tutorial-step-action')) {
+                        return;
+                    }
+                    
+                    // Toggle active state
+                    const isActive = this.classList.contains('active');
+                    steps.forEach(s => s.classList.remove('active'));
+                    
+                    if (!isActive) {
+                        this.classList.add('active');
+                    }
+                });
+            });
+            
+            // Checkbox change handlers
+            document.querySelectorAll('.tutorial-check').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const step = this.closest('.tutorial-step');
+                    checkStepCompletion(step);
+                    saveProgress();
+                });
+            });
+            
+            // Demo Simulator
+            window.showDemo = function(type) {
+                demoSimulator.classList.add('active');
+                demoFeedback.className = 'demo-feedback';
+                demoFeedback.style.display = 'none';
+                
+                switch(type) {
+                    case 'login':
+                        demoTitle.textContent = 'Login Demo';
+                        demoScreen.innerHTML = `
+                            <div style="max-width: 300px; margin: 0 auto;">
+                                <h4 style="margin-bottom: 20px; color: #6f42c1;">eNote Login</h4>
+                                <input type="text" class="demo-input" placeholder="Username" id="demoUsername">
+                                <input type="password" class="demo-input" placeholder="Password" id="demoPassword">
+                                <select class="demo-input" id="demoRole">
+                                    <option value="">Select Role</option>
+                                    <option value="teacher">Teacher</option>
+                                    <option value="admin">Administrator</option>
+                                </select>
+                                <button class="demo-button" onclick="simulateLogin()">Login</button>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'dashboard':
+                        demoTitle.textContent = 'Dashboard Demo';
+                        demoScreen.innerHTML = `
+                            <div style="text-align: left;">
+                                <h4 style="margin-bottom: 16px; color: #6f42c1;">Welcome, Teacher! 👋</h4>
+                                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px;">
+                                    <div style="background: white; padding: 16px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 24px; font-weight: 700; color: #6f42c1;">156</div>
+                                        <div style="font-size: 12px; color: #6b7280;">Students</div>
+                                    </div>
+                                    <div style="background: white; padding: 16px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 24px; font-weight: 700; color: #10b981;">12</div>
+                                        <div style="font-size: 12px; color: #6b7280;">Observations</div>
+                                    </div>
+                                    <div style="background: white; padding: 16px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 24px; font-weight: 700; color: #f59e0b;">8</div>
+                                        <div style="font-size: 12px; color: #6b7280;">Absences</div>
+                                    </div>
+                                    <div style="background: white; padding: 16px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 24px; font-weight: 700; color: #3b82f6;">3</div>
+                                        <div style="font-size: 12px; color: #6b7280;">Majors</div>
+                                    </div>
+                                </div>
+                                <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                                    <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">Recent Activity</div>
+                                    <div style="font-size: 14px;">📋 New observation added for Student #1024</div>
+                                </div>
+                                <p style="font-size: 13px; color: #6b7280; text-align: center;">This is how your personalized dashboard will look!</p>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'records':
+                        demoTitle.textContent = 'Records Demo';
+                        demoScreen.innerHTML = `
+                            <div style="text-align: left;">
+                                <h4 style="margin-bottom: 16px; color: #6f42c1;">Student Records</h4>
+                                <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600;">Ahmed Benali</div>
+                                        <div style="font-size: 12px; color: #6b7280;">EOA 1 - Section A</div>
+                                    </div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button class="demo-button" style="padding: 6px 12px; font-size: 12px;" onclick="showDemoFeedback('Observation recorded!')">📝</button>
+                                        <button class="demo-button" style="padding: 6px 12px; font-size: 12px; background: #f59e0b;" onclick="showDemoFeedback('Absence marked!')">❌</button>
+                                    </div>
+                                </div>
+                                <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600;">Sarah Mansouri</div>
+                                        <div style="font-size: 12px; color: #6b7280;">EOA 1 - Section A</div>
+                                    </div>
+                                    <div style="display: flex; gap: 8px;">
+                                        <button class="demo-button" style="padding: 6px 12px; font-size: 12px;" onclick="showDemoFeedback('Observation recorded!')">📝</button>
+                                        <button class="demo-button" style="padding: 6px 12px; font-size: 12px; background: #f59e0b;" onclick="showDemoFeedback('Absence marked!')">❌</button>
+                                    </div>
+                                </div>
+                                <p style="font-size: 13px; color: #6b7280; text-align: center; margin-top: 16px;">Click the buttons to see how recording works!</p>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'search':
+                        demoTitle.textContent = 'Search Demo';
+                        demoScreen.innerHTML = `
+                            <div style="text-align: left;">
+                                <h4 style="margin-bottom: 16px; color: #6f42c1;">Search Students</h4>
+                                <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                                    <input type="text" class="demo-input" style="margin-bottom: 0;" placeholder="Search by name..." id="demoSearchInput">
+                                    <button class="demo-button" onclick="simulateSearch()">🔍</button>
+                                </div>
+                                <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+                                    <select class="demo-input" style="flex: 1; min-width: 120px; margin-bottom: 0;">
+                                        <option>All Categories</option>
+                                        <option>EOA 1</option>
+                                        <option>EOA 2</option>
+                                    </select>
+                                    <select class="demo-input" style="flex: 1; min-width: 120px; margin-bottom: 0;">
+                                        <option>All Sections</option>
+                                        <option>Section A</option>
+                                        <option>Section B</option>
+                                    </select>
+                                </div>
+                                <div id="demoSearchResults"></div>
+                            </div>
+                        `;
+                        break;
+                }
+                
+                demoSimulator.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            };
+            
+            // Demo simulation functions
+            window.simulateLogin = function() {
+                const username = document.getElementById('demoUsername')?.value;
+                const password = document.getElementById('demoPassword')?.value;
+                const role = document.getElementById('demoRole')?.value;
+                
+                if (username && password && role) {
+                    showDemoFeedback('✅ Login successful! Redirecting to dashboard...', 'success');
+                    setTimeout(() => {
+                        demoScreen.innerHTML = `
+                            <div style="text-align: center; padding: 40px;">
+                                <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+                                <h4 style="color: #10b981;">Welcome back!</h4>
+                                <p style="color: #6b7280; font-size: 14px;">This is a demo. Click "Get Started" to use the real app!</p>
+                            </div>
+                        `;
+                    }, 1500);
+                } else {
+                    showDemoFeedback('⚠️ Please fill in all fields', 'info');
+                }
+            };
+            
+            window.simulateSearch = function() {
+                const input = document.getElementById('demoSearchInput');
+                const results = document.getElementById('demoSearchResults');
+                
+                if (input && results) {
+                    results.innerHTML = `
+                        <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+                            <div style="font-weight: 600;">Ahmed Benali</div>
+                            <div style="font-size: 12px; color: #6b7280;">EOA 1 - Section A • 3 absences • 2 observations</div>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 8px;">
+                            <div style="font-weight: 600;">Ahmed Smith</div>
+                            <div style="font-size: 12px; color: #6b7280;">EOA 2 - Section B • 1 absence • 0 observations</div>
+                        </div>
+                    `;
+                    showDemoFeedback('✅ Found 2 students matching your search', 'success');
+                }
+            };
+            
+            window.showDemoFeedback = function(message, type = 'info') {
+                demoFeedback.textContent = message;
+                demoFeedback.className = 'demo-feedback ' + type;
+            };
+            
+            // Demo button handlers
+            if (tryDemoBtn) {
+                tryDemoBtn.addEventListener('click', () => {
+                    showDemo('login');
+                    // Expand first step
+                    steps.forEach(s => s.classList.remove('active'));
+                    document.querySelector('.tutorial-step[data-step="1"]').classList.add('active');
+                });
+            }
+            
+            if (closeDemoBtn) {
+                closeDemoBtn.addEventListener('click', () => {
+                    demoSimulator.classList.remove('active');
+                });
+            }
+            
+            // Initialize
+            loadProgress();
+        })();
 
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
