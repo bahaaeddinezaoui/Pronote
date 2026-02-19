@@ -382,6 +382,7 @@ $T = [
     'nav_options' => 'الإعدادات',
     'nav_tutorial' => 'الشرح',
     'nav_logout' => 'تسجيل الخروج',
+    'logout_disabled_during_onboarding' => 'تسجيل الخروج معطل خلال الإعداد الأولي. يرجى إكمال عملية الإعداد.',
     'nav_login' => 'تسجيل الدخول',
 
     'options_coming_soon' => 'ستتوفر الإعدادات قريبًا.',

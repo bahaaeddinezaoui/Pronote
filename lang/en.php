@@ -382,6 +382,7 @@ $T = [
     'nav_options' => 'Options',
     'nav_tutorial' => 'Tutorial',
     'nav_logout' => 'Logout',
+    'logout_disabled_during_onboarding' => 'Logout is disabled during onboarding. Please complete the setup process.',
     'nav_login' => 'Login',
 
     'options_coming_soon' => 'Options will be available soon.',

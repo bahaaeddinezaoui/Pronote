@@ -537,6 +537,17 @@ html[dir="rtl"] .main-content {
     color: var(--danger-hover);
 }
 
+.sidebar-footer .logout-btn.disabled {
+    color: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.sidebar-footer .logout-btn.disabled:hover {
+    background-color: transparent;
+    color: #9ca3af;
+}
+
 /* Notifications Styles */
 .notification-container {
     position: fixed;

@@ -79,7 +79,8 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
             <span class="text"><?php echo t('nav_tutorial'); ?></span>
         </a>
 
-        <a href="logout.php" id="navLogout" class="sidebar-link logout-btn">
+        <a href="logout.php" id="navLogout" class="sidebar-link logout-btn <?php if ($role === 'Teacher' && !empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) echo 'disabled'; ?>" 
+           <?php if ($role === 'Teacher' && !empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) echo 'onclick="return false;" title="' . t('logout_disabled_during_onboarding') . '"'; ?>>
             <span class="icon">🚪</span>
             <span class="text"><?php echo t('nav_logout'); ?></span>
         </a>
