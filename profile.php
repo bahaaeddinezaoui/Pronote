@@ -42,7 +42,7 @@ $photoData = null;
 
 if ($role === 'Teacher') {
     $stmt = $conn->prepare("
-        SELECT t.TEACHER_FIRST_NAME_EN, t.TEACHER_LAST_NAME_EN, g.GRADE_NAME_EN, t.TEACHER_PHOTO
+        SELECT t.TEACHER_FIRST_NAME_EN, t.TEACHER_LAST_NAME_EN, t.TEACHER_FIRST_NAME_AR, t.TEACHER_LAST_NAME_AR, g.GRADE_NAME_EN, g.GRADE_NAME_AR, t.TEACHER_PHOTO
         FROM teacher t
         LEFT JOIN grade g ON t.TEACHER_GRADE_ID = g.GRADE_ID
         WHERE t.USER_ID = ?
@@ -52,16 +52,17 @@ if ($role === 'Teacher') {
     $result = $stmt->get_result();
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $first = $row['TEACHER_FIRST_NAME_EN'] ?? '';
-        $last = $row['TEACHER_LAST_NAME_EN'] ?? '';
+        $first = ($LANG === 'ar' && !empty($row['TEACHER_FIRST_NAME_AR'])) ? $row['TEACHER_FIRST_NAME_AR'] : ($row['TEACHER_FIRST_NAME_EN'] ?? '');
+        $last = ($LANG === 'ar' && !empty($row['TEACHER_LAST_NAME_AR'])) ? $row['TEACHER_LAST_NAME_AR'] : ($row['TEACHER_LAST_NAME_EN'] ?? '');
         $fullName = trim(htmlspecialchars($first . ' ' . $last)) ?: "Teacher";
-        $grade = htmlspecialchars($row['GRADE_NAME_EN'] ?? 'N/A');
+        $gradeName = ($LANG === 'ar' && !empty($row['GRADE_NAME_AR'])) ? $row['GRADE_NAME_AR'] : ($row['GRADE_NAME_EN'] ?? 'N/A');
+        $grade = htmlspecialchars($gradeName);
         $photoData = $row['TEACHER_PHOTO'];
     }
     $stmt->close();
 } elseif ($role === 'Admin') {
     $stmt = $conn->prepare("
-        SELECT a.ADMINISTRATOR_FIRST_NAME_EN, a.ADMINISTRATOR_LAST_NAME_EN, g.GRADE_NAME_EN, a.ADMINISTRATOR_POSITION, a.ADMINISTRATOR_PHOTO
+        SELECT a.ADMINISTRATOR_FIRST_NAME_EN, a.ADMINISTRATOR_LAST_NAME_EN, a.ADMINISTRATOR_FIRST_NAME_AR, a.ADMINISTRATOR_LAST_NAME_AR, g.GRADE_NAME_EN, g.GRADE_NAME_AR, a.ADMINISTRATOR_POSITION, a.ADMINISTRATOR_PHOTO
         FROM administrator a
         LEFT JOIN grade g ON a.ADMINISTRATOR_GRADE_ID = g.GRADE_ID
         WHERE a.USER_ID = ?
@@ -71,17 +72,18 @@ if ($role === 'Teacher') {
     $result = $stmt->get_result();
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $first = $row['ADMINISTRATOR_FIRST_NAME_EN'] ?? '';
-        $last = $row['ADMINISTRATOR_LAST_NAME_EN'] ?? '';
+        $first = ($LANG === 'ar' && !empty($row['ADMINISTRATOR_FIRST_NAME_AR'])) ? $row['ADMINISTRATOR_FIRST_NAME_AR'] : ($row['ADMINISTRATOR_FIRST_NAME_EN'] ?? '');
+        $last = ($LANG === 'ar' && !empty($row['ADMINISTRATOR_LAST_NAME_AR'])) ? $row['ADMINISTRATOR_LAST_NAME_AR'] : ($row['ADMINISTRATOR_LAST_NAME_EN'] ?? '');
         $fullName = trim(htmlspecialchars($first . ' ' . $last)) ?: "Administrator";
-        $grade = htmlspecialchars($row['GRADE_NAME_EN'] ?? 'N/A');
+        $gradeName = ($LANG === 'ar' && !empty($row['GRADE_NAME_AR'])) ? $row['GRADE_NAME_AR'] : ($row['GRADE_NAME_EN'] ?? 'N/A');
+        $grade = htmlspecialchars($gradeName);
         $position = htmlspecialchars($row['ADMINISTRATOR_POSITION'] ?? '');
         $photoData = $row['ADMINISTRATOR_PHOTO'];
     }
     $stmt->close();
 } elseif ($role === 'Secretary') {
     $stmt = $conn->prepare("
-        SELECT s.SECRETARY_FIRST_NAME_EN, s.SECRETARY_LAST_NAME_EN, g.GRADE_NAME_EN, s.SECRETARY_POSITION, s.SECRETARY_PHOTO
+        SELECT s.SECRETARY_FIRST_NAME_EN, s.SECRETARY_LAST_NAME_EN, s.SECRETARY_FIRST_NAME_AR, s.SECRETARY_LAST_NAME_AR, g.GRADE_NAME_EN, g.GRADE_NAME_AR, s.SECRETARY_POSITION, s.SECRETARY_PHOTO
         FROM secretary s
         LEFT JOIN grade g ON s.SECRETARY_GRADE_ID = g.GRADE_ID
         WHERE s.USER_ID = ?
@@ -91,10 +93,11 @@ if ($role === 'Teacher') {
     $result = $stmt->get_result();
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $first = $row['SECRETARY_FIRST_NAME_EN'] ?? '';
-        $last = $row['SECRETARY_LAST_NAME_EN'] ?? '';
+        $first = ($LANG === 'ar' && !empty($row['SECRETARY_FIRST_NAME_AR'])) ? $row['SECRETARY_FIRST_NAME_AR'] : ($row['SECRETARY_FIRST_NAME_EN'] ?? '');
+        $last = ($LANG === 'ar' && !empty($row['SECRETARY_LAST_NAME_AR'])) ? $row['SECRETARY_LAST_NAME_AR'] : ($row['SECRETARY_LAST_NAME_EN'] ?? '');
         $fullName = trim(htmlspecialchars($first . ' ' . $last)) ?: "Secretary";
-        $grade = htmlspecialchars($row['GRADE_NAME_EN'] ?? 'N/A');
+        $gradeName = ($LANG === 'ar' && !empty($row['GRADE_NAME_AR'])) ? $row['GRADE_NAME_AR'] : ($row['GRADE_NAME_EN'] ?? 'N/A');
+        $grade = htmlspecialchars($gradeName);
         $position = htmlspecialchars($row['SECRETARY_POSITION'] ?? '');
         $photoData = $row['SECRETARY_PHOTO'];
     }

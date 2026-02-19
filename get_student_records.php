@@ -234,6 +234,8 @@ try {
             tmao.OBSERVATION_NOTE,
             t.TEACHER_FIRST_NAME_EN,
             t.TEACHER_LAST_NAME_EN,
+            t.TEACHER_FIRST_NAME_AR,
+            t.TEACHER_LAST_NAME_AR,
             ss.STUDY_SESSION_DATE
         FROM teacher_makes_an_observation_for_a_student tmao
         JOIN teacher t ON tmao.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
@@ -258,16 +260,22 @@ try {
 
     $observations = [];
     while ($row = $observationsResult->fetch_assoc()) {
+        $teacherFirstName = ($lang === 'ar' && !empty($row['TEACHER_FIRST_NAME_AR'])) ? $row['TEACHER_FIRST_NAME_AR'] : $row['TEACHER_FIRST_NAME_EN'];
+        $teacherLastName = ($lang === 'ar' && !empty($row['TEACHER_LAST_NAME_AR'])) ? $row['TEACHER_LAST_NAME_AR'] : $row['TEACHER_LAST_NAME_EN'];
         $observations[] = [
             'observation_id' => $row['OBSERVATION_ID'],
             'observation_date_and_time' => $row['OBSERVATION_DATE_AND_TIME'],
             'observation_motif' => $row['OBSERVATION_MOTIF'],
             'observation_note' => $row['OBSERVATION_NOTE'],
-            'teacher_name' => htmlspecialchars($row['TEACHER_FIRST_NAME_EN'] . ' ' . $row['TEACHER_LAST_NAME_EN']),
+            'teacher_name' => htmlspecialchars($teacherFirstName . ' ' . $teacherLastName),
             'study_session_date' => $row['STUDY_SESSION_DATE']
         ];
     }
     $stmt->close();
+
+    // Prepare student name based on language
+    $studentFirstName = ($lang === 'ar' && !empty($student['STUDENT_FIRST_NAME_AR'])) ? $student['STUDENT_FIRST_NAME_AR'] : $student['STUDENT_FIRST_NAME_EN'];
+    $studentLastName = ($lang === 'ar' && !empty($student['STUDENT_LAST_NAME_AR'])) ? $student['STUDENT_LAST_NAME_AR'] : $student['STUDENT_LAST_NAME_EN'];
 
     // Prepare dynamic values based on language
     $grade = ($lang === 'ar') ? $student['GRADE_NAME_AR'] : $student['GRADE_NAME_EN'];
@@ -296,8 +304,10 @@ try {
         'success' => true,
         'student' => [
             'serial_number' => htmlspecialchars($student['STUDENT_SERIAL_NUMBER']),
-            'first_name' => htmlspecialchars($student['STUDENT_FIRST_NAME_EN']),
-            'last_name' => htmlspecialchars($student['STUDENT_LAST_NAME_EN']),
+            'first_name' => htmlspecialchars($studentFirstName),
+            'last_name' => htmlspecialchars($studentLastName),
+            'first_name_en' => htmlspecialchars($student['STUDENT_FIRST_NAME_EN'] ?? ''),
+            'last_name_en' => htmlspecialchars($student['STUDENT_LAST_NAME_EN'] ?? ''),
             'first_name_ar' => htmlspecialchars($student['STUDENT_FIRST_NAME_AR'] ?? ''),
             'last_name_ar' => htmlspecialchars($student['STUDENT_LAST_NAME_AR'] ?? ''),
             'sex' => htmlspecialchars($student['STUDENT_SEX'] ?? ''),

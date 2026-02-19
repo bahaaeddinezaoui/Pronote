@@ -16,30 +16,36 @@ if ($conn->connect_error) {
 // --- GET PARAMETERS ---
 $major_id = isset($_GET['major_id']) ? $_GET['major_id'] : null;
 $teacher_serial = isset($_GET['teacher_serial']) ? $_GET['teacher_serial'] : null;
+$category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 
-if (!$major_id || !$teacher_serial) {
+if (!$major_id || !$teacher_serial || !$category_id) {
     echo json_encode(["success" => false, "message" => "Missing parameters"]);
     exit;
 }
 
 // --- QUERY ---
-// Get sections linked to the selected major (and ensure the teacher teaches that major)
+// Get sections linked to the selected major AND category (and ensure the teacher teaches that major)
 $sql = $conn->prepare("
-    SELECT DISTINCT SE.SECTION_ID, SE.SECTION_NAME_EN
+    SELECT DISTINCT SE.SECTION_ID, SE.SECTION_NAME_EN, SE.SECTION_NAME_AR
     FROM SECTION SE
     INNER JOIN STUDIES SD ON SD.SECTION_ID = SE.SECTION_ID
     INNER JOIN TEACHES TH ON TH.MAJOR_ID = SD.MAJOR_ID
-    WHERE TH.TEACHER_SERIAL_NUMBER = ? AND SD.MAJOR_ID = ?
+    WHERE TH.TEACHER_SERIAL_NUMBER = ? AND SD.MAJOR_ID = ? AND SE.CATEGORY_ID = ?
+    ORDER BY SE.SECTION_NAME_EN
 ");
-$sql->bind_param("ss", $teacher_serial, $major_id);
+$sql->bind_param("sss", $teacher_serial, $major_id, $category_id);
 $sql->execute();
 $result = $sql->get_result();
 
+session_start();
+require_once __DIR__ . '/lang/i18n.php';
+
 $sections = [];
 while ($row = $result->fetch_assoc()) {
+    $sectionName = ($LANG === 'ar' && !empty($row['SECTION_NAME_AR'])) ? $row['SECTION_NAME_AR'] : $row['SECTION_NAME_EN'];
     $sections[] = [
         "id" => $row["SECTION_ID"],
-        "name" => $row["SECTION_NAME_EN"]
+        "name" => $sectionName
     ];
 }
 

@@ -44,7 +44,7 @@ $teacherSerial = $rowTeacher['TEACHER_SERIAL_NUMBER'];
 
 // First try to get sections based on teacher's assignments
 $sql = $conn->prepare("
-    SELECT DISTINCT SE.SECTION_ID, SE.SECTION_NAME_EN
+    SELECT DISTINCT SE.SECTION_ID, SE.SECTION_NAME_EN, SE.SECTION_NAME_AR
     FROM SECTION SE
     INNER JOIN STUDIES SD ON SD.SECTION_ID = SE.SECTION_ID
     INNER JOIN TEACHES TH ON TH.MAJOR_ID = SD.MAJOR_ID
@@ -58,9 +58,10 @@ $res = $sql->get_result();
 
 $sections = [];
 while ($r = $res->fetch_assoc()) {
+    $sectionName = ($LANG === 'ar' && !empty($r['SECTION_NAME_AR'])) ? $r['SECTION_NAME_AR'] : $r['SECTION_NAME_EN'];
     $sections[] = [
         'id' => (int)$r['SECTION_ID'],
-        'name' => $r['SECTION_NAME_EN'],
+        'name' => $sectionName,
     ];
 }
 $sql->close();
@@ -68,7 +69,7 @@ $sql->close();
 // If no sections found (teacher has no assignments for this category), get all sections for the category
 if (empty($sections)) {
     $sqlAll = $conn->prepare("
-        SELECT SECTION_ID, SECTION_NAME_EN 
+        SELECT SECTION_ID, SECTION_NAME_EN, SECTION_NAME_AR 
         FROM SECTION 
         WHERE CATEGORY_ID = ?
         ORDER BY SECTION_NAME_EN
@@ -78,9 +79,10 @@ if (empty($sections)) {
     $resAll = $sqlAll->get_result();
     
     while ($r = $resAll->fetch_assoc()) {
+        $sectionName = ($LANG === 'ar' && !empty($r['SECTION_NAME_AR'])) ? $r['SECTION_NAME_AR'] : $r['SECTION_NAME_EN'];
         $sections[] = [
             'id' => (int)$r['SECTION_ID'],
-            'name' => $r['SECTION_NAME_EN'],
+            'name' => $sectionName,
         ];
     }
     $sqlAll->close();

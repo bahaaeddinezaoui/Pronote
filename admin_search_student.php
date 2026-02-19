@@ -24,13 +24,17 @@ if ($conn->connect_error) {
 // Get admin info
 $admin_name = "Admin";
 if (isset($_SESSION['user_id'])) {
-    $stmt = $conn->prepare("SELECT ADMINISTRATOR_FIRST_NAME_EN, ADMINISTRATOR_LAST_NAME_EN FROM administrator WHERE USER_ID = ?");
+    $stmt = $conn->prepare("SELECT ADMINISTRATOR_FIRST_NAME_EN, ADMINISTRATOR_LAST_NAME_EN, ADMINISTRATOR_FIRST_NAME_AR, ADMINISTRATOR_LAST_NAME_AR FROM administrator WHERE USER_ID = ?");
     $stmt->bind_param("i", $_SESSION['user_id']);
     $stmt->execute();
     $result = $stmt->get_result();
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $admin_name = htmlspecialchars($row['ADMINISTRATOR_FIRST_NAME_EN']) . ' ' . htmlspecialchars($row['ADMINISTRATOR_LAST_NAME_EN']);
+        if ($LANG === 'ar' && !empty($row['ADMINISTRATOR_FIRST_NAME_AR'])) {
+            $admin_name = htmlspecialchars($row['ADMINISTRATOR_FIRST_NAME_AR']) . ' ' . htmlspecialchars($row['ADMINISTRATOR_LAST_NAME_AR']);
+        } else {
+            $admin_name = htmlspecialchars($row['ADMINISTRATOR_FIRST_NAME_EN']) . ' ' . htmlspecialchars($row['ADMINISTRATOR_LAST_NAME_EN']);
+        }
     }
     $stmt->close();
 }

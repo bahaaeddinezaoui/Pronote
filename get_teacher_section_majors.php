@@ -44,7 +44,7 @@ $teacherSerial = $rowTeacher['TEACHER_SERIAL_NUMBER'];
 
 // Get all majors from the database
 $sql = $conn->prepare("
-    SELECT MAJOR_ID, MAJOR_NAME_EN 
+    SELECT MAJOR_ID, MAJOR_NAME_EN, MAJOR_NAME_AR 
     FROM MAJOR 
     ORDER BY MAJOR_NAME_EN
 ");
@@ -53,9 +53,10 @@ $res = $sql->get_result();
 
 $majors = [];
 while ($r = $res->fetch_assoc()) {
+    $majorName = ($LANG === 'ar' && !empty($r['MAJOR_NAME_AR'])) ? $r['MAJOR_NAME_AR'] : $r['MAJOR_NAME_EN'];
     $majors[] = [
         'id' => $r['MAJOR_ID'],
-        'name' => $r['MAJOR_NAME_EN'],
+        'name' => $majorName,
     ];
 }
 $sql->close();

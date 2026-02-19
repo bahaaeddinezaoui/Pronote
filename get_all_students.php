@@ -1,6 +1,7 @@
 <?php
 // get_all_students.php - Fetch all students for autocomplete
 session_start();
+require_once __DIR__ . '/lang/i18n.php';
 
 header('Content-Type: application/json');
 
@@ -30,6 +31,8 @@ $query = "
         STUDENT_SERIAL_NUMBER,
         STUDENT_FIRST_NAME_EN,
         STUDENT_LAST_NAME_EN,
+        STUDENT_FIRST_NAME_AR,
+        STUDENT_LAST_NAME_AR,
         SECTION_ID,
         STUDENT_PHOTO
     FROM student
@@ -61,10 +64,13 @@ if ($result) {
             }
         }
         
+        $firstName = ($LANG === 'ar' && !empty($row['STUDENT_FIRST_NAME_AR'])) ? $row['STUDENT_FIRST_NAME_AR'] : $row['STUDENT_FIRST_NAME_EN'];
+        $lastName = ($LANG === 'ar' && !empty($row['STUDENT_LAST_NAME_AR'])) ? $row['STUDENT_LAST_NAME_AR'] : $row['STUDENT_LAST_NAME_EN'];
+        
         $students[] = [
             'serial_number' => $row['STUDENT_SERIAL_NUMBER'],
-            'first_name' => htmlspecialchars($row['STUDENT_FIRST_NAME_EN']),
-            'last_name' => htmlspecialchars($row['STUDENT_LAST_NAME_EN']),
+            'first_name' => htmlspecialchars($firstName),
+            'last_name' => htmlspecialchars($lastName),
             'section_id' => $row['SECTION_ID'],
             'photo' => $photoData
         ];

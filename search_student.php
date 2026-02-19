@@ -1,6 +1,9 @@
 <?php
 header('Content-Type: application/json');
 
+session_start();
+require_once __DIR__ . '/lang/i18n.php';
+
 // --- DATABASE CONNECTION ---
 $servername = "localhost";
 $username_db = "root";
@@ -40,14 +43,15 @@ $result = $stmt->get_result();
 
 $students = [];
 while ($row = $result->fetch_assoc()) {
-    $label = $row['STUDENT_FIRST_NAME_EN'] . ' ' . $row['STUDENT_LAST_NAME_EN'];
-    if (!empty($row['STUDENT_FIRST_NAME_AR'])) {
-        $label .= ' (' . $row['STUDENT_FIRST_NAME_AR'] . ' ' . $row['STUDENT_LAST_NAME_AR'] . ')';
-    }
+    $firstName = ($LANG === 'ar' && !empty($row['STUDENT_FIRST_NAME_AR'])) ? $row['STUDENT_FIRST_NAME_AR'] : $row['STUDENT_FIRST_NAME_EN'];
+    $lastName = ($LANG === 'ar' && !empty($row['STUDENT_LAST_NAME_AR'])) ? $row['STUDENT_LAST_NAME_AR'] : $row['STUDENT_LAST_NAME_EN'];
+    
+    $label = $firstName . ' ' . $lastName;
+    
     $students[] = [
         'serial_number' => $row['STUDENT_SERIAL_NUMBER'],
-        'first_name' => $row['STUDENT_FIRST_NAME_EN'],
-        'last_name' => $row['STUDENT_LAST_NAME_EN'],
+        'first_name' => $firstName,
+        'last_name' => $lastName,
         'photo' => $row['STUDENT_PHOTO'],
         'label' => $label
     ];

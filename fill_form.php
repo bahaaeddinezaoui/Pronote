@@ -131,14 +131,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'search_students') {
     $res = $stmt->get_result();
     $out = [];
     while ($r = $res->fetch_assoc()) {
-        $label = $r['STUDENT_FIRST_NAME_EN'] . ' ' . $r['STUDENT_LAST_NAME_EN'];
-        if (!empty($r['STUDENT_FIRST_NAME_AR'])) {
-            $label .= ' (' . $r['STUDENT_FIRST_NAME_AR'] . ' ' . $r['STUDENT_LAST_NAME_AR'] . ')';
-        }
+        $firstName = ($LANG === 'ar' && !empty($r['STUDENT_FIRST_NAME_AR'])) ? $r['STUDENT_FIRST_NAME_AR'] : $r['STUDENT_FIRST_NAME_EN'];
+        $lastName = ($LANG === 'ar' && !empty($r['STUDENT_LAST_NAME_AR'])) ? $r['STUDENT_LAST_NAME_AR'] : $r['STUDENT_LAST_NAME_EN'];
+        $label = $firstName . ' ' . $lastName;
         $out[] = [
             'serial' => $r['STUDENT_SERIAL_NUMBER'],
-            'first_name' => $r['STUDENT_FIRST_NAME_EN'],
-            'last_name' => $r['STUDENT_LAST_NAME_EN'],
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'label' => $label
         ];
     }
@@ -313,26 +312,27 @@ $show_abs_initially = !$show_obs_initially;
 
 
  // Teacher categories 
- $teacher_categories = [];
- if (!empty($logged_in_teacher_serial)) {
-     $sql_categories = $conn->prepare("
-        SELECT DISTINCT C.CATEGORY_ID, C.CATEGORY_NAME_EN
+$teacher_categories = [];
+if (!empty($logged_in_teacher_serial)) {
+    $sql_categories = $conn->prepare("
+        SELECT DISTINCT C.CATEGORY_ID, C.CATEGORY_NAME_EN, C.CATEGORY_NAME_AR
         FROM CATEGORY C
         INNER JOIN SECTION SE ON SE.CATEGORY_ID = C.CATEGORY_ID
         INNER JOIN STUDIES SD ON SD.SECTION_ID = SE.SECTION_ID
         INNER JOIN TEACHES TH ON TH.MAJOR_ID = SD.MAJOR_ID
         WHERE TH.TEACHER_SERIAL_NUMBER = ?
         ORDER BY C.CATEGORY_NAME_EN
-     ");
+    ");
     $sql_categories->bind_param('s', $logged_in_teacher_serial);
-     $sql_categories->execute();
-     $result_categories = $sql_categories->get_result();
+    $sql_categories->execute();
+    $result_categories = $sql_categories->get_result();
 
     if ($result_categories->num_rows > 0) {
         while ($row = $result_categories->fetch_assoc()) {
+            $categoryName = ($LANG === 'ar' && !empty($row['CATEGORY_NAME_AR'])) ? $row['CATEGORY_NAME_AR'] : $row['CATEGORY_NAME_EN'];
             $teacher_categories[] = [
                 'id' => $row['CATEGORY_ID'],
-                'name' => $row['CATEGORY_NAME_EN']
+                'name' => $categoryName
             ];
         }
     } else {
@@ -365,10 +365,11 @@ if ($resObsMotif && $resObsMotif->num_rows > 0) {
 // NEW: load classes to populate the Class dropdown
 // ----------------------
 $classes = [];
-$class_q = $conn->query("SELECT CLASS_ID, CLASS_NAME_EN FROM class ORDER BY CLASS_NAME_EN");
+$class_q = $conn->query("SELECT CLASS_ID, CLASS_NAME_EN, CLASS_NAME_AR FROM class ORDER BY CLASS_NAME_EN");
 if ($class_q) {
     while ($r = $class_q->fetch_assoc()) {
-        $classes[] = ['id' => $r['CLASS_ID'], 'name' => $r['CLASS_NAME_EN']];
+        $className = ($LANG === 'ar' && !empty($r['CLASS_NAME_AR'])) ? $r['CLASS_NAME_AR'] : $r['CLASS_NAME_EN'];
+        $classes[] = ['id' => $r['CLASS_ID'], 'name' => $className];
     }
 }
 
@@ -853,18 +854,20 @@ function updateAbsenteesAndPresentees() {
 }
 
 function loadSections() {
+    const categorySelect = document.getElementById('categories');
     const majorSelect = document.getElementById('major_select');
     const sectionContainer = document.getElementById('select_sections');
     const studentTableBody = document.querySelector('#student_table tbody');
     const majorId = majorSelect.value;
+    const categoryId = categorySelect.value;
 
     sectionContainer.innerHTML = '<p>' + (T.loading_sections || 'Loading sections...') + '</p>';
     studentTableBody.innerHTML = '';
 
-    if (!majorId) return;
+    if (!majorId || !categoryId) return;
     const teacherSerial = '<?php echo $logged_in_teacher_serial; ?>';
 
-    fetch('get_sections.php?major_id=' + encodeURIComponent(majorId) + '&teacher_serial=' + encodeURIComponent(teacherSerial))
+    fetch('get_sections.php?major_id=' + encodeURIComponent(majorId) + '&teacher_serial=' + encodeURIComponent(teacherSerial) + '&category_id=' + encodeURIComponent(categoryId))
         .then(res => res.json())
         .then(data => {
             if (data.success && data.sections.length > 0) {

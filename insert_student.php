@@ -348,11 +348,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 // 5. Fetch Dropdowns
 $categories = [];
-$res = $conn->query("SELECT CATEGORY_ID, CATEGORY_NAME_EN FROM category ORDER BY CATEGORY_NAME_EN");
+$res = $conn->query("SELECT CATEGORY_ID, CATEGORY_NAME_EN, CATEGORY_NAME_AR FROM category ORDER BY CATEGORY_NAME_EN");
 while($r = $res->fetch_assoc()) $categories[] = $r;
 
 $sections = [];
-$res = $conn->query("SELECT SECTION_ID, SECTION_NAME_EN, CATEGORY_ID FROM section ORDER BY SECTION_NAME_EN");
+$res = $conn->query("SELECT SECTION_ID, SECTION_NAME_EN, SECTION_NAME_AR, CATEGORY_ID FROM section ORDER BY SECTION_NAME_EN");
 while($r = $res->fetch_assoc()) $sections[] = $r;
 
 // NEW: Fetch Grades
@@ -362,7 +362,7 @@ while($r = $res->fetch_assoc()) $grades[] = $r;
 
 // Countries (For Address)
 $countries = [];
-$res = $conn->query("SELECT COUNTRY_ID, COUNTRY_NAME_EN FROM country ORDER BY COUNTRY_NAME_EN");
+$res = $conn->query("SELECT COUNTRY_ID, COUNTRY_NAME_EN, COUNTRY_NAME_AR FROM country ORDER BY COUNTRY_NAME_EN");
 while($r = $res->fetch_assoc()) $countries[] = $r;
 
 // Recruitment Sources (Fetched from DB)
@@ -374,7 +374,7 @@ if ($res) {
 
 // Armies (Fetched from DB)
 $armies = [];
-$res = $conn->query("SELECT ARMY_ID, ARMY_NAME_EN FROM army ORDER BY ARMY_NAME_EN");
+$res = $conn->query("SELECT ARMY_ID, ARMY_NAME_EN, ARMY_NAME_AR FROM army ORDER BY ARMY_NAME_EN");
 if ($res) {
     while($r = $res->fetch_assoc()) $armies[] = $r;
 }
@@ -544,7 +544,8 @@ $conn->close();
                             <select id="CATEGORY_ID" name="CATEGORY_ID" required>
                                 <option value=""><?php echo t('select'); ?></option>
                                 <?php foreach ($categories as $c): ?>
-                                    <option value="<?php echo $c['CATEGORY_ID']; ?>"><?php echo htmlspecialchars($c['CATEGORY_NAME_EN']); ?></option>
+                                    <?php $catName = ($LANG === 'ar' && !empty($c['CATEGORY_NAME_AR'])) ? $c['CATEGORY_NAME_AR'] : $c['CATEGORY_NAME_EN']; ?>
+                                    <option value="<?php echo $c['CATEGORY_ID']; ?>"><?php echo htmlspecialchars($catName); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -553,8 +554,9 @@ $conn->close();
                             <select id="SECTION_ID" name="SECTION_ID" required disabled>
                                 <option value=""><?php echo t('select'); ?></option>
                                 <?php foreach ($sections as $s): ?>
+                                    <?php $secName = ($LANG === 'ar' && !empty($s['SECTION_NAME_AR'])) ? $s['SECTION_NAME_AR'] : $s['SECTION_NAME_EN']; ?>
                                     <option value="<?php echo $s['SECTION_ID']; ?>" data-category="<?php echo $s['CATEGORY_ID']; ?>">
-                                        <?php echo htmlspecialchars($s['SECTION_NAME_EN']); ?>
+                                        <?php echo htmlspecialchars($secName); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -567,7 +569,10 @@ $conn->close();
                             <select name="STUDENT_GRADE_ID">
                                 <option value=""><?php echo t('select_grade'); ?></option>
                                 <?php foreach ($grades as $g): ?>
-                                    <option value="<?php echo $g['GRADE_ID']; ?>"><?php echo htmlspecialchars($g['GRADE_NAME_EN']); ?> (<?php echo htmlspecialchars($g['GRADE_NAME_AR']); ?>)</option>
+                                    <?php 
+                                        $gradeName = ($LANG === 'ar' && !empty($g['GRADE_NAME_AR'])) ? $g['GRADE_NAME_AR'] : $g['GRADE_NAME_EN'];
+                                    ?>
+                                    <option value="<?php echo $g['GRADE_ID']; ?>"><?php echo htmlspecialchars($gradeName); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -588,7 +593,8 @@ $conn->close();
                             <select name="STUDENT_ARMY_ID">
                                 <option value=""><?php echo t('select_army'); ?></option>
                                 <?php foreach ($armies as $a): ?>
-                                    <option value="<?php echo $a['ARMY_ID']; ?>"><?php echo htmlspecialchars($a['ARMY_NAME_EN']); ?></option>
+                                    <?php $armyName = ($LANG === 'ar' && !empty($a['ARMY_NAME_AR'])) ? $a['ARMY_NAME_AR'] : $a['ARMY_NAME_EN']; ?>
+                                    <option value="<?php echo $a['ARMY_ID']; ?>"><?php echo htmlspecialchars($armyName); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -648,7 +654,8 @@ $conn->close();
                                     <select class="country-select" data-prefix="BP_" name="BP_COUNTRY_ID">
                                         <option value=""><?php echo t('option_select_country'); ?></option>
                                         <?php foreach ($countries as $c): ?>
-                                            <option value="<?php echo $c['COUNTRY_ID']; ?>"><?php echo htmlspecialchars($c['COUNTRY_NAME_EN']); ?></option>
+                                            <?php $countryName = ($LANG === 'ar' && !empty($c['COUNTRY_NAME_AR'])) ? $c['COUNTRY_NAME_AR'] : $c['COUNTRY_NAME_EN']; ?>
+                                            <option value="<?php echo $c['COUNTRY_ID']; ?>"><?php echo htmlspecialchars($countryName); ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -669,7 +676,8 @@ $conn->close();
                                     <select class="country-select" data-prefix="PERS_" name="PERS_COUNTRY_ID">
                                         <option value=""><?php echo t('option_select_country'); ?></option>
                                         <?php foreach ($countries as $c): ?>
-                                            <option value="<?php echo $c['COUNTRY_ID']; ?>"><?php echo htmlspecialchars($c['COUNTRY_NAME_EN']); ?></option>
+                                            <?php $countryName = ($LANG === 'ar' && !empty($c['COUNTRY_NAME_AR'])) ? $c['COUNTRY_NAME_AR'] : $c['COUNTRY_NAME_EN']; ?>
+                                            <option value="<?php echo $c['COUNTRY_ID']; ?>"><?php echo htmlspecialchars($countryName); ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -750,7 +758,8 @@ $conn->close();
                                                 <select class="country-select" data-prefix="CONTACT_" name="CONTACT_COUNTRY_ID">
                                                     <option value=""><?php echo t('option_select_country'); ?></option>
                                                     <?php foreach ($countries as $c): ?>
-                                                        <option value="<?php echo $c['COUNTRY_ID']; ?>"><?php echo htmlspecialchars($c['COUNTRY_NAME_EN']); ?></option>
+                                                        <?php $countryName = ($LANG === 'ar' && !empty($c['COUNTRY_NAME_AR'])) ? $c['COUNTRY_NAME_AR'] : $c['COUNTRY_NAME_EN']; ?>
+                                                        <option value="<?php echo $c['COUNTRY_ID']; ?>"><?php echo htmlspecialchars($countryName); ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>

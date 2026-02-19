@@ -79,7 +79,7 @@ $teacher_last = "";
 $teacher_serial = "";
 
 $stmt = $conn->prepare("
-    SELECT TEACHER_FIRST_NAME_EN, TEACHER_LAST_NAME_EN, TEACHER_SERIAL_NUMBER 
+    SELECT TEACHER_FIRST_NAME_EN, TEACHER_LAST_NAME_EN, TEACHER_FIRST_NAME_AR, TEACHER_LAST_NAME_AR, TEACHER_SERIAL_NUMBER 
     FROM teacher 
     WHERE USER_ID = ?
 ");
@@ -88,8 +88,8 @@ $stmt->execute();
 $res = $stmt->get_result();
 if ($res->num_rows > 0) {
     $row = $res->fetch_assoc();
-    $teacher_first = $row['TEACHER_FIRST_NAME_EN'];
-    $teacher_last = $row['TEACHER_LAST_NAME_EN'];
+    $teacher_first = ($LANG === 'ar' && !empty($row['TEACHER_FIRST_NAME_AR'])) ? $row['TEACHER_FIRST_NAME_AR'] : $row['TEACHER_FIRST_NAME_EN'];
+    $teacher_last = ($LANG === 'ar' && !empty($row['TEACHER_LAST_NAME_AR'])) ? $row['TEACHER_LAST_NAME_AR'] : $row['TEACHER_LAST_NAME_EN'];
     $teacher_serial = $row['TEACHER_SERIAL_NUMBER'];
 }
 $stmt->close();
@@ -115,7 +115,7 @@ if ($teacher_serial) {
 $assigned_classes = [];
 if ($teacher_serial) {
     $stmt_classes = $conn->prepare("
-        SELECT DISTINCT M.MAJOR_NAME_EN
+        SELECT DISTINCT M.MAJOR_NAME_EN, M.MAJOR_NAME_AR
         FROM TEACHES TH
         JOIN MAJOR M ON TH.MAJOR_ID = M.MAJOR_ID
         WHERE TH.TEACHER_SERIAL_NUMBER = ?
@@ -124,7 +124,8 @@ if ($teacher_serial) {
     $stmt_classes->execute();
     $result_classes = $stmt_classes->get_result();
     while ($r = $result_classes->fetch_assoc()) {
-        $assigned_classes[] = $r['MAJOR_NAME_EN'];
+        $majorName = ($LANG === 'ar' && !empty($r['MAJOR_NAME_AR'])) ? $r['MAJOR_NAME_AR'] : $r['MAJOR_NAME_EN'];
+        $assigned_classes[] = $majorName;
     }
     $stmt_classes->close();
 }
