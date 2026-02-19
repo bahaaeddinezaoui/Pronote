@@ -304,18 +304,31 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
 
                 if (data.majors && data.majors.length > 0) {
                     var controlsDiv = document.createElement('div');
-                    controlsDiv.style.marginBottom = '12px';
+                    controlsDiv.style.marginBottom = '16px';
+                    controlsDiv.style.display = 'flex';
+                    controlsDiv.style.gap = '12px';
+                    controlsDiv.style.flexWrap = 'wrap';
                     
                     var selectAllBtn = document.createElement('button');
                     selectAllBtn.type = 'button';
                     selectAllBtn.textContent = T.onboarding_select_all_majors || 'Select All Majors';
-                    selectAllBtn.style.marginRight = '8px';
-                    selectAllBtn.style.padding = '6px 12px';
-                    selectAllBtn.style.border = '1px solid #d1d5db';
-                    selectAllBtn.style.borderRadius = '6px';
-                    selectAllBtn.style.background = '#f9fafb';
-                    selectAllBtn.style.cursor = 'pointer';
-                    selectAllBtn.style.fontSize = '14px';
+                    selectAllBtn.className = 'btn btn-secondary';
+                    selectAllBtn.style.cssText = `
+                        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                        color: white;
+                        border: none;
+                        padding: 10px 16px;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        transition: all 0.25s ease;
+                        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                    `;
+                    selectAllBtn.innerHTML = '<span style="font-size: 16px;">✓</span> ' + (T.onboarding_select_all_majors || 'Select All Majors');
                     selectAllBtn.addEventListener('click', function(){
                         var checkboxes = majorsList.querySelectorAll('input[type="checkbox"]');
                         checkboxes.forEach(function(cb){
@@ -327,18 +340,48 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                     var clearAllBtn = document.createElement('button');
                     clearAllBtn.type = 'button';
                     clearAllBtn.textContent = T.onboarding_clear_all_majors || 'Clear All Majors';
-                    clearAllBtn.style.padding = '6px 12px';
-                    clearAllBtn.style.border = '1px solid #d1d5db';
-                    clearAllBtn.style.borderRadius = '6px';
-                    clearAllBtn.style.background = '#f9fafb';
-                    clearAllBtn.style.cursor = 'pointer';
-                    clearAllBtn.style.fontSize = '14px';
+                    clearAllBtn.className = 'btn btn-secondary';
+                    clearAllBtn.style.cssText = `
+                        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                        color: white;
+                        border: none;
+                        padding: 10px 16px;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        transition: all 0.25s ease;
+                        box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                    `;
+                    clearAllBtn.innerHTML = '<span style="font-size: 16px;">✕</span> ' + (T.onboarding_clear_all_majors || 'Clear All Majors');
                     clearAllBtn.addEventListener('click', function(){
                         var checkboxes = majorsList.querySelectorAll('input[type="checkbox"]');
                         checkboxes.forEach(function(cb){
                             cb.checked = false;
                             onMajorChange(cb);
                         });
+                    });
+
+                    // Add hover effects
+                    selectAllBtn.addEventListener('mouseenter', function() {
+                        this.style.transform = 'translateY(-2px)';
+                        this.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)';
+                    });
+                    selectAllBtn.addEventListener('mouseleave', function() {
+                        this.style.transform = 'translateY(0)';
+                        this.style.boxShadow = '0 2px 4px rgba(16, 185, 129, 0.2)';
+                    });
+                    
+                    clearAllBtn.addEventListener('mouseenter', function() {
+                        this.style.transform = 'translateY(-2px)';
+                        this.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
+                    });
+                    clearAllBtn.addEventListener('mouseleave', function() {
+                        this.style.transform = 'translateY(0)';
+                        this.style.boxShadow = '0 2px 4px rgba(239, 68, 68, 0.2)';
                     });
                     
                     controlsDiv.appendChild(selectAllBtn);

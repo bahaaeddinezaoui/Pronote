@@ -346,18 +346,18 @@ $conn->close();
 
         /* Highlight new observations in modal */
         .observation-item.new-observation {
-            background: linear-gradient(90deg, #fef08a, #fde68a);
-            border-left-color: #eab308;
-            box-shadow: 0 0 8px rgba(234, 179, 8, 0.3);
+            background: rgba(79, 70, 229, 0.05);
+            border-left-color: var(--primary-color);
+            box-shadow: 0 0 12px rgba(79, 70, 229, 0.1);
         }
 
         .detail-table tr.new-observation-row {
-            background-color: #fef08a !important;
-            box-shadow: inset 0 0 6px rgba(234, 179, 8, 0.3);
+            background-color: rgba(79, 70, 229, 0.08) !important;
+            border-left: 3px solid var(--primary-color);
         }
 
         .detail-table tr.new-observation-row:nth-child(even) {
-            background-color: #fef08a !important;
+            background-color: rgba(79, 70, 229, 0.1) !important;
         }
 
         /* Absence Summary Styles */

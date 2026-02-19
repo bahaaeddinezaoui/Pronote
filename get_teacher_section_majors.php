@@ -43,10 +43,11 @@ if (!$rowTeacher || empty($rowTeacher['TEACHER_SERIAL_NUMBER'])) {
 $teacherSerial = $rowTeacher['TEACHER_SERIAL_NUMBER'];
 
 // Get all majors from the database
+$orderColumn = ($LANG === 'ar') ? 'MAJOR_NAME_AR' : 'MAJOR_NAME_EN';
 $sql = $conn->prepare("
     SELECT MAJOR_ID, MAJOR_NAME_EN, MAJOR_NAME_AR 
     FROM MAJOR 
-    ORDER BY MAJOR_NAME_EN
+    ORDER BY $orderColumn
 ");
 $sql->execute();
 $res = $sql->get_result();

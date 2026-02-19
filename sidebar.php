@@ -19,47 +19,50 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
 ?>
 <div class="sidebar">
     <div class="sidebar-header">
+        <button class="sidebar-toggle-btn" id="sidebarToggle" title="Toggle Sidebar">
+            <span class="toggle-icon">&gt;</span>
+        </button>
         <div class="app-name">📚 <?php echo t('app_name'); ?></div>
     </div>
     
     <nav class="sidebar-nav">
         <a href="<?php echo $home_link; ?>" id="navHome" class="sidebar-link <?php echo ($current_page == basename($home_link)) ? 'active' : ''; ?>">
             <span class="icon">🏠</span>
-            <span class="text"><?php echo t('nav_home'); ?></span>
+            <span class="text" data-tooltip="<?php echo t('nav_home'); ?>"><?php echo t('nav_home'); ?></span>
         </a>
 
         <?php if ($role === 'Admin'): ?>
             <a href="admin_dashboard.php" id="navSearchSessions" class="sidebar-link <?php echo ($current_page == 'admin_dashboard.php') ? 'active' : ''; ?>">
                 <span class="icon">🔍</span>
-                <span class="text"><?php echo t('nav_search'); ?></span>
+                <span class="text" data-tooltip="<?php echo t('nav_search'); ?>"><?php echo t('nav_search'); ?></span>
             </a>
             <a href="admin_search_student.php" id="navStudentRecords" class="sidebar-link <?php echo ($current_page == 'admin_search_student.php') ? 'active' : ''; ?>">
                 <span class="icon">📂</span>
-                <span class="text"><?php echo t('nav_student_records'); ?></span>
+                <span class="text" data-tooltip="<?php echo t('nav_student_records'); ?>"><?php echo t('nav_student_records'); ?></span>
             </a>
         <?php endif; ?>
 
         <?php if ($role === 'Teacher'): ?>
             <a href="fill_form.php?tab=absences" id="navAbsences" class="sidebar-link <?php echo ($current_page == 'fill_form.php' && ($current_tab == 'absences' || $current_tab == '')) ? 'active' : ''; ?>">
                 <span class="icon">📅</span>
-                <span class="text"><?php echo t('absences'); ?></span>
+                <span class="text" data-tooltip="<?php echo t('absences'); ?>"><?php echo t('absences'); ?></span>
             </a>
             <a href="fill_form.php?tab=observations" id="navObservations" class="sidebar-link <?php echo ($current_page == 'fill_form.php' && $current_tab == 'observations') ? 'active' : ''; ?>">
                 <span class="icon">📝</span>
-                <span class="text"><?php echo t('observations'); ?></span>
+                <span class="text" data-tooltip="<?php echo t('observations'); ?>"><?php echo t('observations'); ?></span>
             </a>
         <?php endif; ?>
         
         <?php if ($role === 'Secretary'): ?>
              <a href="insert_student.php" id="navInsertStudent" class="sidebar-link <?php echo ($current_page == 'insert_student.php') ? 'active' : ''; ?>">
                 <span class="icon">➕</span>
-                <span class="text"><?php echo t('insert_student'); ?></span>
+                <span class="text" data-tooltip="<?php echo t('insert_student'); ?>"><?php echo t('insert_student'); ?></span>
             </a>
         <?php endif; ?>
 
         <a href="profile.php" id="navProfile" class="sidebar-link <?php echo ($current_page == 'profile.php') ? 'active' : ''; ?>">
             <span class="icon">👤</span>
-            <span class="text"><?php echo t('nav_profile'); ?></span>
+            <span class="text" data-tooltip="<?php echo t('nav_profile'); ?>"><?php echo t('nav_profile'); ?></span>
         </a>
     </nav>
 
@@ -71,18 +74,18 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
 
         <a href="options.php" id="navOptions" class="sidebar-link">
             <span class="icon">⚙️</span>
-            <span class="text"><?php echo t('nav_options'); ?></span>
+            <span class="text" data-tooltip="<?php echo t('nav_options'); ?>"><?php echo t('nav_options'); ?></span>
         </a>
 
         <a href="#" id="restartTutorial" class="sidebar-link">
             <span class="icon">❔</span>
-            <span class="text"><?php echo t('nav_tutorial'); ?></span>
+            <span class="text" data-tooltip="<?php echo t('nav_tutorial'); ?>"><?php echo t('nav_tutorial'); ?></span>
         </a>
 
         <a href="logout.php" id="navLogout" class="sidebar-link logout-btn <?php if ($role === 'Teacher' && !empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) echo 'disabled'; ?>" 
            <?php if ($role === 'Teacher' && !empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) echo 'onclick="return false;" title="' . t('logout_disabled_during_onboarding') . '"'; ?>>
             <span class="icon">🚪</span>
-            <span class="text"><?php echo t('nav_logout'); ?></span>
+            <span class="text" data-tooltip="<?php echo t('nav_logout'); ?>"><?php echo t('nav_logout'); ?></span>
         </a>
     </div>
 
@@ -94,7 +97,7 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
                 <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
             </div>
             <div class="notifications-panel" id="notificationsPanel">
-                <div style="padding:12px; border-bottom:1px solid #e5e7eb; font-weight:600; background:#f9fafb;">
+                <div class="notifications-header">
                     <?php echo t('new_observations'); ?>
                 </div>
                 <div id="notificationsContent"></div>
@@ -212,3 +215,88 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
 <?php if ($role !== 'Admin'): ?>
 <script src="effects.js"></script>
 <?php endif; ?>
+
+<script>
+// Collapsible Sidebar Functionality
+(function() {
+    'use strict';
+    
+    // Storage key for sidebar state
+    const SIDEBAR_STATE_KEY = 'edutrack_sidebar_collapsed';
+    
+    // Get DOM elements
+    const sidebar = document.querySelector('.sidebar');
+    const toggleBtn = document.getElementById('sidebarToggle');
+    const mainContent = document.querySelector('.main-content');
+    
+    if (!sidebar || !toggleBtn) return;
+    
+    // Load saved state
+    function loadSidebarState() {
+        try {
+            const isCollapsed = localStorage.getItem(SIDEBAR_STATE_KEY) === 'true';
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+            }
+        } catch (e) {
+            console.warn('Could not load sidebar state:', e);
+        }
+    }
+    
+    // Save state
+    function saveSidebarState(isCollapsed) {
+        try {
+            localStorage.setItem(SIDEBAR_STATE_KEY, isCollapsed.toString());
+        } catch (e) {
+            console.warn('Could not save sidebar state:', e);
+        }
+    }
+    
+    // Toggle sidebar
+    function toggleSidebar() {
+        const isCollapsed = sidebar.classList.toggle('collapsed');
+        saveSidebarState(isCollapsed);
+        
+        // Emit custom event for other components
+        window.dispatchEvent(new CustomEvent('sidebarToggle', { 
+            detail: { collapsed: isCollapsed } 
+        }));
+    }
+    
+    // Handle keyboard shortcut (Ctrl/Cmd + B)
+    function handleKeyboardShortcut(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+            e.preventDefault();
+            toggleSidebar();
+        }
+    }
+    
+    // Initialize
+    function init() {
+        loadSidebarState();
+        
+        // Bind toggle button click
+        toggleBtn.addEventListener('click', toggleSidebar);
+        
+        // Bind keyboard shortcut
+        document.addEventListener('keydown', handleKeyboardShortcut);
+        
+        // Handle window resize for responsive behavior
+        function handleResize() {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('collapsed');
+            }
+        }
+        
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Check initial size
+    }
+    
+    // Start when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+</script>
