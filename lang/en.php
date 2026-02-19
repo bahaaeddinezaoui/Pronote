@@ -18,6 +18,9 @@ $T = [
     'session_label' => 'Session',
     'motif_label' => 'Motif',
     'by' => 'By',
+    'clear_notification' => 'Clear',
+    'clear_all_notifications' => 'Clear All',
+    'notifications_cleared' => 'All notifications cleared.',
     'welcome' => 'Welcome',
 
     // Landing

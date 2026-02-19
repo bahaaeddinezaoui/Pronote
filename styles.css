@@ -735,7 +735,7 @@ html[dir="rtl"] .sidebar-link .text::after {
 }
 
 .notifications-header {
-    padding: 1.25rem;
+    padding: 1rem 1.25rem;
     border-bottom: 1px solid var(--border-color);
     font-weight: 700;
     font-size: 1rem;
@@ -744,6 +744,28 @@ html[dir="rtl"] .sidebar-link .text::after {
     position: sticky;
     top: 0;
     z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.clear-all-btn {
+    background: transparent;
+    border: 1px solid var(--primary-light);
+    color: var(--primary-color);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: var(--radius-md);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.clear-all-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
 }
 
 .notifications-panel.active {
@@ -806,6 +828,41 @@ html[dir="rtl"] .sidebar-link .text::after {
     padding: 24px;
     text-align: center;
     color: #9ca3af;
+}
+
+.clear-notif-btn {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    z-index: 5;
+}
+
+.notification-item:hover .clear-notif-btn {
+    opacity: 1;
+}
+
+.clear-notif-btn:hover {
+    background: #fee2e2;
+    color: #ef4444;
+    transform: rotate(90deg);
+}
+
+html[dir="rtl"] .clear-notif-btn {
+    right: auto;
+    left: 0.75rem;
 }
 
 /* RTL Adjustments for Notifications */

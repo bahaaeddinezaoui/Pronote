@@ -98,7 +98,8 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
             </div>
             <div class="notifications-panel" id="notificationsPanel">
                 <div class="notifications-header">
-                    <?php echo t('new_observations'); ?>
+                    <span><?php echo t('new_observations'); ?></span>
+                    <button class="clear-all-btn" id="clearAllNotifications" onclick="clearAllNotifications(event)"><?php echo t('clear_all_notifications'); ?></button>
                 </div>
                 <div id="notificationsContent"></div>
             </div>
@@ -173,25 +174,113 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
             
             let html = '';
             newNotifications.forEach((notif, idx) => {
-                html += `<a class="notification-item new" href="admin_dashboard.php?session=${encodeURIComponent(notif.session_id)}" 
-                             onclick="try{fetch('mark_observation_read.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({observation_id:${notif.observation_id}})});}catch(e){}">
-                    <div class="notification-item-header">
-                        <span class="notification-item-student">${notif.student_name}</span>
-                        <span class="notification-item-time">${notif.observation_time}</span>
-                    </div>
-                    <div class="notification-item-details">
-                        <div><strong>${T.teacher_label || 'Teacher'}:</strong> ${notif.teacher_name}</div>
-                        <div><strong>${T.session_label || 'Session'}:</strong> ${notif.session_date} (${notif.session_time})</div>
-                        <div><strong>${T.motif_label || 'Motif'}:</strong> ${notif.motif}</div>
-                    </div>
-                </a>`;
+                html += `<div class="notification-item new" data-id="${notif.observation_id}">
+                    <a href="admin_dashboard.php?session=${encodeURIComponent(notif.session_id)}" 
+                             onclick="markAsRead(${notif.observation_id})">
+                        <div class="notification-item-header">
+                            <span class="notification-item-student">${notif.student_name}</span>
+                            <span class="notification-item-time">${notif.observation_time}</span>
+                        </div>
+                        <div class="notification-item-details">
+                            <div><strong>${T.teacher_label || 'Teacher'}:</strong> ${notif.teacher_name}</div>
+                            <div><strong>${T.session_label || 'Session'}:</strong> ${notif.session_date} (${notif.session_time})</div>
+                            <div><strong>${T.motif_label || 'Motif'}:</strong> ${notif.motif}</div>
+                        </div>
+                    </a>
+                    <button class="clear-notif-btn" onclick="clearNotification(event, ${notif.observation_id})" title="${T.clear_notification || 'Clear'}">
+                        ✕
+                    </button>
+                </div>`;
             });
             content.innerHTML = html;
         } else {
             countBadge.style.display = 'none';
             content.innerHTML = '<div class="notification-empty">' + (T.no_new_observations || 'No new observations') + '</div>';
+            const clearAllBtn = document.getElementById('clearAllNotifications');
+            if (clearAllBtn) clearAllBtn.style.display = 'none';
         }
     }
+
+    window.markAsRead = function(id) {
+        try {
+            fetch('mark_observation_read.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ observation_id: id })
+            });
+        } catch (e) {}
+    };
+
+    window.clearNotification = function(event, id) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const item = event.target.closest('.notification-item');
+        if (item) {
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(20px)';
+            setTimeout(() => {
+                newNotifications = newNotifications.filter(n => n.observation_id != id);
+                updateNotificationDisplay();
+            }, 300);
+        }
+
+        fetch('mark_observation_read.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ observation_id: id })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                console.error('Failed to clear notification:', data.message);
+                fetchNotifications(); // Refresh on error
+            }
+        });
+    };
+
+    window.clearAllNotifications = function(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        const content = document.getElementById('notificationsContent');
+        if (content) {
+            content.style.opacity = '0.5';
+            content.style.pointerEvents = 'none';
+        }
+
+        fetch('mark_all_observations_read.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                newNotifications = [];
+                updateNotificationDisplay();
+                
+                // Show a small toast or just let it empty out
+                if (window.EduTrackEffects && typeof window.EduTrackEffects.showToast === 'function') {
+                    window.EduTrackEffects.showToast(T.notifications_cleared || 'Notifications cleared', 'success');
+                }
+            } else {
+                console.error('Failed to clear all notifications:', data.message);
+            }
+            if (content) {
+                content.style.opacity = '1';
+                content.style.pointerEvents = 'auto';
+            }
+        })
+        .catch(err => {
+            console.error('Error clearing all notifications:', err);
+            if (content) {
+                content.style.opacity = '1';
+                content.style.pointerEvents = 'auto';
+            }
+        });
+    };
 
     // Close notifications panel when clicking outside
     document.addEventListener('click', function(event) {

@@ -384,23 +384,23 @@ $conn->close();
         }
 
         .absence-stat-card {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #fcd34d;
-            text-align: center;
+            background: #f5f3ff;
+            border-left: 4px solid #8b5cf6;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 10px;
         }
 
         .absence-stat-number {
-            font-size: 28px;
+            font-size: 20px;
             font-weight: 700;
-            color: #d97706;
-            margin: 5px 0;
+            color: #6d28d9;
+            margin-top: 4px;
         }
 
         .absence-stat-label {
             font-size: 12px;
-            color: #92400e;
+            color: #6d28d9;
             font-weight: 600;
         }
 
@@ -418,23 +418,23 @@ $conn->close();
         }
 
         .absence-details-table th {
-            background-color: #f59e0b;
+            background-color: #8b5cf6;
             color: white;
             font-weight: 600;
         }
 
         .absence-details-table tr:nth-child(even) {
-            background-color: #fffbeb;
+            background-color: #f5f3ff;
         }
 
         .absence-details-table tr:hover {
-            background-color: #fef3c7;
+            background-color: #ede9fe;
         }
 
         .absence-motif-badge {
             display: inline-block;
-            background: #fed7aa;
-            color: #92400e;
+            background: #ddd6fe;
+            color: #5b21b6;
             padding: 3px 8px;
             border-radius: 4px;
             font-size: 12px;

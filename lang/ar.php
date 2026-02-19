@@ -18,6 +18,9 @@ $T = [
     'session_label' => 'الجلسة',
     'motif_label' => 'السبب',
     'by' => 'بواسطة',
+    'clear_notification' => 'مسح',
+    'clear_all_notifications' => 'مسح الكل',
+    'notifications_cleared' => 'تم مسح جميع الإشعارات.',
     'welcome' => 'مرحباً',
 
     // Landing
