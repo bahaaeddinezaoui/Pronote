@@ -8,11 +8,14 @@ header('Pragma: no-cache');
 
 // If already authenticated, send user to their home
 if (isset($_SESSION['user_id'], $_SESSION['role'])) {
-    if ($_SESSION['role'] === 'Admin') {
+    $role = trim((string)($_SESSION['role'] ?? ''));
+    if ($role === 'Admin') {
         header('Location: admin_home.php');
-    } elseif ($_SESSION['role'] === 'Secretary') {
+    } elseif ($role === 'Superuser') {
+        header('Location: superuser_dashboard.php');
+    } elseif ($role === 'Secretary') {
         header('Location: secretary_home.php');
-    } elseif ($_SESSION['role'] === 'Teacher') {
+    } elseif ($role === 'Teacher') {
         if (!empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) {
             header('Location: teacher_onboarding.php');
         } else {

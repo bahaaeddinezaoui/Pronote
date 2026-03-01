@@ -39,6 +39,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_result($user_id, $hashed_password, $role, $last_login_at);
         $stmt->fetch();
 
+        $role = trim((string)$role);
+        $roleLower = strtolower($role);
+        if ($roleLower === 'admin') {
+            $role = 'Admin';
+        } elseif ($roleLower === 'teacher') {
+            $role = 'Teacher';
+        } elseif ($roleLower === 'secretary') {
+            $role = 'Secretary';
+        } elseif ($roleLower === 'superuser') {
+            $role = 'Superuser';
+        }
+
         // 6. Verify the Password
         if (password_verify($password, $hashed_password)) {
             $_SESSION['user_id'] = $user_id;
@@ -47,7 +59,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['needs_onboarding'] = false;
 
             $redirect = 'admin_home.php';
-            if ($role === 'Teacher') {
+            if ($role === 'Superuser') {
+                $redirect = 'superuser_dashboard.php';
+            } elseif ($role === 'Teacher') {
                 $needs_onboarding = false;
 
                 $stmtTeacher = $conn->prepare("SELECT TEACHER_SERIAL_NUMBER FROM teacher WHERE USER_ID = ?");

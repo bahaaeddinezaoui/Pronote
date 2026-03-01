@@ -1,12 +1,13 @@
 <?php
 // Ensure role is set
-$role = $_SESSION['role'] ?? '';
+$role = trim((string)($_SESSION['role'] ?? ''));
 $current_page = basename($_SERVER['PHP_SELF']);
 $current_tab = $_GET['tab'] ?? '';
 
 // Determine Home Link
 $home_link = 'index.php';
 if ($role === 'Admin') $home_link = 'admin_home.php';
+if ($role === 'Superuser') $home_link = 'superuser_dashboard.php';
 if ($role === 'Teacher') {
     if (!empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) {
         $home_link = 'teacher_onboarding.php';
@@ -39,6 +40,17 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
             <a href="admin_search_student.php" id="navStudentRecords" class="sidebar-link <?php echo ($current_page == 'admin_search_student.php') ? 'active' : ''; ?>">
                 <span class="icon">📂</span>
                 <span class="text" data-tooltip="<?php echo t('nav_student_records'); ?>"><?php echo t('nav_student_records'); ?></span>
+            </a>
+            <a href="admin_weekly_program.php" id="navWeeklyProgram" class="sidebar-link <?php echo ($current_page == 'admin_weekly_program.php') ? 'active' : ''; ?>">
+                <span class="icon">📄</span>
+                <span class="text" data-tooltip="<?php echo t('nav_weekly_program'); ?>"><?php echo t('nav_weekly_program'); ?></span>
+            </a>
+        <?php endif; ?>
+
+        <?php if ($role === 'Superuser'): ?>
+            <a href="superuser_upload_weekly_program.php" id="navSuperuserWeeklyProgramUpload" class="sidebar-link <?php echo ($current_page == 'superuser_upload_weekly_program.php') ? 'active' : ''; ?>">
+                <span class="icon">📤</span>
+                <span class="text" data-tooltip="<?php echo t('nav_upload_weekly_program'); ?>"><?php echo t('nav_upload_weekly_program'); ?></span>
             </a>
         <?php endif; ?>
 

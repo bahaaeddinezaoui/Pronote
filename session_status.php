@@ -10,6 +10,8 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
     $response['loggedIn'] = true;
     if ($_SESSION['role'] === 'Admin') {
         $response['home'] = 'admin_home.php';
+    } elseif ($_SESSION['role'] === 'Superuser') {
+        $response['home'] = 'superuser_dashboard.php';
     } elseif ($_SESSION['role'] === 'Secretary') {
         $response['home'] = 'secretary_home.php';
     } elseif ($_SESSION['role'] === 'Teacher') {

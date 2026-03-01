@@ -388,6 +388,24 @@ $T = [
     'logout_disabled_during_onboarding' => 'Logout is disabled during onboarding. Please complete the setup process.',
     'nav_login' => 'Login',
 
+    'nav_weekly_program' => 'Weekly Program',
+    'weekly_program_title' => 'Weekly Program',
+    'weekly_program_not_uploaded' => 'Weekly program has not been uploaded yet.',
+    'weekly_program_last_upload' => 'Last upload:',
+    'weekly_program_upload_title' => 'Upload Weekly Program',
+    'weekly_program_upload_btn' => 'Upload PDF',
+    'weekly_program_upload_hint' => 'Upload a PDF file. The latest upload replaces the previous weekly program.',
+    'weekly_program_uploaded_success' => 'Weekly program uploaded successfully.',
+    'weekly_program_upload_failed' => 'Weekly program upload failed.',
+    'weekly_program_invalid_file' => 'Invalid file. Please upload a PDF.',
+    'weekly_program_invalid_size' => 'Invalid file size. Maximum allowed is 10 MB.',
+    'pdf_viewer_fallback' => 'It seems your browser cannot display this PDF inline.',
+    'download_pdf' => 'Click here to download the PDF.',
+
+    'nav_upload_weekly_program' => 'Upload Weekly Program',
+    'superuser_dashboard_title' => 'Superuser Dashboard',
+    'weekly_program_available' => 'Weekly program is available.',
+
     'options_coming_soon' => 'Options will be available soon.',
 
     'change_password' => 'Change Password',
