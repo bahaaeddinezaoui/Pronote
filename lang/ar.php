@@ -729,4 +729,14 @@ $T = [
     'see_how' => 'شاهد كيف يعمل',
     'try_search' => 'جرب البحث',
     'get_started_now' => 'ابدأ الآن',
+
+    // Login Carousel Features
+    'carousel_feature_students' => 'إدارة الطلاب',
+    'carousel_feature_students_desc' => 'إدارة سجلات الطلاب والفئات والأقسام بكفاءة. الوصول إلى الملفات الشاملة مع التفاصيل الشخصية والمعلومات الأكاديمية وسجل الحضور.',
+    'carousel_feature_attendance' => 'تتبع الحضور',
+    'carousel_feature_attendance_desc' => 'تسجيل ومراقبة حضور الطلاب بسهولة. تتبع الغيابات وتحديد الأنماط وإنشاء تقارير مفصلة لإدارة أفضل للفصل.',
+    'carousel_feature_reports' => 'التقارير والسجلات',
+    'carousel_feature_reports_desc' => 'الوصول إلى سجلات الطلاب التفصيلية وإنشاء تقارير شاملة. البحث والتصفية وتصدير البيانات لاتخاذ قرارات مستنيرة.',
+    'carousel_feature_notifications' => 'إشعارات فورية',
+    'carousel_feature_notifications_desc' => 'ابقَ على اطلاع مع تنبيهات فورية للملاحظات الجديدة والأحداث المهمة. لا تفوت التحديثات الحرجة عن طلابك.',
 ];

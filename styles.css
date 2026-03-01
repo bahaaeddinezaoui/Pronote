@@ -1467,3 +1467,276 @@ html {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* ============================================
+   SPLIT-SCREEN LOGIN LAYOUT
+   ============================================ */
+
+.login-wrapper {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.login-left {
+    flex: 0 0 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--background-color);
+    position: relative;
+    padding: 2rem;
+}
+
+.login-right {
+    flex: 0 0 50%;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #6366f1 50%, #8b5cf6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-right::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+}
+
+/* Override login container for split layout */
+.login-left .login-container {
+    min-height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-left .login-card {
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-logo {
+    width: 64px;
+    height: 64px;
+    background: var(--primary-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: var(--primary-color);
+}
+
+.login-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+}
+
+/* ============================================
+   CAROUSEL STYLES
+   ============================================ */
+
+.carousel-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    z-index: 1;
+}
+
+.carousel-slides {
+    position: relative;
+    min-height: 350px;
+}
+
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(30px);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    color: white;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+.carousel-icon {
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.carousel-slide.active .carousel-icon {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.carousel-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    opacity: 0.9;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.carousel-dot:hover {
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.1);
+}
+
+.carousel-dot.active {
+    background: white;
+    border-color: white;
+    transform: scale(1.2);
+}
+
+.carousel-nav {
+    display: none;
+}
+
+.carousel-prev,
+.carousel-next {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.carousel-prev:hover,
+.carousel-next:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: scale(1.1);
+}
+
+/* RTL Support for Split Login */
+html[dir="rtl"] .login-left {
+    order: 2;
+}
+
+html[dir="rtl"] .login-right {
+    order: 1;
+}
+
+html[dir="rtl"] .carousel-slide {
+    transform: translateX(-30px);
+}
+
+html[dir="rtl"] .carousel-slide.active {
+    transform: translateX(0);
+}
+
+html[dir="rtl"] .login-lang-fix {
+    right: auto;
+    left: 1rem;
+}
+
+/* Responsive Split Login */
+@media (max-width: 1024px) {
+    .login-wrapper {
+        flex-direction: column;
+    }
+
+    .login-left,
+    .login-right {
+        flex: none;
+        width: 100%;
+    }
+
+    .login-left {
+        min-height: 100vh;
+        order: 1;
+    }
+
+    .login-right {
+        display: none;
+    }
+
+    html[dir="rtl"] .login-left {
+        order: 1;
+    }
+
+    html[dir="rtl"] .login-right {
+        order: 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-left {
+        padding: 1rem;
+    }
+
+    .login-left .login-card {
+        padding: 1.5rem;
+    }
+
+    .login-logo {
+        width: 56px;
+        height: 56px;
+    }
+
+    .login-logo svg {
+        width: 28px;
+        height: 28px;
+    }
+}

@@ -663,4 +663,14 @@ $T = [
     'see_how' => 'See how it works',
     'try_search' => 'Try search demo',
     'get_started_now' => 'Get Started Now',
+
+    // Login Carousel Features
+    'carousel_feature_students' => 'Student Management',
+    'carousel_feature_students_desc' => 'Efficiently manage student records, categories, and sections. Access comprehensive profiles with personal details, academic information, and attendance history.',
+    'carousel_feature_attendance' => 'Attendance Tracking',
+    'carousel_feature_attendance_desc' => 'Record and monitor student attendance with ease. Track absences, identify patterns, and generate detailed reports for better classroom management.',
+    'carousel_feature_reports' => 'Reports & Records',
+    'carousel_feature_reports_desc' => 'Access detailed student records and generate comprehensive reports. Search, filter, and export data for informed decision-making.',
+    'carousel_feature_notifications' => 'Real-Time Notifications',
+    'carousel_feature_notifications_desc' => 'Stay informed with instant alerts for new observations and important events. Never miss critical updates about your students.',
 ];
