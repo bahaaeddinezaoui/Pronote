@@ -663,6 +663,7 @@ $T = [
     'see_how' => 'See how it works',
     'try_search' => 'Try search demo',
     'get_started_now' => 'Get Started Now',
+    'upload_new_program_question' => 'Would you like to upload a new weekly program?',
 
     // Login Carousel Features
     'carousel_feature_students' => 'Student Management',

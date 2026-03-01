@@ -729,6 +729,7 @@ $T = [
     'see_how' => 'شاهد كيف يعمل',
     'try_search' => 'جرب البحث',
     'get_started_now' => 'ابدأ الآن',
+    'upload_new_program_question' => 'هل ترغب في رفع برنامج أسبوعي جديد؟',
 
     // Login Carousel Features
     'carousel_feature_students' => 'إدارة الطلاب',

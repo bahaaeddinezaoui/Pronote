@@ -58,6 +58,7 @@ $pdfExists = is_file($pdfFullPath);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
+            width: auto; /* Ensure button doesn't take full width */
         }
         .btn-primary:hover { background-color: var(--primary-hover); }
         .btn-secondary {
@@ -71,6 +72,7 @@ $pdfExists = is_file($pdfFullPath);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
+            width: auto; /* Ensure button doesn't take full width */
         }
         .btn-secondary:hover { background: #f9fafb; }
     </style>
