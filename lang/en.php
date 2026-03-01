@@ -664,6 +664,11 @@ $T = [
     'try_search' => 'Try search demo',
     'get_started_now' => 'Get Started Now',
     'upload_new_program_question' => 'Would you like to upload a new weekly program?',
+    'confirm_selections_title' => 'Confirm Selections',
+    'submit' => 'Submit',
+    'edit' => 'Edit',
+    'security' => 'Security',
+    'change_password_desc' => 'Update your account password to stay secure.',
 
     // Login Carousel Features
     'carousel_feature_students' => 'Student Management',

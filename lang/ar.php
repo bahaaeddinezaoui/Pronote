@@ -730,6 +730,11 @@ $T = [
     'try_search' => 'جرب البحث',
     'get_started_now' => 'ابدأ الآن',
     'upload_new_program_question' => 'هل ترغب في رفع برنامج أسبوعي جديد؟',
+    'confirm_selections_title' => 'تأكيد الاختيارات',
+    'submit' => 'إرسال',
+    'edit' => 'تعديل',
+    'security' => 'الأمان',
+    'change_password_desc' => 'قم بتحديث كلمة مرور حسابك للحفاظ على أمانه.',
 
     // Login Carousel Features
     'carousel_feature_students' => 'إدارة الطلاب',

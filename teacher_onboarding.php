@@ -25,8 +25,84 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title><?php echo t('change_password'); ?> - <?php echo t('app_name'); ?></title>
+    <style>
+        /* ... existing styles ... */
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .modal-header {
+            margin-bottom: 16px;
+        }
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        .modal-body {
+            margin-bottom: 24px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .summary-item {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        .summary-major {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+        .summary-sections {
+            font-size: 0.875rem;
+            color: #4b5563;
+        }
+    </style>
 </head>
 <body>
+
+<!-- Confirmation Modal -->
+<div id="confirmModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title"><?php echo t('confirm_selections_title') ?? 'Confirm Selections'; ?></div>
+        </div>
+        <div class="modal-body" id="modalSummaryBody">
+            <!-- Content populated by JS -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="editBtn" style="width: auto;"><?php echo t('edit') ?? 'Edit'; ?></button>
+            <button class="btn btn-primary" id="confirmSubmitBtn" style="width: auto;"><?php echo t('submit') ?? 'Submit'; ?></button>
+        </div>
+    </div>
+</div>
 
 <div class="app-layout">
     <?php include 'sidebar.php'; ?>
@@ -64,17 +140,32 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                 <form id="onboardingChangePasswordForm">
                     <div class="form-group">
                         <label class="form-label" for="old_password"><?php echo t('old_password'); ?></label>
-                        <input class="form-input" type="password" id="old_password" required>
+                        <div style="position: relative;">
+                            <input class="form-input" type="password" id="old_password" required style="padding-right: 40px;">
+                            <span class="toggle-password" data-target="old_password" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); user-select: none; font-size: 1.2rem;">
+                                👁️
+                            </span>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="new_password"><?php echo t('new_password'); ?></label>
-                        <input class="form-input" type="password" id="new_password" required>
+                        <div style="position: relative;">
+                            <input class="form-input" type="password" id="new_password" required style="padding-right: 40px;">
+                            <span class="toggle-password" data-target="new_password" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); user-select: none; font-size: 1.2rem;">
+                                👁️
+                            </span>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="confirm_new_password"><?php echo t('confirm_new_password'); ?></label>
-                        <input class="form-input" type="password" id="confirm_new_password" required>
+                        <div style="position: relative;">
+                            <input class="form-input" type="password" id="confirm_new_password" required style="padding-right: 40px;">
+                            <span class="toggle-password" data-target="confirm_new_password" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); user-select: none; font-size: 1.2rem;">
+                                👁️
+                            </span>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary" id="onboardingChangePasswordBtn"><?php echo t('update_password'); ?></button>
@@ -142,9 +233,17 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
     var selectionSummary = document.getElementById('selection_summary');
     var summaryText = document.getElementById('summary_text');
 
+    var confirmModal = document.getElementById('confirmModal');
+    var modalSummaryBody = document.getElementById('modalSummaryBody');
+    var confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
+    var editBtn = document.getElementById('editBtn');
+
     var majorSectionsState = {};
     var allCategoriesState = {}; // Persist selections across category changes
     var currentCategoryId = null;
+
+    var majorNamesMap = {};
+    var sectionNamesMap = {};
 
     function updateSummary() {
         var payload = buildPayload();
@@ -219,6 +318,21 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
         })
         .finally(function(){
             pwBtn.disabled = false;
+        });
+    });
+
+    // Password toggle logic
+    document.querySelectorAll('.toggle-password').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var targetId = this.getAttribute('data-target');
+            var input = document.getElementById(targetId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.textContent = '🔒';
+            } else {
+                input.type = 'password';
+                this.textContent = '👁️';
+            }
         });
     });
 
@@ -425,6 +539,8 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                         label.style.flex = '1';
                         label.textContent = m.name;
 
+                        majorNamesMap[m.id] = m.name;
+
                         headerDiv.appendChild(checkbox);
                         headerDiv.appendChild(label);
                         majorDiv.appendChild(headerDiv);
@@ -590,6 +706,8 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                         var span = document.createElement('span');
                         span.textContent = s.name;
 
+                        sectionNamesMap[s.id] = s.name;
+
                         row.appendChild(cb);
                         row.appendChild(span);
                         sectionsGrid.appendChild(row);
@@ -631,26 +749,19 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
             var catState = allCategoriesState[catId];
             Object.keys(catState).forEach(function(majorId) {
                 if (!mergedState[majorId]) {
-                    mergedState[majorId] = {};
+                    mergedState[majorId] = { section_ids: [], major_name: '' };
                 }
-                Object.keys(catState[majorId]).forEach(function(sectionId) {
-                    if (catState[majorId][sectionId]) {
-                        mergedState[majorId][sectionId] = true;
-                    }
-                });
+                // We need to capture major names too for the summary
+                // This is a bit tricky since major names are only available in the DOM when loaded
+                // Let's ensure major names are captured in onMajorChange/onSectionChange
             });
         });
         
         // Merge current category state
         Object.keys(majorSectionsState).forEach(function(majorId) {
             if (!mergedState[majorId]) {
-                mergedState[majorId] = {};
+                mergedState[majorId] = { section_ids: [], major_name: '' };
             }
-            Object.keys(majorSectionsState[majorId]).forEach(function(sectionId) {
-                if (majorSectionsState[majorId][sectionId]) {
-                    mergedState[majorId][sectionId] = true;
-                }
-            });
         });
         
         var assignments = [];
@@ -664,14 +775,97 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
         return { assignments: assignments };
     }
 
+    function showConfirmModal() {
+        var payload = buildPayload();
+        modalSummaryBody.innerHTML = '';
+        
+        // Collect all selections with their names for display
+        var summaryData = [];
+        
+        // Process all categories and majors
+        var allStates = [allCategoriesState, { current: majorSectionsState }];
+        
+        var selections = {}; // { majorId: { name: '', sections: [ { id: '', name: '' } ] } }
+
+        // Helper to find names from DOM or state
+        function getMajorName(id) {
+            var el = document.querySelector('label[for="major_' + id + '"]');
+            return el ? el.textContent : (majorNamesMap[id] || 'Major ' + id);
+        }
+        function getSectionName(majorId, sectionId) {
+            var majorDiv = document.getElementById('sections_for_major_' + majorId);
+            if (majorDiv) {
+                var cb = majorDiv.querySelector('input[value="' + sectionId + '"]');
+                if (cb && cb.nextElementSibling) return cb.nextElementSibling.textContent;
+            }
+            return sectionNamesMap[sectionId] || 'Section ' + sectionId;
+        }
+
+        // We'll update the state management to keep track of names
+        // For now, let's build the visual summary from the built payload and maps
+        
+        var hasSelections = false;
+        
+        // Using a more robust way to gather the names
+        // I will add maps to store names as they are loaded
+        
+        Object.keys(allCategoriesState).forEach(function(catId) {
+            var catState = allCategoriesState[catId];
+            Object.keys(catState).forEach(function(majorId) {
+                var sectionIds = Object.keys(catState[majorId]).filter(function(sid) { return catState[majorId][sid]; });
+                if (sectionIds.length > 0) {
+                    hasSelections = true;
+                    var majorName = majorNamesMap[majorId] || 'Major ' + majorId;
+                    var sectionNames = sectionIds.map(function(sid) { return sectionNamesMap[sid] || 'Section ' + sid; });
+                    
+                    var item = document.createElement('div');
+                    item.className = 'summary-item';
+                    item.innerHTML = '<div class="summary-major">' + majorName + '</div>' +
+                                   '<div class="summary-sections">' + sectionNames.join(', ') + '</div>';
+                    modalSummaryBody.appendChild(item);
+                }
+            });
+        });
+        
+        // current category
+        Object.keys(majorSectionsState).forEach(function(majorId) {
+            var sectionIds = Object.keys(majorSectionsState[majorId]).filter(function(sid) { return majorSectionsState[majorId][sid]; });
+            if (sectionIds.length > 0) {
+                hasSelections = true;
+                var majorName = majorNamesMap[majorId] || 'Major ' + majorId;
+                var sectionNames = sectionIds.map(function(sid) { return sectionNamesMap[sid] || 'Section ' + sid; });
+                
+                var item = document.createElement('div');
+                item.className = 'summary-item';
+                item.innerHTML = '<div class="summary-major">' + majorName + '</div>' +
+                               '<div class="summary-sections">' + sectionNames.join(', ') + '</div>';
+                modalSummaryBody.appendChild(item);
+            }
+        });
+
+        if (hasSelections) {
+            confirmModal.style.display = 'flex';
+        } else {
+            showAlert(saveMsg, T.onboarding_select_at_least_one || 'Please select at least one major and section.', 'error');
+        }
+    }
+
     saveBtn.addEventListener('click', function(){
+        showConfirmModal();
+    });
+
+    editBtn.addEventListener('click', function() {
+        confirmModal.style.display = 'none';
+    });
+
+    confirmSubmitBtn.addEventListener('click', function() {
+        confirmModal.style.display = 'none';
+        performSave();
+    });
+
+    function performSave() {
         saveMsg.style.display = 'none';
         var payload = buildPayload();
-
-        if (!payload.assignments || payload.assignments.length === 0) {
-            showAlert(saveMsg, T.onboarding_select_at_least_one || 'Please select at least one major and section.', 'error');
-            return;
-        }
 
         saveBtn.disabled = true;
         fetch('teacher_onboarding_save.php', {
@@ -696,7 +890,7 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
         .finally(function(){
             saveBtn.disabled = false;
         });
-    });
+    }
 
     <?php if (!empty($_SESSION['onboarding_password_changed'])): ?>
     unlockStep2();
