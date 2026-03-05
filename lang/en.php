@@ -679,4 +679,15 @@ $T = [
     'carousel_feature_reports_desc' => 'Access detailed student records and generate comprehensive reports. Search, filter, and export data for informed decision-making.',
     'carousel_feature_notifications' => 'Real-Time Notifications',
     'carousel_feature_notifications_desc' => 'Stay informed with instant alerts for new observations and important events. Never miss critical updates about your students.',
+
+    // Secretary Edit Student
+    'edit_student' => 'Edit Student',
+    'edit_student_info' => 'Edit student information',
+    'search_btn' => 'Search',
+    'student_not_found' => 'Student not found.',
+    'personal_details' => 'Personal Details',
+    'academic_info' => 'Academic Info',
+    'uniforms' => 'Uniforms',
+    'save_changes' => 'Save Changes',
+    'and' => '&',
 ];

@@ -70,6 +70,11 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
                 <span class="icon">➕</span>
                 <span class="text" data-tooltip="<?php echo t('insert_student'); ?>"><?php echo t('insert_student'); ?></span>
             </a>
+
+            <a href="secretary_edit_student.php" id="navEditStudent" class="sidebar-link <?php echo ($current_page == 'secretary_edit_student.php') ? 'active' : ''; ?>">
+                <span class="icon">✏️</span>
+                <span class="text" data-tooltip="<?php echo t('edit_student'); ?>"><?php echo t('edit_student'); ?></span>
+            </a>
         <?php endif; ?>
 
         <a href="profile.php" id="navProfile" class="sidebar-link <?php echo ($current_page == 'profile.php') ? 'active' : ''; ?>">

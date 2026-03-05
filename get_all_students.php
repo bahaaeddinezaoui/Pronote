@@ -6,7 +6,7 @@ require_once __DIR__ . '/lang/i18n.php';
 header('Content-Type: application/json');
 
 // Check if user is logged in as Admin
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role'] ?? '', ['Admin', 'Secretary'], true)) {
     http_response_code(403);
     echo json_encode(['success' => false, 'students' => []]);
     exit;

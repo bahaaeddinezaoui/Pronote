@@ -26,6 +26,26 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Serial availability endpoint (AJAX)
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['check_serial']) && $_GET['check_serial'] === '1') {
+    header('Content-Type: application/json; charset=utf-8');
+    $serialToCheck = trim($_GET['serial'] ?? '');
+    $exists = false;
+    if ($serialToCheck !== '') {
+        $stmtCheck = $conn->prepare("SELECT 1 FROM student WHERE STUDENT_SERIAL_NUMBER = ? LIMIT 1");
+        if ($stmtCheck) {
+            $stmtCheck->bind_param("s", $serialToCheck);
+            $stmtCheck->execute();
+            $stmtCheck->store_result();
+            $exists = ($stmtCheck->num_rows > 0);
+            $stmtCheck->close();
+        }
+    }
+    echo json_encode(['exists' => $exists]);
+    $conn->close();
+    exit;
+}
+
 // 3. Fetch Secretary Name
 $user_id = $_SESSION['user_id'];
 $secretary_name = "Secretary";
@@ -137,6 +157,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $message = "Please fill in all required fields (Serial Number, Names, Category, Section).";
         $msg_type = "error";
     } else {
+        $stmtCheck = $conn->prepare("SELECT 1 FROM student WHERE STUDENT_SERIAL_NUMBER = ? LIMIT 1");
+        if ($stmtCheck) {
+            $stmtCheck->bind_param("s", $serial);
+            $stmtCheck->execute();
+            $stmtCheck->store_result();
+            $serialExists = ($stmtCheck->num_rows > 0);
+            $stmtCheck->close();
+            if ($serialExists) {
+                $message = t('error_serial_exists', $serial);
+                $msg_type = "error";
+                // Stop here, but keep connection open for dropdown fetching below.
+                $stmt = null;
+                goto after_student_insert;
+            }
+        }
+
         $sql = "INSERT INTO student (
             STUDENT_SERIAL_NUMBER, CATEGORY_ID, SECTION_ID,
             STUDENT_FIRST_NAME_EN, STUDENT_LAST_NAME_EN, STUDENT_FIRST_NAME_AR, STUDENT_LAST_NAME_AR,
@@ -157,22 +193,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $message = "Prepare failed: (" . $conn->errno . ") " . $conn->error;
                 $msg_type = "error";
         } else {
-            // Handle Photo
-            $photo_path = null;
-            if (isset($_FILES['STUDENT_PHOTO']) && $_FILES['STUDENT_PHOTO']['error'] === UPLOAD_ERR_OK) {
-                $upload_dir = __DIR__ . '/resources/photos/';
-                $file_extension = strtolower(pathinfo($_FILES['STUDENT_PHOTO']['name'], PATHINFO_EXTENSION));
-                $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
-                
-                if (in_array($file_extension, $allowed_extensions)) {
-                    $unique_filename = 'student_' . $serial . '_' . time() . '.' . $file_extension;
-                    $upload_path = $upload_dir . $unique_filename;
-                    
-                    if (move_uploaded_file($_FILES['STUDENT_PHOTO']['tmp_name'], $upload_path)) {
-                        $photo_path = 'resources/photos/' . $unique_filename;
-                    }
-                }
-            }
+            $photo_path = 'resources\\photos\\students\\' . $serial . '.jpg';
 
             // Build type string explicitly: 40 params (photo as string path)
             $types = "sii" . "ssss" . "i" . "ssss" . "dd" . "s" . "d" . "ssssssssssssss" . "iii" . "i" . "sss" . "iii";
@@ -346,6 +367,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
+after_student_insert:
+
 // 5. Fetch Dropdowns
 $categories = [];
 $res = $conn->query("SELECT CATEGORY_ID, CATEGORY_NAME_EN, CATEGORY_NAME_AR FROM category ORDER BY CATEGORY_NAME_EN");
@@ -476,7 +499,7 @@ $conn->close();
     <?php endif; ?>
 
     <div class="form-card">
-        <form method="POST" action="secretary_home.php" id="wizardForm" enctype="multipart/form-data">
+        <form method="POST" action="insert_student.php" id="wizardForm">
             <input type="hidden" name="action" value="add_student">
             <div class="wizard-steps">
                 <div class="wizard-step-dot active" data-step="1" title="<?php echo t('step_personal_details'); ?>">1</div>
@@ -494,13 +517,8 @@ $conn->close();
                         
                         <div class="form-group">
                             <label><?php echo t('serial_number'); ?></label>
-                            <input type="text" name="STUDENT_SERIAL_NUMBER" required placeholder="<?php echo t('serial_placeholder'); ?>">
-                        </div>
-
-                        <!-- STUDENT PHOTO UPLOAD -->
-                        <div class="form-group">
-                            <label><?php echo t('label_student_photo'); ?></label>
-                            <input type="file" name="STUDENT_PHOTO" accept="image/*">
+                            <input type="text" id="STUDENT_SERIAL_NUMBER" name="STUDENT_SERIAL_NUMBER" required placeholder="<?php echo t('serial_placeholder'); ?>">
+                            <div id="serialError" style="margin-top:0.35rem; color:#991b1b; font-size:0.85rem; display:none;"></div>
                         </div>
 
                         <div class="form-group"><label><?php echo t('label_first_name_en'); ?></label><input type="text" name="STUDENT_FIRST_NAME_EN" required></div>
@@ -857,11 +875,98 @@ function showStep(step) {
 }
 
 document.getElementById('wizardPrev').onclick = function() { if (currentStep > 1) showStep(currentStep - 1); };
-document.getElementById('wizardNext').onclick = function() { if (currentStep < TOTAL_STEPS) showStep(currentStep + 1); };
+const serialInput = document.getElementById('STUDENT_SERIAL_NUMBER');
+const serialError = document.getElementById('serialError');
+let serialExists = false;
+let serialCheckSeq = 0;
+
+function setSerialError(msg) {
+    if (msg) {
+        serialError.textContent = msg;
+        serialError.style.display = 'block';
+    } else {
+        serialError.textContent = '';
+        serialError.style.display = 'none';
+    }
+}
+
+function updateWizardButtonsForSerial() {
+    const nextBtn = document.getElementById('wizardNext');
+    const submitBtn = document.getElementById('wizardSubmit');
+    const serialVal = (serialInput.value || '').trim();
+    const invalid = (serialVal === '') || serialExists;
+    if (nextBtn) nextBtn.disabled = (currentStep === 1) ? invalid : false;
+    if (submitBtn) submitBtn.disabled = invalid;
+}
+
+function checkSerialAvailability() {
+    const serialVal = (serialInput.value || '').trim();
+    serialExists = false;
+    if (serialVal === '') {
+        setSerialError('');
+        updateWizardButtonsForSerial();
+        return Promise.resolve(false);
+    }
+    const seq = ++serialCheckSeq;
+    return fetch(`insert_student.php?check_serial=1&serial=${encodeURIComponent(serialVal)}`)
+        .then(r => r.json())
+        .then(data => {
+            if (seq !== serialCheckSeq) return serialExists;
+            serialExists = !!(data && data.exists);
+            if (serialExists) {
+                setSerialError((T.error_serial_exists_inline || 'This serial number already exists.'));
+            } else {
+                setSerialError('');
+            }
+            updateWizardButtonsForSerial();
+            return serialExists;
+        })
+        .catch(() => {
+            updateWizardButtonsForSerial();
+            return false;
+        });
+}
+
+if (serialInput) {
+    serialInput.addEventListener('input', function() {
+        setSerialError('');
+        serialExists = false;
+        updateWizardButtonsForSerial();
+        clearTimeout(serialInput.__t);
+        serialInput.__t = setTimeout(checkSerialAvailability, 250);
+    });
+    serialInput.addEventListener('blur', function() { checkSerialAvailability(); });
+}
+
+document.getElementById('wizardNext').onclick = function() {
+    if (currentStep < TOTAL_STEPS) {
+        if (currentStep === 1) {
+            checkSerialAvailability().then(exists => {
+                if (!exists && (serialInput.value || '').trim() !== '') {
+                    showStep(currentStep + 1);
+                }
+            });
+            return;
+        }
+        showStep(currentStep + 1);
+    }
+};
 document.querySelectorAll('.wizard-step-dot').forEach(d => {
-    d.addEventListener('click', function() { showStep(parseInt(this.getAttribute('data-step'), 10)); });
+    d.addEventListener('click', function() {
+        const targetStep = parseInt(this.getAttribute('data-step'), 10);
+        if (currentStep === 1 && targetStep > 1) {
+            checkSerialAvailability().then(exists => {
+                if (!exists && (serialInput.value || '').trim() !== '') {
+                    showStep(targetStep);
+                }
+            });
+            return;
+        }
+        showStep(targetStep);
+    });
 });
 showStep(1);
+updateWizardButtonsForSerial();
 
 // Cascading Locations (Generic)
 function fetchLocations(type, parentParam, parentId, targetSelect, placeholder) {

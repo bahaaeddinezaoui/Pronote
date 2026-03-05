@@ -745,4 +745,15 @@ $T = [
     'carousel_feature_reports_desc' => 'الوصول إلى سجلات الطلاب التفصيلية وإنشاء تقارير شاملة. البحث والتصفية وتصدير البيانات لاتخاذ قرارات مستنيرة.',
     'carousel_feature_notifications' => 'إشعارات فورية',
     'carousel_feature_notifications_desc' => 'ابقَ على اطلاع مع تنبيهات فورية للملاحظات الجديدة والأحداث المهمة. لا تفوت التحديثات الحرجة عن طلابك.',
+
+    // Secretary Edit Student
+    'edit_student' => 'تعديل بيانات طالب',
+    'edit_student_info' => 'تعديل معلومات الطالب',
+    'search_btn' => 'بحث',
+    'student_not_found' => 'الطالب غير موجود.',
+    'personal_details' => 'البيانات الشخصية',
+    'academic_info' => 'المعلومات الأكاديمية',
+    'uniforms' => 'الزي',
+    'save_changes' => 'حفظ التغييرات',
+    'and' => 'و',
 ];

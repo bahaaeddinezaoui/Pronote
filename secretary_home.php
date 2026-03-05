@@ -133,6 +133,10 @@ $conn->close();
                             <i>➕</i>
                             <span><?php echo t('insert_student'); ?></span>
                         </a>
+                        <a href="secretary_edit_student.php" class="action-card">
+                            <i>✏️</i>
+                            <span>Edit Student</span>
+                        </a>
                         <!-- Add more actions here -->
                     </div>
                 </div>
