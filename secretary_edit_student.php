@@ -731,6 +731,7 @@ function selectedAttr($current, $value) {
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="styles.css" />
@@ -757,14 +758,14 @@ function selectedAttr($current, $value) {
         .btn-submit:active::after { width: 300px; height: 300px; }
         .alert { padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-weight: 500; animation: slideInLeft 0.4s ease-out; }
         @keyframes slideInLeft { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
-        .alert.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; animation: shake 0.5s ease-out; }
-        .alert.success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .alert.error { background: var(--bg-error); color: var(--text-error); border: 1px solid #fecaca; animation: shake 0.5s ease-out; }
+        .alert.success { background: var(--bg-success); color: var(--text-success); border: 1px solid #bbf7d0; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
-        .sub-group { padding: 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; grid-column: 1 / -1; transition: all 0.3s ease; }
+        .sub-group { padding: 1rem; background: var(--background-color); border: 1px solid var(--border-color); border-radius: 8px; grid-column: 1 / -1; transition: all 0.3s ease; }
         .sub-group:hover { border-color: var(--primary-color); box-shadow: 0 2px 8px rgba(111, 66, 193, 0.1); }
         .wizard-steps { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem; padding: 0.75rem; background: var(--bg-secondary); border-radius: var(--radius-lg); }
-        .wizard-step-dot { width: 2rem; height: 2rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; color: #6b7280; background: #e5e7eb; cursor: pointer; transition: all 0.3s ease; }
-        .wizard-step-dot:hover { background: #d1d5db; color: #374151; transform: scale(1.1); }
+        .wizard-step-dot { width: 2rem; height: 2rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); background: var(--border-color); cursor: pointer; transition: all 0.3s ease; }
+        .wizard-step-dot:hover { background: var(--border-color); color: var(--text-primary); transform: scale(1.1); }
         .wizard-step-dot.active { background: var(--primary-color); color: white; animation: pulse 1.5s infinite; }
         .wizard-step-dot.done { background: #10b981; color: white; animation: bounce 0.5s ease; }
         @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(111, 66, 193, 0.4); } 50% { box-shadow: 0 0 0 8px rgba(111, 66, 193, 0); } }
@@ -775,7 +776,7 @@ function selectedAttr($current, $value) {
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .wizard-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); gap: 1rem; flex-wrap: wrap; }
         .wizard-actions .btn-prev, .wizard-actions .btn-next { padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); transition: all 0.3s ease; }
-        .wizard-actions .btn-prev:hover, .wizard-actions .btn-next:hover { background: #e5e7eb; transform: translateY(-2px); }
+        .wizard-actions .btn-prev:hover, .wizard-actions .btn-next:hover { background: var(--border-color); transform: translateY(-2px); }
         .wizard-actions .btn-next { background: var(--primary-color); color: white; border-color: var(--primary-color); }
         .wizard-actions .btn-next:hover { background: var(--primary-hover); box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3); }
         .wizard-actions .btn-submit { margin-left: auto; }
@@ -788,8 +789,8 @@ function selectedAttr($current, $value) {
         #suggestionsContainer {
             display: none;
             margin-bottom: 20px;
-            background: #f8f9fa;
-            border: 1px solid #bbb;
+            background: var(--bg-muted);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             max-height: 500px;
@@ -952,7 +953,7 @@ function selectedAttr($current, $value) {
                         </div>
 
                         <button type="submit" class="btn-search"><?php echo t('search_btn'); ?></button>
-                        <button type="button" class="btn-search" style="background: #e5e7eb; color: #111827;" onclick="clearSearch()"><?php echo t('clear'); ?></button>
+                        <button type="button" class="btn-search" style="background: var(--border-color); color: var(--text-primary);" onclick="clearSearch()"><?php echo t('clear'); ?></button>
                     </div>
                 </form>
             </div>
@@ -1300,7 +1301,7 @@ function selectedAttr($current, $value) {
                             <div class="accordion-content">
                             <div class="wizard-panel" data-step="7">
                             <div class="form-grid">
-                                <div class="sub-group" style="grid-column: 1 / -1; border-color:#fecaca; background:#fffafa;">
+                                <div class="sub-group" style="grid-column: 1 / -1; border-color:var(--border-error); background:var(--bg-error);">
                                     <div class="form-grid" style="gap: 1.5rem;">
                                         <div class="form-group"><label><?php echo t('label_contact_phone'); ?></label><input type="text" name="CONTACT_PHONE_NUMBER" value="<?php echo h($student['CONTACT_PHONE_NUMBER']); ?>"></div>
 
@@ -1361,7 +1362,7 @@ function selectedAttr($current, $value) {
 
                                         <div id="FOREIGN_CONTACT_FIELDS" style="grid-column: 1 / -1; display:none; grid-template-columns: 1fr 1fr; gap: 1rem;">
                                             <div class="form-group"><label><?php echo t('label_consulate_number'); ?></label><input type="text" name="CONSULATE_NUMBER" value="<?php echo h($student['CONSULATE_NUMBER']); ?>"></div>
-                                            <div class="form-group" style="grid-column: span 2;"><p style="font-size:0.9rem; color:#666;"><?php echo t('relation_consulate_note'); ?></p></div>
+                                            <div class="form-group" style="grid-column: span 2;"><p style="font-size:0.9rem; color:var(--text-secondary);"><?php echo t('relation_consulate_note'); ?></p></div>
                                         </div>
 
                                     </div>

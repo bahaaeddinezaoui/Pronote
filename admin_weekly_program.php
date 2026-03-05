@@ -27,6 +27,7 @@ $pdfExists = is_file($pdfFullPath);
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
@@ -38,16 +39,16 @@ $pdfExists = is_file($pdfFullPath);
             padding: 0 20px 30px;
         }
         .card {
-            background: #fff;
-            border: 1px solid #bbb;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.06);
         }
-        .meta { color: #6b7280; font-size: 14px; margin-top: 10px; }
-        .pdf-box { margin-top: 20px; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+        .meta { color: var(--text-secondary); font-size: 14px; margin-top: 10px; }
+        .pdf-box { margin-top: 20px; border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; }
         .pdf-box iframe { width: 100%; height: 750px; border: 0; }
-        .no-data { color: #888; font-style: italic; padding: 15px; text-align: center; }
+        .no-data { color: var(--text-secondary); font-style: italic; padding: 15px; text-align: center; }
     </style>
 </head>
 <body>

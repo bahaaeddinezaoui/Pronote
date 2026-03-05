@@ -407,6 +407,7 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="styles.css" />
@@ -435,17 +436,17 @@ $conn->close();
         }
         .btn-submit:hover { background: var(--primary-hover); }
         .alert { padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-weight: 500; }
-        .alert.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-        .alert.success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .sub-group { padding: 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; grid-column: 1 / -1; }
+        .alert.error { background: var(--bg-error); color: var(--text-error); border: 1px solid #fecaca; }
+        .alert.success { background: var(--bg-success); color: var(--text-success); border: 1px solid #bbf7d0; }
+        .sub-group { padding: 1rem; background: var(--background-color); border: 1px solid var(--border-color); border-radius: 8px; grid-column: 1 / -1; }
         .emergency-section {
-            background: #fffafa; border: 1px solid #fecaca; border-radius: 12px;
+            background: var(--bg-error); border: 1px solid #fecaca; border-radius: 12px;
             padding: 1.5rem; grid-column: 1 / -1; margin-top: 2rem;
             position: relative;
         }
         .emergency-section::before {
             content: '🚨'; position: absolute; top: -15px; left: 20px;
-            font-size: 1.5rem; background: white; padding: 0 5px;
+            font-size: 1.5rem; background: var(--surface-color); padding: 0 5px;
         }
         .emergency-section .form-section-title {
              color: #dc2626; border-color: #fee2e2; margin-top: 0;
@@ -458,10 +459,10 @@ $conn->close();
         }
         .wizard-step-dot {
             width: 2rem; height: 2rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
-            font-size: 0.85rem; font-weight: 700; color: #6b7280; background: #e5e7eb;
+            font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); background: var(--border-color);
             cursor: pointer; transition: all 0.2s;
         }
-        .wizard-step-dot:hover { background: #d1d5db; color: #374151; }
+        .wizard-step-dot:hover { background: var(--border-color); color: var(--text-primary); }
         .wizard-step-dot.active { background: var(--primary-color); color: white; }
         .wizard-step-dot.done { background: #10b981; color: white; }
         .wizard-panels { position: relative; min-height: 320px; }
@@ -476,7 +477,7 @@ $conn->close();
             padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer;
             border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary);
         }
-        .wizard-actions .btn-prev:hover, .wizard-actions .btn-next:hover { background: #e5e7eb; }
+        .wizard-actions .btn-prev:hover, .wizard-actions .btn-next:hover { background: var(--border-color); }
         .wizard-actions .btn-next { background: var(--primary-color); color: white; border-color: var(--primary-color); }
         .wizard-actions .btn-next:hover { background: var(--primary-hover); }
         .wizard-actions .btn-submit { margin-left: auto; }
@@ -518,7 +519,7 @@ $conn->close();
                         <div class="form-group">
                             <label><?php echo t('serial_number'); ?></label>
                             <input type="text" id="STUDENT_SERIAL_NUMBER" name="STUDENT_SERIAL_NUMBER" required placeholder="<?php echo t('serial_placeholder'); ?>">
-                            <div id="serialError" style="margin-top:0.35rem; color:#991b1b; font-size:0.85rem; display:none;"></div>
+                            <div id="serialError" style="margin-top:0.35rem; color:var(--text-error); font-size:0.85rem; display:none;"></div>
                         </div>
 
                         <div class="form-group"><label><?php echo t('label_first_name_en'); ?></label><input type="text" name="STUDENT_FIRST_NAME_EN" required></div>
@@ -791,7 +792,7 @@ $conn->close();
                                  <div id="FOREIGN_CONTACT_FIELDS" style="grid-column: 1 / -1; display:none; grid-template-columns: 1fr 1fr; gap: 1rem;">
                                      <div class="form-group"><label><?php echo t('label_consulate_number'); ?></label><input type="text" name="CONSULATE_NUMBER"></div>
                                      <div class="form-group" style="grid-column: span 2;">
-                                        <p style="font-size:0.9rem; color:#666;"><?php echo t('relation_consulate_note'); ?></p>
+                                        <p style="font-size:0.9rem; color:var(--text-secondary);"><?php echo t('relation_consulate_note'); ?></p>
                                      </div>
                                  </div>
                              </div>

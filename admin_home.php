@@ -158,6 +158,7 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
@@ -198,8 +199,8 @@ $conn->close();
         }
 
         .stat-card {
-            background: #fff;
-            border: 1px solid #bbb;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.06);
@@ -221,13 +222,13 @@ $conn->close();
 
         .stat-label {
             font-size: 14px;
-            color: #6b7280;
+            color: var(--text-secondary);
             font-weight: 500;
         }
 
         .info-section {
-            background: #fff;
-            border: 1px solid #bbb;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
@@ -238,7 +239,7 @@ $conn->close();
             margin: 0 0 15px 0;
             color: var(--primary-color);
             font-size: 18px;
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
         }
 
@@ -262,17 +263,17 @@ $conn->close();
         }
 
         .info-list strong {
-            color: #1f1f1f;
+            color: var(--text-primary);
             font-weight: 600;
         }
 
         .info-list .highlight {
-            color: #6f42c1;
+            color: var(--primary-color);
             font-weight: 500;
         }
 
         .no-data {
-            color: #888;
+            color: var(--text-secondary);
             font-style: italic;
             padding: 15px;
             text-align: center;
@@ -353,7 +354,7 @@ $conn->close();
                         <li>
                             <div>
                                 <strong><?php echo htmlspecialchars($obs['STUDENT_FIRST_NAME_EN'] . ' ' . $obs['STUDENT_LAST_NAME_EN']); ?></strong>
-                                <div style="font-size: 12px; color: #6b7280;"><?php echo t('by'); ?> <?php echo htmlspecialchars($obs['TEACHER_FIRST_NAME_EN'] . ' ' . $obs['TEACHER_LAST_NAME_EN']); ?></div>
+                                <div style="font-size: 12px; color: var(--text-secondary);"><?php echo t('by'); ?> <?php echo htmlspecialchars($obs['TEACHER_FIRST_NAME_EN'] . ' ' . $obs['TEACHER_LAST_NAME_EN']); ?></div>
                             </div>
                             <div>
                                 <span class="highlight"><?php echo htmlspecialchars($obs['OBSERVATION_MOTIF']); ?></span>
@@ -378,7 +379,7 @@ $conn->close();
                         <li>
                             <div>
                                 <strong><?php echo htmlspecialchars($abs['STUDENT_FIRST_NAME_EN'] . ' ' . $abs['STUDENT_LAST_NAME_EN']); ?></strong>
-                                <div style="font-size: 12px; color: #6b7280;"><?php echo t('session_label'); ?>: <?php echo date('d/m/Y', strtotime($abs['STUDY_SESSION_DATE'])); ?></div>
+                                <div style="font-size: 12px; color: var(--text-secondary);"><?php echo t('session_label'); ?>: <?php echo date('d/m/Y', strtotime($abs['STUDY_SESSION_DATE'])); ?></div>
                             </div>
                             <div>
                                 <span class="highlight"><?php echo htmlspecialchars($abs['ABSENCE_MOTIF']); ?></span>

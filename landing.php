@@ -15,6 +15,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo t('app_name'); ?> - <?php echo t('title_suffix'); ?></title>
@@ -27,14 +28,14 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f9fafb;
-            color: #333;
+            background: var(--background-color);
+            color: var(--text-primary);
             line-height: 1.6;
         }
 
         /* Navigation Bar */
         .navbar {
-            background: #fff;
+            background: var(--surface-color);
             padding: 1rem 2rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             position: sticky;
@@ -48,7 +49,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         .navbar-brand {
             font-size: 24px;
             font-weight: 700;
-            color: #6f42c1;
+            color: var(--primary-color);
             text-decoration: none;
         }
 
@@ -60,17 +61,17 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
         .navbar-links a {
             text-decoration: none;
-            color: #6b7280;
+            color: var(--text-secondary);
             font-weight: 500;
             transition: color 0.3s ease;
         }
 
         .navbar-links a:hover {
-            color: #6f42c1;
+            color: var(--primary-color);
         }
 
         .btn-login {
-            background: #6f42c1;
+            background: var(--primary-color);
             color: white;
             padding: 0.7rem 1.5rem;
             border-radius: 8px;
@@ -80,7 +81,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .btn-login:hover {
-            background: #5a34a1;
+            background: var(--primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
         }
@@ -151,8 +152,8 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .btn-primary {
-            background: white;
-            color: #6f42c1;
+            background: var(--surface-color);
+            color: var(--primary-color);
             padding: 12px 30px;
             border-radius: 8px;
             text-decoration: none;
@@ -179,8 +180,8 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .btn-secondary:hover {
-            background: white;
-            color: #6f42c1;
+            background: var(--surface-color);
+            color: var(--primary-color);
             transform: translateY(-3px);
         }
 
@@ -196,12 +197,12 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             font-size: 36px;
             font-weight: 700;
             margin-bottom: 50px;
-            color: #1f1f1f;
+            color: var(--text-primary);
         }
 
         .section-subtitle {
             text-align: center;
-            color: #6b7280;
+            color: var(--text-secondary);
             margin-bottom: 30px;
             font-size: 16px;
         }
@@ -214,10 +215,10 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .feature-card {
-            background: white;
+            background: var(--surface-color);
             padding: 30px;
             border-radius: 12px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-color);
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
             text-align: center;
@@ -226,7 +227,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         .feature-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 12px 24px rgba(111, 66, 193, 0.15);
-            border-color: #6f42c1;
+            border-color: var(--primary-color);
         }
 
         .feature-icon {
@@ -237,21 +238,21 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         .feature-card h3 {
             font-size: 20px;
             margin-bottom: 12px;
-            color: #1f1f1f;
+            color: var(--text-primary);
         }
 
         .feature-card p {
-            color: #6b7280;
+            color: var(--text-secondary);
             font-size: 14px;
             line-height: 1.6;
         }
 
         /* Tutorial Section */
         .tutorial {
-            background: #fff;
+            background: var(--surface-color);
             padding: 80px 2rem;
-            border-top: 1px solid #e5e7eb;
-            border-bottom: 1px solid #e5e7eb;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .tutorial-container {
@@ -269,7 +270,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         .tutorial-text h3 {
             font-size: 28px;
             margin-bottom: 20px;
-            color: #1f1f1f;
+            color: var(--text-primary);
         }
 
         .tutorial-steps {
@@ -289,7 +290,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             position: absolute;
             left: 0;
             top: 0;
-            background: #6f42c1;
+            background: var(--primary-color);
             color: white;
             width: 40px;
             height: 40px;
@@ -303,13 +304,13 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
         .tutorial-steps li strong {
             display: block;
-            color: #1f1f1f;
+            color: var(--text-primary);
             font-size: 16px;
             margin-bottom: 5px;
         }
 
         .tutorial-steps li span {
-            color: #6b7280;
+            color: var(--text-secondary);
             font-size: 14px;
         }
 
@@ -337,13 +338,13 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .tutorial-visual h4 {
-            color: #6f42c1;
+            color: var(--primary-color);
             font-size: 18px;
             margin-bottom: 10px;
         }
 
         .tutorial-visual p {
-            color: #6b7280;
+            color: var(--text-secondary);
             font-size: 14px;
         }
 
@@ -374,13 +375,13 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .use-case-card h4 {
-            color: #6f42c1;
+            color: var(--primary-color);
             font-size: 18px;
             margin-bottom: 12px;
         }
 
         .use-case-card p {
-            color: #6b7280;
+            color: var(--text-secondary);
             font-size: 14px;
             line-height: 1.6;
         }
@@ -439,10 +440,10 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .footer-links a:hover {
-            color: #6f42c1;
+            color: var(--primary-color);
         }
 
-        .lang-switcher{display:inline-flex;align-items:center;gap:.25rem;font-size:.875rem}.lang-switcher a{color:#6b7280;text-decoration:none;padding:.25rem .5rem}.lang-switcher a:hover{color:#6f42c1}.lang-switcher a.active{color:#6f42c1;font-weight:600}.lang-sep{color:#9ca3af}
+        .lang-switcher{display:inline-flex;align-items:center;gap:.25rem;font-size:.875rem}.lang-switcher a{color:var(--text-secondary);text-decoration:none;padding:.25rem .5rem}.lang-switcher a:hover{color:var(--primary-color)}.lang-switcher a.active{color:var(--primary-color);font-weight:600}.lang-sep{color:#9ca3af}
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -647,8 +648,8 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
         /* Interactive Tutorial Styles */
         .tutorial-step {
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
+            background: var(--background-color);
+            border: 2px solid var(--border-color);
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 16px;
@@ -659,20 +660,20 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .tutorial-step:hover {
-            border-color: #6f42c1;
+            border-color: var(--primary-color);
             transform: translateX(5px);
             box-shadow: 0 4px 12px rgba(111, 66, 193, 0.1);
         }
 
         .tutorial-step.active {
-            border-color: #6f42c1;
-            background: #fff;
+            border-color: var(--primary-color);
+            background: var(--surface-color);
             box-shadow: 0 8px 24px rgba(111, 66, 193, 0.15);
         }
 
         .tutorial-step.completed {
-            border-color: #10b981;
-            background: #ecfdf5;
+            border-color: var(--text-success);
+            background: var(--bg-success);
         }
 
         .tutorial-step.completed::after {
@@ -699,7 +700,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .tutorial-step-number {
-            background: #6f42c1;
+            background: var(--primary-color);
             color: white;
             width: 44px;
             height: 44px;
@@ -719,12 +720,12 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
         .tutorial-step-title {
             font-weight: 700;
-            color: #1f1f1f;
+            color: var(--text-primary);
             font-size: 16px;
         }
 
         .tutorial-step-preview {
-            color: #6b7280;
+            color: var(--text-secondary);
             font-size: 14px;
             margin-top: 4px;
         }
@@ -742,7 +743,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .tutorial-step-details {
-            color: #4b5563;
+            color: var(--text-muted);
             font-size: 14px;
             line-height: 1.7;
             margin-bottom: 16px;
@@ -752,7 +753,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: #6f42c1;
+            background: var(--primary-color);
             color: white;
             padding: 10px 20px;
             border-radius: 8px;
@@ -764,13 +765,13 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .tutorial-step-action:hover {
-            background: #5a34a1;
+            background: var(--primary-hover);
             transform: translateY(-2px);
         }
 
         /* Progress Bar */
         .tutorial-progress {
-            background: #f3f4f6;
+            background: var(--bg-muted);
             border-radius: 10px;
             height: 8px;
             margin-bottom: 24px;
@@ -788,14 +789,14 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         .tutorial-progress-text {
             text-align: center;
             font-size: 14px;
-            color: #6b7280;
+            color: var(--text-secondary);
             margin-bottom: 8px;
         }
 
         /* Demo Simulator */
         .demo-simulator {
-            background: #fff;
-            border: 2px solid #e5e7eb;
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
             border-radius: 16px;
             padding: 24px;
             margin-top: 20px;
@@ -813,19 +814,19 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             justify-content: space-between;
             margin-bottom: 20px;
             padding-bottom: 16px;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .demo-title {
             font-weight: 700;
-            color: #1f1f1f;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
         .demo-close {
-            background: #f3f4f6;
+            background: var(--bg-muted);
             border: none;
             width: 32px;
             height: 32px;
@@ -838,11 +839,11 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .demo-close:hover {
-            background: #e5e7eb;
+            background: var(--border-color);
         }
 
         .demo-screen {
-            background: #f9fafb;
+            background: var(--background-color);
             border-radius: 12px;
             padding: 20px;
             min-height: 200px;
@@ -851,7 +852,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         .demo-input {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 14px;
             margin-bottom: 12px;
@@ -860,11 +861,11 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
         .demo-input:focus {
             outline: none;
-            border-color: #6f42c1;
+            border-color: var(--primary-color);
         }
 
         .demo-button {
-            background: #6f42c1;
+            background: var(--primary-color);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -875,7 +876,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .demo-button:hover {
-            background: #5a34a1;
+            background: var(--primary-hover);
         }
 
         .demo-feedback {
@@ -887,15 +888,15 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .demo-feedback.success {
-            background: #ecfdf5;
+            background: var(--bg-success);
             color: #065f46;
             border: 1px solid #10b981;
             display: block;
         }
 
         .demo-feedback.info {
-            background: #eff6ff;
-            color: #1e40af;
+            background: var(--bg-info);
+            color: var(--text-info);
             border: 1px solid #3b82f6;
             display: block;
         }
@@ -912,13 +913,13 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             gap: 12px;
             padding: 8px 0;
             font-size: 14px;
-            color: #4b5563;
+            color: var(--text-muted);
         }
 
         .tutorial-checklist input[type="checkbox"] {
             width: 20px;
             height: 20px;
-            accent-color: #6f42c1;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
 
@@ -994,7 +995,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             left: 0;
             width: 0;
             height: 2px;
-            background: #6f42c1;
+            background: var(--primary-color);
             transition: width 0.3s ease;
         }
 
@@ -1032,16 +1033,16 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: var(--border-color);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #6f42c1;
+            background: var(--primary-color);
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #5a34a1;
+            background: var(--primary-hover);
         }
 
         /* Reduced Motion */
@@ -1339,7 +1340,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
     <div class="cta-content reveal-scale">
         <h2><?php echo t('cta_title'); ?></h2>
         <p><?php echo t('cta_sub'); ?></p>
-        <a href="login.php" class="btn-primary" style="background: white; color: #6f42c1;"><?php echo t('login_now'); ?></a>
+        <a href="login.php" class="btn-primary" style="background: var(--surface-color); color: var(--primary-color);"><?php echo t('login_now'); ?></a>
     </div>
 </section>
 
@@ -1585,7 +1586,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
                         demoTitle.textContent = 'Login Demo';
                         demoScreen.innerHTML = `
                             <div style="max-width: 300px; margin: 0 auto;">
-                                <h4 style="margin-bottom: 20px; color: #6f42c1;">eNote Login</h4>
+                                <h4 style="margin-bottom: 20px; color: var(--primary-color);">eNote Login</h4>
                                 <input type="text" class="demo-input" placeholder="Username" id="demoUsername">
                                 <input type="password" class="demo-input" placeholder="Password" id="demoPassword">
                                 <select class="demo-input" id="demoRole">
@@ -1602,30 +1603,30 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
                         demoTitle.textContent = 'Dashboard Demo';
                         demoScreen.innerHTML = `
                             <div style="text-align: left;">
-                                <h4 style="margin-bottom: 16px; color: #6f42c1;">Welcome, Teacher! 👋</h4>
+                                <h4 style="margin-bottom: 16px; color: var(--primary-color);">Welcome, Teacher! 👋</h4>
                                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px;">
-                                    <div style="background: white; padding: 16px; border-radius: 8px; text-align: center;">
-                                        <div style="font-size: 24px; font-weight: 700; color: #6f42c1;">156</div>
-                                        <div style="font-size: 12px; color: #6b7280;">Students</div>
+                                    <div style="background: var(--surface-color); padding: 16px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 24px; font-weight: 700; color: var(--primary-color);">156</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">Students</div>
                                     </div>
-                                    <div style="background: white; padding: 16px; border-radius: 8px; text-align: center;">
-                                        <div style="font-size: 24px; font-weight: 700; color: #10b981;">12</div>
-                                        <div style="font-size: 12px; color: #6b7280;">Observations</div>
+                                    <div style="background: var(--surface-color); padding: 16px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 24px; font-weight: 700; color: var(--text-success);">12</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">Observations</div>
                                     </div>
-                                    <div style="background: white; padding: 16px; border-radius: 8px; text-align: center;">
+                                    <div style="background: var(--surface-color); padding: 16px; border-radius: 8px; text-align: center;">
                                         <div style="font-size: 24px; font-weight: 700; color: #f59e0b;">8</div>
-                                        <div style="font-size: 12px; color: #6b7280;">Absences</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">Absences</div>
                                     </div>
-                                    <div style="background: white; padding: 16px; border-radius: 8px; text-align: center;">
+                                    <div style="background: var(--surface-color); padding: 16px; border-radius: 8px; text-align: center;">
                                         <div style="font-size: 24px; font-weight: 700; color: #3b82f6;">3</div>
-                                        <div style="font-size: 12px; color: #6b7280;">Majors</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">Majors</div>
                                     </div>
                                 </div>
-                                <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
-                                    <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">Recent Activity</div>
+                                <div style="background: var(--surface-color); padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                                    <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Recent Activity</div>
                                     <div style="font-size: 14px;">📋 New observation added for Student #1024</div>
                                 </div>
-                                <p style="font-size: 13px; color: #6b7280; text-align: center;">This is how your personalized dashboard will look!</p>
+                                <p style="font-size: 13px; color: var(--text-secondary); text-align: center;">This is how your personalized dashboard will look!</p>
                             </div>
                         `;
                         break;
@@ -1634,28 +1635,28 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
                         demoTitle.textContent = 'Records Demo';
                         demoScreen.innerHTML = `
                             <div style="text-align: left;">
-                                <h4 style="margin-bottom: 16px; color: #6f42c1;">Student Records</h4>
-                                <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                <h4 style="margin-bottom: 16px; color: var(--primary-color);">Student Records</h4>
+                                <div style="background: var(--surface-color); padding: 12px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600;">Ahmed Benali</div>
-                                        <div style="font-size: 12px; color: #6b7280;">EOA 1 - Section A</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">EOA 1 - Section A</div>
                                     </div>
                                     <div style="display: flex; gap: 8px;">
                                         <button class="demo-button" style="padding: 6px 12px; font-size: 12px;" onclick="showDemoFeedback('Observation recorded!')">📝</button>
-                                        <button class="demo-button" style="padding: 6px 12px; font-size: 12px; background: #f59e0b;" onclick="showDemoFeedback('Absence marked!')">❌</button>
+                                        <button class="demo-button" style="padding: 6px 12px; font-size: 12px; background: var(--bg-warning);" onclick="showDemoFeedback('Absence marked!')">❌</button>
                                     </div>
                                 </div>
-                                <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="background: var(--surface-color); padding: 12px; border-radius: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600;">Sarah Mansouri</div>
-                                        <div style="font-size: 12px; color: #6b7280;">EOA 1 - Section A</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">EOA 1 - Section A</div>
                                     </div>
                                     <div style="display: flex; gap: 8px;">
                                         <button class="demo-button" style="padding: 6px 12px; font-size: 12px;" onclick="showDemoFeedback('Observation recorded!')">📝</button>
-                                        <button class="demo-button" style="padding: 6px 12px; font-size: 12px; background: #f59e0b;" onclick="showDemoFeedback('Absence marked!')">❌</button>
+                                        <button class="demo-button" style="padding: 6px 12px; font-size: 12px; background: var(--bg-warning);" onclick="showDemoFeedback('Absence marked!')">❌</button>
                                     </div>
                                 </div>
-                                <p style="font-size: 13px; color: #6b7280; text-align: center; margin-top: 16px;">Click the buttons to see how recording works!</p>
+                                <p style="font-size: 13px; color: var(--text-secondary); text-align: center; margin-top: 16px;">Click the buttons to see how recording works!</p>
                             </div>
                         `;
                         break;
@@ -1664,7 +1665,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
                         demoTitle.textContent = 'Search Demo';
                         demoScreen.innerHTML = `
                             <div style="text-align: left;">
-                                <h4 style="margin-bottom: 16px; color: #6f42c1;">Search Students</h4>
+                                <h4 style="margin-bottom: 16px; color: var(--primary-color);">Search Students</h4>
                                 <div style="display: flex; gap: 8px; margin-bottom: 16px;">
                                     <input type="text" class="demo-input" style="margin-bottom: 0;" placeholder="Search by name..." id="demoSearchInput">
                                     <button class="demo-button" onclick="simulateSearch()">🔍</button>
@@ -1702,8 +1703,8 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
                         demoScreen.innerHTML = `
                             <div style="text-align: center; padding: 40px;">
                                 <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
-                                <h4 style="color: #10b981;">Welcome back!</h4>
-                                <p style="color: #6b7280; font-size: 14px;">This is a demo. Click "Get Started" to use the real app!</p>
+                                <h4 style="color: var(--text-success);">Welcome back!</h4>
+                                <p style="color: var(--text-secondary); font-size: 14px;">This is a demo. Click "Get Started" to use the real app!</p>
                             </div>
                         `;
                     }, 1500);
@@ -1718,13 +1719,13 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
                 
                 if (input && results) {
                     results.innerHTML = `
-                        <div style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+                        <div style="background: var(--surface-color); padding: 12px; border-radius: 8px; margin-bottom: 8px;">
                             <div style="font-weight: 600;">Ahmed Benali</div>
-                            <div style="font-size: 12px; color: #6b7280;">EOA 1 - Section A • 3 absences • 2 observations</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">EOA 1 - Section A • 3 absences • 2 observations</div>
                         </div>
-                        <div style="background: white; padding: 12px; border-radius: 8px;">
+                        <div style="background: var(--surface-color); padding: 12px; border-radius: 8px;">
                             <div style="font-weight: 600;">Ahmed Smith</div>
-                            <div style="font-size: 12px; color: #6b7280;">EOA 2 - Section B • 1 absence • 0 observations</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">EOA 2 - Section B • 1 absence • 0 observations</div>
                         </div>
                     `;
                     showDemoFeedback('✅ Found 2 students matching your search', 'success');

@@ -21,6 +21,7 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
@@ -43,7 +44,7 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
             backdrop-filter: blur(4px);
         }
         .modal-content {
-            background: white;
+            background: var(--surface-color);
             padding: 24px;
             border-radius: 16px;
             max-width: 500px;
@@ -56,7 +57,7 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
         .modal-title {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #111827;
+            color: var(--text-primary);
         }
         .modal-body {
             margin-bottom: 24px;
@@ -71,9 +72,9 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
         .summary-item {
             margin-bottom: 12px;
             padding: 12px;
-            background: #f9fafb;
+            background: var(--background-color);
             border-radius: 8px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-color);
         }
         .summary-major {
             font-weight: 700;
@@ -82,7 +83,7 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
         }
         .summary-sections {
             font-size: 0.875rem;
-            color: #4b5563;
+            color: var(--text-muted);
         }
     </style>
 </head>
@@ -108,31 +109,31 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
         <div style="padding: 24px; max-width: 900px;">
-            <div id="onboardingWelcome" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 16px; <?php echo !empty($_SESSION['onboarding_welcome_seen']) ? 'display:none;' : ''; ?>">
-                <h2 style="margin-top: 0; color: #111827; font-size: 20px; font-weight: 700;"><?php echo t('onboarding_welcome_title'); ?></h2>
-                <p style="color: #4b5563; margin-top: 8px; line-height: 1.5;">
+            <div id="onboardingWelcome" style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 16px; <?php echo !empty($_SESSION['onboarding_welcome_seen']) ? 'display:none;' : ''; ?>">
+                <h2 style="margin-top: 0; color: var(--text-primary); font-size: 20px; font-weight: 700;"><?php echo t('onboarding_welcome_title'); ?></h2>
+                <p style="color: var(--text-muted); margin-top: 8px; line-height: 1.5;">
                     <?php echo t('onboarding_welcome_desc'); ?>
                 </p>
                 <div style="margin-top: 20px; display: grid; gap: 16px;">
                     <div style="display: flex; gap: 12px; align-items: flex-start;">
-                        <div style="background: #eff6ff; color: #2563eb; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">1</div>
+                        <div style="background: var(--bg-info); color: #2563eb; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">1</div>
                         <div>
-                            <div style="font-weight: 600; color: #111827;"><?php echo t('onboarding_step1_title'); ?></div>
-                            <div style="font-size: 14px; color: #6b7280;"><?php echo t('onboarding_step1_desc'); ?></div>
+                            <div style="font-weight: 600; color: var(--text-primary);"><?php echo t('onboarding_step1_title'); ?></div>
+                            <div style="font-size: 14px; color: var(--text-secondary);"><?php echo t('onboarding_step1_desc'); ?></div>
                         </div>
                     </div>
                     <div style="display: flex; gap: 12px; align-items: flex-start;">
-                        <div style="background: #eff6ff; color: #2563eb; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">2</div>
+                        <div style="background: var(--bg-info); color: #2563eb; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">2</div>
                         <div>
-                            <div style="font-weight: 600; color: #111827;"><?php echo t('onboarding_step2_title'); ?></div>
-                            <div style="font-size: 14px; color: #6b7280;"><?php echo t('onboarding_step2_desc'); ?></div>
+                            <div style="font-weight: 600; color: var(--text-primary);"><?php echo t('onboarding_step2_title'); ?></div>
+                            <div style="font-size: 14px; color: var(--text-secondary);"><?php echo t('onboarding_step2_desc'); ?></div>
                         </div>
                     </div>
                 </div>
                 <button id="startOnboardingBtn" class="btn btn-primary" style="margin-top: 24px; width: auto; padding: 10px 24px;"><?php echo t('onboarding_get_started'); ?></button>
             </div>
 
-            <div id="onboardingStep1Container" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 16px; <?php echo (empty($_SESSION['onboarding_welcome_seen']) || !empty($_SESSION['onboarding_password_changed'])) ? 'display:none;' : ''; ?>">
+            <div id="onboardingStep1Container" style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; margin-bottom: 16px; <?php echo (empty($_SESSION['onboarding_welcome_seen']) || !empty($_SESSION['onboarding_password_changed'])) ? 'display:none;' : ''; ?>">
                 <div style="font-weight: 700; margin-bottom: 12px;">
                     <?php echo t('change_password'); ?>
                 </div>
@@ -173,7 +174,7 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                 </form>
             </div>
 
-            <div id="onboardingStep2Container" style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; <?php echo empty($_SESSION['onboarding_password_changed']) ? 'display:none;' : ''; ?>">
+            <div id="onboardingStep2Container" style="background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; <?php echo empty($_SESSION['onboarding_password_changed']) ? 'display:none;' : ''; ?>">
                 <div style="font-weight: 700; margin-bottom: 12px;">
                     <?php echo t('onboarding_select_categories'); ?>
                 </div>
@@ -194,9 +195,9 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                         <div id="sections_list"></div>
                     </div>
                     
-                    <div id="selection_summary" style="margin-top: 16px; padding: 12px; background: #f9fafb; border-radius: 8px; display: none;">
+                    <div id="selection_summary" style="margin-top: 16px; padding: 12px; background: var(--background-color); border-radius: 8px; display: none;">
                         <div style="font-weight: 600; margin-bottom: 4px;"><?php echo t('onboarding_selection_summary'); ?></div>
-                        <div id="summary_text" style="font-size: 14px; color: #6b7280;"></div>
+                        <div id="summary_text" style="font-size: 14px; color: var(--text-secondary);"></div>
                     </div>
 
                     <button class="btn btn-primary" id="saveOnboardingBtn" type="button"><?php echo t('onboarding_save'); ?></button>
@@ -555,7 +556,7 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
 
                     majorsList.appendChild(majorsGrid);
                 } else {
-                    majorsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">' + (T.onboarding_no_majors || 'No majors available') + '</div>';
+                    majorsList.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">' + (T.onboarding_no_majors || 'No majors available') + '</div>';
                 }
             })
             .catch(function(){

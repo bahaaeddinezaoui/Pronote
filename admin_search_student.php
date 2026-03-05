@@ -44,6 +44,7 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo t('student_records'); ?> - <?php echo t('app_name'); ?></title>
@@ -51,8 +52,8 @@ $conn->close();
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f9fafb;
-            color: #333;
+            background: var(--background-color);
+            color: var(--text-primary);
             margin: 0;
             padding: 0;
         }
@@ -65,8 +66,8 @@ $conn->close();
         
 
         .search-section {
-            background: #fff;
-            border: 1px solid #bbb;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
@@ -75,9 +76,9 @@ $conn->close();
 
         .search-section h2 {
             margin: 0 0 15px 0;
-            color: #6f42c1;
+            color: var(--primary-color);
             font-size: 18px;
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
         }
 
@@ -99,7 +100,7 @@ $conn->close();
         label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
+            color: var(--text-primary);
             font-weight: 500;
             font-size: 14px;
         }
@@ -109,7 +110,7 @@ $conn->close();
         select {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
             transition: border-color 0.3s;
@@ -119,7 +120,7 @@ $conn->close();
         input[type="date"]:focus,
         select:focus {
             outline: none;
-            border-color: #6f42c1;
+            border-color: var(--primary-color);
             box-shadow: 0 0 3px rgba(111, 66, 193, 0.1);
         }
 
@@ -139,7 +140,7 @@ $conn->close();
         }
 
         .btn-primary {
-            background: #6f42c1;
+            background: var(--primary-color);
             color: white;
         }
 
@@ -150,12 +151,12 @@ $conn->close();
         }
 
         .btn-secondary {
-            background: #e5e7eb;
-            color: #333;
+            background: var(--border-color);
+            color: var(--text-primary);
         }
 
         .btn-secondary:hover {
-            background: #d1d5db;
+            background: var(--border-color);
         }
 
         .results-section {
@@ -167,8 +168,8 @@ $conn->close();
         }
 
         .student-info {
-            background: #fff;
-            border: 1px solid #bbb;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
@@ -177,9 +178,9 @@ $conn->close();
 
         .student-info h3 {
             font-size: 20px;
-            color: #6f42c1;
+            color: var(--primary-color);
             margin: 0 0 15px 0;
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
         }
 
@@ -190,7 +191,7 @@ $conn->close();
         }
 
         .info-item {
-            background: #f9fafb;
+            background: var(--background-color);
             padding: 15px;
             border-radius: 6px;
             border-left: 3px solid #6f42c1;
@@ -198,7 +199,7 @@ $conn->close();
 
         .info-label {
             font-size: 12px;
-            color: #6b7280;
+            color: var(--text-secondary);
             margin-bottom: 5px;
             font-weight: 500;
         }
@@ -206,16 +207,16 @@ $conn->close();
         .info-value {
             font-size: 15px;
             font-weight: 600;
-            color: #1f2937;
+            color: var(--text-primary);
         }
 
         .student-photo-box {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #ffffff;
+            background: var(--surface-color);
             border-radius: 50%;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-color);
             overflow: hidden;
             width: 140px;
             height: 140px;
@@ -236,18 +237,18 @@ $conn->close();
         }
 
         .record-section {
-            background: #fff;
-            border: 1px solid #bbb;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.06);
         }
 
         .record-section h4 {
-            color: #6f42c1;
+            color: var(--primary-color);
             margin: 0 0 15px 0;
             font-size: 16px;
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
             display: flex;
             align-items: center;
@@ -260,7 +261,7 @@ $conn->close();
         }
 
         .record-item {
-            background: #f9fafb;
+            background: var(--background-color);
             padding: 12px;
             margin-bottom: 10px;
             border-radius: 6px;
@@ -273,35 +274,35 @@ $conn->close();
 
         .record-date {
             font-size: 12px;
-            color: #6b7280;
+            color: var(--text-secondary);
             margin-bottom: 8px;
             font-weight: 500;
         }
 
         .record-motif {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--text-primary);
             margin-bottom: 5px;
             font-size: 14px;
         }
 
         .record-note {
-            color: #374151;
+            color: var(--text-primary);
             font-size: 13px;
             line-height: 1.5;
         }
 
         .empty-message {
             text-align: center;
-            color: #6b7280;
+            color: var(--text-secondary);
             padding: 20px;
-            background: #f9fafb;
+            background: var(--background-color);
             border-radius: 6px;
             font-size: 14px;
         }
 
         .error-message {
-            background: #fee2e2;
+            background: var(--bg-error);
             border: 1px solid #fecaca;
             color: #dc2626;
             padding: 15px;
@@ -316,7 +317,7 @@ $conn->close();
         }
 
         .success-message {
-            background: #e0f2fe;
+            background: var(--bg-info);
             border: 1px solid #bae6fd;
             color: #0369a1;
             padding: 15px;
@@ -341,7 +342,7 @@ $conn->close();
         }
 
         .spinner {
-            border: 4px solid #e5e7eb;
+            border: 4px solid var(--border-color);
             border-top: 4px solid #6f42c1;
             border-radius: 50%;
             width: 40px;
@@ -358,8 +359,8 @@ $conn->close();
         #suggestionsContainer {
             display: none;
             margin-bottom: 20px;
-            background: #f8f9fa;
-            border: 1px solid #bbb;
+            background: var(--bg-muted);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             max-height: 500px;
@@ -802,7 +803,7 @@ $conn->close();
                 <div class="student-info">
                     <h3>📋 ${student.first_name} ${student.last_name}</h3>
                     <div class="info-grid" style="grid-template-columns: 140px 1fr 1fr; gap: 20px; align-items: start;">
-                        <div class="info-item" style="grid-row: span 2; border-left-color: #10b981; padding: 15px;">
+                        <div class="info-item" style="grid-row: span 2; border-left-color: var(--text-success); padding: 15px;">
                             <div class="info-label">${t('student_photo')}</div>
                             <div class="student-photo-box" style="width: 110px; height: 110px; margin: 0;">
                                 <img src="${studentPhotoUrl || 'assets/placeholder-student.png'}" onerror="this.onerror=null;this.src='assets/placeholder-student.png';" alt="${t('student_photo')}">

@@ -63,6 +63,7 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="styles.css" />
@@ -79,7 +80,7 @@ $conn->close();
 
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
         .stat-card {
-            background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg);
+            background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg);
             padding: 2rem; display: flex; align-items: center; gap: 1.5rem; transition: transform 0.2s;
         }
         .stat-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
@@ -91,14 +92,14 @@ $conn->close();
         .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.75rem; }
         .action-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
         .action-card {
-            background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md);
+            background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-md);
             padding: 1.5rem; text-decoration: none; color: inherit; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem;
         }
         .action-card:hover { border-color: var(--primary-color); background: var(--primary-light); }
         .action-card i { font-size: 2rem; color: var(--primary-color); }
         .action-card span { font-weight: 600; font-size: 1.1rem; }
 
-        .recent-section { background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; }
+        .recent-section { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2rem; }
         .data-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
         .data-table th { text-align: left; padding: 1rem; border-bottom: 2px solid var(--bg-secondary); color: var(--text-secondary); font-weight: 600; }
         .data-table td { padding: 1rem; border-bottom: 1px solid var(--bg-secondary); }

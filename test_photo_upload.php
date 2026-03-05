@@ -51,6 +51,7 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Upload Test</title>
@@ -58,14 +59,14 @@ $conn->close();
         body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
-        .btn { background: #6f42c1; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        input[type="file"] { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; }
+        .btn { background: var(--primary-color); color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
         .btn:hover { background: #5d3fa3; }
         .alert { padding: 15px; border-radius: 4px; margin-bottom: 20px; }
-        .alert.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .alert.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .alert.success { background: var(--bg-success); color: var(--text-success); border: 1px solid #c3e6cb; }
+        .alert.error { background: var(--bg-error); color: var(--text-error); border: 1px solid #f5c6cb; }
         .photo-preview { margin-top: 20px; max-width: 300px; }
-        .photo-preview img { max-width: 100%; border-radius: 8px; border: 1px solid #ddd; }
+        .photo-preview img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color); }
     </style>
 </head>
 <body>

@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
 <meta charset="UTF-8">
 <title><?php echo t('observations'); ?></title>
 <link rel="stylesheet" href="style.css">
@@ -100,7 +101,7 @@ document.getElementById('observationForm').addEventListener('submit', e => {
     cursor: pointer;
 }
 .student-item:hover {
-    background-color: #eee;
+    background-color: var(--border-color);
 }
 </style>
 

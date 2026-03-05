@@ -27,6 +27,7 @@ $pdfExists = is_file($pdfFullPath);
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
@@ -38,14 +39,14 @@ $pdfExists = is_file($pdfFullPath);
             padding: 0 20px 30px;
         }
         .card {
-            background: #fff;
-            border: 1px solid #bbb;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.06);
         }
-        .meta { color: #6b7280; font-size: 14px; margin-top: 10px; }
-        .no-data { color: #888; font-style: italic; padding: 15px; text-align: center; }
+        .meta { color: var(--text-secondary); font-size: 14px; margin-top: 10px; }
+        .no-data { color: var(--text-secondary); font-style: italic; padding: 15px; text-align: center; }
         .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
         .btn-primary {
             background-color: var(--primary-color);
@@ -62,7 +63,7 @@ $pdfExists = is_file($pdfFullPath);
         }
         .btn-primary:hover { background-color: var(--primary-hover); }
         .btn-secondary {
-            background: #fff;
+            background: var(--surface-color);
             color: var(--primary-color);
             padding: 0.75rem 1.25rem;
             border: 1px solid var(--primary-color);
@@ -74,7 +75,7 @@ $pdfExists = is_file($pdfFullPath);
             align-items: center;
             width: auto; /* Ensure button doesn't take full width */
         }
-        .btn-secondary:hover { background: #f9fafb; }
+        .btn-secondary:hover { background: var(--background-color); }
     </style>
 </head>
 <body>

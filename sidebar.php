@@ -99,6 +99,11 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
             <span class="text" data-tooltip="<?php echo t('nav_tutorial'); ?>"><?php echo t('nav_tutorial'); ?></span>
         </a>
 
+        <a href="#" id="themeToggleBtn" class="sidebar-link">
+            <span class="icon" id="themeToggleIcon">🌙</span>
+            <span class="text" id="themeToggleText" data-tooltip="Toggle Theme">Toggle Theme</span>
+        </a>
+
         <a href="logout.php" id="navLogout" class="sidebar-link logout-btn <?php if ($role === 'Teacher' && !empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) echo 'disabled'; ?>" 
            <?php if ($role === 'Teacher' && !empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) echo 'onclick="return false;" title="' . t('logout_disabled_during_onboarding') . '"'; ?>>
             <span class="icon">🚪</span>

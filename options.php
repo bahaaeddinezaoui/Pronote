@@ -10,14 +10,15 @@ if (!isset($_SESSION['user_id'])) {
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title><?php echo t('nav_options'); ?> - <?php echo t('app_name'); ?></title>
     <style>
         .options-section {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 24px;
@@ -33,7 +34,7 @@ if (!isset($_SESSION['user_id'])) {
         .section-title {
             font-size: 18px;
             font-weight: 700;
-            color: #111827;
+            color: var(--text-primary);
             margin: 0;
         }
         .option-item {
@@ -47,12 +48,12 @@ if (!isset($_SESSION['user_id'])) {
         }
         .option-label {
             font-weight: 600;
-            color: #374151;
+            color: var(--text-primary);
             margin-bottom: 4px;
         }
         .option-desc {
             font-size: 14px;
-            color: #6b7280;
+            color: var(--text-secondary);
         }
         
         /* Modal Styles */
@@ -76,7 +77,7 @@ if (!isset($_SESSION['user_id'])) {
             opacity: 1;
         }
         .modal-content {
-            background: white;
+            background: var(--surface-color);
             padding: 24px;
             border-radius: 16px;
             max-width: 450px;
@@ -97,7 +98,7 @@ if (!isset($_SESSION['user_id'])) {
         .modal-title {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #111827;
+            color: var(--text-primary);
         }
         .close-modal {
             background: none;
@@ -152,7 +153,7 @@ if (!isset($_SESSION['user_id'])) {
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
         <div style="padding: 24px; max-width: 800px;">
-            <h1 style="margin: 0 0 24px 0; font-size: 28px; font-weight: 800; color: #111827;">
+            <h1 style="margin: 0 0 24px 0; font-size: 28px; font-weight: 800; color: var(--text-primary);">
                 <?php echo t('nav_options'); ?>
             </h1>
 

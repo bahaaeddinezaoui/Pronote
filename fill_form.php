@@ -378,6 +378,7 @@ if ($class_q) {
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="styles.css" />
@@ -393,7 +394,7 @@ if ($class_q) {
 
         .suggestions-list { 
             position: absolute; 
-            background: #fff; 
+            background: var(--surface-color); 
             border: 1px solid var(--border-color); 
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-md);
@@ -508,7 +509,7 @@ if ($class_q) {
         .stats-card-mini {
             text-align: center;
             padding: 1.25rem;
-            background: #fff;
+            background: var(--surface-color);
             border-radius: var(--radius-md);
             border: 1px solid var(--border-color);
             transition: transform 0.2s;
@@ -540,14 +541,14 @@ if ($class_q) {
             font-weight: 500;
             cursor: pointer;
             border: 1px solid var(--border-color);
-            background: #fff;
+            background: var(--surface-color);
             transition: all 0.2s;
         }
 
         .btn-edit { color: var(--primary-color); }
         .btn-edit:hover { background: var(--primary-light); border-color: var(--primary-color); }
         .btn-delete { color: var(--danger-color); }
-        .btn-delete:hover { background: #fee2e2; border-color: var(--danger-color); }
+        .btn-delete:hover { background: var(--bg-error); border-color: var(--danger-color); }
 
         .form-row {
             display: grid;

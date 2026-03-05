@@ -995,7 +995,46 @@
             confirm: ConfirmDialog.show.bind(ConfirmDialog)
         };
 
+        initThemeToggle();
+        
         console.log('EduTrack Effects & Animations initialized');
+    }
+
+    // ============================================
+    // THEME TOGGLE (DARK MODE)
+    // ============================================
+    function initThemeToggle() {
+        const toggleBtn = document.getElementById('themeToggleBtn');
+        const toggleIcon = document.getElementById('themeToggleIcon');
+        const toggleText = document.getElementById('themeToggleText');
+        const htmlEl = document.documentElement;
+
+        // Ensure theme matches saved preference initially (handles parts not covered by <head> script)
+        const savedTheme = localStorage.getItem('edutrack_theme') || 'light';
+        if (savedTheme === 'dark') {
+            htmlEl.setAttribute('data-theme', 'dark');
+            if (toggleIcon) toggleIcon.textContent = '☀️';
+            if (toggleText) toggleText.textContent = toggleText.textContent.includes('Theme') ? 'Light Mode' : 'الوضع الفاتح'; // basic translation fallback
+        }
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const currentTheme = htmlEl.getAttribute('data-theme') || 'light';
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                htmlEl.setAttribute('data-theme', newTheme);
+                localStorage.setItem('edutrack_theme', newTheme);
+                
+                if (newTheme === 'dark') {
+                    if (toggleIcon) toggleIcon.textContent = '☀️';
+                    if (toggleText) toggleText.textContent = toggleText.textContent.includes('الوضع') ? 'الوضع الفاتح' : 'Light Mode';
+                } else {
+                    if (toggleIcon) toggleIcon.textContent = '🌙';
+                    if (toggleText) toggleText.textContent = toggleText.textContent.includes('الوضع') ? 'الوضع الداكن' : 'Dark Mode';
+                }
+            });
+        }
     }
 
     // Start initialization

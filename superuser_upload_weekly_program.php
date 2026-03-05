@@ -81,6 +81,7 @@ $pdfExists = is_file($pdfFullPath);
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
@@ -92,15 +93,15 @@ $pdfExists = is_file($pdfFullPath);
             padding: 0 20px 30px;
         }
         .card {
-            background: #fff;
-            border: 1px solid #e2e8f0;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             padding: 2rem;
             box-shadow: var(--shadow-md);
         }
         .alert { padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-weight: 500; }
-        .alert.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-        .alert.success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .alert.error { background: var(--bg-error); color: var(--text-error); border: 1px solid #fecaca; }
+        .alert.success { background: var(--bg-success); color: var(--text-success); border: 1px solid #bbf7d0; }
         
         .upload-section {
             background: var(--bg-secondary);
@@ -124,7 +125,7 @@ $pdfExists = is_file($pdfFullPath);
             padding: 0.5rem; 
             border: 1px solid var(--border-color); 
             border-radius: var(--radius-md); 
-            background: #fff; 
+            background: var(--surface-color); 
             font-size: 0.875rem;
         }
         .btn-primary {

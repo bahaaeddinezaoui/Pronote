@@ -121,6 +121,7 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
@@ -129,8 +130,8 @@ $conn->close();
         /* Modern Profile Styles */
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #f3f4f6;
-            color: #1f2937;
+            background: var(--bg-muted);
+            color: var(--text-primary);
             margin: 0;
             padding: 0;
         }
@@ -142,11 +143,11 @@ $conn->close();
         }
 
         .profile-card {
-            background: white;
+            background: var(--surface-color);
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             overflow: hidden;
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-color);
         }
 
         .profile-banner {
@@ -170,7 +171,7 @@ $conn->close();
         .profile-avatar {
             width: 120px;
             height: 120px;
-            background: white;
+            background: var(--surface-color);
             border-radius: 50%;
             padding: 4px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -180,27 +181,27 @@ $conn->close();
         .profile-avatar-inner {
             width: 100%;
             height: 100%;
-            background: #f3f4f6;
+            background: var(--bg-muted);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 48px;
-            color: #6f42c1;
+            color: var(--primary-color);
             font-weight: 700;
         }
 
         .profile-name {
             font-size: 28px;
             font-weight: 700;
-            color: #1f2937;
+            color: var(--text-primary);
             margin: 0 0 4px 0;
         }
 
         .profile-role-badge {
             display: inline-block;
-            background: #ede9fe;
-            color: #6f42c1;
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--primary-color);
             padding: 6px 16px;
             border-radius: 20px;
             font-size: 14px;
@@ -220,8 +221,8 @@ $conn->close();
         }
 
         .info-card {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 20px;
             display: flex;
@@ -239,19 +240,19 @@ $conn->close();
         .info-icon {
             width: 40px;
             height: 40px;
-            background: #ede9fe;
+            background: rgba(139, 92, 246, 0.15);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            color: #6f42c1;
+            color: var(--primary-color);
         }
 
         .info-text label {
             display: block;
             font-size: 13px;
-            color: #6b7280;
+            color: var(--text-secondary);
             margin-bottom: 4px;
             font-weight: 600;
             text-transform: uppercase;
@@ -260,7 +261,7 @@ $conn->close();
 
         .info-text div {
             font-size: 16px;
-            color: #1f2937;
+            color: var(--text-primary);
             font-weight: 600;
         }
 

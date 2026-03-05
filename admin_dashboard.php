@@ -52,6 +52,7 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
 <head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
@@ -60,8 +61,8 @@ $conn->close();
         /* Match fill_form look & feel */
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f9fafb;
-            color: #333;
+            background: var(--background-color);
+            color: var(--text-primary);
             margin: 0;
             padding: 0;
         }
@@ -73,10 +74,10 @@ $conn->close();
         }
         
         .filters-section, .sessions-section {
-            background: #fff;
+            background: var(--surface-color);
             padding: 20px;
             border-radius: 10px;
-            border: 1px solid #bbb;
+            border: 1px solid var(--border-color);
         }
 
         .filters-section {
@@ -86,7 +87,7 @@ $conn->close();
         .filters-section h2, .sessions-section h2 {
             margin-top: 0;
             font-weight: 600;
-            color: #1f1f1f;
+            color: var(--text-primary);
         }
         
         .filters-grid {
@@ -116,7 +117,7 @@ $conn->close();
             border-radius: var(--radius-md);
             border: 1px solid var(--border-color);
             font-size: 0.95rem;
-            background: #fff;
+            background: var(--surface-color);
             transition: all 0.2s ease;
             width: 100%;
             height: 45px;
@@ -193,8 +194,8 @@ $conn->close();
         }
         
         .session-card {
-            background: #fff;
-            border: 1px solid #bbb;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 16px;
             margin-bottom: 15px;
@@ -203,8 +204,8 @@ $conn->close();
         
         .session-card h3 {
             margin: 0 0 10px 0;
-            color: #6f42c1;
-            border-bottom: 1px solid #e2e8f0;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 8px;
             font-size: 18px;
         }
@@ -231,14 +232,14 @@ $conn->close();
         }
         .modal-backdrop.active { display: flex; }
         .modal-card {
-            background: #fff;
+            background: var(--surface-color);
             border-radius: 10px;
             max-width: 900px;
             width: 100%;
             max-height: 90vh;
             overflow: auto;
             box-shadow: 0 12px 30px rgba(0,0,0,0.18);
-            border: 1px solid #bbb;
+            border: 1px solid var(--border-color);
             padding: 18px;
         }
         .modal-header {
@@ -252,16 +253,16 @@ $conn->close();
             border: none;
             font-size: 22px;
             cursor: pointer;
-            color: #666;
+            color: var(--text-secondary);
         }
-        .modal-close:hover { color: #000; }
+        .modal-close:hover { color: var(--text-primary); }
 
         /* Modal text accents */
         .modal-card h4 {
-            color: #6f42c1;
+            color: var(--primary-color);
         }
         .modal-card .session-info-item strong {
-            color: #6f42c1;
+            color: var(--primary-color);
         }
         
         .session-info {
@@ -273,19 +274,19 @@ $conn->close();
         
         .session-info-item {
             font-size: 14px;
-            color: #444;
+            color: var(--text-primary);
         }
         
         .session-info-item strong {
-            color: #1f1f1f;
+            color: var(--text-primary);
         }
         
         .sections-list, .absences-list, .observations-list {
             margin-top: 10px;
             padding: 10px;
-            background: #fff;
+            background: var(--surface-color);
             border-radius: 8px;
-            border: 1px solid #e6e6e6;
+            border: 1px solid var(--border-color);
         }
         
         .sections-list h4, .absences-list h4, .observations-list h4 {
@@ -297,18 +298,18 @@ $conn->close();
         .absence-item, .observation-item {
             padding: 8px;
             margin: 5px 0;
-            background: #fffdf5;
+            background: var(--bg-warning);
             border-left: 4px solid #ffb74d;
             border-radius: 4px;
         }
         
         .observation-item {
-            background: #f1f8ff;
-            border-left-color: #64b5f6;
+            background: var(--bg-info);
+            border-left-color: var(--border-info);
         }
         
         .no-data {
-            color: #888;
+            color: var(--text-secondary);
             font-style: italic;
             padding: 10px;
         }
@@ -317,7 +318,7 @@ $conn->close();
             text-align: center;
             padding: 20px;
             font-size: 16px;
-            color: #666;
+            color: var(--text-secondary);
         }
         
         .detail-table {
@@ -328,18 +329,18 @@ $conn->close();
         }
         
         .detail-table th, .detail-table td {
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             padding: 8px;
             text-align: left;
         }
         
         .detail-table th {
-            background-color: #6f42c1;
+            background-color: var(--primary-color);
             color: white;
         }
         
         .detail-table tr:nth-child(even) {
-            background-color: #f7f9fc;
+            background-color: var(--bg-muted);
         }
 
         /* Notification styles removed (centralized in sidebar.php) */
@@ -362,10 +363,10 @@ $conn->close();
 
         /* Absence Summary Styles */
         .absence-summary-section {
-            background: #fff;
+            background: var(--surface-color);
             padding: 20px;
             border-radius: 10px;
-            border: 1px solid #bbb;
+            border: 1px solid var(--border-color);
             margin-top: 20px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.06);
         }
@@ -373,7 +374,7 @@ $conn->close();
         .absence-summary-section h2 {
             margin: 0 0 15px 0;
             font-weight: 600;
-            color: #1f1f1f;
+            color: var(--text-primary);
         }
 
         .absence-stats-grid {
@@ -384,7 +385,7 @@ $conn->close();
         }
 
         .absence-stat-card {
-            background: #f5f3ff;
+            background: rgba(139, 92, 246, 0.15);
             border-left: 4px solid #8b5cf6;
             padding: 12px 16px;
             border-radius: 6px;
@@ -394,13 +395,13 @@ $conn->close();
         .absence-stat-number {
             font-size: 20px;
             font-weight: 700;
-            color: #6d28d9;
+            color: var(--primary-color);
             margin-top: 4px;
         }
 
         .absence-stat-label {
             font-size: 12px;
-            color: #6d28d9;
+            color: var(--primary-color);
             font-weight: 600;
         }
 
@@ -412,7 +413,7 @@ $conn->close();
         }
 
         .absence-details-table th, .absence-details-table td {
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             padding: 10px;
             text-align: left;
         }
@@ -424,17 +425,17 @@ $conn->close();
         }
 
         .absence-details-table tr:nth-child(even) {
-            background-color: #f5f3ff;
+            background-color: rgba(139, 92, 246, 0.15);
         }
 
         .absence-details-table tr:hover {
-            background-color: #ede9fe;
+            background-color: rgba(139, 92, 246, 0.15);
         }
 
         .absence-motif-badge {
             display: inline-block;
-            background: #ddd6fe;
-            color: #5b21b6;
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--primary-color);
             padding: 3px 8px;
             border-radius: 4px;
             font-size: 12px;
@@ -446,9 +447,9 @@ $conn->close();
             text-align: center;
             color: #9ca3af;
             font-style: italic;
-            background: #fafafa;
+            background: var(--bg-muted);
             border-radius: 8px;
-            border: 1px dashed #e5e7eb;
+            border: 1px dashed var(--border-color);
         }
     </style>
 </head>
@@ -502,7 +503,7 @@ $conn->close();
 <div id="session_modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="session_modal_title">
     <div class="modal-card">
         <div class="modal-header">
-            <h3 id="session_modal_title" style="margin:0; font-size:18px; color:#6f42c1;"><?php echo t('session_details'); ?></h3>
+            <h3 id="session_modal_title" style="margin:0; font-size:18px; color:var(--primary-color);"><?php echo t('session_details'); ?></h3>
             <button class="modal-close" aria-label="<?php echo t('close'); ?>" onclick="closeSessionModal()">&times;</button>
         </div>
         <div id="modal_body"></div>
