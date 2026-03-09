@@ -80,7 +80,13 @@ function upsertAddress($conn, $existingId, $street_en, $street_ar, $country, $wi
 $message = "";
 $msg_type = "";
 
+if (isset($_GET['updated']) && $_GET['updated'] === '1') {
+    $message = "Student updated successfully.";
+    $msg_type = "success";
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_student') {
+    $originalSerial = trim($_POST['ORIGINAL_STUDENT_SERIAL_NUMBER'] ?? ($_GET['serial'] ?? ''));
     $serial = trim($_POST['STUDENT_SERIAL_NUMBER'] ?? '');
 
     if ($serial === '') {
@@ -89,8 +95,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         goto after_update;
     }
 
+    if (!preg_match('/^\d+$/', $serial)) {
+        $message = "Serial Number must contain digits only.";
+        $msg_type = "error";
+        goto after_update;
+    }
+
+    if ($originalSerial === '') {
+        $message = "Serial Number is required.";
+        $msg_type = "error";
+        goto after_update;
+    }
+
     $stmtExists = $conn->prepare("SELECT STUDENT_SERIAL_NUMBER, STUDENT_BIRTH_PLACE_ID, STUDENT_PERSONAL_ADDRESS_ID FROM student WHERE STUDENT_SERIAL_NUMBER = ?");
-    $stmtExists->bind_param("s", $serial);
+    $stmtExists->bind_param("s", $originalSerial);
     $stmtExists->execute();
     $resExists = $stmtExists->get_result();
     $existingStudent = $resExists->fetch_assoc();
@@ -105,6 +123,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $conn->begin_transaction();
 
     try {
+        if ($serial !== $originalSerial) {
+            $stmtCheck = $conn->prepare("SELECT 1 FROM student WHERE STUDENT_SERIAL_NUMBER = ? LIMIT 1");
+            if ($stmtCheck) {
+                $stmtCheck->bind_param("s", $serial);
+                $stmtCheck->execute();
+                $stmtCheck->store_result();
+                $exists = ($stmtCheck->num_rows > 0);
+                $stmtCheck->close();
+                if ($exists) {
+                    throw new Exception("This serial number already exists.");
+                }
+            }
+
+            $stmtDelCombat = $conn->prepare("DELETE FROM student_combat_outfit WHERE STUDENT_SERIAL_NUMBER = ?");
+            if ($stmtDelCombat) {
+                $stmtDelCombat->bind_param("s", $originalSerial);
+                $stmtDelCombat->execute();
+                $stmtDelCombat->close();
+            }
+        }
+
         $birth_place_id = upsertAddress(
             $conn,
             $existingStudent['STUDENT_BIRTH_PLACE_ID'] ?? null,
@@ -140,6 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $photo_path = 'resources\\photos\\students\\' . $serial . '.jpg';
 
         $sqlStudent = "UPDATE student SET
+            STUDENT_SERIAL_NUMBER = ?,
             CATEGORY_ID = ?,
             SECTION_ID = ?,
             STUDENT_FIRST_NAME_EN = ?,
@@ -155,19 +195,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             STUDENT_WEIGHT_KG = ?,
             STUDENT_IS_FOREIGN = ?,
             STUDENT_ACADEMIC_AVERAGE = ?,
-            STUDENT_SPECIALITY = ?,
-            STUDENT_ACADEMIC_LEVEL = ?,
+            STUDENT_SPECIALITY_ID = ?,
+            STUDENT_ACADEMIC_LEVEL_ID = ?,
             STUDENT_BACCALAUREATE_SUB_NUMBER = ?,
             STUDENT_EDUCATIONAL_CERTIFICATES = ?,
-            STUDENT_MILITARY_CERTIFICATES = ?,
             STUDENT_SCHOOL_SUB_DATE = ?,
             STUDENT_SCHOOL_SUB_CARD_NUMBER = ?,
             STUDENT_LAPTOP_SERIAL_NUMBER = ?,
             STUDENT_BIRTHDATE_CERTIFICATE_NUMBER = ?,
             STUDENT_ID_CARD_NUMBER = ?,
             STUDENT_POSTAL_ACCOUNT_NUMBER = ?,
-            STUDENT_HOBBIES = ?,
-            STUDENT_HEALTH_STATUS = ?,
+            STUDENT_HEALTH_STATUS_ID = ?,
             STUDENT_MILITARY_NECKLACE = ?,
             STUDENT_NUMBER_OF_SIBLINGS = ?,
             STUDENT_NUMBER_OF_SISTERS = ?,
@@ -198,19 +236,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $weight = (isset($_POST['STUDENT_WEIGHT_KG']) && $_POST['STUDENT_WEIGHT_KG'] !== '') ? floatval($_POST['STUDENT_WEIGHT_KG']) : null;
         $is_foreign = $_POST['STUDENT_IS_FOREIGN'] ?? 'No';
         $average = (isset($_POST['STUDENT_ACADEMIC_AVERAGE']) && $_POST['STUDENT_ACADEMIC_AVERAGE'] !== '') ? floatval($_POST['STUDENT_ACADEMIC_AVERAGE']) : null;
-        $speciality = $_POST['STUDENT_SPECIALITY'] ?? '';
-        $level = $_POST['STUDENT_ACADEMIC_LEVEL'] ?? '';
+        $speciality_id = !empty($_POST['STUDENT_SPECIALITY_ID']) ? intval($_POST['STUDENT_SPECIALITY_ID']) : null;
+        $academic_level_id = !empty($_POST['STUDENT_ACADEMIC_LEVEL_ID']) ? intval($_POST['STUDENT_ACADEMIC_LEVEL_ID']) : null;
         $bac_num = $_POST['STUDENT_BACCALAUREATE_SUB_NUMBER'] ?? '';
         $edu_certs = $_POST['STUDENT_EDUCATIONAL_CERTIFICATES'] ?? '';
-        $mil_certs = $_POST['STUDENT_MILITARY_CERTIFICATES'] ?? '';
+        $military_certificate_ids = $_POST['MILITARY_CERTIFICATE_IDS'] ?? [];
+        if (!is_array($military_certificate_ids)) {
+            $military_certificate_ids = [];
+        }
         $school_sub_date = !empty($_POST['STUDENT_SCHOOL_SUB_DATE']) ? $_POST['STUDENT_SCHOOL_SUB_DATE'] : null;
         $sub_card_num = $_POST['STUDENT_SCHOOL_SUB_CARD_NUMBER'] ?? '';
         $laptop_serial = $_POST['STUDENT_LAPTOP_SERIAL_NUMBER'] ?? '';
         $birth_cert_num = $_POST['STUDENT_BIRTHDATE_CERTIFICATE_NUMBER'] ?? '';
         $id_card_num = $_POST['STUDENT_ID_CARD_NUMBER'] ?? '';
         $postal_num = $_POST['STUDENT_POSTAL_ACCOUNT_NUMBER'] ?? '';
-        $hobbies = $_POST['STUDENT_HOBBIES'] ?? '';
-        $health = $_POST['STUDENT_HEALTH_STATUS'] ?? '';
+        $hobby_ids = $_POST['HOBBY_IDS'] ?? [];
+        if (!is_array($hobby_ids)) {
+            $hobby_ids = [];
+        }
+        $health_status_id = !empty($_POST['STUDENT_HEALTH_STATUS_ID']) ? intval($_POST['STUDENT_HEALTH_STATUS_ID']) : null;
         $mil_necklace = $_POST['STUDENT_MILITARY_NECKLACE'] ?? 'No';
         $siblings_cnt = (isset($_POST['STUDENT_NUMBER_OF_SIBLINGS']) && $_POST['STUDENT_NUMBER_OF_SIBLINGS'] !== '') ? intval($_POST['STUDENT_NUMBER_OF_SIBLINGS']) : null;
         $sisters_cnt = (isset($_POST['STUDENT_NUMBER_OF_SISTERS']) && $_POST['STUDENT_NUMBER_OF_SISTERS'] !== '') ? intval($_POST['STUDENT_NUMBER_OF_SISTERS']) : null;
@@ -218,9 +262,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $orphan = $_POST['STUDENT_ORPHAN_STATUS'] ?? 'None';
         $parents = $_POST['STUDENT_PARENTS_SITUATION'] ?? 'Married';
 
-        $typesStudent = "ii" . "ssss" . "i" . "ssss" . "dd" . "sd" . str_repeat('s', 14) . "iiii" . "ss" . "iii" . "ss";
+        $typesStudent = "s" . "ii" . "ssss" . "i" . "ssss" . "dd" . "s" . "d" . "ii" . str_repeat('s', 8) . "i" . "s" . "iiii" . "ss" . "iii" . "ss";
         $stmtStudent->bind_param(
             $typesStudent,
+            $serial,
             $category_id,
             $section_id,
             $fname_en,
@@ -236,19 +281,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $weight,
             $is_foreign,
             $average,
-            $speciality,
-            $level,
+            $speciality_id,
+            $academic_level_id,
             $bac_num,
             $edu_certs,
-            $mil_certs,
             $school_sub_date,
             $sub_card_num,
             $laptop_serial,
             $birth_cert_num,
             $id_card_num,
             $postal_num,
-            $hobbies,
-            $health,
+            $health_status_id,
             $mil_necklace,
             $siblings_cnt,
             $sisters_cnt,
@@ -260,10 +303,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $personal_address_id,
             $recruit_source_id,
             $photo_path,
-            $serial
+            $originalSerial
         );
         $stmtStudent->execute();
         $stmtStudent->close();
+
+        if ($serial !== $originalSerial) {
+            $mapTables = [
+                ['student_parade_uniform', 'STUDENT_SERIAL_NUMBER'],
+                ['student_parent_info', 'STUDENT_SERIAL_NUMBER'],
+                ['student_emergency_contact', 'STUDENT_SERIAL_NUMBER'],
+                ['student_military_certificate', 'student_serial_number'],
+                ['student_hobby', 'student_serial_number'],
+                ['student_gets_absent', 'STUDENT_SERIAL_NUMBER'],
+                ['teacher_makes_an_observation_for_a_student', 'STUDENT_SERIAL_NUMBER']
+            ];
+            foreach ($mapTables as $t) {
+                $table = $t[0];
+                $col = $t[1];
+                $sql = "UPDATE {$table} SET {$col} = ? WHERE {$col} = ?";
+                $st = $conn->prepare($sql);
+                if ($st) {
+                    $st->bind_param("ss", $serial, $originalSerial);
+                    $st->execute();
+                    $st->close();
+                }
+            }
+        }
+
+        $stmtDelMc = $conn->prepare("DELETE FROM student_military_certificate WHERE student_serial_number = ?");
+        if ($stmtDelMc) {
+            $stmtDelMc->bind_param("s", $serial);
+            $stmtDelMc->execute();
+            $stmtDelMc->close();
+        }
+
+        if (!empty($military_certificate_ids)) {
+            $stmtInsMc = $conn->prepare("INSERT INTO student_military_certificate (student_serial_number, military_certificate_id) VALUES (?, ?)");
+            if ($stmtInsMc) {
+                foreach ($military_certificate_ids as $mcid) {
+                    if ($mcid === '' || $mcid === null) continue;
+                    $mcid = intval($mcid);
+                    $stmtInsMc->bind_param("si", $serial, $mcid);
+                    $stmtInsMc->execute();
+                }
+                $stmtInsMc->close();
+            }
+        }
+
+        $stmtDelHobby = $conn->prepare("DELETE FROM student_hobby WHERE student_serial_number = ?");
+        if ($stmtDelHobby) {
+            $stmtDelHobby->bind_param("s", $serial);
+            $stmtDelHobby->execute();
+            $stmtDelHobby->close();
+        }
+
+        if (!empty($hobby_ids)) {
+            $stmtInsHobby = $conn->prepare("INSERT INTO student_hobby (student_serial_number, hobby_id) VALUES (?, ?)");
+            if ($stmtInsHobby) {
+                foreach ($hobby_ids as $hid) {
+                    if ($hid === '' || $hid === null) continue;
+                    $hid = intval($hid);
+                    $stmtInsHobby->bind_param("si", $serial, $hid);
+                    $stmtInsHobby->execute();
+                }
+                $stmtInsHobby->close();
+            }
+        }
 
         $sqlOutfit = "INSERT INTO student_combat_outfit (STUDENT_SERIAL_NUMBER, FIRST_OUTFIT_NUMBER, FIRST_OUTFIT_SIZE, SECOND_OUTFIT_NUMBER, SECOND_OUTFIT_SIZE, COMBAT_SHOE_SIZE)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -342,52 +448,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $sqlParent = "INSERT INTO student_parent_info (
                 STUDENT_SERIAL_NUMBER,
                 FATHER_FIRST_NAME_EN, FATHER_LAST_NAME_EN, FATHER_FIRST_NAME_AR, FATHER_LAST_NAME_AR,
-                FATHER_PROFESSION_EN, FATHER_PROFESSION_AR,
+                FATHER_PROFESSION_ID,
                 MOTHER_FIRST_NAME_EN, MOTHER_LAST_NAME_EN, MOTHER_FIRST_NAME_AR, MOTHER_LAST_NAME_AR,
-                MOTHER_PROFESSION_EN, MOTHER_PROFESSION_AR
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                MOTHER_PROFESSION_ID
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
                 FATHER_FIRST_NAME_EN = VALUES(FATHER_FIRST_NAME_EN),
                 FATHER_LAST_NAME_EN = VALUES(FATHER_LAST_NAME_EN),
                 FATHER_FIRST_NAME_AR = VALUES(FATHER_FIRST_NAME_AR),
                 FATHER_LAST_NAME_AR = VALUES(FATHER_LAST_NAME_AR),
-                FATHER_PROFESSION_EN = VALUES(FATHER_PROFESSION_EN),
-                FATHER_PROFESSION_AR = VALUES(FATHER_PROFESSION_AR),
+                FATHER_PROFESSION_ID = VALUES(FATHER_PROFESSION_ID),
                 MOTHER_FIRST_NAME_EN = VALUES(MOTHER_FIRST_NAME_EN),
                 MOTHER_LAST_NAME_EN = VALUES(MOTHER_LAST_NAME_EN),
                 MOTHER_FIRST_NAME_AR = VALUES(MOTHER_FIRST_NAME_AR),
                 MOTHER_LAST_NAME_AR = VALUES(MOTHER_LAST_NAME_AR),
-                MOTHER_PROFESSION_EN = VALUES(MOTHER_PROFESSION_EN),
-                MOTHER_PROFESSION_AR = VALUES(MOTHER_PROFESSION_AR)";
+                MOTHER_PROFESSION_ID = VALUES(MOTHER_PROFESSION_ID)";
         $stmtParent = $conn->prepare($sqlParent);
         if ($stmtParent) {
             $father_first_en = $_POST['FATHER_FIRST_NAME_EN'] ?? '';
             $father_last_en = $_POST['FATHER_LAST_NAME_EN'] ?? '';
             $father_first_ar = $_POST['FATHER_FIRST_NAME_AR'] ?? '';
             $father_last_ar = $_POST['FATHER_LAST_NAME_AR'] ?? '';
-            $father_prof_en = $_POST['FATHER_PROFESSION_EN'] ?? '';
-            $father_prof_ar = $_POST['FATHER_PROFESSION_AR'] ?? '';
+            $father_profession_id = !empty($_POST['FATHER_PROFESSION_ID']) ? intval($_POST['FATHER_PROFESSION_ID']) : null;
             $mother_first_en = $_POST['MOTHER_FIRST_NAME_EN'] ?? '';
             $mother_last_en = $_POST['MOTHER_LAST_NAME_EN'] ?? '';
             $mother_first_ar = $_POST['MOTHER_FIRST_NAME_AR'] ?? '';
             $mother_last_ar = $_POST['MOTHER_LAST_NAME_AR'] ?? '';
-            $mother_prof_en = $_POST['MOTHER_PROFESSION_EN'] ?? '';
-            $mother_prof_ar = $_POST['MOTHER_PROFESSION_AR'] ?? '';
+            $mother_profession_id = !empty($_POST['MOTHER_PROFESSION_ID']) ? intval($_POST['MOTHER_PROFESSION_ID']) : null;
             $stmtParent->bind_param(
-                "sssssssssssss",
+                "sssssissssi",
                 $serial,
                 $father_first_en,
                 $father_last_en,
                 $father_first_ar,
                 $father_last_ar,
-                $father_prof_en,
-                $father_prof_ar,
+                $father_profession_id,
                 $mother_first_en,
                 $mother_last_en,
                 $mother_first_ar,
                 $mother_last_ar,
-                $mother_prof_en,
-                $mother_prof_ar
+                $mother_profession_id
             );
             $stmtParent->execute();
             $stmtParent->close();
@@ -406,8 +506,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $contact_lname_en = null;
         $contact_fname_ar = null;
         $contact_lname_ar = null;
-        $contact_relation_en = null;
-        $contact_relation_ar = null;
+        $contact_relation_id = null;
         $contact_phone = $_POST['CONTACT_PHONE_NUMBER'] ?? '';
 
         if ($is_foreign === 'No') {
@@ -415,8 +514,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $contact_lname_en = $_POST['CONTACT_LAST_NAME_EN'] ?? '';
             $contact_fname_ar = $_POST['CONTACT_FIRST_NAME_AR'] ?? '';
             $contact_lname_ar = $_POST['CONTACT_LAST_NAME_AR'] ?? '';
-            $contact_relation_en = $_POST['CONTACT_RELATION_EN'] ?? '';
-            $contact_relation_ar = $_POST['CONTACT_RELATION_AR'] ?? '';
+            $contact_relation_id = !empty($_POST['CONTACT_RELATION_ID']) ? intval($_POST['CONTACT_RELATION_ID']) : null;
 
             $contact_address_id = upsertAddress(
                 $conn,
@@ -441,8 +539,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     $country_name_ar = $row_c['COUNTRY_NAME_AR'];
                 }
             }
-            $contact_relation_en = $country_name_en . "'s consulate";
-            $contact_relation_ar = "قنصلية " . $country_name_ar;
         }
 
         if (!empty($existingEmg) && !empty($existingEmg['EMERGENCY_CONTACT_ID'])) {
@@ -450,19 +546,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $sqlEmgUpdate = "UPDATE student_emergency_contact SET
                 CONTACT_FIRST_NAME_EN = ?, CONTACT_LAST_NAME_EN = ?,
                 CONTACT_FIRST_NAME_AR = ?, CONTACT_LAST_NAME_AR = ?,
-                CONTACT_RELATION_EN = ?, CONTACT_RELATION_AR = ?,
+                CONTACT_RELATION_ID = ?,
                 CONTACT_PHONE_NUMBER = ?, CONTACT_ADDRESS_ID = ?, CONSULATE_NUMBER = ?
                 WHERE EMERGENCY_CONTACT_ID = ?";
             $stmtEmg = $conn->prepare($sqlEmgUpdate);
             if ($stmtEmg) {
                 $stmtEmg->bind_param(
-                    "sssssssisi",
+                    "ssssisisi",
                     $contact_fname_en,
                     $contact_lname_en,
                     $contact_fname_ar,
                     $contact_lname_ar,
-                    $contact_relation_en,
-                    $contact_relation_ar,
+                    $contact_relation_id,
                     $contact_phone,
                     $contact_address_id,
                     $consulate_num,
@@ -476,20 +571,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 STUDENT_SERIAL_NUMBER,
                 CONTACT_FIRST_NAME_EN, CONTACT_LAST_NAME_EN,
                 CONTACT_FIRST_NAME_AR, CONTACT_LAST_NAME_AR,
-                CONTACT_RELATION_EN, CONTACT_RELATION_AR,
+                CONTACT_RELATION_ID,
                 CONTACT_PHONE_NUMBER, CONTACT_ADDRESS_ID, CONSULATE_NUMBER
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmtEmg = $conn->prepare($sqlEmgInsert);
             if ($stmtEmg) {
                 $stmtEmg->bind_param(
-                    "ssssssssis",
+                    "sssssisis",
                     $serial,
                     $contact_fname_en,
                     $contact_lname_en,
                     $contact_fname_ar,
                     $contact_lname_ar,
-                    $contact_relation_en,
-                    $contact_relation_ar,
+                    $contact_relation_id,
                     $contact_phone,
                     $contact_address_id,
                     $consulate_num
@@ -500,8 +594,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
 
         $conn->commit();
-        $message = "Student updated successfully.";
-        $msg_type = "success";
+        header('Location: secretary_edit_student.php?serial=' . urlencode($serial) . '&updated=1');
+        exit;
 
     } catch (Throwable $e) {
         $conn->rollback();
@@ -523,6 +617,48 @@ while($r = $res->fetch_assoc()) $sections[] = $r;
 $grades = [];
 $res = $conn->query("SELECT GRADE_ID, GRADE_NAME_EN, GRADE_NAME_AR FROM grade ORDER BY GRADE_NAME_EN");
 while($r = $res->fetch_assoc()) $grades[] = $r;
+
+$specialities = [];
+$res = $conn->query("SELECT student_speciality_id, speciality_name_en, speciality_name_ar FROM student_speciality ORDER BY speciality_name_en");
+if ($res) {
+    while($r = $res->fetch_assoc()) $specialities[] = $r;
+}
+
+$academic_levels = [];
+$res = $conn->query("SELECT ACADEMIC_LEVEL_ID, ACADEMIC_LEVEL_EN, ACADEMIC_LEVEL_AR FROM academic_level ORDER BY ACADEMIC_LEVEL_EN");
+if ($res) {
+    while($r = $res->fetch_assoc()) $academic_levels[] = $r;
+}
+
+$professions = [];
+$res = $conn->query("SELECT profession_id, profession_name_en, profession_name_ar FROM profession ORDER BY profession_name_en");
+if ($res) {
+    while($r = $res->fetch_assoc()) $professions[] = $r;
+}
+
+$military_certificates = [];
+$res = $conn->query("SELECT military_certificate_id, military_certificate_en, military_certificate_ar FROM military_certificate ORDER BY military_certificate_en");
+if ($res) {
+    while($r = $res->fetch_assoc()) $military_certificates[] = $r;
+}
+
+$hobbies = [];
+$res = $conn->query("SELECT hobby_id, hobby_name_en, hobby_name_ar FROM hobby ORDER BY hobby_name_en");
+if ($res) {
+    while($r = $res->fetch_assoc()) $hobbies[] = $r;
+}
+
+$health_statuses = [];
+$res = $conn->query("SELECT health_status_id, health_status_en, health_status_ar FROM health_status ORDER BY health_status_en");
+if ($res) {
+    while($r = $res->fetch_assoc()) $health_statuses[] = $r;
+}
+
+$relations = [];
+$res = $conn->query("SELECT relation_id, relation_name_en, relation_name_ar FROM relation ORDER BY relation_name_en");
+if ($res) {
+    while($r = $res->fetch_assoc()) $relations[] = $r;
+}
 
 $countries = [];
 $res = $conn->query("SELECT COUNTRY_ID, COUNTRY_NAME_EN, COUNTRY_NAME_AR FROM country ORDER BY COUNTRY_NAME_EN");
@@ -551,6 +687,9 @@ $parent = null;
 $outfit = null;
 $parade = null;
 
+$selected_military_certificate_ids = [];
+$selected_hobby_ids = [];
+
 $bpWilayas = [];
 $bpDairas = [];
 $bpCommunes = [];
@@ -564,8 +703,8 @@ $contactCommunes = [];
 if ($loadedSerial !== '') {
     $sql = "SELECT
             s.*,
-            spi.FATHER_FIRST_NAME_EN, spi.FATHER_LAST_NAME_EN, spi.FATHER_FIRST_NAME_AR, spi.FATHER_LAST_NAME_AR, spi.FATHER_PROFESSION_EN, spi.FATHER_PROFESSION_AR,
-            spi.MOTHER_FIRST_NAME_EN, spi.MOTHER_LAST_NAME_EN, spi.MOTHER_FIRST_NAME_AR, spi.MOTHER_LAST_NAME_AR, spi.MOTHER_PROFESSION_EN, spi.MOTHER_PROFESSION_AR,
+            spi.FATHER_FIRST_NAME_EN, spi.FATHER_LAST_NAME_EN, spi.FATHER_FIRST_NAME_AR, spi.FATHER_LAST_NAME_AR, spi.FATHER_PROFESSION_ID,
+            spi.MOTHER_FIRST_NAME_EN, spi.MOTHER_LAST_NAME_EN, spi.MOTHER_FIRST_NAME_AR, spi.MOTHER_LAST_NAME_AR, spi.MOTHER_PROFESSION_ID,
             sco.FIRST_OUTFIT_NUMBER, sco.FIRST_OUTFIT_SIZE, sco.SECOND_OUTFIT_NUMBER, sco.SECOND_OUTFIT_SIZE, sco.COMBAT_SHOE_SIZE,
             spu.SUMMER_JACKET_SIZE, spu.WINTER_JACKET_SIZE, spu.SUMMER_TROUSERS_SIZE, spu.WINTER_TROUSERS_SIZE, spu.SUMMER_SHIRT_SIZE, spu.WINTER_SHIRT_SIZE,
             spu.SUMMER_HAT_SIZE, spu.WINTER_HAT_SIZE, spu.SUMMER_SKIRT_SIZE, spu.WINTER_SKIRT_SIZE,
@@ -574,7 +713,7 @@ if ($loadedSerial !== '') {
             addr_p.ADDRESS_ID AS PERS_ADDRESS_ID, addr_p.ADDRESS_STREET_EN AS PERS_STREET_EN, addr_p.ADDRESS_STREET_AR AS PERS_STREET_AR,
             addr_p.COUNTRY_ID AS PERS_COUNTRY_ID, addr_p.WILAYA_ID AS PERS_WILAYA_ID, addr_p.DAIRA_ID AS PERS_DAIRA_ID, addr_p.COMMUNE_ID AS PERS_COMMUNE_ID,
             sec_emg.EMERGENCY_CONTACT_ID, sec_emg.CONTACT_FIRST_NAME_EN, sec_emg.CONTACT_LAST_NAME_EN, sec_emg.CONTACT_FIRST_NAME_AR, sec_emg.CONTACT_LAST_NAME_AR,
-            sec_emg.CONTACT_RELATION_EN, sec_emg.CONTACT_RELATION_AR, sec_emg.CONTACT_PHONE_NUMBER, sec_emg.CONTACT_ADDRESS_ID, sec_emg.CONSULATE_NUMBER,
+            sec_emg.CONTACT_RELATION_ID, sec_emg.CONTACT_PHONE_NUMBER, sec_emg.CONTACT_ADDRESS_ID, sec_emg.CONSULATE_NUMBER,
             addr_emg.ADDRESS_STREET_EN AS CONTACT_STREET_EN, addr_emg.ADDRESS_STREET_AR AS CONTACT_STREET_AR,
             addr_emg.COUNTRY_ID AS CONTACT_COUNTRY_ID, addr_emg.WILAYA_ID AS CONTACT_WILAYA_ID, addr_emg.DAIRA_ID AS CONTACT_DAIRA_ID, addr_emg.COMMUNE_ID AS CONTACT_COMMUNE_ID
         FROM student s
@@ -597,6 +736,28 @@ if ($loadedSerial !== '') {
     $stmt->close();
 
     if ($student) {
+        $stmtMc = $conn->prepare("SELECT military_certificate_id FROM student_military_certificate WHERE student_serial_number = ?");
+        if ($stmtMc) {
+            $stmtMc->bind_param("s", $loadedSerial);
+            $stmtMc->execute();
+            $resMc = $stmtMc->get_result();
+            while ($rowMc = $resMc->fetch_assoc()) {
+                $selected_military_certificate_ids[] = (int)$rowMc['military_certificate_id'];
+            }
+            $stmtMc->close();
+        }
+
+        $stmtHobby = $conn->prepare("SELECT hobby_id FROM student_hobby WHERE student_serial_number = ?");
+        if ($stmtHobby) {
+            $stmtHobby->bind_param("s", $loadedSerial);
+            $stmtHobby->execute();
+            $resHobby = $stmtHobby->get_result();
+            while ($rowHobby = $resHobby->fetch_assoc()) {
+                $selected_hobby_ids[] = (int)$rowHobby['hobby_id'];
+            }
+            $stmtHobby->close();
+        }
+
         $bp = [
             'BP_STREET_EN' => $student['BP_STREET_EN'] ?? '',
             'BP_STREET_AR' => $student['BP_STREET_AR'] ?? '',
@@ -980,7 +1141,8 @@ function selectedAttr($current, $value) {
 
                                 <div class="form-group">
                                     <label><?php echo t('serial_number'); ?></label>
-                                    <input type="text" name="STUDENT_SERIAL_NUMBER" value="<?php echo h($student['STUDENT_SERIAL_NUMBER']); ?>" readonly>
+                                    <input type="hidden" name="ORIGINAL_STUDENT_SERIAL_NUMBER" value="<?php echo h($student['STUDENT_SERIAL_NUMBER']); ?>">
+                                    <input type="text" id="STUDENT_SERIAL_NUMBER" name="STUDENT_SERIAL_NUMBER" value="<?php echo h($student['STUDENT_SERIAL_NUMBER']); ?>">
                                 </div>
 
                                 <div class="form-group"><label><?php echo t('label_first_name_en'); ?></label><input type="text" name="STUDENT_FIRST_NAME_EN" required value="<?php echo h($student['STUDENT_FIRST_NAME_EN']); ?>"></div>
@@ -1011,7 +1173,7 @@ function selectedAttr($current, $value) {
                                     </select>
                                 </div>
                                 <div class="form-group"><label><?php echo t('label_height'); ?></label><input type="number" step="0.01" name="STUDENT_HEIGHT_CM" value="<?php echo h($student['STUDENT_HEIGHT_CM']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_weight'); ?></label><input type="number" step="0.01" name="STUDENT_WEIGHT_KG" value="<?php echo h($student['STUDENT_WEIGHT_KG']); ?>"></div>
+                                <div class="form-group"><label><?php echo t('label_weight'); ?></label><input type="number" step="0.01" name="STUDENT_WEIGHT_KG" value="<?php echo h($student['STUDENT_WEIGHT_KG']); ?>" min="50" max="150"></div>
                                 <div class="form-group"><label><?php echo t('label_is_foreign'); ?></label>
                                     <select id="IS_FOREIGN_SELECT" name="STUDENT_IS_FOREIGN" onchange="toggleForeignFields()">
                                         <option value="No" <?php echo selectedAttr($student['STUDENT_IS_FOREIGN'], 'No'); ?>><?php echo t('no'); ?></option>
@@ -1050,8 +1212,24 @@ function selectedAttr($current, $value) {
                                     </select>
                                 </div>
 
-                                <div class="form-group"><label><?php echo t('speciality'); ?></label><input type="text" name="STUDENT_SPECIALITY" value="<?php echo h($student['STUDENT_SPECIALITY']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('academic_level'); ?></label><input type="text" name="STUDENT_ACADEMIC_LEVEL" value="<?php echo h($student['STUDENT_ACADEMIC_LEVEL']); ?>"></div>
+                                <div class="form-group"><label><?php echo t('speciality'); ?></label>
+                                    <select name="STUDENT_SPECIALITY_ID">
+                                        <option value=""><?php echo t('select'); ?></option>
+                                        <?php foreach ($specialities as $sp): ?>
+                                            <?php $spName = ($LANG === 'ar' && !empty($sp['speciality_name_ar'])) ? $sp['speciality_name_ar'] : $sp['speciality_name_en']; ?>
+                                            <option value="<?php echo $sp['student_speciality_id']; ?>" <?php echo selectedAttr($student['STUDENT_SPECIALITY_ID'] ?? '', $sp['student_speciality_id']); ?>><?php echo h($spName); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="form-group"><label><?php echo t('academic_level'); ?></label>
+                                    <select name="STUDENT_ACADEMIC_LEVEL_ID">
+                                        <option value=""><?php echo t('select'); ?></option>
+                                        <?php foreach ($academic_levels as $al): ?>
+                                            <?php $alName = ($LANG === 'ar' && !empty($al['ACADEMIC_LEVEL_AR'])) ? $al['ACADEMIC_LEVEL_AR'] : $al['ACADEMIC_LEVEL_EN']; ?>
+                                            <option value="<?php echo $al['ACADEMIC_LEVEL_ID']; ?>" <?php echo selectedAttr($student['STUDENT_ACADEMIC_LEVEL_ID'] ?? '', $al['ACADEMIC_LEVEL_ID']); ?>><?php echo h($alName); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
                                 <div class="form-group"><label><?php echo t('academic_average'); ?></label><input type="number" step="0.01" name="STUDENT_ACADEMIC_AVERAGE" value="<?php echo h($student['STUDENT_ACADEMIC_AVERAGE']); ?>"></div>
                                 <div class="form-group"><label><?php echo t('bac_number'); ?></label><input type="text" name="STUDENT_BACCALAUREATE_SUB_NUMBER" value="<?php echo h($student['STUDENT_BACCALAUREATE_SUB_NUMBER']); ?>"></div>
 
@@ -1103,14 +1281,28 @@ function selectedAttr($current, $value) {
                                 <div class="form-group"><label><?php echo t('label_father_last_en'); ?></label><input type="text" name="FATHER_LAST_NAME_EN" value="<?php echo h($student['FATHER_LAST_NAME_EN']); ?>"></div>
                                 <div class="form-group"><label><?php echo t('label_father_first_ar'); ?></label><input type="text" name="FATHER_FIRST_NAME_AR" dir="rtl" value="<?php echo h($student['FATHER_FIRST_NAME_AR']); ?>"></div>
                                 <div class="form-group"><label><?php echo t('label_father_last_ar'); ?></label><input type="text" name="FATHER_LAST_NAME_AR" dir="rtl" value="<?php echo h($student['FATHER_LAST_NAME_AR']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_father_prof_en'); ?></label><input type="text" name="FATHER_PROFESSION_EN" value="<?php echo h($student['FATHER_PROFESSION_EN']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_father_prof_ar'); ?></label><input type="text" name="FATHER_PROFESSION_AR" dir="rtl" value="<?php echo h($student['FATHER_PROFESSION_AR']); ?>"></div>
+                                <div class="form-group"><label><?php echo t('label_father_prof_en'); ?></label>
+                                    <select name="FATHER_PROFESSION_ID">
+                                        <option value=""><?php echo t('select'); ?></option>
+                                        <?php foreach ($professions as $p): ?>
+                                            <?php $pName = ($LANG === 'ar' && !empty($p['profession_name_ar'])) ? $p['profession_name_ar'] : $p['profession_name_en']; ?>
+                                            <option value="<?php echo $p['profession_id']; ?>" <?php echo selectedAttr($student['FATHER_PROFESSION_ID'] ?? '', $p['profession_id']); ?>><?php echo h($pName); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
                                 <div class="form-group"><label><?php echo t('label_mother_first_en'); ?></label><input type="text" name="MOTHER_FIRST_NAME_EN" value="<?php echo h($student['MOTHER_FIRST_NAME_EN']); ?>"></div>
                                 <div class="form-group"><label><?php echo t('label_mother_last_en'); ?></label><input type="text" name="MOTHER_LAST_NAME_EN" value="<?php echo h($student['MOTHER_LAST_NAME_EN']); ?>"></div>
                                 <div class="form-group"><label><?php echo t('label_mother_first_ar'); ?></label><input type="text" name="MOTHER_FIRST_NAME_AR" dir="rtl" value="<?php echo h($student['MOTHER_FIRST_NAME_AR']); ?>"></div>
                                 <div class="form-group"><label><?php echo t('label_mother_last_ar'); ?></label><input type="text" name="MOTHER_LAST_NAME_AR" dir="rtl" value="<?php echo h($student['MOTHER_LAST_NAME_AR']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_mother_prof_en'); ?></label><input type="text" name="MOTHER_PROFESSION_EN" value="<?php echo h($student['MOTHER_PROFESSION_EN']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_mother_prof_ar'); ?></label><input type="text" name="MOTHER_PROFESSION_AR" dir="rtl" value="<?php echo h($student['MOTHER_PROFESSION_AR']); ?>"></div>
+                                <div class="form-group"><label><?php echo t('label_mother_prof_en'); ?></label>
+                                    <select name="MOTHER_PROFESSION_ID">
+                                        <option value=""><?php echo t('select'); ?></option>
+                                        <?php foreach ($professions as $p): ?>
+                                            <?php $pName = ($LANG === 'ar' && !empty($p['profession_name_ar'])) ? $p['profession_name_ar'] : $p['profession_name_en']; ?>
+                                            <option value="<?php echo $p['profession_id']; ?>" <?php echo selectedAttr($student['MOTHER_PROFESSION_ID'] ?? '', $p['profession_id']); ?>><?php echo h($pName); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
 
                                 <div class="form-group"><label><?php echo t('orphan_status'); ?></label>
                                     <select name="STUDENT_ORPHAN_STATUS">
@@ -1287,9 +1479,34 @@ function selectedAttr($current, $value) {
                                     </select>
                                 </div>
                                 <div class="form-group" style="grid-column: span 2;"><label><?php echo t('educational_certificates'); ?></label><textarea name="STUDENT_EDUCATIONAL_CERTIFICATES" rows="2"><?php echo h($student['STUDENT_EDUCATIONAL_CERTIFICATES']); ?></textarea></div>
-                                <div class="form-group" style="grid-column: span 2;"><label><?php echo t('military_certificates'); ?></label><textarea name="STUDENT_MILITARY_CERTIFICATES" rows="2"><?php echo h($student['STUDENT_MILITARY_CERTIFICATES']); ?></textarea></div>
-                                <div class="form-group" style="grid-column: span 2;"><label><?php echo t('hobbies'); ?></label><textarea name="STUDENT_HOBBIES" rows="2"><?php echo h($student['STUDENT_HOBBIES']); ?></textarea></div>
-                                <div class="form-group" style="grid-column: span 2;"><label><?php echo t('health_status'); ?></label><textarea name="STUDENT_HEALTH_STATUS" rows="2"><?php echo h($student['STUDENT_HEALTH_STATUS']); ?></textarea></div>
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label><?php echo t('military_certificates'); ?></label>
+                                    <select name="MILITARY_CERTIFICATE_IDS[]" multiple size="6">
+                                        <?php foreach ($military_certificates as $mc): ?>
+                                            <?php $mcName = ($LANG === 'ar' && !empty($mc['military_certificate_ar'])) ? $mc['military_certificate_ar'] : $mc['military_certificate_en']; ?>
+                                            <option value="<?php echo $mc['military_certificate_id']; ?>" <?php echo in_array((int)$mc['military_certificate_id'], $selected_military_certificate_ids, true) ? 'selected' : ''; ?>><?php echo h($mcName); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label><?php echo t('hobbies'); ?></label>
+                                    <select name="HOBBY_IDS[]" multiple size="6">
+                                        <?php foreach ($hobbies as $hb): ?>
+                                            <?php $hbName = ($LANG === 'ar' && !empty($hb['hobby_name_ar'])) ? $hb['hobby_name_ar'] : $hb['hobby_name_en']; ?>
+                                            <option value="<?php echo $hb['hobby_id']; ?>" <?php echo in_array((int)$hb['hobby_id'], $selected_hobby_ids, true) ? 'selected' : ''; ?>><?php echo h($hbName); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label><?php echo t('health_status'); ?></label>
+                                    <select name="STUDENT_HEALTH_STATUS_ID">
+                                        <option value=""><?php echo t('select'); ?></option>
+                                        <?php foreach ($health_statuses as $hs): ?>
+                                            <?php $hsName = ($LANG === 'ar' && !empty($hs['health_status_ar'])) ? $hs['health_status_ar'] : $hs['health_status_en']; ?>
+                                            <option value="<?php echo $hs['health_status_id']; ?>" <?php echo selectedAttr($student['STUDENT_HEALTH_STATUS_ID'] ?? '', $hs['health_status_id']); ?>><?php echo h($hsName); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
 
                             </div>
                             </div>
@@ -1308,10 +1525,17 @@ function selectedAttr($current, $value) {
                                         <div id="LOCAL_CONTACT_FIELDS" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
                                             <div class="form-group"><label><?php echo t('label_first_name_en'); ?></label><input type="text" name="CONTACT_FIRST_NAME_EN" value="<?php echo h($student['CONTACT_FIRST_NAME_EN']); ?>"></div>
                                             <div class="form-group"><label><?php echo t('label_last_name_en'); ?></label><input type="text" name="CONTACT_LAST_NAME_EN" value="<?php echo h($student['CONTACT_LAST_NAME_EN']); ?>"></div>
-                                            <div class="form-group"><label><?php echo t('label_relation_en'); ?></label><input type="text" name="CONTACT_RELATION_EN" value="<?php echo h($student['CONTACT_RELATION_EN']); ?>"></div>
+                                            <div class="form-group"><label><?php echo t('label_relation_en'); ?></label>
+                                                <select name="CONTACT_RELATION_ID">
+                                                    <option value=""><?php echo t('select'); ?></option>
+                                                    <?php foreach ($relations as $rel): ?>
+                                                        <?php $relName = ($LANG === 'ar' && !empty($rel['relation_name_ar'])) ? $rel['relation_name_ar'] : $rel['relation_name_en']; ?>
+                                                        <option value="<?php echo $rel['relation_id']; ?>" <?php echo selectedAttr($student['CONTACT_RELATION_ID'] ?? '', $rel['relation_id']); ?>><?php echo h($relName); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
                                             <div class="form-group"><label><?php echo t('label_first_name_ar'); ?></label><input type="text" name="CONTACT_FIRST_NAME_AR" dir="rtl" value="<?php echo h($student['CONTACT_FIRST_NAME_AR']); ?>"></div>
                                             <div class="form-group"><label><?php echo t('label_last_name_ar'); ?></label><input type="text" name="CONTACT_LAST_NAME_AR" dir="rtl" value="<?php echo h($student['CONTACT_LAST_NAME_AR']); ?>"></div>
-                                            <div class="form-group"><label><?php echo t('label_relation_ar'); ?></label><input type="text" name="CONTACT_RELATION_AR" dir="rtl" value="<?php echo h($student['CONTACT_RELATION_AR']); ?>"></div>
 
                                             <div class="sub-group" style="grid-column: 1 / -1;">
                                                 <label style="color:var(--primary-color); font-weight:700;"><?php echo t('label_contact_address'); ?></label>
@@ -1546,7 +1770,9 @@ document.addEventListener('click', function(e) {
 });
 
 function toggleSkirtFields() {
-    const sex = document.getElementById('SEX_SELECT').value;
+    const sexEl = document.getElementById('SEX_SELECT');
+    if (!sexEl) return;
+    const sex = sexEl.value;
     const skirtFields = document.querySelectorAll('.skirt-field');
     skirtFields.forEach(field => {
         field.style.display = (sex === 'Female') ? 'block' : 'none';
@@ -1554,9 +1780,13 @@ function toggleSkirtFields() {
 }
 
 function toggleForeignFields() {
-    const isForeign = document.getElementById('IS_FOREIGN_SELECT').value;
+    const isForeignEl = document.getElementById('IS_FOREIGN_SELECT');
+    if (!isForeignEl) return;
+    const isForeign = isForeignEl.value;
     const localFields = document.getElementById('LOCAL_CONTACT_FIELDS');
     const foreignFields = document.getElementById('FOREIGN_CONTACT_FIELDS');
+
+    if (!localFields || !foreignFields) return;
 
     if (isForeign === 'Yes') {
         localFields.style.display = 'none';
@@ -1663,6 +1893,251 @@ toggleSkirtFields();
 toggleForeignFields();
 
 fetchAllStudents();
+
+const getField = (name) => document.querySelector(`#wizardForm [name="${CSS.escape(name)}"]`);
+const ensureErrorEl = (input) => {
+    if (!input) return null;
+    const key = input.name || input.id || Math.random().toString(36).slice(2);
+    const id = `err_${key}`;
+    let el = document.getElementById(id);
+    if (!el) {
+        el = document.createElement('div');
+        el.id = id;
+        el.style.marginTop = '0.35rem';
+        el.style.color = 'var(--text-error)';
+        el.style.fontSize = '0.85rem';
+        el.style.display = 'none';
+        input.insertAdjacentElement('afterend', el);
+    }
+    return el;
+};
+const setFieldError = (input, message) => {
+    if (!input) return;
+    input.setCustomValidity(message || '');
+    const el = ensureErrorEl(input);
+    if (el) {
+        el.textContent = message || '';
+        el.style.display = message ? 'block' : 'none';
+    }
+};
+
+const isEmpty = (v) => (v === null || v === undefined || String(v).trim() === '');
+const normalizePhone = (v) => String(v || '').trim();
+const isE164 = (v) => /^\+[1-9]\d{1,14}$/.test(normalizePhone(v));
+const containsLatin = (v) => /[A-Za-z]/.test(String(v || ''));
+const containsArabic = (v) => /[\u0600-\u06FF]/.test(String(v || ''));
+const digitsOnly = (v) => /^\d+$/.test(String(v || '').trim());
+const toIntOrNull = (v) => {
+    if (isEmpty(v)) return null;
+    const n = parseInt(String(v), 10);
+    return Number.isFinite(n) ? n : null;
+};
+const toDateOrNull = (v) => {
+    if (isEmpty(v)) return null;
+    const d = new Date(String(v));
+    return Number.isNaN(d.getTime()) ? null : d;
+};
+
+const validateAll = () => {
+    const form = document.getElementById('wizardForm');
+    if (!form) return;
+
+    const serial = getField('STUDENT_SERIAL_NUMBER');
+    if (serial) {
+        if (isEmpty(serial.value)) {
+            setFieldError(serial, 'Serial Number is required.');
+        } else if (!digitsOnly(serial.value)) {
+            setFieldError(serial, 'Serial Number must contain digits only.');
+        } else {
+            setFieldError(serial, '');
+        }
+    }
+
+    const phone = getField('STUDENT_PERSONAL_PHONE');
+    if (phone && !isEmpty(phone.value) && !isE164(phone.value)) {
+        setFieldError(phone, t('invalid_phone') || 'Phone number must be an international format like +213xxxxxxxxx');
+    } else {
+        setFieldError(phone, '');
+    }
+
+    const contactPhone = getField('CONTACT_PHONE_NUMBER');
+    if (contactPhone && !isEmpty(contactPhone.value) && !isE164(contactPhone.value)) {
+        setFieldError(contactPhone, t('invalid_phone') || 'Phone number must be an international format like +213xxxxxxxxx');
+    } else {
+        setFieldError(contactPhone, '');
+    }
+
+    const birthDate = getField('STUDENT_BIRTH_DATE');
+    const bd = birthDate ? toDateOrNull(birthDate.value) : null;
+    if (birthDate && bd) {
+        if (bd.getFullYear() < 1990) {
+            setFieldError(birthDate, 'Birth year must be 1990 or later');
+        } else {
+            setFieldError(birthDate, '');
+        }
+    } else {
+        setFieldError(birthDate, '');
+    }
+
+    const schoolSubDate = getField('STUDENT_SCHOOL_SUB_DATE');
+    const sd = schoolSubDate ? toDateOrNull(schoolSubDate.value) : null;
+    if (schoolSubDate && bd && sd) {
+        if (sd.getTime() < bd.getTime()) {
+            setFieldError(schoolSubDate, 'School subscription date cannot be before the birth date');
+        } else {
+            setFieldError(schoolSubDate, '');
+        }
+    } else {
+        setFieldError(schoolSubDate, '');
+    }
+
+    const height = getField('STUDENT_HEIGHT_CM');
+    if (height && !isEmpty(height.value)) {
+        const hv = Number(height.value);
+        if (!Number.isFinite(hv)) {
+            setFieldError(height, 'Height must be a number');
+        } else if (hv < 140 || hv > 250) {
+            setFieldError(height, 'Height must be between 140 and 250 cm');
+        } else {
+            setFieldError(height, '');
+        }
+    } else {
+        setFieldError(height, '');
+    }
+
+    const weight = getField('STUDENT_WEIGHT_KG');
+    if (weight && weight.validity && weight.validity.badInput) {
+        setFieldError(weight, 'Weight must be a number');
+    } else if (weight && !isEmpty(weight.value)) {
+        const wv = weight.valueAsNumber;
+        if (Number.isNaN(wv)) {
+            setFieldError(weight, 'Weight must be a number');
+        } else if (wv < 50 || wv > 150) {
+            setFieldError(weight, 'Weight must be between 50 and 150 kg');
+        } else {
+            setFieldError(weight, '');
+        }
+    } else {
+        setFieldError(weight, '');
+    }
+
+    const bac = getField('STUDENT_BACCALAUREATE_SUB_NUMBER');
+    if (bac && !isEmpty(bac.value) && !digitsOnly(bac.value)) {
+        setFieldError(bac, 'Bac number must be digits only');
+    } else {
+        setFieldError(bac, '');
+    }
+
+    const numericFields = [
+        'STUDENT_ID_CARD_NUMBER',
+        'STUDENT_BIRTHDATE_CERTIFICATE_NUMBER',
+        'STUDENT_SCHOOL_SUB_CARD_NUMBER',
+        'STUDENT_POSTAL_ACCOUNT_NUMBER',
+        'CONSULATE_NUMBER'
+    ];
+    numericFields.forEach((n) => {
+        const f = getField(n);
+        if (f && !isEmpty(f.value) && !digitsOnly(f.value)) {
+            setFieldError(f, 'This field must be a number');
+        } else {
+            setFieldError(f, '');
+        }
+    });
+
+    const siblings = getField('STUDENT_NUMBER_OF_SIBLINGS');
+    const sisters = getField('STUDENT_NUMBER_OF_SISTERS');
+    const order = getField('STUDENT_ORDER_AMONG_SIBLINGS');
+    const sibVal = siblings ? toIntOrNull(siblings.value) : null;
+    const sisVal = sisters ? toIntOrNull(sisters.value) : null;
+    const ordVal = order ? toIntOrNull(order.value) : null;
+
+    if (siblings && sibVal !== null) {
+        if (sibVal < 0 || sibVal > 30) setFieldError(siblings, 'Number of siblings must be between 0 and 30');
+        else setFieldError(siblings, '');
+    } else {
+        setFieldError(siblings, '');
+    }
+
+    if (sisters && sisVal !== null) {
+        if (sibVal !== null && sisVal > sibVal) setFieldError(sisters, 'Number of sisters cannot exceed number of siblings');
+        else if (sisVal < 0 || sisVal > 30) setFieldError(sisters, 'Number of sisters must be between 0 and 30');
+        else setFieldError(sisters, '');
+    } else {
+        setFieldError(sisters, '');
+    }
+
+    if (order && ordVal !== null) {
+        if (ordVal < 1) {
+            setFieldError(order, 'Order among siblings must be at least 1');
+        } else if (sibVal !== null && ordVal > (sibVal + 1)) {
+            setFieldError(order, 'Order among siblings must be at most number of siblings + 1');
+        } else {
+            setFieldError(order, '');
+        }
+    } else {
+        setFieldError(order, '');
+    }
+
+    const enforceNoLatin = (name) => {
+        const f = getField(name);
+        if (!f) return;
+        if (!isEmpty(f.value) && containsLatin(f.value)) setFieldError(f, 'This field must not contain English letters');
+        else setFieldError(f, '');
+    };
+    const enforceNoArabic = (name) => {
+        const f = getField(name);
+        if (!f) return;
+        if (!isEmpty(f.value) && containsArabic(f.value)) setFieldError(f, 'This field must not contain Arabic letters');
+        else setFieldError(f, '');
+    };
+
+    [
+        'STUDENT_FIRST_NAME_AR','STUDENT_LAST_NAME_AR',
+        'BP_STREET_AR','PERS_STREET_AR',
+        'FATHER_FIRST_NAME_AR','FATHER_LAST_NAME_AR',
+        'MOTHER_FIRST_NAME_AR','MOTHER_LAST_NAME_AR',
+        'CONTACT_FIRST_NAME_AR','CONTACT_LAST_NAME_AR',
+        'CONTACT_STREET_AR'
+    ].forEach(enforceNoLatin);
+
+    [
+        'STUDENT_FIRST_NAME_EN','STUDENT_LAST_NAME_EN',
+        'BP_STREET_EN','PERS_STREET_EN',
+        'FATHER_FIRST_NAME_EN','FATHER_LAST_NAME_EN',
+        'MOTHER_FIRST_NAME_EN','MOTHER_LAST_NAME_EN',
+        'CONTACT_FIRST_NAME_EN','CONTACT_LAST_NAME_EN',
+        'CONTACT_STREET_EN'
+    ].forEach(enforceNoArabic);
+};
+
+const bindValidation = () => {
+    const form = document.getElementById('wizardForm');
+    if (!form) return;
+    const fields = Array.from(form.querySelectorAll('input, select, textarea'));
+    fields.forEach((f) => {
+        f.addEventListener('input', validateAll);
+        f.addEventListener('change', validateAll);
+        f.addEventListener('blur', validateAll);
+    });
+
+    form.addEventListener('submit', function(e) {
+        validateAll();
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            const firstInvalid = form.querySelector(':invalid');
+            if (firstInvalid) {
+                const details = firstInvalid.closest('details.accordion-section');
+                if (details) details.open = true;
+                firstInvalid.focus();
+                firstInvalid.reportValidity();
+            }
+        }
+    });
+
+    validateAll();
+};
+
+bindValidation();
 </script>
 
 </body>

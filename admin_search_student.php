@@ -50,432 +50,458 @@ $conn->close();
     <title><?php echo t('student_records'); ?> - <?php echo t('app_name'); ?></title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: var(--background-color);
             color: var(--text-primary);
             margin: 0;
             padding: 0;
-        }
-
-        .admin-container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px 30px;
-        }
-        
-
-        .search-section {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
-        }
-
-        .search-section h2 {
-            margin: 0 0 15px 0;
-            color: var(--primary-color);
-            font-size: 18px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .form-row.full {
-            grid-template-columns: 1fr;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        input[type="text"],
-        input[type="date"],
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        input[type="text"]:focus,
-        input[type="date"]:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 3px rgba(111, 66, 193, 0.1);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #5d3fa3;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(111, 66, 193, 0.3);
-        }
-
-        .btn-secondary {
-            background: var(--border-color);
-            color: var(--text-primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border-color);
-        }
-
-        .results-section {
-            display: none;
-        }
-
-        .results-section.active {
-            display: block;
-        }
-
-        .student-info {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
-        }
-
-        .student-info h3 {
-            font-size: 20px;
-            color: var(--primary-color);
-            margin: 0 0 15px 0;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .info-item {
-            background: var(--background-color);
-            padding: 15px;
-            border-radius: 6px;
-            border-left: 3px solid #6f42c1;
-        }
-
-        .info-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        .info-value {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .student-photo-box {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--surface-color);
-            border-radius: 50%;
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            width: 140px;
-            height: 140px;
-            margin: 0 auto;
-        }
-
-        .student-photo-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .records-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 20px;
-        }
-
-        .record-section {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
-        }
-
-        .record-section h4 {
-            color: var(--primary-color);
-            margin: 0 0 15px 0;
-            font-size: 16px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-
-        .records-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .record-item {
-            background: var(--background-color);
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 6px;
-            border-left: 3px solid #6f42c1;
-        }
-
-        .record-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .record-date {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .record-motif {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-
-        .record-note {
-            color: var(--text-primary);
-            font-size: 13px;
             line-height: 1.5;
         }
 
-        .empty-message {
-            text-align: center;
+        .admin-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* --- Modern Search Bar --- */
+        .search-container-wrapper {
+            position: sticky;
+            top: 1rem;
+            z-index: 40;
+            margin-bottom: 2.5rem;
+        }
+
+        .search-glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1rem;
+            padding: 0.75rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme='dark'] .search-glass {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .search-icon-inline {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
             color: var(--text-secondary);
-            padding: 20px;
-            background: var(--background-color);
-            border-radius: 6px;
-            font-size: 14px;
+            pointer-events: none;
         }
 
-        .error-message {
-            background: var(--bg-error);
-            border: 1px solid #fecaca;
-            color: #dc2626;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: none;
-            font-size: 14px;
+        [dir="rtl"] .search-icon-inline {
+            left: auto;
+            right: 1rem;
         }
 
-        .error-message.active {
-            display: block;
+        input[type="text"]#searchInput {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            border: none;
+            background: transparent;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            outline: none;
         }
 
-        .success-message {
-            background: var(--bg-info);
-            border: 1px solid #bae6fd;
-            color: #0369a1;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            display: none;
-            font-size: 14px;
+        [dir="rtl"] input[type="text"]#searchInput {
+            padding: 0.75rem 2.75rem 0.75rem 1rem;
         }
 
-        .success-message.active {
-            display: block;
+        .search-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* --- Cards & Sections --- */
+        .glass-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        /* --- Student Hero Header --- */
+        .student-hero {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .student-profile-img-container {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            border: 4px solid var(--surface-color);
+        }
+
+        .student-profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .loader {
-            text-align: center;
-            padding: 20px;
             display: none;
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
         }
 
         .loader.active {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
         }
 
         .spinner {
             border: 4px solid var(--border-color);
-            border-top: 4px solid #6f42c1;
+            border-top: 4px solid #6366f1;
             border-radius: 50%;
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .student-basic-info h1 {
+            margin: 0 0 0.5rem;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: var(--text-primary);
         }
 
-        #suggestionsContainer {
-            display: none;
-            margin-bottom: 20px;
-            background: var(--bg-muted);
+        .student-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: var(--background-color);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            max-height: 500px;
-            overflow-y: auto;
-            padding: 20px;
+            color: var(--text-secondary);
         }
 
-        #suggestionsList {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .badge-primary {
+            background: rgba(99, 102, 241, 0.1);
+            color: #4f46e5;
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        /* --- Info Grid (Less Labels, More Info) --- */
+        .info-minimal-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
         }
 
-        .student-card {
+        .info-cell {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            background: rgba(0, 0, 0, 0.02);
+            transition: all 0.2s ease;
+        }
+
+        [data-theme='dark'] .info-cell {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .info-cell:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .cell-label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+
+        .cell-value {
+            display: block;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* --- Records Styling --- */
+        .records-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .record-card {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 1.5rem;
+            padding: 1.25rem;
+            background: var(--background-color);
+            border-radius: 0.75rem;
+            border-inline-start: 4px solid #ef4444; /* Default for absences */
+            transition: transform 0.2s ease;
+        }
+
+        .record-card.observation {
+            border-inline-start-color: #3b82f6;
+        }
+
+        .record-card:hover {
+            transform: translateX(4px);
+        }
+
+        [dir="rtl"] .record-card:hover {
+            transform: translateX(-4px);
+        }
+
+        .record-time-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            padding-inline-end: 1rem;
+            border-inline-end: 1px solid var(--border-color);
+        }
+
+        .record-day {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .record-month {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
+
+        .record-content h4 {
+            margin: 0 0 0.25rem;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .record-meta {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .record-note-bubble {
+            background: var(--surface-color);
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem 1rem 1rem 1rem;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
             position: relative;
-            width: 100%;
-            height: 220px;
-            border-radius: 16px;
+        }
+
+        [dir="rtl"] .record-note-bubble {
+            border-radius: 1rem 0.5rem 1rem 1rem;
+        }
+
+        /* --- Buttons --- */
+        .btn-modern {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+            border: none;
+            gap: 0.5rem;
         }
 
-        .student-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(111, 66, 193, 0.35);
+        .btn-modern-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
 
-        .student-card-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center top;
-            background-repeat: no-repeat;
+        .btn-modern-secondary {
+            background: var(--surface-color);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
         }
 
-        .student-card-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center top;
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .btn-modern:active {
+            transform: translateY(0);
+        }
+
+        /* --- Date Filters Glass --- */
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: flex-end;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .filter-item label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
             display: block;
         }
 
-        .student-card-bg.placeholder {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .filter-item input[type="date"] {
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1rem;
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            min-width: 160px;
+        }
+
+        [data-theme='dark'] .filter-item input[type="date"] {
+            background: rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .filter-item input[type="date"]:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            background: var(--surface-color);
+        }
+
+        /* --- Suggestions (Autocomplete) --- */
+        #suggestionsContainer {
+            margin-top: -1.5rem;
+            margin-bottom: 2rem;
+            background: var(--surface-color);
+            border-radius: 0 0 1rem 1rem;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            box-shadow: var(--shadow-lg);
+            padding: 1.5rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .student-grid-minimal {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .student-mini-card {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid transparent;
         }
 
-        .student-card-bg.placeholder::after {
-            content: '👤';
-            font-size: 60px;
-            opacity: 0.5;
+        .student-mini-card:hover {
+            background: rgba(99, 102, 241, 0.05);
+            border-color: rgba(99, 102, 241, 0.2);
         }
 
-        .student-card-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px 15px 15px;
-            background: linear-gradient(to top, 
-                rgba(0, 0, 0, 0.9) 0%, 
-                rgba(0, 0, 0, 0.7) 40%, 
-                rgba(0, 0, 0, 0.3) 70%,
-                transparent 100%);
+        .mini-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 0.5rem;
+            object-fit: cover;
         }
 
-        .student-card-name {
-            font-weight: 700;
-            color: #ffffff;
-            font-size: 15px;
-            margin-bottom: 6px;
-            line-height: 1.3;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        .mini-info-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: block;
         }
 
-        .student-card-id {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.9);
-            background: rgba(111, 66, 193, 0.8);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-family: monospace;
-            display: inline-block;
-            backdrop-filter: blur(4px);
+        .mini-info-serial {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
         }
-
-
-
-
 
         @media (max-width: 768px) {
-            .form-row {
+            .student-hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                justify-items: center;
+            }
+            .record-card {
                 grid-template-columns: 1fr;
             }
-
-            .records-container {
-                grid-template-columns: 1fr;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
+            .record-time-box {
+                flex-direction: row;
+                justify-content: flex-start;
+                border-inline-end: none;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 0.5rem;
+                gap: 0.5rem;
             }
         }
     </style>
@@ -486,87 +512,85 @@ $conn->close();
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
 
-<div class="admin-container">
+        <div class="admin-container">
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
 
-        <div class="error-message" id="errorMessage"></div>
-        <div class="success-message" id="successMessage"></div>
-
-        <div class="search-section">
-                <h2>🔍 <?php echo t('search_students'); ?></h2>
-                
-                <div class="form-row full">
-                    <div class="form-group">
-                        <label for="searchInput"><?php echo t('search_student_name_label'); ?></label>
+            <!-- Modern Search Interface -->
+            <div class="search-container-wrapper">
+                <div class="search-glass">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon-inline">🔍</span>
                         <input type="text" id="searchInput" placeholder="<?php echo t('student_search_placeholder'); ?>" autocomplete="off">
                     </div>
-                </div>
-
-                <div class="form-row full">
-                    <div class="form-group">
-                        <div class="button-group">
-                            <button class="btn btn-secondary" onclick="clearSearch()"><?php echo t('clear'); ?></button>
-                        </div>
+                    <div class="search-actions">
+                        <button class="btn-modern btn-modern-secondary" onclick="clearSearch()">
+                            <span>✕</span> <?php echo t('clear'); ?>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div id="suggestionsContainer">
-                <ul id="suggestionsList"></ul>
+            <div id="suggestionsContainer" style="display: none;">
+                <div class="student-grid-minimal" id="suggestionsList"></div>
             </div>
 
-            <div class="loader" id="loader">
+            <div class="loader" id="loader" style="display: none;">
                 <div class="spinner"></div>
                 <p><?php echo t('loading_student_records'); ?></p>
             </div>
 
-            <div class="results-section" id="resultsSection" style="margin-top: 20px;">
+            <div class="results-section" id="resultsSection">
                 <div id="studentInfo" style="display: none;"></div>
 
-                <div class="record-section" id="dateFilterSection" style="display:none; margin-bottom: 20px;">
-                    <h4>🗓️ <?php echo t('select_date'); ?></h4>
-                    <div class="form-row" style="margin-bottom: 0;">
-                        <div class="form-group">
-                            <label for="startDate"><?php echo t('start_date'); ?></label>
+                <div class="glass-card" id="dateFilterSection" style="display:none;">
+                    <div class="filters-bar">
+                        <div class="filter-item">
+                            <label><?php echo t('start_date'); ?></label>
                             <input type="date" id="startDate">
                         </div>
-                        <div class="form-group">
-                            <label for="endDate"><?php echo t('end_date'); ?></label>
+                        <div class="filter-item">
+                            <label><?php echo t('end_date'); ?></label>
                             <input type="date" id="endDate">
                         </div>
-                        <div class="form-group">
-                            <label>&nbsp;</label>
-                            <div class="button-group">
-                                <button class="btn btn-secondary" onclick="clearSearch()"><?php echo t('clear'); ?></button>
-                            </div>
+                        <div style="flex-grow: 1;"></div>
+                        <div class="view-toggles" id="viewToggles" style="display:none; gap: 0.5rem;">
+                            <button class="btn-modern btn-modern-primary" id="btnRecords" onclick="switchView('records')">
+                                📊 <?php echo t('btn_student_records'); ?>
+                            </button>
+                            <button class="btn-modern btn-modern-secondary" id="btnFullInfo" onclick="switchView('fullInfo')">
+                                📄 <?php echo t('btn_full_information'); ?>
+                            </button>
                         </div>
                     </div>
-                </div>
-
-                <div class="view-toggles" id="viewToggles" style="display:none; margin: 20px 0; gap: 10px;">
-                    <button class="btn btn-primary" id="btnRecords" onclick="switchView('records')"><?php echo t('btn_student_records'); ?></button>
-                    <button class="btn btn-secondary" id="btnFullInfo" onclick="switchView('fullInfo')"><?php echo t('btn_full_information'); ?></button>
                 </div>
 
                 <div id="recordsContainer"></div>
                 <div id="fullInfoContainer" style="display: none;"></div>
             </div>
+        </div>
     </div>
-</div>
-</div>
-</div>
-
-    </div>
-</div>
 </div>
 
 <script>
         const T = <?php echo json_encode($T); ?>;
         const t = (key) => T[key] || key;
 
+        const isArabic = <?php echo $LANG === 'ar' ? 'true' : 'false'; ?>;
+
         let selectedStudent = null;
         let allStudents = [];
         let autoSearchDebounceTimer = null;
         let lastAutoSearchKey = null;
+
+        const escapeHtmlAttr = (value) => {
+            if (value === null || value === undefined) return '';
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        };
 
         const isImageFilename = (value) => typeof value === 'string' && /\.(jpe?g|png|gif|webp)$/i.test(value);
         const resolvePhotoUrl = (value) => {
@@ -577,6 +601,17 @@ $conn->close();
             if (isImageFilename(value)) return `resources/photos/students/${value}`;
             return `data:image/jpeg;base64,${value}`;
         };
+
+        function formatDate(dateStr, type = 'full') {
+            const date = new Date(dateStr);
+            if (isNaN(date)) return dateStr;
+            
+            const options = type === 'day' ? { day: '2-digit' } : 
+                          type === 'month' ? { month: 'short' } :
+                          { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            
+            return date.toLocaleDateString(isArabic ? 'ar-EG' : 'en-US', options);
+        }
 
         // Initialize with today's date range
         function initializeDates() {
@@ -619,28 +654,17 @@ $conn->close();
 
             if (matches.length > 0) {
                 const suggestionsList = document.getElementById('suggestionsList');
-                suggestionsList.innerHTML = matches.slice(0, 12).map(student => {
-                    let bgStyle = '';
-                    let bgClass = 'placeholder';
-
-                    const photoUrl = student.photo ? resolvePhotoUrl(student.photo) : null;
-                    const photoImg = photoUrl
-                        ? `<img class="student-card-img" src="${photoUrl}" onerror="this.onerror=null;this.src='assets/placeholder-student.png';" />`
-                        : '';
-                    
-                    if (student.photo) {
-                        bgStyle = `style="background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"`;
-                    }
+                suggestionsList.innerHTML = matches.slice(0, 15).map(student => {
+                    const photoUrl = student.photo ? resolvePhotoUrl(student.photo) : 'assets/placeholder-student.png';
                     
                     return `
-                        <li class="student-card" onclick="selectStudent('${student.serial_number}', '${student.first_name}', '${student.last_name}')">
-                            <div class="student-card-bg ${bgClass}" ${bgStyle}></div>
-                            ${photoImg}
-                            <div class="student-card-overlay">
-                                <div class="student-card-name">${student.first_name} ${student.last_name}</div>
-                                <div class="student-card-id">${student.serial_number}</div>
+                        <div class="student-mini-card" data-serial="${escapeHtmlAttr(student.serial_number)}" data-first="${escapeHtmlAttr(student.first_name)}" data-last="${escapeHtmlAttr(student.last_name)}">
+                            <img class="mini-avatar" src="${photoUrl}" onerror="this.src='assets/placeholder-student.png';">
+                            <div class="mini-info">
+                                <span class="mini-info-name">${student.first_name} ${student.last_name}</span>
+                                <span class="mini-info-serial">${student.serial_number}</span>
                             </div>
-                        </li>
+                        </div>
                     `;
                 }).join('');
                 document.getElementById('suggestionsContainer').style.display = 'block';
@@ -649,21 +673,19 @@ $conn->close();
             }
         });
 
+        document.getElementById('suggestionsList').addEventListener('click', function(e) {
+            const card = e.target.closest('.student-mini-card');
+            if (!card) return;
+            selectStudent(card.dataset.serial, card.dataset.first, card.dataset.last);
+        });
+
         function selectStudent(serialNumber, firstName, lastName) {
             selectedStudent = { serialNumber, firstName, lastName };
+            lastAutoSearchKey = null;
             document.getElementById('searchInput').value = firstName + ' ' + lastName;
             document.getElementById('suggestionsContainer').style.display = 'none';
 
-            const dateFilterSection = document.getElementById('dateFilterSection');
-            if (dateFilterSection) {
-                dateFilterSection.style.display = 'block';
-            }
-
-            const startDateEl = document.getElementById('startDate');
-            if (startDateEl && !startDateEl.value) {
-                startDateEl.focus();
-            }
-
+            document.getElementById('dateFilterSection').style.display = 'block';
             scheduleAutoSearch();
         }
 
@@ -724,11 +746,6 @@ $conn->close();
                 return;
             }
 
-            if (new Date(startDate) > new Date(endDate)) {
-                showError(t('msg_start_before_end'));
-                return;
-            }
-
             document.getElementById('loader').classList.add('active');
             document.getElementById('resultsSection').classList.remove('active');
 
@@ -747,7 +764,6 @@ $conn->close();
                 if (data.success) {
                     displayResults(data.student, data.absences, data.observations);
                     document.getElementById('resultsSection').classList.add('active');
-                    showSuccess(t('msg_records_loaded_success'));
                 } else {
                     showError(data.message || t('msg_failed_load_records'));
                 }
@@ -757,73 +773,58 @@ $conn->close();
             }
         }
 
-        let currentStudentData = null;
-
         function switchView(view) {
             const btnRecords = document.getElementById('btnRecords');
             const btnFullInfo = document.getElementById('btnFullInfo');
             const recordsContainer = document.getElementById('recordsContainer');
             const fullInfoContainer = document.getElementById('fullInfoContainer');
-            const dateFilterSection = document.getElementById('dateFilterSection');
 
             if (view === 'records') {
-                btnRecords.className = 'btn btn-primary';
-                btnFullInfo.className = 'btn btn-secondary';
-                recordsContainer.style.display = 'grid'; // Restore grid layout
+                btnRecords.className = 'btn-modern btn-modern-primary';
+                btnFullInfo.className = 'btn-modern btn-modern-secondary';
+                recordsContainer.style.display = 'block';
                 fullInfoContainer.style.display = 'none';
-                if (dateFilterSection) {
-                    dateFilterSection.style.display = 'block';
-                    if (dateFilterSection.parentElement !== recordsContainer) {
-                        recordsContainer.insertAdjacentElement('afterbegin', dateFilterSection);
-                    }
-                }
             } else {
-                btnRecords.className = 'btn btn-secondary';
-                btnFullInfo.className = 'btn btn-primary';
+                btnRecords.className = 'btn-modern btn-modern-secondary';
+                btnFullInfo.className = 'btn-modern btn-modern-primary';
                 recordsContainer.style.display = 'none';
                 fullInfoContainer.style.display = 'block';
-                if (dateFilterSection) {
-                    dateFilterSection.style.display = 'none';
-                }
             }
         }
 
         function displayResults(student, absences, observations) {
-            currentStudentData = student;
-            
-            // Show toggles
             document.getElementById('viewToggles').style.display = 'flex';
-            
-            // Default to records view
             switchView('records');
 
-            // Display student info header
-            const studentPhotoUrl = student.photo ? resolvePhotoUrl(student.photo) : null;
+            const studentPhotoUrl = student.photo ? resolvePhotoUrl(student.photo) : 'assets/placeholder-student.png';
+            
             const studentInfoHtml = `
-                <div class="student-info">
-                    <h3>📋 ${student.first_name} ${student.last_name}</h3>
-                    <div class="info-grid" style="grid-template-columns: 140px 1fr 1fr; gap: 20px; align-items: start;">
-                        <div class="info-item" style="grid-row: span 2; border-left-color: var(--text-success); padding: 15px;">
-                            <div class="info-label">${t('student_photo')}</div>
-                            <div class="student-photo-box" style="width: 110px; height: 110px; margin: 0;">
-                                <img src="${studentPhotoUrl || 'assets/placeholder-student.png'}" onerror="this.onerror=null;this.src='assets/placeholder-student.png';" alt="${t('student_photo')}">
+                <div class="glass-card">
+                    <div class="student-hero">
+                        <div class="student-profile-img-container">
+                            <img src="${studentPhotoUrl}" class="student-profile-img" onerror="this.src='assets/placeholder-student.png';">
+                        </div>
+                        <div class="student-basic-info">
+                            <div class="student-badges">
+                                <span class="badge badge-primary">${student.section_name}</span>
+                                <span class="badge">${student.serial_number}</span>
+                                <span class="badge">${student.category_name}</span>
                             </div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">${t('serial_number')}</div>
-                            <div class="info-value">${student.serial_number}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">${t('section')}</div>
-                            <div class="info-value">${student.section_name}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">${t('category')}</div>
-                            <div class="info-value">${student.category_name}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">${t('grade_level')}</div>
-                            <div class="info-value">${student.grade || 'N/A'}</div>
+                            <h1>${student.first_name} ${student.last_name}</h1>
+                            <div class="info-minimal-grid">
+                                <div class="info-cell">
+                                    <span class="cell-label">${t('grade_level')}</span>
+                                    <span class="cell-value">${student.grade || 'N/A'}</span>
+                                </div>
+                                <div class="info-cell">
+                                    <span class="cell-label">${t('academic_level')}</span>
+                                    <span class="cell-value">${student.academic_level || 'N/A'}</span>
+                                </div>
+                                <div class="info-cell">
+                                    <span class="cell-label">${t('speciality')}</span>
+                                    <span class="cell-value">${student.speciality || 'N/A'}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -832,176 +833,175 @@ $conn->close();
             document.getElementById('studentInfo').innerHTML = studentInfoHtml;
             document.getElementById('studentInfo').style.display = 'block';
 
-            // --- Render Records (Absences/Observations) ---
-            let recordsHtml = ''; // Grid container is the parent div now
+            // --- Render Timeline Records ---
+            let recordsHtml = '<div class="records-timeline">';
+            
+            // Combine and sort by date
+            const allRecords = [
+                ...absences.map(a => ({...a, type: 'absence', date: a.absence_date_and_time})),
+                ...observations.map(o => ({...o, type: 'observation', date: o.observation_date_and_time}))
+            ].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-            // Absences
-            recordsHtml += `
-                <div class="record-section">
-                    <h4><span class="record-icon">⚠️</span>${t('absences')} (${absences.length})</h4>
-                    ${absences.length > 0 ? `
-                        <ul class="records-list">
-                            ${absences.map(absence => `
-                                <li class="record-item">
-                                    <div class="record-date">${new Date(absence.absence_date_and_time).toLocaleDateString('<?php echo $LANG === 'ar' ? 'ar-EG' : 'en-US'; ?>', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
-                                    <div class="record-motif">${t('motif')}: ${absence.absence_motif || t('not_specified')}</div>
-                                    ${absence.absence_observation ? `<div class="record-note"><strong>${t('observation')}:</strong> ${absence.absence_observation}</div>` : ''}
-                                </li>
-                            `).join('')}
-                        </ul>
-                    ` : `<div class="empty-message">${t('no_absences_period')}</div>`}
-                </div>
-            `;
-
-            // Observations
-            recordsHtml += `
-                <div class="record-section">
-                    <h4><span class="record-icon">📝</span>${t('observations')} (${observations.length})</h4>
-                    ${observations.length > 0 ? `
-                        <ul class="records-list">
-                            ${observations.map(obs => `
-                                <li class="record-item">
-                                    <div class="record-date">${new Date(obs.observation_date_and_time).toLocaleDateString('<?php echo $LANG === 'ar' ? 'ar-EG' : 'en-US'; ?>', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} - ${obs.teacher_name}</div>
-                                    <div class="record-motif">${t('motif')}: ${obs.observation_motif || t('not_specified')}</div>
-                                    ${obs.observation_note ? `<div class="record-note"><strong>${t('observation')}:</strong> ${obs.observation_note}</div>` : ''}
-                                </li>
-                            `).join('')}
-                        </ul>
-                    ` : `<div class="empty-message">${t('no_observations_period')}</div>`}
-                </div>
-            `;
-            // Keep the grid structure logic for records
-            const recordsContainer = document.getElementById('recordsContainer');
-            const dateFilterSection = document.getElementById('dateFilterSection');
-            recordsContainer.innerHTML = '';
-            if (dateFilterSection) {
-                dateFilterSection.style.display = 'block';
-                recordsContainer.appendChild(dateFilterSection);
+            if (allRecords.length === 0) {
+                recordsHtml += `<div class="glass-card" style="text-align:center; color:var(--text-secondary); padding: 3rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🍃</div>
+                    <p>${t('no_records_found')}</p>
+                </div>`;
+            } else {
+                allRecords.forEach(record => {
+                    const dateObj = new Date(record.date);
+                    const day = dateObj.getDate();
+                    const month = dateObj.toLocaleDateString(isArabic ? 'ar-EG' : 'en-US', { month: 'short' });
+                    
+                    recordsHtml += `
+                        <div class="record-card ${record.type === 'observation' ? 'observation' : ''}">
+                            <div class="record-time-box">
+                                <span class="record-day">${day}</span>
+                                <span class="record-month">${month}</span>
+                            </div>
+                            <div class="record-content">
+                                <div class="record-meta">
+                                    ${record.type === 'observation' ? '📝 ' + t('observation') : '⚠️ ' + t('absence')} 
+                                    • ${formatDate(record.date, 'time')} 
+                                    ${record.teacher_name ? '• ' + record.teacher_name : ''}
+                                </div>
+                                <h4>${record.absence_motif || record.observation_motif || t('not_specified')}</h4>
+                                ${(record.absence_observation || record.observation_note) ? `
+                                    <div class="record-note-bubble">
+                                        ${record.absence_observation || record.observation_note}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
             }
-            recordsContainer.insertAdjacentHTML('beforeend', recordsHtml);
+            recordsHtml += '</div>';
+            document.getElementById('recordsContainer').innerHTML = recordsHtml;
 
-            // --- Render Full Info ---
             renderFullInfo(student);
         }
 
         function renderFullInfo(s) {
             const createSection = (title, content) => `
-                <div class="record-section" style="margin-bottom: 20px;">
-                    <h4>${title}</h4>
-                    <div class="info-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                <div class="glass-card">
+                    <h3 style="margin-top:0; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; color: var(--text-primary);">${title}</h3>
+                    <div class="info-minimal-grid">
                         ${content}
                     </div>
                 </div>
             `;
             
-            const item = (label, value) => `
-                <div class="info-item" style="border-left-color: #3b82f6;">
-                    <div class="info-label">${label}</div>
-                    <div class="info-value">${value || 'N/A'}</div>
+            const cell = (label, value) => `
+                <div class="info-cell">
+                    <span class="cell-label">${label}</span>
+                    <span class="cell-value">${value || 'N/A'}</span>
                 </div>
             `;
 
             let html = '';
 
-             // 1. Personal Details
+            // 1. Personal Details
             html += createSection('👤 ' + t('step_personal_details'), `
-                ${item(t('label_first_name_en'), s.first_name)}
-                ${item(t('label_last_name_en'), s.last_name)}
-                ${item(t('label_first_name_ar'), s.first_name_ar)}
-                ${item(t('label_last_name_ar'), s.last_name_ar)}
-                ${item(t('label_sex'), t(s.sex.toLowerCase()))}
-                ${item(t('label_birth_date'), s.birth_date)}
-                ${item(t('label_blood_type'), s.blood_type)}
-                ${item(t('label_phone'), s.personal_phone)}
-                ${item(t('label_height'), s.height_cm + ' cm')}
-                ${item(t('label_weight'), s.weight_kg + ' kg')}
-                ${item(t('label_is_foreign'), t(s.is_foreign.toLowerCase()))}
+                ${cell(t('label_first_name_en'), s.first_name)}
+                ${cell(t('label_last_name_en'), s.last_name)}
+                ${cell(t('label_first_name_ar'), s.first_name_ar)}
+                ${cell(t('label_last_name_ar'), s.last_name_ar)}
+                ${cell(t('label_sex'), t(s.sex.toLowerCase()))}
+                ${cell(t('label_birth_date'), s.birth_date)}
+                ${cell(t('label_blood_type'), s.blood_type)}
+                ${cell(t('label_phone'), s.personal_phone)}
+                ${cell(t('label_height'), s.height_cm + ' cm')}
+                ${cell(t('label_weight'), s.weight_kg + ' kg')}
+                ${cell(t('label_is_foreign'), t(s.is_foreign.toLowerCase()))}
             `);
 
             // 2. Academic
             html += createSection('🎓 ' + t('step_academic_info'), `
-                ${item(t('label_speciality'), s.speciality)}
-                ${item(t('label_academic_level'), s.academic_level)}
-                ${item(t('label_academic_average'), s.academic_average)}
-                ${item(t('label_bac_number'), s.bac_number)}
-                ${item(t('category'), s.category_name)}
-                ${item(t('grade_level'), s.grade)}
-                ${item(t('army'), s.army_name)}
+                ${cell(t('label_speciality'), s.speciality)}
+                ${cell(t('label_academic_level'), s.academic_level)}
+                ${cell(t('label_academic_average'), s.academic_average)}
+                ${cell(t('label_bac_number'), s.bac_number)}
+                ${cell(t('category'), s.category_name)}
+                ${cell(t('grade_level'), s.grade)}
+                ${cell(t('army'), s.army_name)}
             `);
 
             // 3. Parents & Family
             html += createSection('👪 ' + t('step_family_info'), `
-                ${item(t('label_father_name_en'), s.father_name_en)}
-                ${item(t('label_father_name_ar'), s.father_name_ar)}
-                ${item(t('label_father_prof_en'), s.father_profession)}
-                ${item(t('label_father_prof_ar'), s.father_profession_ar)}
+                ${cell(t('label_father_name_en'), s.father_name_en)}
+                ${cell(t('label_father_name_ar'), s.father_name_ar)}
+                ${cell(t('label_father_prof_en'), s.father_profession)}
+                ${cell(t('label_father_prof_ar'), s.father_profession_ar)}
                 
-                ${item(t('label_mother_name_en'), s.mother_name_en)}
-                ${item(t('label_mother_name_ar'), s.mother_name_ar)}
-                ${item(t('label_mother_prof_en'), s.mother_profession)}
-                ${item(t('label_mother_prof_ar'), s.mother_profession_ar)}
+                ${cell(t('label_mother_name_en'), s.mother_name_en)}
+                ${cell(t('label_mother_name_ar'), s.mother_name_ar)}
+                ${cell(t('label_mother_prof_en'), s.mother_profession)}
+                ${cell(t('label_mother_prof_ar'), s.mother_profession_ar)}
                 
-                ${item(t('label_orphan_status'), t('orphan_' + s.orphans_status.toLowerCase()))}
-                ${item(t('label_parents_situation'), t(s.parents_situation.toLowerCase()))}
+                ${cell(t('label_orphan_status'), t('orphan_' + s.orphans_status.toLowerCase()))}
+                ${cell(t('label_parents_situation'), t(s.parents_situation.toLowerCase()))}
                 
-                ${item(t('label_siblings_count'), s.siblings_count)}
-                ${item(t('label_sisters_count'), s.sisters_count)}
-                ${item(t('label_order_among_siblings'), s.order_among_siblings)}
+                ${cell(t('label_siblings_count'), s.siblings_count)}
+                ${cell(t('label_sisters_count'), s.sisters_count)}
+                ${cell(t('label_order_among_siblings'), s.order_among_siblings)}
             `);
 
             // 4. Addresses
             html += createSection('📍 ' + t('step_addresses'), `
-                <div style="grid-column: span 2;">
-                    ${item(t('label_birth_place_address'), s.birth_place)}
+                <div class="info-cell" style="grid-column: span 2;">
+                    <span class="cell-label">${t('label_birth_place_address')}</span>
+                    <span class="cell-value">${s.birth_place || 'N/A'}</span>
                 </div>
-                <div style="grid-column: span 2;">
-                    ${item(t('label_personal_address'), s.personal_address)}
+                <div class="info-cell" style="grid-column: span 2;">
+                    <span class="cell-label">${t('label_personal_address')}</span>
+                    <span class="cell-value">${s.personal_address || 'N/A'}</span>
                 </div>
             `);
             
             // 5. Uniforms
             if (s.uniforms) {
                  html += createSection('🪖 ' + t('combat_outfit'), `
-                    ${item(t('1st_outfit_number') + '/' + t('1st_outfit_size'), s.uniforms.combat.outfit1)}
-                    ${item(t('2nd_outfit_number') + '/' + t('2nd_outfit_size'), s.uniforms.combat.outfit2)}
-                    ${item(t('combat_shoe_size'), s.uniforms.combat.shoe)}
+                    ${cell(t('1st_outfit_number') + '/' + t('1st_outfit_size'), s.uniforms.combat.outfit1)}
+                    ${cell(t('2nd_outfit_number') + '/' + t('2nd_outfit_size'), s.uniforms.combat.outfit2)}
+                    ${cell(t('combat_shoe_size'), s.uniforms.combat.shoe)}
                 `);
 
                  html += createSection('👔 ' + t('parade_uniform'), `
-                    ${item(t('summer_jacket_size'), s.uniforms.parade.summer_jacket)}
-                    ${item(t('winter_jacket_size'), s.uniforms.parade.winter_jacket)}
-                    ${item(t('summer_trousers_size'), s.uniforms.parade.summer_trousers)}
-                    ${item(t('winter_trousers_size'), s.uniforms.parade.winter_trousers)}
-                    ${item(t('summer_shirt_size'), s.uniforms.parade.summer_shirt)}
-                    ${item(t('winter_shirt_size'), s.uniforms.parade.winter_shirt)}
-                    ${item(t('summer_hat_size'), s.uniforms.parade.summer_hat)}
-                    ${item(t('winter_hat_size'), s.uniforms.parade.winter_hat)}
-                    ${s.sex === 'Female' ? item(t('summer_skirt_size'), s.uniforms.parade.summer_skirt) : ''}
-                    ${s.sex === 'Female' ? item(t('winter_skirt_size'), s.uniforms.parade.winter_skirt) : ''}
+                    ${cell(t('summer_jacket_size'), s.uniforms.parade.summer_jacket)}
+                    ${cell(t('winter_jacket_size'), s.uniforms.parade.winter_jacket)}
+                    ${cell(t('summer_trousers_size'), s.uniforms.parade.summer_trousers)}
+                    ${cell(t('winter_trousers_size'), s.uniforms.parade.winter_trousers)}
+                    ${cell(t('summer_shirt_size'), s.uniforms.parade.summer_shirt)}
+                    ${cell(t('winter_shirt_size'), s.uniforms.parade.winter_shirt)}
+                    ${cell(t('summer_hat_size'), s.uniforms.parade.summer_hat)}
+                    ${cell(t('winter_hat_size'), s.uniforms.parade.winter_hat)}
+                    ${s.sex === 'Female' ? cell(t('summer_skirt_size'), s.uniforms.parade.summer_skirt) : ''}
+                    ${s.sex === 'Female' ? cell(t('winter_skirt_size'), s.uniforms.parade.winter_skirt) : ''}
                 `);
             }
 
             // 6. Documents & Misc
             html += createSection('📄 ' + t('step_other_details'), `
-                ${item(t('label_id_card_num'), s.id_card_num)}
-                ${item(t('label_birth_cert_num'), s.birth_cert_num)}
-                ${item(t('label_school_sub_card'), s.school_sub_card)}
-                ${item(t('label_laptop_serial'), s.laptop_serial)}
-                ${item(t('label_postal_account'), s.postal_account)}
-                ${item(t('label_mil_necklace'), s.mil_necklace)}
+                ${cell(t('label_id_card_num'), s.id_card_num)}
+                ${cell(t('label_birth_cert_num'), s.birth_cert_num)}
+                ${cell(t('label_school_sub_card'), s.school_sub_card)}
+                ${cell(t('label_laptop_serial'), s.laptop_serial)}
+                ${cell(t('label_postal_account'), s.postal_account)}
+                ${cell(t('label_mil_necklace'), s.mil_necklace)}
             `);
-            
+
             // 7. Emergency Contact
             if (s.emergency_contact) {
                 html += createSection('🚨 ' + t('step_emergency_contact'), `
-                    ${item(t('contact_name_en'), (s.emergency_contact.first_name_en || '') + ' ' + (s.emergency_contact.last_name_en || ''))}
-                    ${item(t('contact_name_ar'), (s.emergency_contact.first_name_ar || '') + ' ' + (s.emergency_contact.last_name_ar || ''))}
-                    ${item(t('label_relation_en'), s.emergency_contact.relation_en)}
-                    ${item(t('label_relation_ar'), s.emergency_contact.relation_ar)}
-                    ${item(t('label_contact_phone'), s.emergency_contact.phone)}
-                    ${s.emergency_contact.consulate_number ? item(t('label_consulate_number'), s.emergency_contact.consulate_number) : ''}
-                    <div style="grid-column: span 2;">
-                        ${item(t('contact_address'), s.emergency_contact.address)}
+                    ${cell(t('contact_name_en'), (s.emergency_contact.first_name_en || '') + ' ' + (s.emergency_contact.last_name_en || ''))}
+                    ${cell(t('contact_name_ar'), (s.emergency_contact.first_name_ar || '') + ' ' + (s.emergency_contact.last_name_ar || ''))}
+                    ${cell(isArabic ? t('label_relation_ar') : t('label_relation_en'), isArabic ? s.emergency_contact.relation_ar : s.emergency_contact.relation_en)}
+                    ${cell(t('label_contact_phone'), s.emergency_contact.phone)}
+                    ${s.emergency_contact.consulate_number ? cell(t('label_consulate_number'), s.emergency_contact.consulate_number) : ''}
+                    <div class="info-cell" style="grid-column: span 2;">
+                        <span class="cell-label">${t('contact_address')}</span>
+                        <span class="cell-value">${s.emergency_contact.address || 'N/A'}</span>
                     </div>
                 `);
             }
@@ -1010,36 +1010,40 @@ $conn->close();
         }
 
         function clearSearch() {
+            // Clear inputs
             document.getElementById('searchInput').value = '';
-            document.getElementById('startDate').value = '';
-            document.getElementById('endDate').value = '';
+            
+            // Hide and clear UI sections
             document.getElementById('resultsSection').classList.remove('active');
             document.getElementById('suggestionsContainer').style.display = 'none';
+            document.getElementById('studentInfo').style.display = 'none';
+            document.getElementById('studentInfo').innerHTML = '';
+            document.getElementById('recordsContainer').innerHTML = '';
+            document.getElementById('fullInfoContainer').innerHTML = '';
+            document.getElementById('viewToggles').style.display = 'none';
+            document.getElementById('dateFilterSection').style.display = 'none';
+            
+            // Reset state
             selectedStudent = null;
-            const dateFilterSection = document.getElementById('dateFilterSection');
-            if (dateFilterSection) {
-                dateFilterSection.style.display = 'none';
-            }
+            lastAutoSearchKey = null;
+            
+            // Re-initialize dates but don't trigger search
             initializeDates();
         }
 
         document.getElementById('startDate').addEventListener('change', scheduleAutoSearch);
         document.getElementById('endDate').addEventListener('change', scheduleAutoSearch);
 
-        // Initialize
         window.addEventListener('load', function() {
             initializeDates();
             fetchAllStudents();
         });
 
-        // Close suggestions when clicking outside
         document.addEventListener('click', function(e) {
             if (!e.target.closest('#searchInput') && !e.target.closest('#suggestionsContainer')) {
                 document.getElementById('suggestionsContainer').style.display = 'none';
             }
         });
-
-
     </script>
 </body>
 </html>

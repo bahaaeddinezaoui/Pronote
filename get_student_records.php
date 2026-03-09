@@ -54,14 +54,14 @@ try {
             s.STUDENT_PERSONAL_PHONE,
             s.STUDENT_HEIGHT_CM, s.STUDENT_WEIGHT_KG,
             s.STUDENT_IS_FOREIGN,
-            s.STUDENT_ACADEMIC_AVERAGE, s.STUDENT_SPECIALITY,
-            s.STUDENT_ACADEMIC_LEVEL, s.STUDENT_BACCALAUREATE_SUB_NUMBER,
-            s.STUDENT_EDUCATIONAL_CERTIFICATES, s.STUDENT_MILITARY_CERTIFICATES,
+            s.STUDENT_ACADEMIC_AVERAGE, s.STUDENT_SPECIALITY_ID,
+            s.STUDENT_ACADEMIC_LEVEL_ID, s.STUDENT_BACCALAUREATE_SUB_NUMBER,
+            s.STUDENT_EDUCATIONAL_CERTIFICATES,
             s.STUDENT_SCHOOL_SUB_DATE, s.STUDENT_SCHOOL_SUB_CARD_NUMBER,
             s.STUDENT_LAPTOP_SERIAL_NUMBER,
             s.STUDENT_BIRTHDATE_CERTIFICATE_NUMBER, s.STUDENT_ID_CARD_NUMBER,
             s.STUDENT_POSTAL_ACCOUNT_NUMBER,
-            s.STUDENT_HOBBIES, s.STUDENT_HEALTH_STATUS,
+            s.STUDENT_HEALTH_STATUS_ID,
             s.STUDENT_MILITARY_NECKLACE,
             s.STUDENT_NUMBER_OF_SIBLINGS, s.STUDENT_NUMBER_OF_SISTERS,
             s.STUDENT_ORDER_AMONG_SIBLINGS,
@@ -73,11 +73,31 @@ try {
             cat.CATEGORY_NAME_EN, cat.CATEGORY_NAME_AR,
             a.ARMY_NAME_EN, a.ARMY_NAME_AR,
 
+            sp.speciality_name_en AS SPECIALITY_NAME_EN,
+            sp.speciality_name_ar AS SPECIALITY_NAME_AR,
+
+            al.ACADEMIC_LEVEL_EN AS ACADEMIC_LEVEL_EN,
+            al.ACADEMIC_LEVEL_AR AS ACADEMIC_LEVEL_AR,
+
             -- Parent Info
-            spi.FATHER_FIRST_NAME_EN, spi.FATHER_LAST_NAME_EN, spi.FATHER_PROFESSION_EN,
-            spi.FATHER_FIRST_NAME_AR, spi.FATHER_LAST_NAME_AR, spi.FATHER_PROFESSION_AR,
-            spi.MOTHER_FIRST_NAME_EN, spi.MOTHER_LAST_NAME_EN, spi.MOTHER_PROFESSION_EN,
-            spi.MOTHER_FIRST_NAME_AR, spi.MOTHER_LAST_NAME_AR, spi.MOTHER_PROFESSION_AR,
+            spi.FATHER_FIRST_NAME_EN, spi.FATHER_LAST_NAME_EN, spi.FATHER_PROFESSION_ID,
+            spi.FATHER_FIRST_NAME_AR, spi.FATHER_LAST_NAME_AR,
+            spi.MOTHER_FIRST_NAME_EN, spi.MOTHER_LAST_NAME_EN, spi.MOTHER_PROFESSION_ID,
+            spi.MOTHER_FIRST_NAME_AR, spi.MOTHER_LAST_NAME_AR,
+
+            pf.profession_name_en AS FATHER_PROFESSION_EN,
+            pf.profession_name_ar AS FATHER_PROFESSION_AR,
+            pm.profession_name_en AS MOTHER_PROFESSION_EN,
+            pm.profession_name_ar AS MOTHER_PROFESSION_AR,
+
+            GROUP_CONCAT(DISTINCT mc.military_certificate_en ORDER BY mc.military_certificate_en SEPARATOR ', ') AS MIL_CERTS_EN,
+            GROUP_CONCAT(DISTINCT mc.military_certificate_ar ORDER BY mc.military_certificate_en SEPARATOR ', ') AS MIL_CERTS_AR,
+
+            GROUP_CONCAT(DISTINCT hb.hobby_name_en ORDER BY hb.hobby_name_en SEPARATOR ', ') AS HOBBIES_EN,
+            GROUP_CONCAT(DISTINCT hb.hobby_name_ar ORDER BY hb.hobby_name_en SEPARATOR ', ') AS HOBBIES_AR,
+
+            hs.health_status_en AS HEALTH_STATUS_EN,
+            hs.health_status_ar AS HEALTH_STATUS_AR,
 
             -- Combat Outfit
             sco.FIRST_OUTFIT_NUMBER, sco.FIRST_OUTFIT_SIZE,
@@ -104,7 +124,9 @@ try {
             -- Emergency Contact
             sec_emg.CONTACT_FIRST_NAME_EN, sec_emg.CONTACT_LAST_NAME_EN,
             sec_emg.CONTACT_FIRST_NAME_AR, sec_emg.CONTACT_LAST_NAME_AR,
-            sec_emg.CONTACT_RELATION_EN, sec_emg.CONTACT_RELATION_AR,
+            sec_emg.CONTACT_RELATION_ID,
+            rel.relation_name_en AS CONTACT_RELATION_EN,
+            rel.relation_name_ar AS CONTACT_RELATION_AR,
             sec_emg.CONTACT_PHONE_NUMBER AS EMG_PHONE,
             sec_emg.CONSULATE_NUMBER,
             addr_emg.ADDRESS_STREET_EN AS EMG_STREET_EN, addr_emg.ADDRESS_STREET_AR AS EMG_STREET_AR,
@@ -116,10 +138,24 @@ try {
         LEFT JOIN category cat ON s.CATEGORY_ID = cat.CATEGORY_ID
         LEFT JOIN grade g ON s.STUDENT_GRADE_ID = g.GRADE_ID
         LEFT JOIN army a ON s.STUDENT_ARMY_ID = a.ARMY_ID
+
+        LEFT JOIN student_speciality sp ON s.STUDENT_SPECIALITY_ID = sp.student_speciality_id
+
+        LEFT JOIN academic_level al ON s.STUDENT_ACADEMIC_LEVEL_ID = al.ACADEMIC_LEVEL_ID
         
         LEFT JOIN student_parent_info spi ON s.STUDENT_SERIAL_NUMBER = spi.STUDENT_SERIAL_NUMBER
+        LEFT JOIN profession pf ON spi.FATHER_PROFESSION_ID = pf.profession_id
+        LEFT JOIN profession pm ON spi.MOTHER_PROFESSION_ID = pm.profession_id
         LEFT JOIN student_combat_outfit sco ON s.STUDENT_SERIAL_NUMBER = sco.STUDENT_SERIAL_NUMBER
         LEFT JOIN student_parade_uniform spu ON s.STUDENT_SERIAL_NUMBER = spu.STUDENT_SERIAL_NUMBER
+
+        LEFT JOIN student_military_certificate smc ON s.STUDENT_SERIAL_NUMBER = smc.student_serial_number
+        LEFT JOIN military_certificate mc ON smc.military_certificate_id = mc.military_certificate_id
+
+        LEFT JOIN student_hobby sh ON s.STUDENT_SERIAL_NUMBER = sh.student_serial_number
+        LEFT JOIN hobby hb ON sh.hobby_id = hb.hobby_id
+
+        LEFT JOIN health_status hs ON s.STUDENT_HEALTH_STATUS_ID = hs.health_status_id
 
         -- Address Joins
         LEFT JOIN address addr_bp ON s.STUDENT_BIRTH_PLACE_ID = addr_bp.ADDRESS_ID
@@ -132,11 +168,13 @@ try {
 
         -- Emergency Contact Joins
         LEFT JOIN student_emergency_contact sec_emg ON s.STUDENT_SERIAL_NUMBER = sec_emg.STUDENT_SERIAL_NUMBER
+        LEFT JOIN relation rel ON sec_emg.CONTACT_RELATION_ID = rel.relation_id
         LEFT JOIN address addr_emg ON sec_emg.CONTACT_ADDRESS_ID = addr_emg.ADDRESS_ID
         LEFT JOIN country c_emg ON addr_emg.COUNTRY_ID = c_emg.COUNTRY_ID
         LEFT JOIN wilaya w_emg ON addr_emg.WILAYA_ID = w_emg.WILAYA_ID
 
         WHERE s.STUDENT_SERIAL_NUMBER = ?
+        GROUP BY s.STUDENT_SERIAL_NUMBER
     ";
 
     $stmt = $conn->prepare($studentQuery);
@@ -283,6 +321,13 @@ try {
     $category = ($lang === 'ar') ? $student['CATEGORY_NAME_AR'] : $student['CATEGORY_NAME_EN'];
     $army = ($lang === 'ar') ? $student['ARMY_NAME_AR'] : $student['ARMY_NAME_EN'];
 
+    $speciality = ($lang === 'ar') ? ($student['SPECIALITY_NAME_AR'] ?? '') : ($student['SPECIALITY_NAME_EN'] ?? '');
+    $academic_level = ($lang === 'ar') ? ($student['ACADEMIC_LEVEL_AR'] ?? '') : ($student['ACADEMIC_LEVEL_EN'] ?? '');
+
+    $mil_certs = ($lang === 'ar') ? ($student['MIL_CERTS_AR'] ?? '') : ($student['MIL_CERTS_EN'] ?? '');
+    $hobbies = ($lang === 'ar') ? ($student['HOBBIES_AR'] ?? '') : ($student['HOBBIES_EN'] ?? '');
+    $health_status = ($lang === 'ar') ? ($student['HEALTH_STATUS_AR'] ?? '') : ($student['HEALTH_STATUS_EN'] ?? '');
+
     // Addresses Localization
     $bp_street = ($lang === 'ar') ? $student['BP_STREET_AR'] : $student['BP_STREET_EN'];
     $bp_wilaya = ($lang === 'ar') ? $student['BP_WILAYA_AR'] : $student['BP_WILAYA_EN'];
@@ -298,6 +343,15 @@ try {
     $emg_wilaya = ($lang === 'ar') ? $student['EMG_WILAYA_AR'] : $student['EMG_WILAYA_EN'];
     $emg_country = ($lang === 'ar') ? $student['EMG_COUNTRY_AR'] : $student['EMG_COUNTRY_EN'];
     $emg_address = trim(($emg_street ?? '') . ' ' . ($emg_wilaya ?? '') . ' ' . ($emg_country ?? ''));
+
+    $relation_en = $student['CONTACT_RELATION_EN'] ?? '';
+    $relation_ar = $student['CONTACT_RELATION_AR'] ?? '';
+    if (($relation_en === '' && $relation_ar === '') && (($student['STUDENT_IS_FOREIGN'] ?? '') === 'Yes')) {
+        $country_name_en = $student['BP_COUNTRY_EN'] ?? 'Unknown';
+        $country_name_ar = $student['BP_COUNTRY_AR'] ?? 'غير معروف';
+        $relation_en = $country_name_en . "'s consulate";
+        $relation_ar = "قنصلية " . $country_name_ar;
+    }
 
     // Return results
     echo json_encode([
@@ -318,19 +372,19 @@ try {
             'weight_kg' => htmlspecialchars($student['STUDENT_WEIGHT_KG'] ?? ''),
             'is_foreign' => htmlspecialchars($student['STUDENT_IS_FOREIGN'] ?? ''),
             'academic_average' => htmlspecialchars($student['STUDENT_ACADEMIC_AVERAGE'] ?? ''),
-            'speciality' => htmlspecialchars($student['STUDENT_SPECIALITY'] ?? ''),
-            'academic_level' => htmlspecialchars($student['STUDENT_ACADEMIC_LEVEL'] ?? ''),
+            'speciality' => htmlspecialchars($speciality ?? ''),
+            'academic_level' => htmlspecialchars($academic_level ?? ''),
             'bac_number' => htmlspecialchars($student['STUDENT_BACCALAUREATE_SUB_NUMBER'] ?? ''),
             'edu_certificates' => htmlspecialchars($student['STUDENT_EDUCATIONAL_CERTIFICATES'] ?? ''),
-            'mil_certificates' => htmlspecialchars($student['STUDENT_MILITARY_CERTIFICATES'] ?? ''),
+            'mil_certificates' => htmlspecialchars($mil_certs ?? ''),
             'school_sub_date' => htmlspecialchars($student['STUDENT_SCHOOL_SUB_DATE'] ?? ''),
             'school_sub_card' => htmlspecialchars($student['STUDENT_SCHOOL_SUB_CARD_NUMBER'] ?? ''),
             'laptop_serial' => htmlspecialchars($student['STUDENT_LAPTOP_SERIAL_NUMBER'] ?? ''),
             'birth_cert_num' => htmlspecialchars($student['STUDENT_BIRTHDATE_CERTIFICATE_NUMBER'] ?? ''),
             'id_card_num' => htmlspecialchars($student['STUDENT_ID_CARD_NUMBER'] ?? ''),
             'postal_account' => htmlspecialchars($student['STUDENT_POSTAL_ACCOUNT_NUMBER'] ?? ''),
-            'hobbies' => htmlspecialchars($student['STUDENT_HOBBIES'] ?? ''),
-            'health_status' => htmlspecialchars($student['STUDENT_HEALTH_STATUS'] ?? ''),
+            'hobbies' => htmlspecialchars($hobbies ?? ''),
+            'health_status' => htmlspecialchars($health_status ?? ''),
             'mil_necklace' => htmlspecialchars($student['STUDENT_MILITARY_NECKLACE'] ?? ''),
             
             'grade' => htmlspecialchars($grade ?? ''),
@@ -386,8 +440,8 @@ try {
                 'last_name_en' => htmlspecialchars($student['CONTACT_LAST_NAME_EN'] ?? ''),
                 'first_name_ar' => htmlspecialchars($student['CONTACT_FIRST_NAME_AR'] ?? ''),
                 'last_name_ar' => htmlspecialchars($student['CONTACT_LAST_NAME_AR'] ?? ''),
-                'relation_en' => htmlspecialchars($student['CONTACT_RELATION_EN'] ?? ''),
-                'relation_ar' => htmlspecialchars($student['CONTACT_RELATION_AR'] ?? ''),
+                'relation_en' => htmlspecialchars($relation_en ?? ''),
+                'relation_ar' => htmlspecialchars($relation_ar ?? ''),
                 'phone' => htmlspecialchars($student['EMG_PHONE'] ?? ''),
                 'consulate_number' => htmlspecialchars($student['CONSULATE_NUMBER'] ?? ''),
                 'address' => htmlspecialchars($emg_address)
