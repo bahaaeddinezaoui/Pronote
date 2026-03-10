@@ -101,6 +101,7 @@ $T = [
     // Admin home
     'welcome_admin' => 'Welcome, %s! 👋',
     'welcome_admin_sub' => 'Here\'s an overview of the educational management system',
+    'admin_dashboard' => 'Admin Dashboard',
     'total_students' => 'Total Students',
     'total_teachers' => 'Total Teachers',
     'total_classes' => 'Total Classes',

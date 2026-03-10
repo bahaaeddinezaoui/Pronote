@@ -817,12 +817,12 @@ $conn->close();
                                     <span class="cell-value">${student.grade || 'N/A'}</span>
                                 </div>
                                 <div class="info-cell">
-                                    <span class="cell-label">${t('academic_level')}</span>
-                                    <span class="cell-value">${student.academic_level || 'N/A'}</span>
+                                    <span class="cell-label">${t('label_birth_date')}</span>
+                                    <span class="cell-value">${student.birth_date || 'N/A'}</span>
                                 </div>
                                 <div class="info-cell">
-                                    <span class="cell-label">${t('speciality')}</span>
-                                    <span class="cell-value">${student.speciality || 'N/A'}</span>
+                                    <span class="cell-label">${t('label_personal_address')}</span>
+                                    <span class="cell-value">${student.personal_address || 'N/A'}</span>
                                 </div>
                             </div>
                         </div>

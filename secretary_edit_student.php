@@ -45,6 +45,10 @@ function upsertAddress($conn, $existingId, $street_en, $street_ar, $country, $wi
     $daira = intval($daira);
     $commune = intval($commune);
 
+    if ($wilaya <= 0) $wilaya = null;
+    if ($daira <= 0) $daira = null;
+    if ($commune <= 0) $commune = null;
+
     if ($country <= 0) {
         return null;
     }
@@ -79,29 +83,17 @@ function upsertAddress($conn, $existingId, $street_en, $street_ar, $country, $wi
 
 $message = "";
 $msg_type = "";
-
-if (isset($_GET['updated']) && $_GET['updated'] === '1') {
-    $message = "Student updated successfully.";
-    $msg_type = "success";
-}
+$updatedSerial = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_student') {
-    $originalSerial = trim($_POST['ORIGINAL_STUDENT_SERIAL_NUMBER'] ?? ($_GET['serial'] ?? ''));
     $serial = trim($_POST['STUDENT_SERIAL_NUMBER'] ?? '');
-
-    if ($serial === '') {
-        $message = "Serial Number is required.";
-        $msg_type = "error";
-        goto after_update;
-    }
-
-    if (!preg_match('/^\d+$/', $serial)) {
-        $message = "Serial Number must contain digits only.";
-        $msg_type = "error";
-        goto after_update;
-    }
+    $originalSerial = trim($_POST['ORIGINAL_STUDENT_SERIAL_NUMBER'] ?? '');
 
     if ($originalSerial === '') {
+        $originalSerial = $serial;
+    }
+
+    if ($serial === '') {
         $message = "Serial Number is required.";
         $msg_type = "error";
         goto after_update;
@@ -124,16 +116,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     try {
         if ($serial !== $originalSerial) {
-            $stmtCheck = $conn->prepare("SELECT 1 FROM student WHERE STUDENT_SERIAL_NUMBER = ? LIMIT 1");
-            if ($stmtCheck) {
-                $stmtCheck->bind_param("s", $serial);
-                $stmtCheck->execute();
-                $stmtCheck->store_result();
-                $exists = ($stmtCheck->num_rows > 0);
-                $stmtCheck->close();
-                if ($exists) {
-                    throw new Exception("This serial number already exists.");
-                }
+            $stmtDup = $conn->prepare("SELECT 1 FROM student WHERE STUDENT_SERIAL_NUMBER = ? LIMIT 1");
+            if (!$stmtDup) {
+                throw new Exception("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+            }
+            $stmtDup->bind_param("s", $serial);
+            $stmtDup->execute();
+            $stmtDup->store_result();
+            $exists = ($stmtDup->num_rows > 0);
+            $stmtDup->close();
+            if ($exists) {
+                throw new Exception("Serial Number already exists.");
+            }
+
+            $stmtDelMcPre = $conn->prepare("DELETE FROM student_military_certificate WHERE student_serial_number = ?");
+            if ($stmtDelMcPre) {
+                $stmtDelMcPre->bind_param("s", $originalSerial);
+                $stmtDelMcPre->execute();
+                $stmtDelMcPre->close();
+            }
+
+            $stmtDelHobbyPre = $conn->prepare("DELETE FROM student_hobby WHERE student_serial_number = ?");
+            if ($stmtDelHobbyPre) {
+                $stmtDelHobbyPre->bind_param("s", $originalSerial);
+                $stmtDelHobbyPre->execute();
+                $stmtDelHobbyPre->close();
             }
 
             $stmtDelCombat = $conn->prepare("DELETE FROM student_combat_outfit WHERE STUDENT_SERIAL_NUMBER = ?");
@@ -141,6 +148,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $stmtDelCombat->bind_param("s", $originalSerial);
                 $stmtDelCombat->execute();
                 $stmtDelCombat->close();
+            }
+
+            $stmtDelParade = $conn->prepare("DELETE FROM student_parade_uniform WHERE STUDENT_SERIAL_NUMBER = ?");
+            if ($stmtDelParade) {
+                $stmtDelParade->bind_param("s", $originalSerial);
+                $stmtDelParade->execute();
+                $stmtDelParade->close();
+            }
+
+            $stmtDelParent = $conn->prepare("DELETE FROM student_parent_info WHERE STUDENT_SERIAL_NUMBER = ?");
+            if ($stmtDelParent) {
+                $stmtDelParent->bind_param("s", $originalSerial);
+                $stmtDelParent->execute();
+                $stmtDelParent->close();
             }
         }
 
@@ -179,7 +200,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $photo_path = 'resources\\photos\\students\\' . $serial . '.jpg';
 
         $sqlStudent = "UPDATE student SET
-            STUDENT_SERIAL_NUMBER = ?,
             CATEGORY_ID = ?,
             SECTION_ID = ?,
             STUDENT_FIRST_NAME_EN = ?,
@@ -262,10 +282,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $orphan = $_POST['STUDENT_ORPHAN_STATUS'] ?? 'None';
         $parents = $_POST['STUDENT_PARENTS_SITUATION'] ?? 'Married';
 
-        $typesStudent = "s" . "ii" . "ssss" . "i" . "ssss" . "dd" . "s" . "d" . "ii" . str_repeat('s', 8) . "i" . "s" . "iiii" . "ss" . "iii" . "ss";
+        $typesStudent = "ii" . "ssss" . "i" . "ssss" . "dd" . "s" . "d" . "ii" . str_repeat('s', 8) . "i" . "s" . "iiii" . "ss" . "iii" . "ss";
         $stmtStudent->bind_param(
             $typesStudent,
-            $serial,
             $category_id,
             $section_id,
             $fname_en,
@@ -309,25 +328,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $stmtStudent->close();
 
         if ($serial !== $originalSerial) {
-            $mapTables = [
-                ['student_parade_uniform', 'STUDENT_SERIAL_NUMBER'],
-                ['student_parent_info', 'STUDENT_SERIAL_NUMBER'],
-                ['student_emergency_contact', 'STUDENT_SERIAL_NUMBER'],
-                ['student_military_certificate', 'student_serial_number'],
-                ['student_hobby', 'student_serial_number'],
-                ['student_gets_absent', 'STUDENT_SERIAL_NUMBER'],
-                ['teacher_makes_an_observation_for_a_student', 'STUDENT_SERIAL_NUMBER']
-            ];
-            foreach ($mapTables as $t) {
-                $table = $t[0];
-                $col = $t[1];
-                $sql = "UPDATE {$table} SET {$col} = ? WHERE {$col} = ?";
-                $st = $conn->prepare($sql);
-                if ($st) {
-                    $st->bind_param("ss", $serial, $originalSerial);
-                    $st->execute();
-                    $st->close();
-                }
+            $stmtUpdateSerial = $conn->prepare("UPDATE student SET STUDENT_SERIAL_NUMBER = ? WHERE STUDENT_SERIAL_NUMBER = ?");
+            if (!$stmtUpdateSerial) {
+                throw new Exception("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+            }
+            $stmtUpdateSerial->bind_param("ss", $serial, $originalSerial);
+            $stmtUpdateSerial->execute();
+            $stmtUpdateSerial->close();
+
+            $stmtCascadeEmg = $conn->prepare("UPDATE student_emergency_contact SET STUDENT_SERIAL_NUMBER = ? WHERE STUDENT_SERIAL_NUMBER = ?");
+            if ($stmtCascadeEmg) {
+                $stmtCascadeEmg->bind_param("ss", $serial, $originalSerial);
+                $stmtCascadeEmg->execute();
+                $stmtCascadeEmg->close();
+            }
+
+            $stmtCascadeAbsent = $conn->prepare("UPDATE student_gets_absent SET STUDENT_SERIAL_NUMBER = ? WHERE STUDENT_SERIAL_NUMBER = ?");
+            if ($stmtCascadeAbsent) {
+                $stmtCascadeAbsent->bind_param("ss", $serial, $originalSerial);
+                $stmtCascadeAbsent->execute();
+                $stmtCascadeAbsent->close();
+            }
+
+            $stmtCascadeObs = $conn->prepare("UPDATE teacher_makes_an_observation_for_a_student SET STUDENT_SERIAL_NUMBER = ? WHERE STUDENT_SERIAL_NUMBER = ?");
+            if ($stmtCascadeObs) {
+                $stmtCascadeObs->bind_param("ss", $serial, $originalSerial);
+                $stmtCascadeObs->execute();
+                $stmtCascadeObs->close();
             }
         }
 
@@ -594,8 +621,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
 
         $conn->commit();
-        header('Location: secretary_edit_student.php?serial=' . urlencode($serial) . '&updated=1');
-        exit;
+        $message = "Student updated successfully.";
+        $msg_type = "success";
+
+        if ($serial !== $originalSerial) {
+            $updatedSerial = $serial;
+        }
 
     } catch (Throwable $e) {
         $conn->rollback();
@@ -605,6 +636,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 after_update:
+
+if ($updatedSerial !== null) {
+    $loadedSerial = $updatedSerial;
+}
 
 $categories = [];
 $res = $conn->query("SELECT CATEGORY_ID, CATEGORY_NAME_EN, CATEGORY_NAME_AR FROM category ORDER BY CATEGORY_NAME_EN");
@@ -676,7 +711,7 @@ if ($res) {
     while($r = $res->fetch_assoc()) $armies[] = $r;
 }
 
-$loadedSerial = trim($_GET['serial'] ?? '');
+$loadedSerial = isset($loadedSerial) && $loadedSerial !== '' ? $loadedSerial : trim($_GET['serial'] ?? '');
 $student = null;
 
 $bp = [];
@@ -907,11 +942,107 @@ function selectedAttr($current, $value) {
         .form-section-title::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: var(--primary-color); transition: width 0.5s ease; }
         .accordion-section:hover .form-section-title::after { width: 100%; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-        .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.9rem; color: var(--text-primary); }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.6rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 0.95rem; background: var(--bg-secondary); transition: all 0.3s ease; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.15); transform: translateY(-1px); }
-        .form-group { transition: transform 0.2s ease; }
-        .form-group:focus-within { transform: translateY(-2px); }
+        .form-group label { display: none; }
+        .form-group { position: relative; margin-bottom: 0.5rem; }
+        .form-group input, .form-group select, .form-group textarea { 
+            width: 100%; 
+            padding: 0.8rem 1rem; 
+            border: 1px solid var(--border-color); 
+            border-radius: var(--radius-lg); 
+            font-size: 0.95rem; 
+            background: var(--bg-secondary); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+            border-color: var(--primary-color); 
+            box-shadow: 0 4px 20px rgba(111, 66, 193, 0.1);
+            background: var(--bg-primary);
+            transform: translateY(-2px);
+        }
+        .form-group::after {
+            content: attr(data-label);
+            position: absolute;
+            top: -0.5rem;
+            left: 0.8rem;
+            padding: 0 0.4rem;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 4px;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all 0.2s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .form-group:focus-within::after,
+        .form-group.has-value::after {
+            opacity: 1;
+            transform: translateY(0);
+            color: var(--primary-color);
+        }
+        .form-group.has-value::after { color: var(--text-secondary); }
+        .form-group:focus-within::after { color: var(--primary-color); }
+
+        .tabs-list { width: 240px; }
+        .tab-button { 
+            border: none;
+            background: transparent;
+            padding: 0.8rem 1rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        .tab-button:hover { background: var(--bg-secondary); transform: none; color: var(--text-primary); }
+        .tab-button.active { 
+            background: var(--bg-secondary); 
+            color: var(--primary-color); 
+            box-shadow: none;
+        }
+        .tab-button.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary-color);
+            border-radius: 0 4px 4px 0;
+        }
+        .tab-button::after { display: none; }
+        
+        .tab-panel { border: none; box-shadow: var(--shadow-sm); padding: 2.5rem; }
+        .form-section-title { border: none; font-size: 1.5rem; margin-bottom: 2rem; color: var(--text-primary); }
+
+        /* Bubble Buttons for selection */
+        .bubble-group { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
+        .bubble-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+        .bubble-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        .bubble-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
+        }
+        .bubble-label { display: block; margin-bottom: 0.75rem; font-weight: 700; color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
         .btn-submit { grid-column: 1 / -1; margin-top: 2rem; background: var(--primary-color); color: white; padding: 1rem; border: none; border-radius: var(--radius-md); font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
         .btn-submit:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(111, 66, 193, 0.4); }
         .btn-submit:active { transform: translateY(0); box-shadow: 0 2px 6px rgba(111, 66, 193, 0.3); }
@@ -1055,32 +1186,25 @@ function selectedAttr($current, $value) {
             backdrop-filter: blur(4px);
         }
 
-        .accordion-section { border: 1px solid var(--border-color); border-radius: var(--radius-lg); background: var(--bg-primary); margin-bottom: 1rem; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: top; }
-        .accordion-section:hover { box-shadow: 0 6px 20px rgba(111, 66, 193, 0.15); transform: translateY(-2px); border-color: rgba(111, 66, 193, 0.3); }
-        .accordion-section summary { cursor: pointer; list-style: none; padding: 1rem 1.25rem; font-weight: 800; color: var(--primary-color); background: var(--bg-secondary); user-select: none; transition: all 0.3s ease; position: relative; }
-        .accordion-section summary:hover { background: linear-gradient(90deg, var(--bg-secondary) 0%, rgba(111, 66, 193, 0.05) 100%); padding-left: 1.5rem; }
-        .accordion-section summary::-webkit-details-marker { display: none; }
-        .accordion-section summary::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--primary-color); transform: scaleY(0); transition: transform 0.3s ease; }
-        .accordion-section:hover summary::before, .accordion-section[open] summary::before { transform: scaleY(1); }
-        .accordion-section summary::after { content: '▸'; float: right; color: var(--text-secondary); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: inline-block; font-size: 0.9rem; }
-        .accordion-section[open] summary::after { content: '▾'; transform: rotate(180deg); color: var(--primary-color); }
-        .accordion-section[open] { animation: accordionExpand 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes accordionExpand { from { opacity: 0.7; transform: scaleY(0.95); } to { opacity: 1; transform: scaleY(1); } }
-        .accordion-section summary { border-bottom: 1px solid var(--border-color); }
-        .accordion-section[open] summary { border-bottom-color: var(--primary-color); border-bottom-width: 2px; }
-        .accordion-content { padding: 1.25rem; animation: contentSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes contentSlideIn { from { opacity: 0; transform: translateY(-15px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .accordion-section .form-group { animation: fieldFadeIn 0.4s ease-out backwards; }
-        .accordion-section .form-group:nth-child(1) { animation-delay: 0.05s; }
-        .accordion-section .form-group:nth-child(2) { animation-delay: 0.1s; }
-        .accordion-section .form-group:nth-child(3) { animation-delay: 0.15s; }
-        .accordion-section .form-group:nth-child(4) { animation-delay: 0.2s; }
-        .accordion-section .form-group:nth-child(5) { animation-delay: 0.25s; }
-        .accordion-section .form-group:nth-child(n+6) { animation-delay: 0.3s; }
-        @keyframes fieldFadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-        .accordion-section .sub-group { animation: subGroupFade 0.5s ease-out 0.2s backwards; }
-        @keyframes subGroupFade { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .accordion-section .wizard-panel { padding: 0; }
+        .tabs-container { display: flex; gap: 2rem; align-items: flex-start; }
+        .tabs-list { display: flex; flex-direction: column; gap: 0.5rem; width: 280px; flex-shrink: 0; position: sticky; top: 2rem; }
+        .tab-button { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); cursor: pointer; transition: all 0.3s ease; text-align: left; font-weight: 700; color: var(--text-secondary); width: 100%; font-family: inherit; font-size: 0.95rem; }
+        .tab-button:hover { background: rgba(111, 66, 193, 0.05); border-color: var(--primary-color); color: var(--primary-color); transform: translateX(5px); }
+        .tab-button.active { background: var(--primary-color); color: white; border-color: var(--primary-color); box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3); }
+        .tab-button::after { content: '▸'; opacity: 0.5; transition: transform 0.3s ease; }
+        .tab-button.active::after { transform: rotate(90deg); opacity: 1; }
+        .tab-content-container { flex-grow: 1; min-width: 0; }
+        .tab-panel { display: none; animation: fadeIn 0.4s ease; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-md); }
+        .tab-panel.active { display: block; }
+        
+        @media (max-width: 992px) {
+            .tabs-container { flex-direction: column; }
+            .tabs-list { width: 100%; position: static; flex-direction: row; overflow-x: auto; padding-bottom: 0.5rem; }
+            .tab-button { white-space: nowrap; width: auto; }
+        }
+
+        .form-card.main-form-card { background: transparent; border: none; padding: 0; box-shadow: none; }
+        .form-section-title { grid-column: 1 / -1; font-size: 1.1rem; font-weight: 700; color: var(--primary-color); margin-top: 0; margin-bottom: 1.5rem; border-bottom: 2px solid var(--bg-secondary); padding-bottom: 0.5rem; }
         .skirt-field { display:none; }
     </style>
 </head>
@@ -1123,478 +1247,464 @@ function selectedAttr($current, $value) {
                 <ul id="suggestionsList"></ul>
             </div>
 
-            <?php if ($loadedSerial !== '' && !$student): ?>
+            <?php if ($loadedSerial !== '' && !$student && $message !== 'Student not found.'): ?>
                 <div class="alert error"><?php echo t('student_not_found'); ?></div>
             <?php endif; ?>
 
             <?php if ($student): ?>
-            <div class="form-card">
+            <div class="form-card main-form-card">
                 <form method="POST" action="secretary_edit_student.php?serial=<?php echo urlencode($loadedSerial); ?>" id="wizardForm">
                     <input type="hidden" name="action" value="update_student">
+                    <input type="hidden" name="ORIGINAL_STUDENT_SERIAL_NUMBER" value="<?php echo h($student['STUDENT_SERIAL_NUMBER']); ?>">
 
-                    <div class="wizard-panels">
-                        <details class="accordion-section" open>
-                            <summary><?php echo t('personal_details'); ?></summary>
-                            <div class="accordion-content">
-                            <div class="wizard-panel" data-step="1">
-                            <div class="form-grid">
+                    <div class="tabs-container">
+                        <div class="tabs-list">
+                            <button type="button" class="tab-button active" onclick="switchTab(event, 'tab-personal')"><?php echo t('personal_details'); ?></button>
+                            <button type="button" class="tab-button" onclick="switchTab(event, 'tab-academic')"><?php echo t('academic_info'); ?></button>
+                            <button type="button" class="tab-button" onclick="switchTab(event, 'tab-family')"><?php echo t('family_information'); ?></button>
+                            <button type="button" class="tab-button" onclick="switchTab(event, 'tab-address')"><?php echo t('label_personal_address'); ?></button>
+                            <button type="button" class="tab-button" onclick="switchTab(event, 'tab-uniforms')"><?php echo t('uniforms'); ?></button>
+                            <button type="button" class="tab-button" onclick="switchTab(event, 'tab-other')"><?php echo t('step_other_details'); ?></button>
+                            <button type="button" class="tab-button" onclick="switchTab(event, 'tab-emergency')"><?php echo t('step_emergency_contact'); ?></button>
+                        </div>
 
-                                <div class="form-group">
-                                    <label><?php echo t('serial_number'); ?></label>
-                                    <input type="hidden" name="ORIGINAL_STUDENT_SERIAL_NUMBER" value="<?php echo h($student['STUDENT_SERIAL_NUMBER']); ?>">
-                                    <input type="text" id="STUDENT_SERIAL_NUMBER" name="STUDENT_SERIAL_NUMBER" value="<?php echo h($student['STUDENT_SERIAL_NUMBER']); ?>">
-                                </div>
-
-                                <div class="form-group"><label><?php echo t('label_first_name_en'); ?></label><input type="text" name="STUDENT_FIRST_NAME_EN" required value="<?php echo h($student['STUDENT_FIRST_NAME_EN']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_last_name_en'); ?></label><input type="text" name="STUDENT_LAST_NAME_EN" required value="<?php echo h($student['STUDENT_LAST_NAME_EN']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_first_name_ar'); ?></label><input type="text" name="STUDENT_FIRST_NAME_AR" dir="rtl" value="<?php echo h($student['STUDENT_FIRST_NAME_AR']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_last_name_ar'); ?></label><input type="text" name="STUDENT_LAST_NAME_AR" dir="rtl" value="<?php echo h($student['STUDENT_LAST_NAME_AR']); ?>"></div>
-
-                                <div class="form-group"><label><?php echo t('label_sex'); ?></label>
-                                    <select id="SEX_SELECT" name="STUDENT_SEX" onchange="toggleSkirtFields()">
-                                        <option value="" <?php echo ($student['STUDENT_SEX'] ? '' : 'selected'); ?>><?php echo t('select'); ?></option>
-                                        <option value="Male" <?php echo selectedAttr($student['STUDENT_SEX'], 'Male'); ?>><?php echo t('male'); ?></option>
-                                        <option value="Female" <?php echo selectedAttr($student['STUDENT_SEX'], 'Female'); ?>><?php echo t('female'); ?></option>
-                                    </select>
-                                </div>
-                                <div class="form-group"><label><?php echo t('label_birth_date'); ?></label><input type="date" name="STUDENT_BIRTH_DATE" value="<?php echo h($student['STUDENT_BIRTH_DATE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_phone'); ?></label><input type="text" name="STUDENT_PERSONAL_PHONE" value="<?php echo h($student['STUDENT_PERSONAL_PHONE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_blood_type'); ?></label>
-                                    <select name="STUDENT_BLOOD_TYPE">
-                                        <option value="" <?php echo ($student['STUDENT_BLOOD_TYPE'] ? '' : 'selected'); ?>><?php echo t('select'); ?></option>
-                                        <option value="A+" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'A+'); ?>>A+</option>
-                                        <option value="A-" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'A-'); ?>>A-</option>
-                                        <option value="B+" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'B+'); ?>>B+</option>
-                                        <option value="B-" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'B-'); ?>>B-</option>
-                                        <option value="AB+" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'AB+'); ?>>AB+</option>
-                                        <option value="AB-" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'AB-'); ?>>AB-</option>
-                                        <option value="O+" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'O+'); ?>>O+</option>
-                                        <option value="O-" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'O-'); ?>>O-</option>
-                                    </select>
-                                </div>
-                                <div class="form-group"><label><?php echo t('label_height'); ?></label><input type="number" step="0.01" name="STUDENT_HEIGHT_CM" value="<?php echo h($student['STUDENT_HEIGHT_CM']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_weight'); ?></label><input type="number" step="0.01" name="STUDENT_WEIGHT_KG" value="<?php echo h($student['STUDENT_WEIGHT_KG']); ?>" min="50" max="150"></div>
-                                <div class="form-group"><label><?php echo t('label_is_foreign'); ?></label>
-                                    <select id="IS_FOREIGN_SELECT" name="STUDENT_IS_FOREIGN" onchange="toggleForeignFields()">
-                                        <option value="No" <?php echo selectedAttr($student['STUDENT_IS_FOREIGN'], 'No'); ?>><?php echo t('no'); ?></option>
-                                        <option value="Yes" <?php echo selectedAttr($student['STUDENT_IS_FOREIGN'], 'Yes'); ?>><?php echo t('yes'); ?></option>
-                                    </select>
-                                </div>
-
-                            </div>
-                            </div>
-                            </div>
-                        </details>
-
-                        <details class="accordion-section">
-                            <summary><?php echo t('academic_info'); ?></summary>
-                            <div class="accordion-content">
-                            <div class="wizard-panel" data-step="2">
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label><?php echo t('category'); ?></label>
-                                    <select id="CATEGORY_ID" name="CATEGORY_ID" required>
-                                        <option value=""><?php echo t('select'); ?></option>
-                                        <?php foreach ($categories as $c): ?>
-                                            <?php $catName = ($LANG === 'ar' && !empty($c['CATEGORY_NAME_AR'])) ? $c['CATEGORY_NAME_AR'] : $c['CATEGORY_NAME_EN']; ?>
-                                            <option value="<?php echo $c['CATEGORY_ID']; ?>" <?php echo selectedAttr($student['CATEGORY_ID'], $c['CATEGORY_ID']); ?>><?php echo h($catName); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="form-group" id="SECTION_GROUP">
-                                    <label><?php echo t('section'); ?></label>
-                                    <select id="SECTION_ID" name="SECTION_ID" required>
-                                        <option value=""><?php echo t('select'); ?></option>
-                                        <?php foreach ($sections as $s): ?>
-                                            <?php $secName = ($LANG === 'ar' && !empty($s['SECTION_NAME_AR'])) ? $s['SECTION_NAME_AR'] : $s['SECTION_NAME_EN']; ?>
-                                            <option value="<?php echo $s['SECTION_ID']; ?>" data-category="<?php echo $s['CATEGORY_ID']; ?>" <?php echo selectedAttr($student['SECTION_ID'], $s['SECTION_ID']); ?>><?php echo h($secName); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                                <div class="form-group"><label><?php echo t('speciality'); ?></label>
-                                    <select name="STUDENT_SPECIALITY_ID">
-                                        <option value=""><?php echo t('select'); ?></option>
-                                        <?php foreach ($specialities as $sp): ?>
-                                            <?php $spName = ($LANG === 'ar' && !empty($sp['speciality_name_ar'])) ? $sp['speciality_name_ar'] : $sp['speciality_name_en']; ?>
-                                            <option value="<?php echo $sp['student_speciality_id']; ?>" <?php echo selectedAttr($student['STUDENT_SPECIALITY_ID'] ?? '', $sp['student_speciality_id']); ?>><?php echo h($spName); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="form-group"><label><?php echo t('academic_level'); ?></label>
-                                    <select name="STUDENT_ACADEMIC_LEVEL_ID">
-                                        <option value=""><?php echo t('select'); ?></option>
-                                        <?php foreach ($academic_levels as $al): ?>
-                                            <?php $alName = ($LANG === 'ar' && !empty($al['ACADEMIC_LEVEL_AR'])) ? $al['ACADEMIC_LEVEL_AR'] : $al['ACADEMIC_LEVEL_EN']; ?>
-                                            <option value="<?php echo $al['ACADEMIC_LEVEL_ID']; ?>" <?php echo selectedAttr($student['STUDENT_ACADEMIC_LEVEL_ID'] ?? '', $al['ACADEMIC_LEVEL_ID']); ?>><?php echo h($alName); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="form-group"><label><?php echo t('academic_average'); ?></label><input type="number" step="0.01" name="STUDENT_ACADEMIC_AVERAGE" value="<?php echo h($student['STUDENT_ACADEMIC_AVERAGE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('bac_number'); ?></label><input type="text" name="STUDENT_BACCALAUREATE_SUB_NUMBER" value="<?php echo h($student['STUDENT_BACCALAUREATE_SUB_NUMBER']); ?>"></div>
-
-                                <div class="form-group"><label><?php echo t('grade_rank'); ?></label>
-                                    <select name="STUDENT_GRADE_ID">
-                                        <option value=""><?php echo t('select_grade'); ?></option>
-                                        <?php foreach ($grades as $g): ?>
-                                            <?php $gradeName = ($LANG === 'ar' && !empty($g['GRADE_NAME_AR'])) ? $g['GRADE_NAME_AR'] : $g['GRADE_NAME_EN']; ?>
-                                            <option value="<?php echo $g['GRADE_ID']; ?>" <?php echo selectedAttr($student['STUDENT_GRADE_ID'], $g['GRADE_ID']); ?>><?php echo h($gradeName); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                                <div class="form-group"><label><?php echo t('recruitment_source'); ?></label>
-                                    <select id="RECRUITMENT_SOURCE_ID" name="RECRUITMENT_SOURCE_ID">
-                                        <option value=""><?php echo t('select_recruitment'); ?></option>
-                                        <?php foreach ($recruitment_sources as $rs): ?>
-                                            <?php
-                                                $label = ($LANG === 'ar' ? ($rs['RECRUITMENT_TYPE_AR'] ?? $rs['RECRUITMENT_TYPE_EN']) : $rs['RECRUITMENT_TYPE_EN']);
-                                                $school = ($LANG === 'ar' ? ($rs['ECN_SCHOOL_NAME_AR'] ?? $rs['ECN_SCHOOL_NAME_EN']) : $rs['ECN_SCHOOL_NAME_EN']);
-                                                if ($school) $label .= ' - ' . $school;
-                                            ?>
-                                            <option value="<?php echo $rs['RECRUITMENT_SOURCE_ID']; ?>" <?php echo selectedAttr($student['STUDENT_RECRUITMENT_SOURCE_ID'], $rs['RECRUITMENT_SOURCE_ID']); ?>><?php echo h($label); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                                <div class="form-group"><label><?php echo t('army'); ?></label>
-                                    <select name="STUDENT_ARMY_ID">
-                                        <option value=""><?php echo t('select_army'); ?></option>
-                                        <?php foreach ($armies as $a): ?>
-                                            <?php $armyName = ($LANG === 'ar' && !empty($a['ARMY_NAME_AR'])) ? $a['ARMY_NAME_AR'] : $a['ARMY_NAME_EN']; ?>
-                                            <option value="<?php echo $a['ARMY_ID']; ?>" <?php echo selectedAttr($student['STUDENT_ARMY_ID'], $a['ARMY_ID']); ?>><?php echo h($armyName); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                            </div>
-                            </div>
-                            </div>
-                        </details>
-
-                        <details class="accordion-section">
-                            <summary><?php echo t('family_information'); ?></summary>
-                            <div class="accordion-content">
-                            <div class="wizard-panel" data-step="3">
-                            <div class="form-grid">
-                                <div class="form-group"><label><?php echo t('label_father_first_en'); ?></label><input type="text" name="FATHER_FIRST_NAME_EN" value="<?php echo h($student['FATHER_FIRST_NAME_EN']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_father_last_en'); ?></label><input type="text" name="FATHER_LAST_NAME_EN" value="<?php echo h($student['FATHER_LAST_NAME_EN']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_father_first_ar'); ?></label><input type="text" name="FATHER_FIRST_NAME_AR" dir="rtl" value="<?php echo h($student['FATHER_FIRST_NAME_AR']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_father_last_ar'); ?></label><input type="text" name="FATHER_LAST_NAME_AR" dir="rtl" value="<?php echo h($student['FATHER_LAST_NAME_AR']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_father_prof_en'); ?></label>
-                                    <select name="FATHER_PROFESSION_ID">
-                                        <option value=""><?php echo t('select'); ?></option>
-                                        <?php foreach ($professions as $p): ?>
-                                            <?php $pName = ($LANG === 'ar' && !empty($p['profession_name_ar'])) ? $p['profession_name_ar'] : $p['profession_name_en']; ?>
-                                            <option value="<?php echo $p['profession_id']; ?>" <?php echo selectedAttr($student['FATHER_PROFESSION_ID'] ?? '', $p['profession_id']); ?>><?php echo h($pName); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="form-group"><label><?php echo t('label_mother_first_en'); ?></label><input type="text" name="MOTHER_FIRST_NAME_EN" value="<?php echo h($student['MOTHER_FIRST_NAME_EN']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_mother_last_en'); ?></label><input type="text" name="MOTHER_LAST_NAME_EN" value="<?php echo h($student['MOTHER_LAST_NAME_EN']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_mother_first_ar'); ?></label><input type="text" name="MOTHER_FIRST_NAME_AR" dir="rtl" value="<?php echo h($student['MOTHER_FIRST_NAME_AR']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_mother_last_ar'); ?></label><input type="text" name="MOTHER_LAST_NAME_AR" dir="rtl" value="<?php echo h($student['MOTHER_LAST_NAME_AR']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_mother_prof_en'); ?></label>
-                                    <select name="MOTHER_PROFESSION_ID">
-                                        <option value=""><?php echo t('select'); ?></option>
-                                        <?php foreach ($professions as $p): ?>
-                                            <?php $pName = ($LANG === 'ar' && !empty($p['profession_name_ar'])) ? $p['profession_name_ar'] : $p['profession_name_en']; ?>
-                                            <option value="<?php echo $p['profession_id']; ?>" <?php echo selectedAttr($student['MOTHER_PROFESSION_ID'] ?? '', $p['profession_id']); ?>><?php echo h($pName); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                                <div class="form-group"><label><?php echo t('orphan_status'); ?></label>
-                                    <select name="STUDENT_ORPHAN_STATUS">
-                                        <option value="None" <?php echo selectedAttr($student['STUDENT_ORPHAN_STATUS'], 'None'); ?>><?php echo t('orphan_none'); ?></option>
-                                        <option value="Father" <?php echo selectedAttr($student['STUDENT_ORPHAN_STATUS'], 'Father'); ?>><?php echo t('orphan_father'); ?></option>
-                                        <option value="Mother" <?php echo selectedAttr($student['STUDENT_ORPHAN_STATUS'], 'Mother'); ?>><?php echo t('orphan_mother'); ?></option>
-                                        <option value="Both" <?php echo selectedAttr($student['STUDENT_ORPHAN_STATUS'], 'Both'); ?>><?php echo t('orphan_both'); ?></option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group"><label><?php echo t('parents_situation'); ?></label>
-                                    <select name="STUDENT_PARENTS_SITUATION">
-                                        <option value="Married" <?php echo selectedAttr($student['STUDENT_PARENTS_SITUATION'], 'Married'); ?>><?php echo t('married'); ?></option>
-                                        <option value="Divorced" <?php echo selectedAttr($student['STUDENT_PARENTS_SITUATION'], 'Divorced'); ?>><?php echo t('divorced'); ?></option>
-                                        <option value="Separated" <?php echo selectedAttr($student['STUDENT_PARENTS_SITUATION'], 'Separated'); ?>><?php echo t('separated'); ?></option>
-                                        <option value="Widowed" <?php echo selectedAttr($student['STUDENT_PARENTS_SITUATION'], 'Widowed'); ?>><?php echo t('widowed'); ?></option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group"><label><?php echo t('num_siblings'); ?></label><input type="number" name="STUDENT_NUMBER_OF_SIBLINGS" value="<?php echo h($student['STUDENT_NUMBER_OF_SIBLINGS']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_sisters_count'); ?></label><input type="number" name="STUDENT_NUMBER_OF_SISTERS" value="<?php echo h($student['STUDENT_NUMBER_OF_SISTERS']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_order_among_siblings'); ?></label><input type="number" name="STUDENT_ORDER_AMONG_SIBLINGS" value="<?php echo h($student['STUDENT_ORDER_AMONG_SIBLINGS']); ?>"></div>
-
-                            </div>
-                            </div>
-                            </div>
-                        </details>
-
-                        <details class="accordion-section">
-                            <summary><?php echo t('label_personal_address'); ?> <?php echo t('and'); ?> <?php echo t('label_birth_place_address'); ?></summary>
-                            <div class="accordion-content">
-                            <div class="wizard-panel" data-step="4">
-                            <div class="form-grid">
-
-                                <div class="sub-group" style="grid-column: 1 / -1;">
-                                    <label style="color:var(--primary-color); font-weight:700;"><?php echo t('label_birth_place_address'); ?></label>
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top:0.5rem;">
-                                        <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_street_en'); ?></label><input type="text" name="BP_STREET_EN" value="<?php echo h($bp['BP_STREET_EN'] ?? ''); ?>"></div>
-                                        <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_street_ar'); ?></label><input type="text" name="BP_STREET_AR" dir="rtl" value="<?php echo h($bp['BP_STREET_AR'] ?? ''); ?>"></div>
-                                        <div class="form-group">
-                                            <label style="font-size:0.8rem;"><?php echo t('label_country'); ?></label>
-                                            <select class="country-select" data-prefix="BP_" name="BP_COUNTRY_ID">
-                                                <option value=""><?php echo t('option_select_country'); ?></option>
-                                                <?php foreach ($countries as $c): ?>
-                                                    <?php $countryName = ($LANG === 'ar' && !empty($c['COUNTRY_NAME_AR'])) ? $c['COUNTRY_NAME_AR'] : $c['COUNTRY_NAME_EN']; ?>
-                                                    <option value="<?php echo $c['COUNTRY_ID']; ?>" <?php echo selectedAttr($bp['BP_COUNTRY_ID'] ?? '', $c['COUNTRY_ID']); ?>><?php echo h($countryName); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_wilaya'); ?></label>
-                                            <select id="BP_WILAYA_ID" name="BP_WILAYA_ID" class="wilaya-select" data-prefix="BP_" <?php echo (!empty($bpWilayas) ? '' : 'disabled'); ?>>
-                                                <option value=""><?php echo t('option_select_wilaya_first'); ?></option>
-                                                <?php foreach ($bpWilayas as $w): ?>
-                                                    <?php $wName = ($LANG === 'ar' && !empty($w['WILAYA_NAME_AR'])) ? $w['WILAYA_NAME_AR'] : $w['WILAYA_NAME_EN']; ?>
-                                                    <option value="<?php echo $w['WILAYA_ID']; ?>" <?php echo selectedAttr($bp['BP_WILAYA_ID'] ?? '', $w['WILAYA_ID']); ?>><?php echo h($wName); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_daira'); ?></label>
-                                            <select id="BP_DAIRA_ID" name="BP_DAIRA_ID" class="daira-select" data-prefix="BP_" <?php echo (!empty($bpDairas) ? '' : 'disabled'); ?>>
-                                                <option value=""><?php echo t('option_select_daira_first'); ?></option>
-                                                <?php foreach ($bpDairas as $d): ?>
-                                                    <?php $dName = ($LANG === 'ar' && !empty($d['DAIRA_NAME_AR'])) ? $d['DAIRA_NAME_AR'] : $d['DAIRA_NAME_EN']; ?>
-                                                    <option value="<?php echo $d['DAIRA_ID']; ?>" <?php echo selectedAttr($bp['BP_DAIRA_ID'] ?? '', $d['DAIRA_ID']); ?>><?php echo h($dName); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_commune'); ?></label>
-                                            <select id="BP_COMMUNE_ID" name="BP_COMMUNE_ID" <?php echo (!empty($bpCommunes) ? '' : 'disabled'); ?>>
-                                                <option value=""><?php echo t('option_select_commune_first'); ?></option>
-                                                <?php foreach ($bpCommunes as $cc): ?>
-                                                    <?php $cName = ($LANG === 'ar' && !empty($cc['COMMUNE_NAME_AR'])) ? $cc['COMMUNE_NAME_AR'] : $cc['COMMUNE_NAME_EN']; ?>
-                                                    <option value="<?php echo $cc['COMMUNE_ID']; ?>" <?php echo selectedAttr($bp['BP_COMMUNE_ID'] ?? '', $cc['COMMUNE_ID']); ?>><?php echo h($cName); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
+                        <div class="tab-content-container">
+                            <!-- Tab 1: Personal Details -->
+                            <div id="tab-personal" class="tab-panel active">
+                                <h2 class="form-section-title"><?php echo t('personal_details'); ?></h2>
+                                <div class="form-grid">
+                                    <div class="form-group" data-label="<?php echo t('serial_number'); ?>">
+                                        <input type="text" name="STUDENT_SERIAL_NUMBER" placeholder="<?php echo t('serial_number'); ?>" value="<?php echo h($student['STUDENT_SERIAL_NUMBER']); ?>">
+                                    </div>
+                                    <div class="form-group" data-label="<?php echo t('label_first_name_en'); ?>"><input type="text" name="STUDENT_FIRST_NAME_EN" placeholder="<?php echo t('label_first_name_en'); ?>" required value="<?php echo h($student['STUDENT_FIRST_NAME_EN']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_last_name_en'); ?>"><input type="text" name="STUDENT_LAST_NAME_EN" placeholder="<?php echo t('label_last_name_en'); ?>" required value="<?php echo h($student['STUDENT_LAST_NAME_EN']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_first_name_ar'); ?>"><input type="text" name="STUDENT_FIRST_NAME_AR" placeholder="<?php echo t('label_first_name_ar'); ?>" dir="rtl" value="<?php echo h($student['STUDENT_FIRST_NAME_AR']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_last_name_ar'); ?>"><input type="text" name="STUDENT_LAST_NAME_AR" placeholder="<?php echo t('label_last_name_ar'); ?>" dir="rtl" value="<?php echo h($student['STUDENT_LAST_NAME_AR']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_sex'); ?>">
+                                        <select id="SEX_SELECT" name="STUDENT_SEX" onchange="toggleSkirtFields()">
+                                            <option value="" disabled <?php echo ($student['STUDENT_SEX'] ? '' : 'selected'); ?>><?php echo t('label_sex'); ?></option>
+                                            <option value="Male" <?php echo selectedAttr($student['STUDENT_SEX'], 'Male'); ?>><?php echo t('male'); ?></option>
+                                            <option value="Female" <?php echo selectedAttr($student['STUDENT_SEX'], 'Female'); ?>><?php echo t('female'); ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" data-label="<?php echo t('label_birth_date'); ?>"><input type="date" name="STUDENT_BIRTH_DATE" placeholder="<?php echo t('label_birth_date'); ?>" value="<?php echo h($student['STUDENT_BIRTH_DATE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_phone'); ?>"><input type="text" name="STUDENT_PERSONAL_PHONE" placeholder="<?php echo t('label_phone'); ?>" value="<?php echo h($student['STUDENT_PERSONAL_PHONE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_blood_type'); ?>">
+                                        <select name="STUDENT_BLOOD_TYPE">
+                                            <option value="" disabled <?php echo ($student['STUDENT_BLOOD_TYPE'] ? '' : 'selected'); ?>><?php echo t('label_blood_type'); ?></option>
+                                            <option value="A+" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'A+'); ?>>A+</option>
+                                            <option value="A-" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'A-'); ?>>A-</option>
+                                            <option value="B+" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'B+'); ?>>B+</option>
+                                            <option value="B-" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'B-'); ?>>B-</option>
+                                            <option value="AB+" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'AB+'); ?>>AB+</option>
+                                            <option value="AB-" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'AB-'); ?>>AB-</option>
+                                            <option value="O+" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'O+'); ?>>O+</option>
+                                            <option value="O-" <?php echo selectedAttr($student['STUDENT_BLOOD_TYPE'], 'O-'); ?>>O-</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" data-label="<?php echo t('label_height'); ?>"><input type="number" step="0.01" name="STUDENT_HEIGHT_CM" placeholder="<?php echo t('label_height'); ?>" value="<?php echo h($student['STUDENT_HEIGHT_CM']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_weight'); ?>"><input type="number" step="0.01" name="STUDENT_WEIGHT_KG" placeholder="<?php echo t('label_weight'); ?>" value="<?php echo h($student['STUDENT_WEIGHT_KG']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_is_foreign'); ?>">
+                                        <select id="IS_FOREIGN_SELECT" name="STUDENT_IS_FOREIGN" onchange="toggleForeignFields()">
+                                            <option value="No" <?php echo selectedAttr($student['STUDENT_IS_FOREIGN'], 'No'); ?>><?php echo t('no'); ?></option>
+                                            <option value="Yes" <?php echo selectedAttr($student['STUDENT_IS_FOREIGN'], 'Yes'); ?>><?php echo t('yes'); ?></option>
+                                        </select>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="sub-group" style="grid-column: 1 / -1;">
-                                    <label style="color:var(--primary-color); font-weight:700;"><?php echo t('label_personal_address'); ?></label>
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top:0.5rem;">
-                                        <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_street_en'); ?></label><input type="text" name="PERS_STREET_EN" value="<?php echo h($pers['PERS_STREET_EN'] ?? ''); ?>"></div>
-                                        <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_street_ar'); ?></label><input type="text" name="PERS_STREET_AR" dir="rtl" value="<?php echo h($pers['PERS_STREET_AR'] ?? ''); ?>"></div>
-                                        <div class="form-group">
-                                            <label style="font-size:0.8rem;"><?php echo t('label_country'); ?></label>
-                                            <select class="country-select" data-prefix="PERS_" name="PERS_COUNTRY_ID">
-                                                <option value=""><?php echo t('option_select_country'); ?></option>
-                                                <?php foreach ($countries as $c): ?>
-                                                    <?php $countryName = ($LANG === 'ar' && !empty($c['COUNTRY_NAME_AR'])) ? $c['COUNTRY_NAME_AR'] : $c['COUNTRY_NAME_EN']; ?>
-                                                    <option value="<?php echo $c['COUNTRY_ID']; ?>" <?php echo selectedAttr($pers['PERS_COUNTRY_ID'] ?? '', $c['COUNTRY_ID']); ?>><?php echo h($countryName); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_wilaya'); ?></label>
-                                            <select id="PERS_WILAYA_ID" name="PERS_WILAYA_ID" class="wilaya-select" data-prefix="PERS_" <?php echo (!empty($persWilayas) ? '' : 'disabled'); ?>>
-                                                <option value=""><?php echo t('option_select_wilaya_first'); ?></option>
-                                                <?php foreach ($persWilayas as $w): ?>
-                                                    <?php $wName = ($LANG === 'ar' && !empty($w['WILAYA_NAME_AR'])) ? $w['WILAYA_NAME_AR'] : $w['WILAYA_NAME_EN']; ?>
-                                                    <option value="<?php echo $w['WILAYA_ID']; ?>" <?php echo selectedAttr($pers['PERS_WILAYA_ID'] ?? '', $w['WILAYA_ID']); ?>><?php echo h($wName); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_daira'); ?></label>
-                                            <select id="PERS_DAIRA_ID" name="PERS_DAIRA_ID" class="daira-select" data-prefix="PERS_" <?php echo (!empty($persDairas) ? '' : 'disabled'); ?>>
-                                                <option value=""><?php echo t('option_select_daira_first'); ?></option>
-                                                <?php foreach ($persDairas as $d): ?>
-                                                    <?php $dName = ($LANG === 'ar' && !empty($d['DAIRA_NAME_AR'])) ? $d['DAIRA_NAME_AR'] : $d['DAIRA_NAME_EN']; ?>
-                                                    <option value="<?php echo $d['DAIRA_ID']; ?>" <?php echo selectedAttr($pers['PERS_DAIRA_ID'] ?? '', $d['DAIRA_ID']); ?>><?php echo h($dName); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_commune'); ?></label>
-                                            <select id="PERS_COMMUNE_ID" name="PERS_COMMUNE_ID" <?php echo (!empty($persCommunes) ? '' : 'disabled'); ?>>
-                                                <option value=""><?php echo t('option_select_commune_first'); ?></option>
-                                                <?php foreach ($persCommunes as $cc): ?>
-                                                    <?php $cName = ($LANG === 'ar' && !empty($cc['COMMUNE_NAME_AR'])) ? $cc['COMMUNE_NAME_AR'] : $cc['COMMUNE_NAME_EN']; ?>
-                                                    <option value="<?php echo $cc['COMMUNE_ID']; ?>" <?php echo selectedAttr($pers['PERS_COMMUNE_ID'] ?? '', $cc['COMMUNE_ID']); ?>><?php echo h($cName); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
+                            <!-- Tab 2: Academic Info -->
+                            <div id="tab-academic" class="tab-panel">
+                                <h2 class="form-section-title"><?php echo t('academic_info'); ?></h2>
+                                <div class="form-grid">
+                                    <div class="form-group" data-label="<?php echo t('category'); ?>">
+                                        <select id="CATEGORY_ID" name="CATEGORY_ID" required>
+                                            <option value="" disabled><?php echo t('category'); ?></option>
+                                            <?php foreach ($categories as $c): ?>
+                                                <?php $catName = ($LANG === 'ar' && !empty($c['CATEGORY_NAME_AR'])) ? $c['CATEGORY_NAME_AR'] : $c['CATEGORY_NAME_EN']; ?>
+                                                <option value="<?php echo $c['CATEGORY_ID']; ?>" <?php echo selectedAttr($student['CATEGORY_ID'], $c['CATEGORY_ID']); ?>><?php echo h($catName); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="SECTION_GROUP" data-label="<?php echo t('section'); ?>">
+                                        <select id="SECTION_ID" name="SECTION_ID" required>
+                                            <option value="" disabled><?php echo t('section'); ?></option>
+                                            <?php foreach ($sections as $s): ?>
+                                                <?php $secName = ($LANG === 'ar' && !empty($s['SECTION_NAME_AR'])) ? $s['SECTION_NAME_AR'] : $s['SECTION_NAME_EN']; ?>
+                                                <option value="<?php echo $s['SECTION_ID']; ?>" data-category="<?php echo $s['CATEGORY_ID']; ?>" <?php echo selectedAttr($student['SECTION_ID'], $s['SECTION_ID']); ?>><?php echo h($secName); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" data-label="<?php echo t('speciality'); ?>">
+                                        <select name="STUDENT_SPECIALITY_ID">
+                                            <option value="" disabled><?php echo t('speciality'); ?></option>
+                                            <?php foreach ($specialities as $sp): ?>
+                                                <?php $spName = ($LANG === 'ar' && !empty($sp['speciality_name_ar'])) ? $sp['speciality_name_ar'] : $sp['speciality_name_en']; ?>
+                                                <option value="<?php echo $sp['student_speciality_id']; ?>" <?php echo selectedAttr($student['STUDENT_SPECIALITY_ID'] ?? '', $sp['student_speciality_id']); ?>><?php echo h($spName); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" data-label="<?php echo t('academic_level'); ?>">
+                                        <select name="STUDENT_ACADEMIC_LEVEL_ID">
+                                            <option value="" disabled><?php echo t('academic_level'); ?></option>
+                                            <?php foreach ($academic_levels as $al): ?>
+                                                <?php $alName = ($LANG === 'ar' && !empty($al['ACADEMIC_LEVEL_AR'])) ? $al['ACADEMIC_LEVEL_AR'] : $al['ACADEMIC_LEVEL_EN']; ?>
+                                                <option value="<?php echo $al['ACADEMIC_LEVEL_ID']; ?>" <?php echo selectedAttr($student['STUDENT_ACADEMIC_LEVEL_ID'] ?? '', $al['ACADEMIC_LEVEL_ID']); ?>><?php echo h($alName); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" data-label="<?php echo t('academic_average'); ?>"><input type="number" step="0.01" name="STUDENT_ACADEMIC_AVERAGE" placeholder="<?php echo t('academic_average'); ?>" value="<?php echo h($student['STUDENT_ACADEMIC_AVERAGE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('bac_number'); ?>"><input type="text" name="STUDENT_BACCALAUREATE_SUB_NUMBER" placeholder="<?php echo t('bac_number'); ?>" value="<?php echo h($student['STUDENT_BACCALAUREATE_SUB_NUMBER']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('grade_rank'); ?>">
+                                        <select name="STUDENT_GRADE_ID">
+                                            <option value="" disabled><?php echo t('grade_rank'); ?></option>
+                                            <?php foreach ($grades as $g): ?>
+                                                <?php $gradeName = ($LANG === 'ar' && !empty($g['GRADE_NAME_AR'])) ? $g['GRADE_NAME_AR'] : $g['GRADE_NAME_EN']; ?>
+                                                <option value="<?php echo $g['GRADE_ID']; ?>" <?php echo selectedAttr($student['STUDENT_GRADE_ID'], $g['GRADE_ID']); ?>><?php echo h($gradeName); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" data-label="<?php echo t('recruitment_source'); ?>">
+                                        <select id="RECRUITMENT_SOURCE_ID" name="RECRUITMENT_SOURCE_ID">
+                                            <option value="" disabled><?php echo t('recruitment_source'); ?></option>
+                                            <?php foreach ($recruitment_sources as $rs): ?>
+                                                <?php
+                                                    $label = ($LANG === 'ar' ? ($rs['RECRUITMENT_TYPE_AR'] ?? $rs['RECRUITMENT_TYPE_EN']) : $rs['RECRUITMENT_TYPE_EN']);
+                                                    $school = ($LANG === 'ar' ? ($rs['ECN_SCHOOL_NAME_AR'] ?? $rs['ECN_SCHOOL_NAME_EN']) : $rs['ECN_SCHOOL_NAME_EN']);
+                                                    if ($school) $label .= ' - ' . $school;
+                                                ?>
+                                                <option value="<?php echo $rs['RECRUITMENT_SOURCE_ID']; ?>" <?php echo selectedAttr($student['STUDENT_RECRUITMENT_SOURCE_ID'], $rs['RECRUITMENT_SOURCE_ID']); ?>><?php echo h($label); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" data-label="<?php echo t('army'); ?>">
+                                        <select name="STUDENT_ARMY_ID">
+                                            <option value="" disabled><?php echo t('army'); ?></option>
+                                            <?php foreach ($armies as $a): ?>
+                                                <?php $armyName = ($LANG === 'ar' && !empty($a['ARMY_NAME_AR'])) ? $a['ARMY_NAME_AR'] : $a['ARMY_NAME_EN']; ?>
+                                                <option value="<?php echo $a['ARMY_ID']; ?>" <?php echo selectedAttr($student['STUDENT_ARMY_ID'], $a['ARMY_ID']); ?>><?php echo h($armyName); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
                                 </div>
+                            </div>
 
-                            </div>
-                            </div>
-                            </div>
-                        </details>
-
-                        <details class="accordion-section">
-                            <summary><?php echo t('uniforms'); ?></summary>
-                            <div class="accordion-content">
-                            <div class="wizard-panel" data-step="5">
-                            <div class="form-grid">
-                                <div class="form-section-title"><?php echo t('combat_outfit'); ?></div>
-                                <div class="form-group"><label><?php echo t('outfit1_number'); ?></label><input type="text" name="FIRST_OUTFIT_NUMBER" value="<?php echo h($student['FIRST_OUTFIT_NUMBER']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('outfit1_size'); ?></label><input type="text" name="FIRST_OUTFIT_SIZE" value="<?php echo h($student['FIRST_OUTFIT_SIZE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('outfit2_number'); ?></label><input type="text" name="SECOND_OUTFIT_NUMBER" value="<?php echo h($student['SECOND_OUTFIT_NUMBER']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('outfit2_size'); ?></label><input type="text" name="SECOND_OUTFIT_SIZE" value="<?php echo h($student['SECOND_OUTFIT_SIZE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('shoe_size'); ?></label><input type="text" name="COMBAT_SHOE_SIZE" value="<?php echo h($student['COMBAT_SHOE_SIZE']); ?>"></div>
-
-                                <div class="form-section-title"><?php echo t('parade_uniform'); ?></div>
-                                <div class="form-group"><label><?php echo t('summer_jacket_size'); ?></label><input type="text" name="SUMMER_JACKET_SIZE" value="<?php echo h($student['SUMMER_JACKET_SIZE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('winter_jacket_size'); ?></label><input type="text" name="WINTER_JACKET_SIZE" value="<?php echo h($student['WINTER_JACKET_SIZE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('summer_trousers_size'); ?></label><input type="text" name="SUMMER_TROUSERS_SIZE" value="<?php echo h($student['SUMMER_TROUSERS_SIZE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('winter_trousers_size'); ?></label><input type="text" name="WINTER_TROUSERS_SIZE" value="<?php echo h($student['WINTER_TROUSERS_SIZE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('summer_shirt_size'); ?></label><input type="text" name="SUMMER_SHIRT_SIZE" value="<?php echo h($student['SUMMER_SHIRT_SIZE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('winter_shirt_size'); ?></label><input type="text" name="WINTER_SHIRT_SIZE" value="<?php echo h($student['WINTER_SHIRT_SIZE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('summer_hat_size'); ?></label><input type="text" name="SUMMER_HAT_SIZE" value="<?php echo h($student['SUMMER_HAT_SIZE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('winter_hat_size'); ?></label><input type="text" name="WINTER_HAT_SIZE" value="<?php echo h($student['WINTER_HAT_SIZE']); ?>"></div>
-                                <div class="form-group skirt-field"><label><?php echo t('summer_skirt_size'); ?></label><input type="text" name="SUMMER_SKIRT_SIZE" value="<?php echo h($student['SUMMER_SKIRT_SIZE']); ?>"></div>
-                                <div class="form-group skirt-field"><label><?php echo t('winter_skirt_size'); ?></label><input type="text" name="WINTER_SKIRT_SIZE" value="<?php echo h($student['WINTER_SKIRT_SIZE']); ?>"></div>
-
-                            </div>
-                            </div>
-                            </div>
-                        </details>
-
-                        <details class="accordion-section">
-                            <summary><?php echo t('step_other_details'); ?></summary>
-                            <div class="accordion-content">
-                            <div class="wizard-panel">
-                            <div class="form-grid">
-                                <div class="form-group"><label><?php echo t('id_card_num'); ?></label><input type="text" name="STUDENT_ID_CARD_NUMBER" value="<?php echo h($student['STUDENT_ID_CARD_NUMBER']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('birth_cert_num'); ?></label><input type="text" name="STUDENT_BIRTHDATE_CERTIFICATE_NUMBER" value="<?php echo h($student['STUDENT_BIRTHDATE_CERTIFICATE_NUMBER']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('school_card_number'); ?></label><input type="text" name="STUDENT_SCHOOL_SUB_CARD_NUMBER" value="<?php echo h($student['STUDENT_SCHOOL_SUB_CARD_NUMBER']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('school_sub_date'); ?></label><input type="date" name="STUDENT_SCHOOL_SUB_DATE" value="<?php echo h($student['STUDENT_SCHOOL_SUB_DATE']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('laptop_serial'); ?></label><input type="text" name="STUDENT_LAPTOP_SERIAL_NUMBER" value="<?php echo h($student['STUDENT_LAPTOP_SERIAL_NUMBER']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('postal_account'); ?></label><input type="text" name="STUDENT_POSTAL_ACCOUNT_NUMBER" value="<?php echo h($student['STUDENT_POSTAL_ACCOUNT_NUMBER']); ?>"></div>
-                                <div class="form-group"><label><?php echo t('label_mil_necklace'); ?></label>
-                                    <select name="STUDENT_MILITARY_NECKLACE">
-                                        <option value="No" <?php echo selectedAttr($student['STUDENT_MILITARY_NECKLACE'], 'No'); ?>><?php echo t('no'); ?></option>
-                                        <option value="Yes" <?php echo selectedAttr($student['STUDENT_MILITARY_NECKLACE'], 'Yes'); ?>><?php echo t('yes'); ?></option>
-                                    </select>
+                            <!-- Tab 3: Family Info -->
+                            <div id="tab-family" class="tab-panel">
+                                <h2 class="form-section-title"><?php echo t('family_information'); ?></h2>
+                                <div class="form-grid">
+                                    <div class="form-group" data-label="<?php echo t('label_father_first_en'); ?>"><input type="text" name="FATHER_FIRST_NAME_EN" placeholder="<?php echo t('label_father_first_en'); ?>" value="<?php echo h($student['FATHER_FIRST_NAME_EN']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_father_last_en'); ?>"><input type="text" name="FATHER_LAST_NAME_EN" placeholder="<?php echo t('label_father_last_en'); ?>" value="<?php echo h($student['FATHER_LAST_NAME_EN']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_father_first_ar'); ?>"><input type="text" name="FATHER_FIRST_NAME_AR" placeholder="<?php echo t('label_father_first_ar'); ?>" dir="rtl" value="<?php echo h($student['FATHER_FIRST_NAME_AR']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_father_last_ar'); ?>"><input type="text" name="FATHER_LAST_NAME_AR" placeholder="<?php echo t('label_father_last_ar'); ?>" dir="rtl" value="<?php echo h($student['FATHER_LAST_NAME_AR']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_father_prof_en'); ?>">
+                                        <select name="FATHER_PROFESSION_ID">
+                                            <option value="" disabled><?php echo t('label_father_prof_en'); ?></option>
+                                            <?php foreach ($professions as $p): ?>
+                                                <?php $pName = ($LANG === 'ar' && !empty($p['profession_name_ar'])) ? $p['profession_name_ar'] : $p['profession_name_en']; ?>
+                                                <option value="<?php echo $p['profession_id']; ?>" <?php echo selectedAttr($student['FATHER_PROFESSION_ID'] ?? '', $p['profession_id']); ?>><?php echo h($pName); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" data-label="<?php echo t('label_mother_first_en'); ?>"><input type="text" name="MOTHER_FIRST_NAME_EN" placeholder="<?php echo t('label_mother_first_en'); ?>" value="<?php echo h($student['MOTHER_FIRST_NAME_EN']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_mother_last_en'); ?>"><input type="text" name="MOTHER_LAST_NAME_EN" placeholder="<?php echo t('label_mother_last_en'); ?>" value="<?php echo h($student['MOTHER_LAST_NAME_EN']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_mother_first_ar'); ?>"><input type="text" name="MOTHER_FIRST_NAME_AR" placeholder="<?php echo t('label_mother_first_ar'); ?>" dir="rtl" value="<?php echo h($student['MOTHER_FIRST_NAME_AR']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_mother_last_ar'); ?>"><input type="text" name="MOTHER_LAST_NAME_AR" placeholder="<?php echo t('label_mother_last_ar'); ?>" dir="rtl" value="<?php echo h($student['MOTHER_LAST_NAME_AR']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_mother_prof_en'); ?>">
+                                        <select name="MOTHER_PROFESSION_ID">
+                                            <option value="" disabled><?php echo t('label_mother_prof_en'); ?></option>
+                                            <?php foreach ($professions as $p): ?>
+                                                <?php $pName = ($LANG === 'ar' && !empty($p['profession_name_ar'])) ? $p['profession_name_ar'] : $p['profession_name_en']; ?>
+                                                <option value="<?php echo $p['profession_id']; ?>" <?php echo selectedAttr($student['MOTHER_PROFESSION_ID'] ?? '', $p['profession_id']); ?>><?php echo h($pName); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" data-label="<?php echo t('orphan_status'); ?>">
+                                        <select name="STUDENT_ORPHAN_STATUS">
+                                            <option value="None" <?php echo selectedAttr($student['STUDENT_ORPHAN_STATUS'], 'None'); ?>><?php echo t('orphan_none'); ?></option>
+                                            <option value="Father" <?php echo selectedAttr($student['STUDENT_ORPHAN_STATUS'], 'Father'); ?>><?php echo t('orphan_father'); ?></option>
+                                            <option value="Mother" <?php echo selectedAttr($student['STUDENT_ORPHAN_STATUS'], 'Mother'); ?>><?php echo t('orphan_mother'); ?></option>
+                                            <option value="Both" <?php echo selectedAttr($student['STUDENT_ORPHAN_STATUS'], 'Both'); ?>><?php echo t('orphan_both'); ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" data-label="<?php echo t('parents_situation'); ?>">
+                                        <select name="STUDENT_PARENTS_SITUATION">
+                                            <option value="Married" <?php echo selectedAttr($student['STUDENT_PARENTS_SITUATION'], 'Married'); ?>><?php echo t('married'); ?></option>
+                                            <option value="Divorced" <?php echo selectedAttr($student['STUDENT_PARENTS_SITUATION'], 'Divorced'); ?>><?php echo t('divorced'); ?></option>
+                                            <option value="Separated" <?php echo selectedAttr($student['STUDENT_PARENTS_SITUATION'], 'Separated'); ?>><?php echo t('separated'); ?></option>
+                                            <option value="Widowed" <?php echo selectedAttr($student['STUDENT_PARENTS_SITUATION'], 'Widowed'); ?>><?php echo t('widowed'); ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" data-label="<?php echo t('num_siblings'); ?>"><input type="number" name="STUDENT_NUMBER_OF_SIBLINGS" placeholder="<?php echo t('num_siblings'); ?>" value="<?php echo h($student['STUDENT_NUMBER_OF_SIBLINGS']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_sisters_count'); ?>"><input type="number" name="STUDENT_NUMBER_OF_SISTERS" placeholder="<?php echo t('label_sisters_count'); ?>" value="<?php echo h($student['STUDENT_NUMBER_OF_SISTERS']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_order_among_siblings'); ?>"><input type="number" name="STUDENT_ORDER_AMONG_SIBLINGS" placeholder="<?php echo t('label_order_among_siblings'); ?>" value="<?php echo h($student['STUDENT_ORDER_AMONG_SIBLINGS']); ?>"></div>
                                 </div>
-                                <div class="form-group" style="grid-column: span 2;"><label><?php echo t('educational_certificates'); ?></label><textarea name="STUDENT_EDUCATIONAL_CERTIFICATES" rows="2"><?php echo h($student['STUDENT_EDUCATIONAL_CERTIFICATES']); ?></textarea></div>
-                                <div class="form-group" style="grid-column: span 2;">
-                                    <label><?php echo t('military_certificates'); ?></label>
-                                    <select name="MILITARY_CERTIFICATE_IDS[]" multiple size="6">
-                                        <?php foreach ($military_certificates as $mc): ?>
-                                            <?php $mcName = ($LANG === 'ar' && !empty($mc['military_certificate_ar'])) ? $mc['military_certificate_ar'] : $mc['military_certificate_en']; ?>
-                                            <option value="<?php echo $mc['military_certificate_id']; ?>" <?php echo in_array((int)$mc['military_certificate_id'], $selected_military_certificate_ids, true) ? 'selected' : ''; ?>><?php echo h($mcName); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="form-group" style="grid-column: span 2;">
-                                    <label><?php echo t('hobbies'); ?></label>
-                                    <select name="HOBBY_IDS[]" multiple size="6">
-                                        <?php foreach ($hobbies as $hb): ?>
-                                            <?php $hbName = ($LANG === 'ar' && !empty($hb['hobby_name_ar'])) ? $hb['hobby_name_ar'] : $hb['hobby_name_en']; ?>
-                                            <option value="<?php echo $hb['hobby_id']; ?>" <?php echo in_array((int)$hb['hobby_id'], $selected_hobby_ids, true) ? 'selected' : ''; ?>><?php echo h($hbName); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="form-group" style="grid-column: span 2;">
-                                    <label><?php echo t('health_status'); ?></label>
-                                    <select name="STUDENT_HEALTH_STATUS_ID">
-                                        <option value=""><?php echo t('select'); ?></option>
-                                        <?php foreach ($health_statuses as $hs): ?>
-                                            <?php $hsName = ($LANG === 'ar' && !empty($hs['health_status_ar'])) ? $hs['health_status_ar'] : $hs['health_status_en']; ?>
-                                            <option value="<?php echo $hs['health_status_id']; ?>" <?php echo selectedAttr($student['STUDENT_HEALTH_STATUS_ID'] ?? '', $hs['health_status_id']); ?>><?php echo h($hsName); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
                             </div>
-                            </div>
-                            </div>
-                        </details>
 
-                        <details class="accordion-section">
-                            <summary><?php echo t('step_emergency_contact'); ?></summary>
-                            <div class="accordion-content">
-                            <div class="wizard-panel" data-step="7">
-                            <div class="form-grid">
-                                <div class="sub-group" style="grid-column: 1 / -1; border-color:var(--border-error); background:var(--bg-error);">
-                                    <div class="form-grid" style="gap: 1.5rem;">
-                                        <div class="form-group"><label><?php echo t('label_contact_phone'); ?></label><input type="text" name="CONTACT_PHONE_NUMBER" value="<?php echo h($student['CONTACT_PHONE_NUMBER']); ?>"></div>
-
-                                        <div id="LOCAL_CONTACT_FIELDS" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-                                            <div class="form-group"><label><?php echo t('label_first_name_en'); ?></label><input type="text" name="CONTACT_FIRST_NAME_EN" value="<?php echo h($student['CONTACT_FIRST_NAME_EN']); ?>"></div>
-                                            <div class="form-group"><label><?php echo t('label_last_name_en'); ?></label><input type="text" name="CONTACT_LAST_NAME_EN" value="<?php echo h($student['CONTACT_LAST_NAME_EN']); ?>"></div>
-                                            <div class="form-group"><label><?php echo t('label_relation_en'); ?></label>
-                                                <select name="CONTACT_RELATION_ID">
-                                                    <option value=""><?php echo t('select'); ?></option>
-                                                    <?php foreach ($relations as $rel): ?>
-                                                        <?php $relName = ($LANG === 'ar' && !empty($rel['relation_name_ar'])) ? $rel['relation_name_ar'] : $rel['relation_name_en']; ?>
-                                                        <option value="<?php echo $rel['relation_id']; ?>" <?php echo selectedAttr($student['CONTACT_RELATION_ID'] ?? '', $rel['relation_id']); ?>><?php echo h($relName); ?></option>
+                            <!-- Tab 4: Address Info -->
+                            <div id="tab-address" class="tab-panel">
+                                <h2 class="form-section-title"><?php echo t('label_personal_address'); ?> <?php echo t('and'); ?> <?php echo t('label_birth_place_address'); ?></h2>
+                                <div class="form-grid">
+                                    <div class="sub-group" style="grid-column: 1 / -1;">
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top:0.5rem;">
+                                            <div class="form-group" data-label="<?php echo t('label_birth_place_address'); ?> - <?php echo t('label_street_en'); ?>"><input type="text" name="BP_STREET_EN" placeholder="<?php echo t('label_birth_place_address'); ?> - <?php echo t('label_street_en'); ?>" value="<?php echo h($bp['BP_STREET_EN'] ?? ''); ?>"></div>
+                                            <div class="form-group" data-label="<?php echo t('label_birth_place_address'); ?> - <?php echo t('label_street_ar'); ?>"><input type="text" name="BP_STREET_AR" placeholder="<?php echo t('label_birth_place_address'); ?> - <?php echo t('label_street_ar'); ?>" dir="rtl" value="<?php echo h($bp['BP_STREET_AR'] ?? ''); ?>"></div>
+                                            <div class="form-group" data-label="<?php echo t('label_birth_place_address'); ?> - <?php echo t('label_country'); ?>">
+                                                <select class="country-select" data-prefix="BP_" name="BP_COUNTRY_ID">
+                                                    <option value="" disabled><?php echo t('label_birth_place_address'); ?> - <?php echo t('label_country'); ?></option>
+                                                    <?php foreach ($countries as $c): ?>
+                                                        <?php $countryName = ($LANG === 'ar' && !empty($c['COUNTRY_NAME_AR'])) ? $c['COUNTRY_NAME_AR'] : $c['COUNTRY_NAME_EN']; ?>
+                                                        <option value="<?php echo $c['COUNTRY_ID']; ?>" <?php echo selectedAttr($bp['BP_COUNTRY_ID'] ?? '', $c['COUNTRY_ID']); ?>><?php echo h($countryName); ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
-                                            <div class="form-group"><label><?php echo t('label_first_name_ar'); ?></label><input type="text" name="CONTACT_FIRST_NAME_AR" dir="rtl" value="<?php echo h($student['CONTACT_FIRST_NAME_AR']); ?>"></div>
-                                            <div class="form-group"><label><?php echo t('label_last_name_ar'); ?></label><input type="text" name="CONTACT_LAST_NAME_AR" dir="rtl" value="<?php echo h($student['CONTACT_LAST_NAME_AR']); ?>"></div>
-
-                                            <div class="sub-group" style="grid-column: 1 / -1;">
-                                                <label style="color:var(--primary-color); font-weight:700;"><?php echo t('label_contact_address'); ?></label>
-                                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top:0.5rem;">
-                                                    <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_street_en'); ?></label><input type="text" name="CONTACT_STREET_EN" value="<?php echo h($contactAddr['CONTACT_STREET_EN'] ?? ''); ?>"></div>
-                                                    <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_street_ar'); ?></label><input type="text" name="CONTACT_STREET_AR" dir="rtl" value="<?php echo h($contactAddr['CONTACT_STREET_AR'] ?? ''); ?>"></div>
-                                                    <div class="form-group">
-                                                        <label style="font-size:0.8rem;"><?php echo t('label_country'); ?></label>
-                                                        <select class="country-select" data-prefix="CONTACT_" name="CONTACT_COUNTRY_ID">
-                                                            <option value=""><?php echo t('option_select_country'); ?></option>
-                                                            <?php foreach ($countries as $c): ?>
-                                                                <?php $countryName = ($LANG === 'ar' && !empty($c['COUNTRY_NAME_AR'])) ? $c['COUNTRY_NAME_AR'] : $c['COUNTRY_NAME_EN']; ?>
-                                                                <option value="<?php echo $c['COUNTRY_ID']; ?>" <?php echo selectedAttr($contactAddr['CONTACT_COUNTRY_ID'] ?? '', $c['COUNTRY_ID']); ?>><?php echo h($countryName); ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_wilaya'); ?></label>
-                                                        <select id="CONTACT_WILAYA_ID" name="CONTACT_WILAYA_ID" class="wilaya-select" data-prefix="CONTACT_" <?php echo (!empty($contactWilayas) ? '' : 'disabled'); ?>>
-                                                            <option value=""><?php echo t('option_select_country_first'); ?></option>
-                                                            <?php foreach ($contactWilayas as $w): ?>
-                                                                <?php $wName = ($LANG === 'ar' && !empty($w['WILAYA_NAME_AR'])) ? $w['WILAYA_NAME_AR'] : $w['WILAYA_NAME_EN']; ?>
-                                                                <option value="<?php echo $w['WILAYA_ID']; ?>" <?php echo selectedAttr($contactAddr['CONTACT_WILAYA_ID'] ?? '', $w['WILAYA_ID']); ?>><?php echo h($wName); ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_daira'); ?></label>
-                                                        <select id="CONTACT_DAIRA_ID" name="CONTACT_DAIRA_ID" class="daira-select" data-prefix="CONTACT_" <?php echo (!empty($contactDairas) ? '' : 'disabled'); ?>>
-                                                            <option value=""><?php echo t('option_select_wilaya_first'); ?></option>
-                                                            <?php foreach ($contactDairas as $d): ?>
-                                                                <?php $dName = ($LANG === 'ar' && !empty($d['DAIRA_NAME_AR'])) ? $d['DAIRA_NAME_AR'] : $d['DAIRA_NAME_EN']; ?>
-                                                                <option value="<?php echo $d['DAIRA_ID']; ?>" <?php echo selectedAttr($contactAddr['CONTACT_DAIRA_ID'] ?? '', $d['DAIRA_ID']); ?>><?php echo h($dName); ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group"><label style="font-size:0.8rem;"><?php echo t('label_commune'); ?></label>
-                                                        <select id="CONTACT_COMMUNE_ID" name="CONTACT_COMMUNE_ID" <?php echo (!empty($contactCommunes) ? '' : 'disabled'); ?>>
-                                                            <option value=""><?php echo t('option_select_daira_first'); ?></option>
-                                                            <?php foreach ($contactCommunes as $cc): ?>
-                                                                <?php $cName = ($LANG === 'ar' && !empty($cc['COMMUNE_NAME_AR'])) ? $cc['COMMUNE_NAME_AR'] : $cc['COMMUNE_NAME_EN']; ?>
-                                                                <option value="<?php echo $cc['COMMUNE_ID']; ?>" <?php echo selectedAttr($contactAddr['CONTACT_COMMUNE_ID'] ?? '', $cc['COMMUNE_ID']); ?>><?php echo h($cName); ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                </div>
+                                            <div class="form-group" data-label="<?php echo t('label_birth_place_address'); ?> - <?php echo t('label_wilaya'); ?>">
+                                                <select id="BP_WILAYA_ID" name="BP_WILAYA_ID" class="wilaya-select" data-prefix="BP_" <?php echo (!empty($bpWilayas) ? '' : 'disabled'); ?>>
+                                                    <option value="" disabled><?php echo t('label_birth_place_address'); ?> - <?php echo t('label_wilaya'); ?></option>
+                                                    <?php foreach ($bpWilayas as $w): ?>
+                                                        <?php $wName = ($LANG === 'ar' && !empty($w['WILAYA_NAME_AR'])) ? $w['WILAYA_NAME_AR'] : $w['WILAYA_NAME_EN']; ?>
+                                                        <option value="<?php echo $w['WILAYA_ID']; ?>" <?php echo selectedAttr($bp['BP_WILAYA_ID'] ?? '', $w['WILAYA_ID']); ?>><?php echo h($wName); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
                                             </div>
-
+                                            <div class="form-group" data-label="<?php echo t('label_birth_place_address'); ?> - <?php echo t('label_daira'); ?>">
+                                                <select id="BP_DAIRA_ID" name="BP_DAIRA_ID" class="daira-select" data-prefix="BP_" <?php echo (!empty($bpDairas) ? '' : 'disabled'); ?>>
+                                                    <option value="" disabled><?php echo t('label_birth_place_address'); ?> - <?php echo t('label_daira'); ?></option>
+                                                    <?php foreach ($bpDairas as $d): ?>
+                                                        <?php $dName = ($LANG === 'ar' && !empty($d['DAIRA_NAME_AR'])) ? $d['DAIRA_NAME_AR'] : $d['DAIRA_NAME_EN']; ?>
+                                                        <option value="<?php echo $d['DAIRA_ID']; ?>" <?php echo selectedAttr($bp['BP_DAIRA_ID'] ?? '', $d['DAIRA_ID']); ?>><?php echo h($dName); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group" data-label="<?php echo t('label_birth_place_address'); ?> - <?php echo t('label_commune'); ?>">
+                                                <select id="BP_COMMUNE_ID" name="BP_COMMUNE_ID" <?php echo (!empty($bpCommunes) ? '' : 'disabled'); ?>>
+                                                    <option value="" disabled><?php echo t('label_birth_place_address'); ?> - <?php echo t('label_commune'); ?></option>
+                                                    <?php foreach ($bpCommunes as $cc): ?>
+                                                        <?php $cName = ($LANG === 'ar' && !empty($cc['COMMUNE_NAME_AR'])) ? $cc['COMMUNE_NAME_AR'] : $cc['COMMUNE_NAME_EN']; ?>
+                                                        <option value="<?php echo $cc['COMMUNE_ID']; ?>" <?php echo selectedAttr($bp['BP_COMMUNE_ID'] ?? '', $cc['COMMUNE_ID']); ?>><?php echo h($cName); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
                                         </div>
+                                    </div>
 
-                                        <div id="FOREIGN_CONTACT_FIELDS" style="grid-column: 1 / -1; display:none; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                                            <div class="form-group"><label><?php echo t('label_consulate_number'); ?></label><input type="text" name="CONSULATE_NUMBER" value="<?php echo h($student['CONSULATE_NUMBER']); ?>"></div>
-                                            <div class="form-group" style="grid-column: span 2;"><p style="font-size:0.9rem; color:var(--text-secondary);"><?php echo t('relation_consulate_note'); ?></p></div>
+                                    <div class="sub-group" style="grid-column: 1 / -1;">
+                                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top:0.5rem;">
+                                            <div class="form-group" data-label="<?php echo t('label_personal_address'); ?> - <?php echo t('label_street_en'); ?>"><input type="text" name="PERS_STREET_EN" placeholder="<?php echo t('label_personal_address'); ?> - <?php echo t('label_street_en'); ?>" value="<?php echo h($pers['PERS_STREET_EN'] ?? ''); ?>"></div>
+                                            <div class="form-group" data-label="<?php echo t('label_personal_address'); ?> - <?php echo t('label_street_ar'); ?>"><input type="text" name="PERS_STREET_AR" placeholder="<?php echo t('label_personal_address'); ?> - <?php echo t('label_street_ar'); ?>" dir="rtl" value="<?php echo h($pers['PERS_STREET_AR'] ?? ''); ?>"></div>
+                                            <div class="form-group" data-label="<?php echo t('label_personal_address'); ?> - <?php echo t('label_country'); ?>">
+                                                <select class="country-select" data-prefix="PERS_" name="PERS_COUNTRY_ID">
+                                                    <option value="" disabled><?php echo t('label_personal_address'); ?> - <?php echo t('label_country'); ?></option>
+                                                    <?php foreach ($countries as $c): ?>
+                                                        <?php $countryName = ($LANG === 'ar' && !empty($c['COUNTRY_NAME_AR'])) ? $c['COUNTRY_NAME_AR'] : $c['COUNTRY_NAME_EN']; ?>
+                                                        <option value="<?php echo $c['COUNTRY_ID']; ?>" <?php echo selectedAttr($pers['PERS_COUNTRY_ID'] ?? '', $c['COUNTRY_ID']); ?>><?php echo h($countryName); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group" data-label="<?php echo t('label_personal_address'); ?> - <?php echo t('label_wilaya'); ?>">
+                                                <select id="PERS_WILAYA_ID" name="PERS_WILAYA_ID" class="wilaya-select" data-prefix="PERS_" <?php echo (!empty($persWilayas) ? '' : 'disabled'); ?>>
+                                                    <option value="" disabled><?php echo t('label_personal_address'); ?> - <?php echo t('label_wilaya'); ?></option>
+                                                    <?php foreach ($persWilayas as $w): ?>
+                                                        <?php $wName = ($LANG === 'ar' && !empty($w['WILAYA_NAME_AR'])) ? $w['WILAYA_NAME_AR'] : $w['WILAYA_NAME_EN']; ?>
+                                                        <option value="<?php echo $w['WILAYA_ID']; ?>" <?php echo selectedAttr($pers['PERS_WILAYA_ID'] ?? '', $w['WILAYA_ID']); ?>><?php echo h($wName); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group" data-label="<?php echo t('label_personal_address'); ?> - <?php echo t('label_daira'); ?>">
+                                                <select id="PERS_DAIRA_ID" name="PERS_DAIRA_ID" class="daira-select" data-prefix="PERS_" <?php echo (!empty($persDairas) ? '' : 'disabled'); ?>>
+                                                    <option value="" disabled><?php echo t('label_personal_address'); ?> - <?php echo t('label_daira'); ?></option>
+                                                    <?php foreach ($persDairas as $d): ?>
+                                                        <?php $dName = ($LANG === 'ar' && !empty($d['DAIRA_NAME_AR'])) ? $d['DAIRA_NAME_AR'] : $d['DAIRA_NAME_EN']; ?>
+                                                        <option value="<?php echo $d['DAIRA_ID']; ?>" <?php echo selectedAttr($pers['PERS_DAIRA_ID'] ?? '', $d['DAIRA_ID']); ?>><?php echo h($dName); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group" data-label="<?php echo t('label_personal_address'); ?> - <?php echo t('label_commune'); ?>">
+                                                <select id="PERS_COMMUNE_ID" name="PERS_COMMUNE_ID" <?php echo (!empty($persCommunes) ? '' : 'disabled'); ?>>
+                                                    <option value="" disabled><?php echo t('label_personal_address'); ?> - <?php echo t('label_commune'); ?></option>
+                                                    <?php foreach ($persCommunes as $cc): ?>
+                                                        <?php $cName = ($LANG === 'ar' && !empty($cc['COMMUNE_NAME_AR'])) ? $cc['COMMUNE_NAME_AR'] : $cc['COMMUNE_NAME_EN']; ?>
+                                                        <option value="<?php echo $cc['COMMUNE_ID']; ?>" <?php echo selectedAttr($pers['PERS_COMMUNE_ID'] ?? '', $cc['COMMUNE_ID']); ?>><?php echo h($cName); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
-                            </div>
-                        </details>
 
+                            <!-- Tab 5: Uniforms -->
+                            <div id="tab-uniforms" class="tab-panel">
+                                <h2 class="form-section-title"><?php echo t('uniforms'); ?></h2>
+                                <div class="form-grid">
+                                    <div class="form-group" data-label="<?php echo t('outfit1_number'); ?>"><input type="text" name="FIRST_OUTFIT_NUMBER" placeholder="<?php echo t('outfit1_number'); ?>" value="<?php echo h($student['FIRST_OUTFIT_NUMBER']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('outfit1_size'); ?>"><input type="text" name="FIRST_OUTFIT_SIZE" placeholder="<?php echo t('outfit1_size'); ?>" value="<?php echo h($student['FIRST_OUTFIT_SIZE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('outfit2_number'); ?>"><input type="text" name="SECOND_OUTFIT_NUMBER" placeholder="<?php echo t('outfit2_number'); ?>" value="<?php echo h($student['SECOND_OUTFIT_NUMBER']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('outfit2_size'); ?>"><input type="text" name="SECOND_OUTFIT_SIZE" placeholder="<?php echo t('outfit2_size'); ?>" value="<?php echo h($student['SECOND_OUTFIT_SIZE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('shoe_size'); ?>"><input type="text" name="COMBAT_SHOE_SIZE" placeholder="<?php echo t('shoe_size'); ?>" value="<?php echo h($student['COMBAT_SHOE_SIZE']); ?>"></div>
+
+                                    <div class="form-group" data-label="<?php echo t('summer_jacket_size'); ?>"><input type="text" name="SUMMER_JACKET_SIZE" placeholder="<?php echo t('summer_jacket_size'); ?>" value="<?php echo h($student['SUMMER_JACKET_SIZE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('winter_jacket_size'); ?>"><input type="text" name="WINTER_JACKET_SIZE" placeholder="<?php echo t('winter_jacket_size'); ?>" value="<?php echo h($student['WINTER_JACKET_SIZE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('summer_trousers_size'); ?>"><input type="text" name="SUMMER_TROUSERS_SIZE" placeholder="<?php echo t('summer_trousers_size'); ?>" value="<?php echo h($student['SUMMER_TROUSERS_SIZE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('winter_trousers_size'); ?>"><input type="text" name="WINTER_TROUSERS_SIZE" placeholder="<?php echo t('winter_trousers_size'); ?>" value="<?php echo h($student['WINTER_TROUSERS_SIZE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('summer_shirt_size'); ?>"><input type="text" name="SUMMER_SHIRT_SIZE" placeholder="<?php echo t('summer_shirt_size'); ?>" value="<?php echo h($student['SUMMER_SHIRT_SIZE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('winter_shirt_size'); ?>"><input type="text" name="WINTER_SHIRT_SIZE" placeholder="<?php echo t('winter_shirt_size'); ?>" value="<?php echo h($student['WINTER_SHIRT_SIZE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('summer_hat_size'); ?>"><input type="text" name="SUMMER_HAT_SIZE" placeholder="<?php echo t('summer_hat_size'); ?>" value="<?php echo h($student['SUMMER_HAT_SIZE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('winter_hat_size'); ?>"><input type="text" name="WINTER_HAT_SIZE" placeholder="<?php echo t('winter_hat_size'); ?>" value="<?php echo h($student['WINTER_HAT_SIZE']); ?>"></div>
+                                    <div class="form-group skirt-field" data-label="<?php echo t('summer_skirt_size'); ?>"><input type="text" name="SUMMER_SKIRT_SIZE" placeholder="<?php echo t('summer_skirt_size'); ?>" value="<?php echo h($student['SUMMER_SKIRT_SIZE']); ?>"></div>
+                                    <div class="form-group skirt-field" data-label="<?php echo t('winter_skirt_size'); ?>"><input type="text" name="WINTER_SKIRT_SIZE" placeholder="<?php echo t('winter_skirt_size'); ?>" value="<?php echo h($student['WINTER_SKIRT_SIZE']); ?>"></div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 6: Other Details -->
+                            <div id="tab-other" class="tab-panel">
+                                <h2 class="form-section-title"><?php echo t('step_other_details'); ?></h2>
+                                <div class="form-grid">
+                                    <div class="form-group" data-label="<?php echo t('id_card_num'); ?>"><input type="text" name="STUDENT_ID_CARD_NUMBER" placeholder="<?php echo t('id_card_num'); ?>" value="<?php echo h($student['STUDENT_ID_CARD_NUMBER']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('birth_cert_num'); ?>"><input type="text" name="STUDENT_BIRTHDATE_CERTIFICATE_NUMBER" placeholder="<?php echo t('birth_cert_num'); ?>" value="<?php echo h($student['STUDENT_BIRTHDATE_CERTIFICATE_NUMBER']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('school_card_number'); ?>"><input type="text" name="STUDENT_SCHOOL_SUB_CARD_NUMBER" placeholder="<?php echo t('school_card_number'); ?>" value="<?php echo h($student['STUDENT_SCHOOL_SUB_CARD_NUMBER']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('school_sub_date'); ?>"><input type="date" name="STUDENT_SCHOOL_SUB_DATE" placeholder="<?php echo t('school_sub_date'); ?>" value="<?php echo h($student['STUDENT_SCHOOL_SUB_DATE']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('laptop_serial'); ?>"><input type="text" name="STUDENT_LAPTOP_SERIAL_NUMBER" placeholder="<?php echo t('laptop_serial'); ?>" value="<?php echo h($student['STUDENT_LAPTOP_SERIAL_NUMBER']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('postal_account'); ?>"><input type="text" name="STUDENT_POSTAL_ACCOUNT_NUMBER" placeholder="<?php echo t('postal_account'); ?>" value="<?php echo h($student['STUDENT_POSTAL_ACCOUNT_NUMBER']); ?>"></div>
+                                    <div class="form-group" data-label="<?php echo t('label_mil_necklace'); ?>">
+                                        <select name="STUDENT_MILITARY_NECKLACE">
+                                            <option value="No" <?php echo selectedAttr($student['STUDENT_MILITARY_NECKLACE'], 'No'); ?>><?php echo t('no'); ?></option>
+                                            <option value="Yes" <?php echo selectedAttr($student['STUDENT_MILITARY_NECKLACE'], 'Yes'); ?>><?php echo t('yes'); ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" style="grid-column: span 2;" data-label="<?php echo t('educational_certificates'); ?>"><textarea name="STUDENT_EDUCATIONAL_CERTIFICATES" placeholder="<?php echo t('educational_certificates'); ?>" rows="2"><?php echo h($student['STUDENT_EDUCATIONAL_CERTIFICATES']); ?></textarea></div>
+                                    <div class="form-group" style="grid-column: span 2;">
+                                        <label class="bubble-label"><?php echo t('military_certificates'); ?></label>
+                                        <div class="bubble-group" id="military-certificates-bubbles">
+                                            <?php foreach ($military_certificates as $mc): ?>
+                                                <?php 
+                                                    $mcName = ($LANG === 'ar' && !empty($mc['military_certificate_ar'])) ? $mc['military_certificate_ar'] : $mc['military_certificate_en']; 
+                                                    $isSelected = in_array((int)$mc['military_certificate_id'], $selected_military_certificate_ids, true);
+                                                ?>
+                                                <div class="bubble-btn <?php echo $isSelected ? 'active' : ''; ?>" 
+                                                     data-id="<?php echo $mc['military_certificate_id']; ?>" 
+                                                     onclick="toggleBubble(this, 'MILITARY_CERTIFICATE_IDS[]')">
+                                                    <?php echo h($mcName); ?>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <div id="military-certificates-inputs">
+                                            <?php foreach ($selected_military_certificate_ids as $id): ?>
+                                                <input type="hidden" name="MILITARY_CERTIFICATE_IDS[]" value="<?php echo $id; ?>" data-bubble-id="<?php echo $id; ?>">
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="grid-column: span 2;" data-label="<?php echo t('hobbies'); ?>">
+                                        <label class="bubble-label"><?php echo t('hobbies'); ?></label>
+                                        <div class="bubble-group" id="hobbies-bubbles">
+                                            <?php foreach ($hobbies as $hb): ?>
+                                                <?php 
+                                                    $hbName = ($LANG === 'ar' && !empty($hb['hobby_name_ar'])) ? $hb['hobby_name_ar'] : $hb['hobby_name_en']; 
+                                                    $isSelected = in_array((int)$hb['hobby_id'], $selected_hobby_ids, true);
+                                                ?>
+                                                <div class="bubble-btn <?php echo $isSelected ? 'active' : ''; ?>" 
+                                                     data-id="<?php echo $hb['hobby_id']; ?>" 
+                                                     onclick="toggleBubble(this, 'HOBBY_IDS[]')">
+                                                    <?php echo h($hbName); ?>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <div id="hobbies-inputs">
+                                            <?php foreach ($selected_hobby_ids as $id): ?>
+                                                <input type="hidden" name="HOBBY_IDS[]" value="<?php echo $id; ?>" data-bubble-id="<?php echo $id; ?>">
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="grid-column: span 2;" data-label="<?php echo t('health_status'); ?>">
+                                        <select name="STUDENT_HEALTH_STATUS_ID">
+                                            <option value="" disabled><?php echo t('health_status'); ?></option>
+                                            <?php foreach ($health_statuses as $hs): ?>
+                                                <?php $hsName = ($LANG === 'ar' && !empty($hs['health_status_ar'])) ? $hs['health_status_ar'] : $hs['health_status_en']; ?>
+                                                <option value="<?php echo $hs['health_status_id']; ?>" <?php echo selectedAttr($student['STUDENT_HEALTH_STATUS_ID'] ?? '', $hs['health_status_id']); ?>><?php echo h($hsName); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 7: Emergency Contact -->
+                            <div id="tab-emergency" class="tab-panel">
+                                <h2 class="form-section-title"><?php echo t('step_emergency_contact'); ?></h2>
+                                <div class="form-grid">
+                                    <div class="sub-group" style="grid-column: 1 / -1; border-color:var(--border-error); background:var(--bg-error);">
+                                        <div class="form-grid" style="gap: 1.5rem;">
+                                            <div class="form-group" data-label="<?php echo t('label_contact_phone'); ?>"><input type="text" name="CONTACT_PHONE_NUMBER" placeholder="<?php echo t('label_contact_phone'); ?>" value="<?php echo h($student['CONTACT_PHONE_NUMBER']); ?>"></div>
+
+                                            <div id="LOCAL_CONTACT_FIELDS" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                                                <div class="form-group" data-label="<?php echo t('label_first_name_en'); ?>"><input type="text" name="CONTACT_FIRST_NAME_EN" placeholder="<?php echo t('label_first_name_en'); ?>" value="<?php echo h($student['CONTACT_FIRST_NAME_EN']); ?>"></div>
+                                                <div class="form-group" data-label="<?php echo t('label_last_name_en'); ?>"><input type="text" name="CONTACT_LAST_NAME_EN" placeholder="<?php echo t('label_last_name_en'); ?>" value="<?php echo h($student['CONTACT_LAST_NAME_EN']); ?>"></div>
+                                                <div class="form-group" data-label="<?php echo t('label_relation_en'); ?>">
+                                                    <select name="CONTACT_RELATION_ID">
+                                                        <option value="" disabled><?php echo t('label_relation_en'); ?></option>
+                                                        <?php foreach ($relations as $rel): ?>
+                                                            <?php $relName = ($LANG === 'ar' && !empty($rel['relation_name_ar'])) ? $rel['relation_name_ar'] : $rel['relation_name_en']; ?>
+                                                            <option value="<?php echo $rel['relation_id']; ?>" <?php echo selectedAttr($student['CONTACT_RELATION_ID'] ?? '', $rel['relation_id']); ?>><?php echo h($relName); ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group" data-label="<?php echo t('label_first_name_ar'); ?>"><input type="text" name="CONTACT_FIRST_NAME_AR" placeholder="<?php echo t('label_first_name_ar'); ?>" dir="rtl" value="<?php echo h($student['CONTACT_FIRST_NAME_AR']); ?>"></div>
+                                                <div class="form-group" data-label="<?php echo t('label_last_name_ar'); ?>"><input type="text" name="CONTACT_LAST_NAME_AR" placeholder="<?php echo t('label_last_name_ar'); ?>" dir="rtl" value="<?php echo h($student['CONTACT_LAST_NAME_AR']); ?>"></div>
+
+                                                <div class="sub-group" style="grid-column: 1 / -1;">
+                                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top:0.5rem;">
+                                                        <div class="form-group" data-label="<?php echo t('label_contact_address'); ?> - <?php echo t('label_street_en'); ?>"><input type="text" name="CONTACT_STREET_EN" placeholder="<?php echo t('label_contact_address'); ?> - <?php echo t('label_street_en'); ?>" value="<?php echo h($contactAddr['CONTACT_STREET_EN'] ?? ''); ?>"></div>
+                                                        <div class="form-group" data-label="<?php echo t('label_contact_address'); ?> - <?php echo t('label_street_ar'); ?>"><input type="text" name="CONTACT_STREET_AR" placeholder="<?php echo t('label_contact_address'); ?> - <?php echo t('label_street_ar'); ?>" dir="rtl" value="<?php echo h($contactAddr['CONTACT_STREET_AR'] ?? ''); ?>"></div>
+                                                        <div class="form-group" data-label="<?php echo t('label_contact_address'); ?> - <?php echo t('label_country'); ?>">
+                                                            <select class="country-select" data-prefix="CONTACT_" name="CONTACT_COUNTRY_ID">
+                                                                <option value="" disabled><?php echo t('label_contact_address'); ?> - <?php echo t('label_country'); ?></option>
+                                                                <?php foreach ($countries as $c): ?>
+                                                                    <?php $countryName = ($LANG === 'ar' && !empty($c['COUNTRY_NAME_AR'])) ? $c['COUNTRY_NAME_AR'] : $c['COUNTRY_NAME_EN']; ?>
+                                                                    <option value="<?php echo $c['COUNTRY_ID']; ?>" <?php echo selectedAttr($contactAddr['CONTACT_COUNTRY_ID'] ?? '', $c['COUNTRY_ID']); ?>><?php echo h($countryName); ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group" data-label="<?php echo t('label_contact_address'); ?> - <?php echo t('label_wilaya'); ?>">
+                                                            <select id="CONTACT_WILAYA_ID" name="CONTACT_WILAYA_ID" class="wilaya-select" data-prefix="CONTACT_" <?php echo (!empty($contactWilayas) ? '' : 'disabled'); ?>>
+                                                                <option value="" disabled><?php echo t('label_contact_address'); ?> - <?php echo t('label_wilaya'); ?></option>
+                                                                <?php foreach ($contactWilayas as $w): ?>
+                                                                    <?php $wName = ($LANG === 'ar' && !empty($w['WILAYA_NAME_AR'])) ? $w['WILAYA_NAME_AR'] : $w['WILAYA_NAME_EN']; ?>
+                                                                    <option value="<?php echo $w['WILAYA_ID']; ?>" <?php echo selectedAttr($contactAddr['CONTACT_WILAYA_ID'] ?? '', $w['WILAYA_ID']); ?>><?php echo h($wName); ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group" data-label="<?php echo t('label_contact_address'); ?> - <?php echo t('label_daira'); ?>">
+                                                            <select id="CONTACT_DAIRA_ID" name="CONTACT_DAIRA_ID" class="daira-select" data-prefix="CONTACT_" <?php echo (!empty($contactDairas) ? '' : 'disabled'); ?>>
+                                                                <option value="" disabled><?php echo t('label_contact_address'); ?> - <?php echo t('label_daira'); ?></option>
+                                                                <?php foreach ($contactDairas as $d): ?>
+                                                                    <?php $dName = ($LANG === 'ar' && !empty($d['DAIRA_NAME_AR'])) ? $d['DAIRA_NAME_AR'] : $d['DAIRA_NAME_EN']; ?>
+                                                                    <option value="<?php echo $d['DAIRA_ID']; ?>" <?php echo selectedAttr($contactAddr['CONTACT_DAIRA_ID'] ?? '', $d['DAIRA_ID']); ?>><?php echo h($dName); ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group" data-label="<?php echo t('label_contact_address'); ?> - <?php echo t('label_commune'); ?>">
+                                                            <select id="CONTACT_COMMUNE_ID" name="CONTACT_COMMUNE_ID" <?php echo (!empty($contactCommunes) ? '' : 'disabled'); ?>>
+                                                                <option value="" disabled><?php echo t('label_contact_address'); ?> - <?php echo t('label_commune'); ?></option>
+                                                                <?php foreach ($contactCommunes as $cc): ?>
+                                                                    <?php $cName = ($LANG === 'ar' && !empty($cc['COMMUNE_NAME_AR'])) ? $cc['COMMUNE_NAME_AR'] : $cc['COMMUNE_NAME_EN']; ?>
+                                                                    <option value="<?php echo $cc['COMMUNE_ID']; ?>" <?php echo selectedAttr($contactAddr['CONTACT_COMMUNE_ID'] ?? '', $cc['COMMUNE_ID']); ?>><?php echo h($cName); ?></option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div id="FOREIGN_CONTACT_FIELDS" style="grid-column: 1 / -1; display:none; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                                <div class="form-group" data-label="<?php echo t('label_consulate_number'); ?>"><input type="text" name="CONSULATE_NUMBER" placeholder="<?php echo t('label_consulate_number'); ?>" value="<?php echo h($student['CONSULATE_NUMBER']); ?>"></div>
+                                                <div class="form-group" style="grid-column: span 2;"><p style="font-size:0.9rem; color:var(--text-secondary);"><?php echo t('relation_consulate_note'); ?></p></div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="wizard-actions">
@@ -1611,6 +1721,40 @@ function selectedAttr($current, $value) {
 </div>
 
 <script>
+function toggleBubble(btn, inputName) {
+    btn.classList.toggle('active');
+    const id = btn.getAttribute('data-id');
+    const containerId = inputName.includes('MILITARY') ? 'military-certificates-inputs' : 'hobbies-inputs';
+    const container = document.getElementById(containerId);
+    
+    if (btn.classList.contains('active')) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = inputName;
+        input.value = id;
+        input.setAttribute('data-bubble-id', id);
+        container.appendChild(input);
+    } else {
+        const input = container.querySelector(`input[data-bubble-id="${id}"]`);
+        if (input) input.remove();
+    }
+}
+
+function switchTab(evt, tabId) {
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    const tabButtons = document.querySelectorAll('.tab-button');
+    
+    tabPanels.forEach(panel => panel.classList.remove('active'));
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    
+    document.getElementById(tabId).classList.add('active');
+    evt.currentTarget.classList.add('active');
+
+    if (window.innerWidth <= 992) {
+        evt.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+}
+
 var T = <?php echo json_encode($T); ?>;
 
 const t = (key) => T[key] || key;
@@ -1770,9 +1914,9 @@ document.addEventListener('click', function(e) {
 });
 
 function toggleSkirtFields() {
-    const sexEl = document.getElementById('SEX_SELECT');
-    if (!sexEl) return;
-    const sex = sexEl.value;
+    const sexSelect = document.getElementById('SEX_SELECT');
+    if (!sexSelect) return;
+    const sex = sexSelect.value;
     const skirtFields = document.querySelectorAll('.skirt-field');
     skirtFields.forEach(field => {
         field.style.display = (sex === 'Female') ? 'block' : 'none';
@@ -1780,22 +1924,22 @@ function toggleSkirtFields() {
 }
 
 function toggleForeignFields() {
-    const isForeignEl = document.getElementById('IS_FOREIGN_SELECT');
-    if (!isForeignEl) return;
-    const isForeign = isForeignEl.value;
+    const isForeignSelect = document.getElementById('IS_FOREIGN_SELECT');
+    if (!isForeignSelect) return;
+    const isForeign = isForeignSelect.value;
     const localFields = document.getElementById('LOCAL_CONTACT_FIELDS');
     const foreignFields = document.getElementById('FOREIGN_CONTACT_FIELDS');
 
-    if (!localFields || !foreignFields) return;
-
     if (isForeign === 'Yes') {
-        localFields.style.display = 'none';
-        foreignFields.style.display = 'grid';
-        foreignFields.style.gridTemplateColumns = '1fr 1fr';
-        foreignFields.style.gap = '1rem';
+        if (localFields) localFields.style.display = 'none';
+        if (foreignFields) {
+            foreignFields.style.display = 'grid';
+            foreignFields.style.gridTemplateColumns = '1fr 1fr';
+            foreignFields.style.gap = '1rem';
+        }
     } else {
-        localFields.style.display = 'grid';
-        foreignFields.style.display = 'none';
+        if (localFields) localFields.style.display = 'grid';
+        if (foreignFields) foreignFields.style.display = 'none';
     }
 }
 
@@ -1889,255 +2033,27 @@ if (catSel) {
     updateSections();
 }
 
-toggleSkirtFields();
-toggleForeignFields();
-
-fetchAllStudents();
-
-const getField = (name) => document.querySelector(`#wizardForm [name="${CSS.escape(name)}"]`);
-const ensureErrorEl = (input) => {
-    if (!input) return null;
-    const key = input.name || input.id || Math.random().toString(36).slice(2);
-    const id = `err_${key}`;
-    let el = document.getElementById(id);
-    if (!el) {
-        el = document.createElement('div');
-        el.id = id;
-        el.style.marginTop = '0.35rem';
-        el.style.color = 'var(--text-error)';
-        el.style.fontSize = '0.85rem';
-        el.style.display = 'none';
-        input.insertAdjacentElement('afterend', el);
-    }
-    return el;
-};
-const setFieldError = (input, message) => {
-    if (!input) return;
-    input.setCustomValidity(message || '');
-    const el = ensureErrorEl(input);
-    if (el) {
-        el.textContent = message || '';
-        el.style.display = message ? 'block' : 'none';
-    }
-};
-
-const isEmpty = (v) => (v === null || v === undefined || String(v).trim() === '');
-const normalizePhone = (v) => String(v || '').trim();
-const isE164 = (v) => /^\+[1-9]\d{1,14}$/.test(normalizePhone(v));
-const containsLatin = (v) => /[A-Za-z]/.test(String(v || ''));
-const containsArabic = (v) => /[\u0600-\u06FF]/.test(String(v || ''));
-const digitsOnly = (v) => /^\d+$/.test(String(v || '').trim());
-const toIntOrNull = (v) => {
-    if (isEmpty(v)) return null;
-    const n = parseInt(String(v), 10);
-    return Number.isFinite(n) ? n : null;
-};
-const toDateOrNull = (v) => {
-    if (isEmpty(v)) return null;
-    const d = new Date(String(v));
-    return Number.isNaN(d.getTime()) ? null : d;
-};
-
-const validateAll = () => {
-    const form = document.getElementById('wizardForm');
-    if (!form) return;
-
-    const serial = getField('STUDENT_SERIAL_NUMBER');
-    if (serial) {
-        if (isEmpty(serial.value)) {
-            setFieldError(serial, 'Serial Number is required.');
-        } else if (!digitsOnly(serial.value)) {
-            setFieldError(serial, 'Serial Number must contain digits only.');
-        } else {
-            setFieldError(serial, '');
-        }
-    }
-
-    const phone = getField('STUDENT_PERSONAL_PHONE');
-    if (phone && !isEmpty(phone.value) && !isE164(phone.value)) {
-        setFieldError(phone, t('invalid_phone') || 'Phone number must be an international format like +213xxxxxxxxx');
-    } else {
-        setFieldError(phone, '');
-    }
-
-    const contactPhone = getField('CONTACT_PHONE_NUMBER');
-    if (contactPhone && !isEmpty(contactPhone.value) && !isE164(contactPhone.value)) {
-        setFieldError(contactPhone, t('invalid_phone') || 'Phone number must be an international format like +213xxxxxxxxx');
-    } else {
-        setFieldError(contactPhone, '');
-    }
-
-    const birthDate = getField('STUDENT_BIRTH_DATE');
-    const bd = birthDate ? toDateOrNull(birthDate.value) : null;
-    if (birthDate && bd) {
-        if (bd.getFullYear() < 1990) {
-            setFieldError(birthDate, 'Birth year must be 1990 or later');
-        } else {
-            setFieldError(birthDate, '');
-        }
-    } else {
-        setFieldError(birthDate, '');
-    }
-
-    const schoolSubDate = getField('STUDENT_SCHOOL_SUB_DATE');
-    const sd = schoolSubDate ? toDateOrNull(schoolSubDate.value) : null;
-    if (schoolSubDate && bd && sd) {
-        if (sd.getTime() < bd.getTime()) {
-            setFieldError(schoolSubDate, 'School subscription date cannot be before the birth date');
-        } else {
-            setFieldError(schoolSubDate, '');
-        }
-    } else {
-        setFieldError(schoolSubDate, '');
-    }
-
-    const height = getField('STUDENT_HEIGHT_CM');
-    if (height && !isEmpty(height.value)) {
-        const hv = Number(height.value);
-        if (!Number.isFinite(hv)) {
-            setFieldError(height, 'Height must be a number');
-        } else if (hv < 140 || hv > 250) {
-            setFieldError(height, 'Height must be between 140 and 250 cm');
-        } else {
-            setFieldError(height, '');
-        }
-    } else {
-        setFieldError(height, '');
-    }
-
-    const weight = getField('STUDENT_WEIGHT_KG');
-    if (weight && weight.validity && weight.validity.badInput) {
-        setFieldError(weight, 'Weight must be a number');
-    } else if (weight && !isEmpty(weight.value)) {
-        const wv = weight.valueAsNumber;
-        if (Number.isNaN(wv)) {
-            setFieldError(weight, 'Weight must be a number');
-        } else if (wv < 50 || wv > 150) {
-            setFieldError(weight, 'Weight must be between 50 and 150 kg');
-        } else {
-            setFieldError(weight, '');
-        }
-    } else {
-        setFieldError(weight, '');
-    }
-
-    const bac = getField('STUDENT_BACCALAUREATE_SUB_NUMBER');
-    if (bac && !isEmpty(bac.value) && !digitsOnly(bac.value)) {
-        setFieldError(bac, 'Bac number must be digits only');
-    } else {
-        setFieldError(bac, '');
-    }
-
-    const numericFields = [
-        'STUDENT_ID_CARD_NUMBER',
-        'STUDENT_BIRTHDATE_CERTIFICATE_NUMBER',
-        'STUDENT_SCHOOL_SUB_CARD_NUMBER',
-        'STUDENT_POSTAL_ACCOUNT_NUMBER',
-        'CONSULATE_NUMBER'
-    ];
-    numericFields.forEach((n) => {
-        const f = getField(n);
-        if (f && !isEmpty(f.value) && !digitsOnly(f.value)) {
-            setFieldError(f, 'This field must be a number');
-        } else {
-            setFieldError(f, '');
-        }
-    });
-
-    const siblings = getField('STUDENT_NUMBER_OF_SIBLINGS');
-    const sisters = getField('STUDENT_NUMBER_OF_SISTERS');
-    const order = getField('STUDENT_ORDER_AMONG_SIBLINGS');
-    const sibVal = siblings ? toIntOrNull(siblings.value) : null;
-    const sisVal = sisters ? toIntOrNull(sisters.value) : null;
-    const ordVal = order ? toIntOrNull(order.value) : null;
-
-    if (siblings && sibVal !== null) {
-        if (sibVal < 0 || sibVal > 30) setFieldError(siblings, 'Number of siblings must be between 0 and 30');
-        else setFieldError(siblings, '');
-    } else {
-        setFieldError(siblings, '');
-    }
-
-    if (sisters && sisVal !== null) {
-        if (sibVal !== null && sisVal > sibVal) setFieldError(sisters, 'Number of sisters cannot exceed number of siblings');
-        else if (sisVal < 0 || sisVal > 30) setFieldError(sisters, 'Number of sisters must be between 0 and 30');
-        else setFieldError(sisters, '');
-    } else {
-        setFieldError(sisters, '');
-    }
-
-    if (order && ordVal !== null) {
-        if (ordVal < 1) {
-            setFieldError(order, 'Order among siblings must be at least 1');
-        } else if (sibVal !== null && ordVal > (sibVal + 1)) {
-            setFieldError(order, 'Order among siblings must be at most number of siblings + 1');
-        } else {
-            setFieldError(order, '');
-        }
-    } else {
-        setFieldError(order, '');
-    }
-
-    const enforceNoLatin = (name) => {
-        const f = getField(name);
-        if (!f) return;
-        if (!isEmpty(f.value) && containsLatin(f.value)) setFieldError(f, 'This field must not contain English letters');
-        else setFieldError(f, '');
-    };
-    const enforceNoArabic = (name) => {
-        const f = getField(name);
-        if (!f) return;
-        if (!isEmpty(f.value) && containsArabic(f.value)) setFieldError(f, 'This field must not contain Arabic letters');
-        else setFieldError(f, '');
-    };
-
-    [
-        'STUDENT_FIRST_NAME_AR','STUDENT_LAST_NAME_AR',
-        'BP_STREET_AR','PERS_STREET_AR',
-        'FATHER_FIRST_NAME_AR','FATHER_LAST_NAME_AR',
-        'MOTHER_FIRST_NAME_AR','MOTHER_LAST_NAME_AR',
-        'CONTACT_FIRST_NAME_AR','CONTACT_LAST_NAME_AR',
-        'CONTACT_STREET_AR'
-    ].forEach(enforceNoLatin);
-
-    [
-        'STUDENT_FIRST_NAME_EN','STUDENT_LAST_NAME_EN',
-        'BP_STREET_EN','PERS_STREET_EN',
-        'FATHER_FIRST_NAME_EN','FATHER_LAST_NAME_EN',
-        'MOTHER_FIRST_NAME_EN','MOTHER_LAST_NAME_EN',
-        'CONTACT_FIRST_NAME_EN','CONTACT_LAST_NAME_EN',
-        'CONTACT_STREET_EN'
-    ].forEach(enforceNoArabic);
-};
-
-const bindValidation = () => {
-    const form = document.getElementById('wizardForm');
-    if (!form) return;
-    const fields = Array.from(form.querySelectorAll('input, select, textarea'));
-    fields.forEach((f) => {
-        f.addEventListener('input', validateAll);
-        f.addEventListener('change', validateAll);
-        f.addEventListener('blur', validateAll);
-    });
-
-    form.addEventListener('submit', function(e) {
-        validateAll();
-        if (!form.checkValidity()) {
-            e.preventDefault();
-            const firstInvalid = form.querySelector(':invalid');
-            if (firstInvalid) {
-                const details = firstInvalid.closest('details.accordion-section');
-                if (details) details.open = true;
-                firstInvalid.focus();
-                firstInvalid.reportValidity();
+function initModernForm() {
+    document.querySelectorAll('.form-group input, .form-group select, .form-group textarea').forEach(el => {
+        const checkValue = () => {
+            if (el.value && el.value !== "" && el.value !== "undefined") {
+                el.closest('.form-group').classList.add('has-value');
+            } else {
+                el.closest('.form-group').classList.remove('has-value');
             }
-        }
+        };
+        el.addEventListener('input', checkValue);
+        el.addEventListener('change', checkValue);
+        checkValue();
     });
+}
 
-    validateAll();
-};
-
-bindValidation();
+toggleSkirtFields();
+if (document.getElementById('IS_FOREIGN_SELECT')) {
+    toggleForeignFields();
+}
+fetchAllStudents();
+initModernForm();
 </script>
 
 </body>

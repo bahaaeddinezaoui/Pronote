@@ -101,6 +101,7 @@ $T = [
     // Admin home
     'welcome_admin' => 'مرحباً، %s! 👋',
     'welcome_admin_sub' => 'نظرة عامة على نظام إدارة التعليم',
+    'admin_dashboard' => 'لوحة تحكم الإدارة',
     'total_students' => 'إجمالي الطلاب',
     'total_teachers' => 'إجمالي المعلمين',
     'total_classes' => 'إجمالي الفصول',
@@ -339,7 +340,7 @@ $T = [
     'select_date' => 'اختر التاريخ:',
     'select_time_slot' => 'اختر الفترة:',
     'all_time_slots' => '-- جميع الفترات --',
-    'search_sessions' => '🔍 بحث الجلسات',
+    'search_sessions' => ' بحث الجلسات',
     'study_sessions' => 'جلسات الدراسة',
     'please_select_date_search' => 'يرجى اختيار تاريخ والنقر على "بحث الجلسات" لعرض جلسات الدراسة.',
     'loading_sessions' => 'جاري تحميل الجلسات...',
