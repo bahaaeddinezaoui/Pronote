@@ -145,6 +145,106 @@ if (isset($_GET['action']) && $_GET['action'] === 'search_students') {
     exit;
 }
 
+if (isset($_GET['action']) && $_GET['action'] === 'get_teacher_observations') {
+    header('Content-Type: application/json');
+
+    if (!isset($_SESSION['user_id'])) {
+        echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+        exit;
+    }
+
+    $stmtTeacher = $conn->prepare("SELECT TEACHER_SERIAL_NUMBER FROM teacher WHERE USER_ID = ?");
+    if (!$stmtTeacher) {
+        echo json_encode(['success' => false, 'message' => 'Query preparation failed']);
+        exit;
+    }
+    $stmtTeacher->bind_param('i', $_SESSION['user_id']);
+    $stmtTeacher->execute();
+    $resTeacher = $stmtTeacher->get_result();
+    $teacherRow = $resTeacher ? $resTeacher->fetch_assoc() : null;
+    $stmtTeacher->close();
+
+    if (!$teacherRow || empty($teacherRow['TEACHER_SERIAL_NUMBER'])) {
+        echo json_encode(['success' => true, 'observations' => []]);
+        exit;
+    }
+
+    $teacherSerial = $teacherRow['TEACHER_SERIAL_NUMBER'];
+    $studySessionId = (int)($_SESSION['current_study_session_id'] ?? 0);
+
+    $lang = $_SESSION['lang'] ?? 'en';
+    $motif_col_obs = ($lang === 'ar') ? "om.OBSERVATION_MOTIF_AR" : "om.OBSERVATION_MOTIF_EN";
+
+    if (!empty($studySessionId)) {
+        $sql = "
+            SELECT
+                tmo.OBSERVATION_ID,
+                tmo.OBSERVATION_DATE_AND_TIME,
+                $motif_col_obs AS OBSERVATION_MOTIF,
+                tmo.OBSERVATION_NOTE,
+                st.STUDENT_FIRST_NAME_EN,
+                st.STUDENT_LAST_NAME_EN,
+                st.STUDENT_FIRST_NAME_AR,
+                st.STUDENT_LAST_NAME_AR
+            FROM teacher_makes_an_observation_for_a_student tmo
+            INNER JOIN student st ON tmo.STUDENT_SERIAL_NUMBER = st.STUDENT_SERIAL_NUMBER
+            LEFT JOIN observation_motif om ON tmo.OBSERVATION_MOTIF_ID = om.OBSERVATION_MOTIF_ID
+            WHERE tmo.TEACHER_SERIAL_NUMBER = ? AND tmo.STUDY_SESSION_ID = ?
+            ORDER BY tmo.OBSERVATION_DATE_AND_TIME DESC
+        ";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            echo json_encode(['success' => false, 'message' => 'Query preparation failed']);
+            exit;
+        }
+        $stmt->bind_param('si', $teacherSerial, $studySessionId);
+    } else {
+        $sql = "
+            SELECT
+                tmo.OBSERVATION_ID,
+                tmo.OBSERVATION_DATE_AND_TIME,
+                $motif_col_obs AS OBSERVATION_MOTIF,
+                tmo.OBSERVATION_NOTE,
+                st.STUDENT_FIRST_NAME_EN,
+                st.STUDENT_LAST_NAME_EN,
+                st.STUDENT_FIRST_NAME_AR,
+                st.STUDENT_LAST_NAME_AR
+            FROM teacher_makes_an_observation_for_a_student tmo
+            INNER JOIN student st ON tmo.STUDENT_SERIAL_NUMBER = st.STUDENT_SERIAL_NUMBER
+            LEFT JOIN observation_motif om ON tmo.OBSERVATION_MOTIF_ID = om.OBSERVATION_MOTIF_ID
+            WHERE tmo.TEACHER_SERIAL_NUMBER = ?
+            ORDER BY tmo.OBSERVATION_DATE_AND_TIME DESC
+            LIMIT 50
+        ";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            echo json_encode(['success' => false, 'message' => 'Query preparation failed']);
+            exit;
+        }
+        $stmt->bind_param('s', $teacherSerial);
+    }
+
+    $stmt->execute();
+    $res = $stmt->get_result();
+    $rows = [];
+    while ($r = $res->fetch_assoc()) {
+        $firstName = ($lang === 'ar' && !empty($r['STUDENT_FIRST_NAME_AR'])) ? $r['STUDENT_FIRST_NAME_AR'] : $r['STUDENT_FIRST_NAME_EN'];
+        $lastName = ($lang === 'ar' && !empty($r['STUDENT_LAST_NAME_AR'])) ? $r['STUDENT_LAST_NAME_AR'] : $r['STUDENT_LAST_NAME_EN'];
+        $rows[] = [
+            'observation_id' => $r['OBSERVATION_ID'],
+            'student_name' => $firstName . ' ' . $lastName,
+            'date_time' => $r['OBSERVATION_DATE_AND_TIME'],
+            'time' => date('H:i', strtotime($r['OBSERVATION_DATE_AND_TIME'])),
+            'motif' => $r['OBSERVATION_MOTIF'] ?? '',
+            'note' => $r['OBSERVATION_NOTE'] ?? ''
+        ];
+    }
+    $stmt->close();
+
+    echo json_encode(['success' => true, 'observations' => $rows]);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'submit_observation') {
     header('Content-Type: application/json');
 
@@ -755,7 +855,7 @@ if ($class_q) {
             </div>
 
             <!-- OBSERVATIONS -->
-            <div id="observations_section" class="form-section <?php echo $existing_session_found ? 'active' : ''; ?>">
+            <div id="observations_section" class="form-section <?php echo $show_obs_initially ? 'active' : ''; ?>">
                 <h3 style="margin-top:0; margin-bottom:1.5rem; color:var(--text-primary); font-size:1.1rem; font-weight:600;">
                     <?php echo t('record_observation'); ?>
                 </h3>
@@ -789,6 +889,25 @@ if ($class_q) {
                 </div>
 
                 <div id="obs_response" style="margin-top:1rem; font-weight:600; color:var(--success-color);"></div>
+
+                <div style="margin-top:2rem;">
+                    <h3 style="margin-top:0; margin-bottom:1rem; color:var(--text-primary); font-size:1.05rem; font-weight:600;">
+                        <?php echo t('observations'); ?>
+                    </h3>
+                    <div class="table-container">
+                        <table class="data-table" id="teacher_observations_table">
+                            <thead>
+                                <tr>
+                                    <th><?php echo t('student'); ?></th>
+                                    <th><?php echo t('time'); ?></th>
+                                    <th><?php echo t('motif'); ?></th>
+                                    <th><?php echo t('note_optional'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody id="teacher_observations_tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -1024,12 +1143,13 @@ function searchStudent(inputElement) {
     })
     .then(res => res.json())
     .then(data => {
-        if (!data.success || !data.students) return;
+        if (!data || !data.success || !data.students) return;
         const ul = document.createElement('ul');
         ul.className = 'suggestions-list';
         data.students.forEach(student => {
             const li = document.createElement('li');
             li.textContent = student.label;
+            li.style.cursor = 'pointer';
             li.onclick = () => {
                 const firstName = student.first_name.trim();
                 const lastName = student.last_name.trim();
@@ -1169,6 +1289,8 @@ document.getElementById('obs_submit_btn').addEventListener('click', function() {
             document.getElementById('obs_student_serial').value = '';
             document.getElementById('obs_motif_id').value = '';
             document.getElementById('obs_note').value = '';
+
+            loadTeacherObservations();
         } else {
             alert(obj.message || (T.error_saving_observation || 'Error saving observation.'));
         }
@@ -1178,6 +1300,43 @@ document.getElementById('obs_submit_btn').addEventListener('click', function() {
         alert(T.error_contacting_server || 'Error contacting server.');
     });
 });
+
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function loadTeacherObservations() {
+    const tbody = document.getElementById('teacher_observations_tbody');
+    if (!tbody) return;
+
+    fetch('<?php echo basename(__FILE__); ?>?action=get_teacher_observations')
+        .then(res => res.json())
+        .then(data => {
+            tbody.innerHTML = '';
+            if (!data || !data.success || !Array.isArray(data.observations) || data.observations.length === 0) {
+                return;
+            }
+
+            data.observations.forEach(o => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${escapeHtml(o.student_name || '')}</td>
+                    <td>${escapeHtml(o.time || '')}</td>
+                    <td>${escapeHtml(o.motif || '')}</td>
+                    <td>${escapeHtml(o.note || '')}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        })
+        .catch(err => console.error('Error loading teacher observations:', err));
+}
+
+loadTeacherObservations();
 
 // ===== Absence Form Submit Handler (AJAX) =====
 document.getElementById('absence_main_form').addEventListener('submit', function(e) {
