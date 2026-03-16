@@ -1,4 +1,4 @@
-secretary_edit_student.php<?php
+<?php
 session_start();
 date_default_timezone_set('Africa/Algiers');
 require_once __DIR__ . '/lang/i18n.php';

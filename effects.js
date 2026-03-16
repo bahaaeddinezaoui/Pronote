@@ -951,6 +951,25 @@
     // ============================================
     // INITIALIZE ALL EFFECTS
     // ============================================
+    const PERFORMANCE_KEY = 'edutrack_performance';
+
+    function getPerformanceMode() {
+        try {
+            const v = localStorage.getItem(PERFORMANCE_KEY);
+            return (v === 'low' || v === 'high') ? v : 'high';
+        } catch (e) {
+            return 'high';
+        }
+    }
+
+    function applyPerformanceMode() {
+        const mode = getPerformanceMode();
+        try {
+            document.documentElement.setAttribute('data-performance', mode);
+        } catch (e) {}
+        return mode;
+    }
+
     function init() {
         // Wait for DOM to be ready
         if (document.readyState === 'loading') {
@@ -961,12 +980,19 @@
     }
 
     function initEffects() {
-        initRippleEffect();
-        initScrollAnimations();
-        initFormValidation();
-        initPageTransitions();
-        initTooltips();
-        animateCounters();
+        const perfMode = applyPerformanceMode();
+
+        if (perfMode === 'high') {
+            initRippleEffect();
+            initScrollAnimations();
+            initFormValidation();
+            initPageTransitions();
+            initTooltips();
+            animateCounters();
+        } else {
+            // Reduced work in performance mode: still enable basic validation
+            initFormValidation();
+        }
 
         // Guided tutorial setup
         window.EduTrackTutorial = Tutorial;
@@ -989,6 +1015,14 @@
             Toast,
             Loading,
             ConfirmDialog,
+            getPerformanceMode,
+            setPerformanceMode(mode) {
+                const normalized = mode === 'low' ? 'low' : 'high';
+                try {
+                    localStorage.setItem(PERFORMANCE_KEY, normalized);
+                } catch (e) {}
+                applyPerformanceMode();
+            },
             showToast: Toast.show.bind(Toast),
             showLoading: Loading.show.bind(Loading),
             hideLoading: Loading.hide.bind(Loading),

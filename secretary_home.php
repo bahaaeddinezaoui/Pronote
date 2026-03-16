@@ -27,14 +27,16 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// 3. Fetch Secretary Name
+// 3. Fetch Secretary Name + editable category
 $user_id = $_SESSION['user_id'];
 $secretary_name = "Secretary";
-$stmt = $conn->prepare("SELECT SECRETARY_FIRST_NAME_EN, SECRETARY_LAST_NAME_EN, SECRETARY_FIRST_NAME_AR, SECRETARY_LAST_NAME_AR FROM secretary WHERE USER_ID = ?");
+$editable_category_id = null;
+$stmt = $conn->prepare("SELECT SECRETARY_FIRST_NAME_EN, SECRETARY_LAST_NAME_EN, SECRETARY_FIRST_NAME_AR, SECRETARY_LAST_NAME_AR, SECRETARY_EDITABLE_CATEGORY_ID FROM secretary WHERE USER_ID = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $res = $stmt->get_result();
 if ($row = $res->fetch_assoc()) {
+    $editable_category_id = isset($row['SECRETARY_EDITABLE_CATEGORY_ID']) ? (int)$row['SECRETARY_EDITABLE_CATEGORY_ID'] : null;
     if ($LANG === 'ar' && !empty($row['SECRETARY_FIRST_NAME_AR'])) {
         $secretary_name = trim($row['SECRETARY_FIRST_NAME_AR'] . ' ' . $row['SECRETARY_LAST_NAME_AR']);
     } else {
@@ -45,10 +47,20 @@ $stmt->close();
 
 // 4. Statistics
 $total_students = 0;
-$res = $conn->query("SELECT COUNT(*) as count FROM student");
-if ($res) {
-    $row = $res->fetch_assoc();
-    $total_students = $row['count'];
+if (!empty($editable_category_id) && $editable_category_id > 0) {
+    $stmtCount = $conn->prepare("SELECT COUNT(*) as count FROM student WHERE CATEGORY_ID = ?");
+    if ($stmtCount) {
+        $stmtCount->bind_param("i", $editable_category_id);
+        $stmtCount->execute();
+        $res = $stmtCount->get_result();
+        if ($res && ($row = $res->fetch_assoc())) {
+            $total_students = (int)$row['count'];
+        }
+        $stmtCount->close();
+    }
+} else {
+    // Fallback: if no category is assigned to this secretary, show 0
+    $total_students = 0;
 }
 
 // Recent registrations
@@ -70,13 +82,7 @@ $conn->close();
     <title><?php echo t('home'); ?> - <?php echo t('app_name'); ?></title>
     <style>
         .dashboard-container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
-        .welcome-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
-            color: white; border-radius: var(--radius-xl); padding: 3rem 2rem;
-            margin-bottom: 2.5rem; box-shadow: var(--shadow-lg);
-        }
-        .welcome-header h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
-        .welcome-header p { font-size: 1.1rem; opacity: 0.9; }
+        /* welcome-header is globally styled in styles.css */
 
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
         .stat-card {
@@ -138,7 +144,14 @@ $conn->close();
                             <i>✏️</i>
                             <span>Edit Student</span>
                         </a>
-                        <!-- Add more actions here -->
+                        <a href="secretary_punishes_student.php" class="action-card">
+                            <i>⚠️</i>
+                            <span><?php echo t('secretary_punishes_student_title') ?: 'Assign Punishments'; ?></span>
+                        </a>
+                        <a href="secretary_rewards_student.php" class="action-card">
+                            <i>🌟</i>
+                            <span><?php echo t('secretary_rewards_student_title') ?: 'Assign Rewards'; ?></span>
+                        </a>
                     </div>
                 </div>
             </div>

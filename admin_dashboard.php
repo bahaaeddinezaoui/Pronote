@@ -58,31 +58,10 @@ $conn->close();
     <link rel="stylesheet" href="styles.css">
     <title><?php echo t('search'); ?> - <?php echo t('app_name'); ?></title>
     <style>
+        /* Local gradients (rest uses global theme tokens from styles.css) */
         :root {
             --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
             --secondary-gradient: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.3);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-
-        [data-theme='dark'] :root {
-            --glass-bg: rgba(30, 41, 59, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --surface-color: #1e293b;
-            --background-color: #0f172a;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --border-color: #334155;
-        }
-
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: var(--background-color);
-            color: var(--text-primary);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
         }
 
         .admin-container {
@@ -110,57 +89,16 @@ $conn->close();
 
         /* --- Glass Cards --- */
         .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: var(--glass-bg-strong);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
             border: 1px solid var(--glass-border);
             border-radius: 1.25rem;
             padding: 2rem;
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--glass-shadow);
             margin-bottom: 2rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        [data-theme='dark'] .glass-card {
-            background: rgba(30, 41, 59, 0.85);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        [data-theme='dark'] .stat-card {
-            background: #1e293b;
-        }
-
-        [data-theme='dark'] .modern-table td {
-            border-top-color: #334155;
-        }
-
-        [data-theme='dark'] .modal-close {
-            background: #334155;
-        }
-
-
-        [data-theme='dark'] .filter-group input, 
-        [data-theme='dark'] .filter-group select {
-            background: #1e293b;
-            color: #f8fafc;
-        }
-
-        [data-theme='dark'] .session-card-mini {
-            background: #1e293b;
-        }
-
-        [data-theme='dark'] .modern-table th {
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        [data-theme='dark'] .modal-header {
-            background: #1e293b;
-        }
-
-        [data-theme='dark'] .modal-body {
-            background: #0f172a;
-        }
-
 
         .section-header {
             display: flex;
@@ -219,7 +157,7 @@ $conn->close();
         }
 
         .filter-group input, .filter-group select {
-            background: var(--background-color);
+            background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 0.75rem;
             padding: 0.75rem 1rem;

@@ -18,6 +18,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
     <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css" />
     <title><?php echo t('app_name'); ?> - <?php echo t('title_suffix'); ?></title>
     <style>
         * {
@@ -27,23 +28,26 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--background-color);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: transparent;
             color: var(--text-primary);
             line-height: 1.6;
         }
 
         /* Navigation Bar */
-        .navbar {
-            background: var(--surface-color);
+        .landing-navbar {
+            background: var(--glass-bg);
             padding: 1rem 2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
             position: sticky;
             top: 0;
             z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
         }
 
         .navbar-brand {
@@ -71,29 +75,36 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .btn-login {
-            background: var(--primary-color);
-            color: white;
+            background: var(--glass-bg);
+            color: var(--text-primary);
             padding: 0.7rem 1.5rem;
             border-radius: 8px;
             text-decoration: none;
             transition: all 0.3s ease;
             font-weight: 600;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
         }
 
         .btn-login:hover {
-            background: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3);
+            border-color: rgba(99, 102, 241, 0.55);
+            box-shadow: 0 26px 60px rgba(0, 0, 0, 0.16);
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #6f42c1 0%, #8c63d9 100%);
-            color: white;
-            padding: 80px 2rem;
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            padding: 72px 2rem;
             text-align: center;
             position: relative;
             overflow: hidden;
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
         }
 
         .hero::before {
@@ -103,7 +114,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             right: -50%;
             width: 500px;
             height: 500px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(99, 102, 241, 0.18);
             border-radius: 50%;
             animation: float 6s ease-in-out infinite;
         }
@@ -115,7 +126,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             left: -20%;
             width: 400px;
             height: 400px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(139, 92, 246, 0.14);
             border-radius: 50%;
             animation: float 8s ease-in-out infinite reverse;
         }
@@ -151,38 +162,40 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             flex-wrap: wrap;
         }
 
-        .btn-primary {
-            background: var(--surface-color);
-            color: var(--primary-color);
+        .landing-btn {
             padding: 12px 30px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
             display: inline-block;
+            border: 1px solid transparent;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-
-        .btn-secondary {
-            background: transparent;
+        .landing-btn-primary {
+            background: var(--primary-color);
             color: white;
-            padding: 12px 30px;
-            border: 2px solid white;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-block;
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.25);
         }
 
-        .btn-secondary:hover {
-            background: var(--surface-color);
-            color: var(--primary-color);
+        .landing-btn-primary:hover {
+            background: var(--primary-hover);
             transform: translateY(-3px);
+            box-shadow: 0 16px 44px rgba(79, 70, 229, 0.28);
+        }
+
+        .landing-btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+        }
+
+        .landing-btn-secondary:hover {
+            background: var(--glass-bg);
+            transform: translateY(-3px);
+            border-color: rgba(99, 102, 241, 0.55);
         }
 
         /* Features Section */
@@ -215,13 +228,15 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .feature-card {
-            background: var(--surface-color);
+            background: var(--glass-bg);
             padding: 30px;
             border-radius: 12px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
             transition: all 0.3s ease;
             text-align: center;
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
         }
 
         .feature-card:hover {
@@ -249,10 +264,10 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
         /* Tutorial Section */
         .tutorial {
-            background: var(--surface-color);
+            background: rgba(255, 255, 255, 0.06);
             padding: 80px 2rem;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .tutorial-container {
@@ -315,7 +330,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .tutorial-visual {
-            background: linear-gradient(135deg, #f0e6ff 0%, #e6d9ff 100%);
+            background: var(--glass-bg);
             border-radius: 12px;
             padding: 40px;
             display: flex;
@@ -324,6 +339,10 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
             align-items: center;
             min-height: 400px;
             text-align: center;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
         }
 
         .tutorial-visual-icon {
@@ -362,11 +381,15 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .use-case-card {
-            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            background: var(--glass-bg);
             padding: 30px;
             border-radius: 12px;
-            border-left: 4px solid #6f42c1;
+            border: 1px solid var(--glass-border);
+            border-left: 4px solid var(--primary-color);
             transition: all 0.3s ease;
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
         }
 
         .use-case-card:hover {
@@ -388,10 +411,13 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
         /* CTA Section */
         .cta {
-            background: linear-gradient(135deg, #6f42c1 0%, #8c63d9 100%);
-            color: white;
+            background: var(--glass-bg);
+            color: var(--text-primary);
             padding: 60px 2rem;
             text-align: center;
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
         }
 
         .cta-content {
@@ -412,16 +438,19 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
 
         /* Footer */
         .footer {
-            background: #1f1f1f;
-            color: #fff;
+            background: var(--glass-bg);
+            color: var(--text-primary);
             padding: 40px 2rem;
             text-align: center;
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
         }
 
         .footer p {
             margin-bottom: 10px;
             font-size: 14px;
-            color: #9ca3af;
+            color: var(--text-secondary);
         }
 
         .footer-links {
@@ -433,7 +462,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         }
 
         .footer-links a {
-            color: #9ca3af;
+            color: var(--text-secondary);
             text-decoration: none;
             font-size: 14px;
             transition: color 0.3s ease;
@@ -469,7 +498,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
                 align-items: center;
             }
 
-            .btn-primary, .btn-secondary {
+        .landing-btn {
                 width: 100%;
                 max-width: 250px;
             }
@@ -1056,12 +1085,17 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
                 scroll-behavior: auto;
             }
         }
+
+        /* Dark mode landing-specific tweaks */
+        [data-theme="dark"] .tutorial {
+            background: rgba(15, 23, 42, 0.18);
+        }
     </style>
 </head>
 <body>
 
 <!-- Navigation Bar -->
-<nav class="navbar">
+<nav class="landing-navbar">
     <a href="#" class="navbar-brand">📚 <?php echo t('app_name'); ?></a>
     <div class="navbar-links">
         <a href="#features"><?php echo t('nav_features'); ?></a>
@@ -1079,8 +1113,8 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         <p><?php echo t('hero_subtitle'); ?></p>
         <p style="font-size: 16px; opacity: 0.9;"><?php echo t('hero_subtitle2'); ?></p>
         <div class="hero-buttons">
-            <a href="login.php" class="btn-primary"><?php echo t('get_started'); ?></a>
-            <a href="#features" class="btn-secondary"><?php echo t('learn_more'); ?></a>
+            <a href="login.php" class="landing-btn landing-btn-primary"><?php echo t('get_started'); ?></a>
+            <a href="#features" class="landing-btn landing-btn-secondary"><?php echo t('learn_more'); ?></a>
         </div>
     </div>
 </section>
@@ -1340,7 +1374,7 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
     <div class="cta-content reveal-scale">
         <h2><?php echo t('cta_title'); ?></h2>
         <p><?php echo t('cta_sub'); ?></p>
-        <a href="login.php" class="btn-primary" style="background: var(--surface-color); color: var(--primary-color);"><?php echo t('login_now'); ?></a>
+        <a href="login.php" class="landing-btn landing-btn-primary"><?php echo t('login_now'); ?></a>
     </div>
 </section>
 

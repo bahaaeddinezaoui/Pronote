@@ -55,6 +55,46 @@ if (!isset($_SESSION['user_id'])) {
             font-size: 14px;
             color: var(--text-secondary);
         }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-muted);
+            transition: .3s;
+            border-radius: 999px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(15,23,42,0.4);
+        }
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
         
         /* Modal Styles */
         .modal-overlay {
@@ -177,6 +217,28 @@ if (!isset($_SESSION['user_id'])) {
                     </button>
                 </div>
             </div>
+
+            <!-- Performance Section -->
+            <div class="options-section">
+                <div class="section-header">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color);">
+                        <path d="M3 12h3l3 8 4-16 3 8h3"></path>
+                    </svg>
+                    <h2 class="section-title"><?php echo t('performance') ?: 'Performance'; ?></h2>
+                </div>
+                <div class="option-item">
+                    <div class="option-info">
+                        <div class="option-label"><?php echo t('performance_mode') ?: 'Performance mode'; ?></div>
+                        <div class="option-desc">
+                            <?php echo t('performance_mode_desc') ?: 'Reduce animations and glass effects for better performance on slower devices.'; ?>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="performanceModeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -288,6 +350,51 @@ if (!isset($_SESSION['user_id'])) {
                 btn.disabled = false;
             });
         });
+
+        // Performance mode toggle
+        const PERFORMANCE_KEY = 'edutrack_performance';
+        const perfToggle = document.getElementById('performanceModeToggle');
+        const htmlEl = document.documentElement;
+
+        function getPerf() {
+            try {
+                const v = localStorage.getItem(PERFORMANCE_KEY);
+                return (v === 'low' || v === 'high') ? v : 'high';
+            } catch (e) {
+                return 'high';
+            }
+        }
+
+        function applyPerf(mode) {
+            const m = mode === 'low' ? 'low' : 'high';
+            try {
+                localStorage.setItem(PERFORMANCE_KEY, m);
+                htmlEl.setAttribute('data-performance', m);
+                if (window.EduTrackEffects && typeof window.EduTrackEffects.setPerformanceMode === 'function') {
+                    window.EduTrackEffects.setPerformanceMode(m);
+                }
+            } catch (e) {}
+        }
+
+        if (perfToggle) {
+            const current = getPerf();
+            perfToggle.checked = (current === 'low');
+            applyPerf(current);
+
+            perfToggle.addEventListener('change', function() {
+                const mode = this.checked ? 'low' : 'high';
+                applyPerf(mode);
+                if (window.EduTrackEffects && window.EduTrackEffects.Toast) {
+                    window.EduTrackEffects.Toast.show(
+                        mode === 'low'
+                            ? (T.performance_mode_enabled || 'Performance mode enabled')
+                            : (T.performance_mode_disabled || 'Performance mode disabled'),
+                        'info',
+                        2200
+                    );
+                }
+            });
+        }
     })();
 </script>
 

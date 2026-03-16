@@ -42,39 +42,37 @@ if (isset($_SESSION['user_id'], $_SESSION['role'])) {
         <div class="login-left">
             <div class="login-lang-fix"><?php include __DIR__ . '/lang/switcher.php'; ?></div>
             
-            <div class="login-container">
-                <div class="login-card">
-                    <div class="login-header">
-                        <div class="login-logo">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                            </svg>
-                        </div>
-                        <h1 class="login-title"><?php echo t('login_welcome'); ?></h1>
-                        <p class="login-subtitle"><?php echo t('app_name'); ?></p>
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="login-logo">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="login-title"><?php echo t('login_welcome'); ?></h1>
+                    <p class="login-subtitle"><?php echo t('app_name'); ?></p>
+                </div>
+
+                <form action="index.php" method="post" id="login">
+                    <div class="form-group">
+                        <label class="form-label" for="username"><?php echo t('username'); ?></label>
+                        <input class="form-input" type="text" id="username" name="username" placeholder="<?php echo t('username_placeholder'); ?>" required>
                     </div>
 
-                    <form action="index.php" method="post" id="login">
-                        <div class="form-group">
-                            <label class="form-label" for="username"><?php echo t('username'); ?></label>
-                            <input class="form-input" type="text" id="username" name="username" placeholder="<?php echo t('username_placeholder'); ?>" required>
+                    <div class="form-group">
+                        <label class="form-label" for="password"><?php echo t('password'); ?></label>
+                        <div style="position: relative;">
+                            <input class="form-input" type="password" id="password" name="password" placeholder="<?php echo t('password_placeholder'); ?>" required style="padding-right: 40px;">
+                            <span id="togglePassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); user-select: none; font-size: 1.2rem;">
+                                👁️
+                            </span>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="form-label" for="password"><?php echo t('password'); ?></label>
-                            <div style="position: relative;">
-                                <input class="form-input" type="password" id="password" name="password" placeholder="<?php echo t('password_placeholder'); ?>" required style="padding-right: 40px;">
-                                <span id="togglePassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); user-select: none; font-size: 1.2rem;">
-                                    👁️
-                                </span>
-                            </div>
-                        </div>
-
-                        <button type="submit" id="login_button" class="btn btn-primary"><?php echo t('login_button'); ?></button>
-                        <div id="login_error" class="alert alert-error mt-4" style="display: none; text-align: center;"></div>
-                    </form>
-                </div>
+                    <button type="submit" id="login_button" class="btn btn-primary"><?php echo t('login_button'); ?></button>
+                    <div id="login_error" class="alert alert-error mt-4" style="display: none; text-align: center;"></div>
+                </form>
             </div>
         </div>
 

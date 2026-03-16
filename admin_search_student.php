@@ -554,19 +554,30 @@ $conn->close();
                             <input type="date" id="endDate">
                         </div>
                         <div style="flex-grow: 1;"></div>
-                        <div class="view-toggles" id="viewToggles" style="display:none; gap: 0.5rem;">
-                            <button class="btn-modern btn-modern-primary" id="btnRecords" onclick="switchView('records')">
-                                📊 <?php echo t('btn_student_records'); ?>
+                        <div class="view-toggles" id="viewToggles" style="display:none; gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="btn-modern btn-modern-primary" id="btnAbsences" onclick="switchView('absences')">
+                                � <?php echo t('absences'); ?>
+                            </button>
+                            <button class="btn-modern btn-modern-secondary" id="btnObservations" onclick="switchView('observations')">
+                                📝 <?php echo t('observations'); ?>
                             </button>
                             <button class="btn-modern btn-modern-secondary" id="btnFullInfo" onclick="switchView('fullInfo')">
                                 📄 <?php echo t('btn_full_information'); ?>
                             </button>
+                            <button class="btn-modern btn-modern-secondary" id="btnPunishments" onclick="switchView('punishments')">
+                                ⚠️ <?php echo t('punishments') ?: 'Punishments'; ?>
+                            </button>
+                            <button class="btn-modern btn-modern-secondary" id="btnRewards" onclick="switchView('rewards')">
+                                🌟 <?php echo t('rewards') ?: 'Rewards'; ?>
+                            </button>
                         </div>
                     </div>
                 </div>
-
-                <div id="recordsContainer"></div>
+                <div id="absencesContainer"></div>
+                <div id="observationsContainer" style="display: none;"></div>
                 <div id="fullInfoContainer" style="display: none;"></div>
+                <div id="punishmentsContainer" style="display: none;"></div>
+                <div id="rewardsContainer" style="display: none;"></div>
             </div>
         </div>
     </div>
@@ -762,7 +773,7 @@ $conn->close();
                 document.getElementById('loader').classList.remove('active');
 
                 if (data.success) {
-                    displayResults(data.student, data.absences, data.observations);
+                    displayResults(data.student, data.absences, data.observations, data.punishments || [], data.rewards || []);
                     document.getElementById('resultsSection').classList.add('active');
                 } else {
                     showError(data.message || t('msg_failed_load_records'));
@@ -774,27 +785,52 @@ $conn->close();
         }
 
         function switchView(view) {
-            const btnRecords = document.getElementById('btnRecords');
+            const btnAbsences = document.getElementById('btnAbsences');
+            const btnObservations = document.getElementById('btnObservations');
             const btnFullInfo = document.getElementById('btnFullInfo');
-            const recordsContainer = document.getElementById('recordsContainer');
-            const fullInfoContainer = document.getElementById('fullInfoContainer');
+            const btnPunishments = document.getElementById('btnPunishments');
+            const btnRewards = document.getElementById('btnRewards');
 
-            if (view === 'records') {
-                btnRecords.className = 'btn-modern btn-modern-primary';
-                btnFullInfo.className = 'btn-modern btn-modern-secondary';
-                recordsContainer.style.display = 'block';
-                fullInfoContainer.style.display = 'none';
-            } else {
-                btnRecords.className = 'btn-modern btn-modern-secondary';
+            const absencesContainer = document.getElementById('absencesContainer');
+            const observationsContainer = document.getElementById('observationsContainer');
+            const fullInfoContainer = document.getElementById('fullInfoContainer');
+            const punishmentsContainer = document.getElementById('punishmentsContainer');
+            const rewardsContainer = document.getElementById('rewardsContainer');
+
+            // reset all
+            if (btnAbsences) btnAbsences.className = 'btn-modern btn-modern-secondary';
+            if (btnObservations) btnObservations.className = 'btn-modern btn-modern-secondary';
+            btnFullInfo.className = 'btn-modern btn-modern-secondary';
+            btnPunishments.className = 'btn-modern btn-modern-secondary';
+            btnRewards.className = 'btn-modern btn-modern-secondary';
+
+            absencesContainer.style.display = 'none';
+            observationsContainer.style.display = 'none';
+            fullInfoContainer.style.display = 'none';
+            punishmentsContainer.style.display = 'none';
+            rewardsContainer.style.display = 'none';
+
+            if (view === 'absences') {
+                btnAbsences.className = 'btn-modern btn-modern-primary';
+                absencesContainer.style.display = 'block';
+            } else if (view === 'observations') {
+                btnObservations.className = 'btn-modern btn-modern-primary';
+                observationsContainer.style.display = 'block';
+            } else if (view === 'fullInfo') {
                 btnFullInfo.className = 'btn-modern btn-modern-primary';
-                recordsContainer.style.display = 'none';
                 fullInfoContainer.style.display = 'block';
+            } else if (view === 'punishments') {
+                btnPunishments.className = 'btn-modern btn-modern-primary';
+                punishmentsContainer.style.display = 'block';
+            } else if (view === 'rewards') {
+                btnRewards.className = 'btn-modern btn-modern-primary';
+                rewardsContainer.style.display = 'block';
             }
         }
 
-        function displayResults(student, absences, observations) {
+        function displayResults(student, absences, observations, punishments, rewards) {
             document.getElementById('viewToggles').style.display = 'flex';
-            switchView('records');
+            switchView('absences');
 
             const studentPhotoUrl = student.photo ? resolvePhotoUrl(student.photo) : 'assets/placeholder-student.png';
             
@@ -833,42 +869,34 @@ $conn->close();
             document.getElementById('studentInfo').innerHTML = studentInfoHtml;
             document.getElementById('studentInfo').style.display = 'block';
 
-            // --- Render Timeline Records ---
-            let recordsHtml = '<div class="records-timeline">';
-            
-            // Combine and sort by date
-            const allRecords = [
-                ...absences.map(a => ({...a, type: 'absence', date: a.absence_date_and_time})),
-                ...observations.map(o => ({...o, type: 'observation', date: o.observation_date_and_time}))
-            ].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            if (allRecords.length === 0) {
-                recordsHtml += `<div class="glass-card" style="text-align:center; color:var(--text-secondary); padding: 3rem;">
+            // --- Render Absences Timeline ---
+            let absencesHtml = '<div class="records-timeline">';
+            if (absences.length === 0) {
+                absencesHtml += `<div class="glass-card" style="text-align:center; color:var(--text-secondary); padding: 3rem;">
                     <div style="font-size: 3rem; margin-bottom: 1rem;">🍃</div>
-                    <p>${t('no_records_found')}</p>
+                    <p>${t('no_absences_period') || t('no_records_found')}</p>
                 </div>`;
             } else {
-                allRecords.forEach(record => {
-                    const dateObj = new Date(record.date);
+                absences.sort((a, b) => new Date(b.absence_date_and_time) - new Date(a.absence_date_and_time)).forEach(record => {
+                    const dateObj = new Date(record.absence_date_and_time);
                     const day = dateObj.getDate();
                     const month = dateObj.toLocaleDateString(isArabic ? 'ar-EG' : 'en-US', { month: 'short' });
                     
-                    recordsHtml += `
-                        <div class="record-card ${record.type === 'observation' ? 'observation' : ''}">
+                    absencesHtml += `
+                        <div class="record-card">
                             <div class="record-time-box">
                                 <span class="record-day">${day}</span>
                                 <span class="record-month">${month}</span>
                             </div>
                             <div class="record-content">
                                 <div class="record-meta">
-                                    ${record.type === 'observation' ? '📝 ' + t('observation') : '⚠️ ' + t('absence')} 
-                                    • ${formatDate(record.date, 'time')} 
-                                    ${record.teacher_name ? '• ' + record.teacher_name : ''}
+                                    ⚠️ ${t('absence')} 
+                                    • ${formatDate(record.absence_date_and_time, 'time')} 
                                 </div>
-                                <h4>${record.absence_motif || record.observation_motif || t('not_specified')}</h4>
-                                ${(record.absence_observation || record.observation_note) ? `
+                                <h4>${record.absence_motif || t('not_specified')}</h4>
+                                ${record.absence_observation ? `
                                     <div class="record-note-bubble">
-                                        ${record.absence_observation || record.observation_note}
+                                        ${record.absence_observation}
                                     </div>
                                 ` : ''}
                             </div>
@@ -876,8 +904,123 @@ $conn->close();
                     `;
                 });
             }
-            recordsHtml += '</div>';
-            document.getElementById('recordsContainer').innerHTML = recordsHtml;
+            absencesHtml += '</div>';
+            document.getElementById('absencesContainer').innerHTML = absencesHtml;
+
+            // --- Render Observations Timeline ---
+            let observationsHtml = '<div class="records-timeline">';
+            if (observations.length === 0) {
+                observationsHtml += `<div class="glass-card" style="text-align:center; color:var(--text-secondary); padding: 3rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🍃</div>
+                    <p>${t('no_observations_period') || t('no_records_found')}</p>
+                </div>`;
+            } else {
+                observations.sort((a, b) => new Date(b.observation_date_and_time) - new Date(a.observation_date_and_time)).forEach(record => {
+                    const dateObj = new Date(record.observation_date_and_time);
+                    const day = dateObj.getDate();
+                    const month = dateObj.toLocaleDateString(isArabic ? 'ar-EG' : 'en-US', { month: 'short' });
+                    
+                    observationsHtml += `
+                        <div class="record-card observation">
+                            <div class="record-time-box">
+                                <span class="record-day">${day}</span>
+                                <span class="record-month">${month}</span>
+                            </div>
+                            <div class="record-content">
+                                <div class="record-meta">
+                                    📝 ${t('observation')} 
+                                    • ${formatDate(record.observation_date_and_time, 'time')} 
+                                    ${record.teacher_name ? '• ' + record.teacher_name : ''}
+                                </div>
+                                <h4>${record.observation_motif || t('not_specified')}</h4>
+                                ${record.observation_note ? `
+                                    <div class="record-note-bubble">
+                                        ${record.observation_note}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            observationsHtml += '</div>';
+            document.getElementById('observationsContainer').innerHTML = observationsHtml;
+
+            // --- Punishments Tab Content (full history within date range) ---
+            let punHtml = `
+                <div class="glass-card">
+                    <h3 style="margin-top:0; margin-bottom:0.75rem;">⚠️ ${t('punishments') || 'Punishments'}</h3>
+            `;
+            if (punishments.length === 0) {
+                punHtml += `<div style="color:var(--text-secondary); font-size:0.9rem;">${t('no_punishments_period') || t('no_records_found')}</div>`;
+            } else {
+                punHtml += `<div class="records-timeline">`;
+                punishments.forEach(p => {
+                    const dateObj = new Date(p.punishment_date_and_time);
+                    const day = dateObj.getDate();
+                    const month = dateObj.toLocaleDateString(isArabic ? 'ar-EG' : 'en-US', { month: 'short' });
+                    punHtml += `
+                        <div class="record-card">
+                            <div class="record-time-box">
+                                <span class="record-day">${day}</span>
+                                <span class="record-month">${month}</span>
+                            </div>
+                            <div class="record-content">
+                                <div class="record-meta">
+                                    ⚠️ ${t('punishment') || 'Punishment'} • ${formatDate(p.punishment_date_and_time, 'time')} • ${p.secretary_name || ''}
+                                </div>
+                                <h4>${p.punishment_label || t('not_specified')}</h4>
+                                ${p.punishment_note ? `
+                                    <div class="record-note-bubble">
+                                        ${p.punishment_note}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                punHtml += `</div>`;
+            }
+            punHtml += `</div>`;
+            document.getElementById('punishmentsContainer').innerHTML = punHtml;
+
+            // --- Rewards Tab Content (full history within date range) ---
+            let rewHtml = `
+                <div class="glass-card">
+                    <h3 style="margin-top:0; margin-bottom:0.75rem;">🌟 ${t('rewards') || 'Rewards'}</h3>
+            `;
+            if (rewards.length === 0) {
+                rewHtml += `<div style="color:var(--text-secondary); font-size:0.9rem;">${t('no_rewards_period') || t('no_records_found')}</div>`;
+            } else {
+                rewHtml += `<div class="records-timeline">`;
+                rewards.forEach(r => {
+                    const dateObj = new Date(r.reward_date_and_time);
+                    const day = dateObj.getDate();
+                    const month = dateObj.toLocaleDateString(isArabic ? 'ar-EG' : 'en-US', { month: 'short' });
+                    rewHtml += `
+                        <div class="record-card observation">
+                            <div class="record-time-box">
+                                <span class="record-day">${day}</span>
+                                <span class="record-month">${month}</span>
+                            </div>
+                            <div class="record-content">
+                                <div class="record-meta">
+                                    🌟 ${t('reward') || 'Reward'} • ${formatDate(r.reward_date_and_time, 'time')} • ${r.secretary_name || ''}
+                                </div>
+                                <h4>${r.reward_label || t('not_specified')}</h4>
+                                ${r.reward_note ? `
+                                    <div class="record-note-bubble">
+                                        ${r.reward_note}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                rewHtml += `</div>`;
+            }
+            rewHtml += `</div>`;
+            document.getElementById('rewardsContainer').innerHTML = rewHtml;
 
             renderFullInfo(student);
         }
@@ -895,7 +1038,7 @@ $conn->close();
             const cell = (label, value) => `
                 <div class="info-cell">
                     <span class="cell-label">${label}</span>
-                    <span class="cell-value">${value || 'N/A'}</span>
+                    <span class="cell-value">${value || t('not_available') || 'N/A'}</span>
                 </div>
             `;
 
@@ -1018,7 +1161,8 @@ $conn->close();
             document.getElementById('suggestionsContainer').style.display = 'none';
             document.getElementById('studentInfo').style.display = 'none';
             document.getElementById('studentInfo').innerHTML = '';
-            document.getElementById('recordsContainer').innerHTML = '';
+            document.getElementById('absencesContainer').innerHTML = '';
+            document.getElementById('observationsContainer').innerHTML = '';
             document.getElementById('fullInfoContainer').innerHTML = '';
             document.getElementById('viewToggles').style.display = 'none';
             document.getElementById('dateFilterSection').style.display = 'none';

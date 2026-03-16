@@ -75,6 +75,16 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
                 <span class="icon">✏️</span>
                 <span class="text" data-tooltip="<?php echo t('edit_student'); ?>"><?php echo t('edit_student'); ?></span>
             </a>
+
+            <a href="secretary_punishes_student.php" id="navPunishStudent" class="sidebar-link <?php echo ($current_page == 'secretary_punishes_student.php') ? 'active' : ''; ?>">
+                <span class="icon">⚠️</span>
+                <span class="text" data-tooltip="<?php echo t('nav_punish_student'); ?>"><?php echo t('nav_punish_student'); ?></span>
+            </a>
+
+            <a href="secretary_rewards_student.php" id="navRewardStudent" class="sidebar-link <?php echo ($current_page == 'secretary_rewards_student.php') ? 'active' : ''; ?>">
+                <span class="icon">🏆</span>
+                <span class="text" data-tooltip="<?php echo t('nav_reward_student'); ?>"><?php echo t('nav_reward_student'); ?></span>
+            </a>
         <?php endif; ?>
 
         <a href="profile.php" id="navProfile" class="sidebar-link <?php echo ($current_page == 'profile.php') ? 'active' : ''; ?>">
@@ -111,23 +121,24 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
         </a>
     </div>
 
-    <!-- Floating Notifications for Admin -->
-    <?php if ($role === 'Admin'): ?>
-        <div class="notification-container">
-            <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
-                🔔
-                <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
-            </div>
-            <div class="notifications-panel" id="notificationsPanel">
-                <div class="notifications-header">
-                    <span><?php echo t('new_observations'); ?></span>
-                    <button class="clear-all-btn" id="clearAllNotifications" onclick="clearAllNotifications(event)"><?php echo t('clear_all_notifications'); ?></button>
-                </div>
-                <div id="notificationsContent"></div>
-            </div>
-        </div>
-    <?php endif; ?>
 </div>
+
+<!-- Floating Notifications for Admin (kept outside sidebar so position:fixed anchors to viewport) -->
+<?php if ($role === 'Admin'): ?>
+    <div class="notification-container">
+        <div class="notification-bell" id="notificationBell" onclick="toggleNotificationsPanel()">
+            🔔
+            <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
+        </div>
+        <div class="notifications-panel" id="notificationsPanel">
+            <div class="notifications-header">
+                <span><?php echo t('new_observations'); ?></span>
+                <button class="clear-all-btn" id="clearAllNotifications" onclick="clearAllNotifications(event)"><?php echo t('clear_all_notifications'); ?></button>
+            </div>
+            <div id="notificationsContent"></div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <script>
 (function(){
@@ -164,6 +175,86 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
 (function() {
     var T = <?php echo json_encode($T ?? []); ?>;
     let newNotifications = [];
+    const NOTIF_SEEN_KEY = 'edutrack_admin_seen_notif_ids';
+    const NOTIF_BOOTSTRAP_KEY = 'edutrack_admin_notif_bootstrap_done';
+    let audioUnlocked = false;
+
+    function safeParseJsonArray(raw) {
+        try {
+            const v = JSON.parse(raw);
+            return Array.isArray(v) ? v : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function getSeenIds() {
+        return new Set(safeParseJsonArray(sessionStorage.getItem(NOTIF_SEEN_KEY) || '[]').map(String));
+    }
+
+    function setSeenIds(idsSet) {
+        try {
+            sessionStorage.setItem(NOTIF_SEEN_KEY, JSON.stringify(Array.from(idsSet)));
+        } catch (e) {}
+    }
+
+    function isBootstrapped() {
+        return sessionStorage.getItem(NOTIF_BOOTSTRAP_KEY) === 'true';
+    }
+
+    function setBootstrapped() {
+        try {
+            sessionStorage.setItem(NOTIF_BOOTSTRAP_KEY, 'true');
+        } catch (e) {}
+    }
+
+    function unlockAudio() {
+        if (audioUnlocked) return;
+        try {
+            const Ctx = window.AudioContext || window.webkitAudioContext;
+            if (!Ctx) return;
+            const ctx = new Ctx();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            gain.gain.value = 0.0001;
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.02);
+            audioUnlocked = true;
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    function playNotificationChime() {
+        try {
+            const Ctx = window.AudioContext || window.webkitAudioContext;
+            if (!Ctx) return;
+            const ctx = new Ctx();
+            const now = ctx.currentTime;
+
+            function tone(freq, start, dur, peak) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, start);
+                gain.gain.setValueAtTime(0.0001, start);
+                gain.gain.exponentialRampToValueAtTime(peak, start + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(start);
+                osc.stop(start + dur + 0.02);
+            }
+
+            // Soft 2-tone chime
+            tone(880, now + 0.00, 0.14, 0.06);
+            tone(1175, now + 0.10, 0.18, 0.05);
+        } catch (e) {
+            // ignore autoplay/security errors
+        }
+    }
 
     window.toggleNotificationsPanel = function() {
         const panel = document.getElementById('notificationsPanel');
@@ -178,6 +269,32 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
             .then(data => {
                 if (data.success) {
                     newNotifications = data.notifications;
+                    try {
+                        const seen = getSeenIds();
+                        const incomingIds = new Set((newNotifications || []).map(n => String(n.observation_id)));
+
+                        // First successful load: bootstrap seen IDs, don't chime.
+                        if (!isBootstrapped()) {
+                            incomingIds.forEach(id => seen.add(id));
+                            setSeenIds(seen);
+                            setBootstrapped();
+                        } else {
+                            let hasNew = false;
+                            incomingIds.forEach(id => {
+                                if (!seen.has(id)) hasNew = true;
+                                seen.add(id);
+                            });
+                            setSeenIds(seen);
+                            if (hasNew) {
+                                if (audioUnlocked) {
+                                    playNotificationChime();
+                                } else {
+                                    // Try anyway; browser may block until first interaction.
+                                    playNotificationChime();
+                                }
+                            }
+                        }
+                    } catch (e) {}
                     updateNotificationDisplay();
                 }
             })
@@ -204,9 +321,12 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
                             <span class="notification-item-time">${notif.observation_time}</span>
                         </div>
                         <div class="notification-item-details">
-                            <div><strong>${T.teacher_label || 'Teacher'}:</strong> ${notif.teacher_name}</div>
-                            <div><strong>${T.session_label || 'Session'}:</strong> ${notif.session_date} (${notif.session_time})</div>
-                            <div><strong>${T.motif_label || 'Motif'}:</strong> ${notif.motif}</div>
+                            <div class="notification-item-meta">
+                                <span class="notification-item-meta-teacher">👤 ${notif.teacher_name}</span>
+                                <span class="notification-item-meta-sep">•</span>
+                                <span class="notification-item-meta-session">🗓️ ${notif.session_date} ${notif.session_time ? `(${notif.session_time})` : ''}</span>
+                            </div>
+                            <div class="notification-item-motif">${notif.motif}</div>
                         </div>
                     </a>
                     <button class="clear-notif-btn" onclick="clearNotification(event, ${notif.observation_id})" title="${T.clear_notification || 'Clear'}">
@@ -306,6 +426,7 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
 
     // Close notifications panel when clicking outside
     document.addEventListener('click', function(event) {
+        unlockAudio();
         const notifBell = document.getElementById('notificationBell');
         const panel = document.getElementById('notificationsPanel');
         

@@ -311,6 +311,98 @@ try {
     }
     $stmt->close();
 
+    // 4. Get punishments for the student within the date range
+    $pun_label_col = ($lang === 'ar') ? "pt.PUNISHMENT_LABEL_AR" : "pt.PUNISHMENT_LABEL_EN";
+    $punishmentsQuery = "
+        SELECT 
+            sps.PUNISHMENT_ID,
+            sps.PUNISHMENT_SUGGESTED_AT,
+            sps.PUNISHMENT_NOTE,
+            $pun_label_col AS PUNISHMENT_LABEL,
+            sec.SECRETARY_FIRST_NAME_EN,
+            sec.SECRETARY_LAST_NAME_EN,
+            sec.SECRETARY_FIRST_NAME_AR,
+            sec.SECRETARY_LAST_NAME_AR
+        FROM secretary_punishes_student sps
+        JOIN punishment_type pt ON sps.PUNISHMENT_TYPE_ID = pt.PUNISHMENT_TYPE_ID
+        JOIN secretary sec ON sps.SECRETARY_ID = sec.SECRETARY_ID
+        WHERE sps.STUDENT_SERIAL_NUMBER = ?
+        AND DATE(sps.PUNISHMENT_SUGGESTED_AT) >= ?
+        AND DATE(sps.PUNISHMENT_SUGGESTED_AT) <= ?
+        ORDER BY sps.PUNISHMENT_SUGGESTED_AT DESC
+    ";
+
+    $stmt = $conn->prepare($punishmentsQuery);
+    if (!$stmt) {
+        echo json_encode(['success' => false, 'message' => 'Query preparation failed: ' . $conn->error]);
+        $conn->close();
+        exit;
+    }
+
+    $stmt->bind_param("sss", $serial_number, $start_date, $end_date);
+    $stmt->execute();
+    $punishmentsResult = $stmt->get_result();
+
+    $punishments = [];
+    while ($row = $punishmentsResult->fetch_assoc()) {
+        $secFirstName = ($lang === 'ar' && !empty($row['SECRETARY_FIRST_NAME_AR'])) ? $row['SECRETARY_FIRST_NAME_AR'] : $row['SECRETARY_FIRST_NAME_EN'];
+        $secLastName = ($lang === 'ar' && !empty($row['SECRETARY_LAST_NAME_AR'])) ? $row['SECRETARY_LAST_NAME_AR'] : $row['SECRETARY_LAST_NAME_EN'];
+        $punishments[] = [
+            'punishment_id' => $row['PUNISHMENT_ID'],
+            'punishment_date_and_time' => $row['PUNISHMENT_SUGGESTED_AT'],
+            'punishment_label' => $row['PUNISHMENT_LABEL'],
+            'punishment_note' => $row['PUNISHMENT_NOTE'],
+            'secretary_name' => htmlspecialchars(trim($secFirstName . ' ' . $secLastName))
+        ];
+    }
+    $stmt->close();
+
+    // 5. Get rewards for the student within the date range
+    $rew_label_col = ($lang === 'ar') ? "rt.REWARD_LABEL_AR" : "rt.REWARD_LABEL_EN";
+    $rewardsQuery = "
+        SELECT 
+            srs.REWARD_ID,
+            srs.REWARD_SUGGESTED_AT,
+            srs.REWARD_NOTE,
+            $rew_label_col AS REWARD_LABEL,
+            sec.SECRETARY_FIRST_NAME_EN,
+            sec.SECRETARY_LAST_NAME_EN,
+            sec.SECRETARY_FIRST_NAME_AR,
+            sec.SECRETARY_LAST_NAME_AR
+        FROM secretary_rewards_student srs
+        JOIN reward_type rt ON srs.REWARD_TYPE_ID = rt.REWARD_TYPE_ID
+        JOIN secretary sec ON srs.SECRETARY_ID = sec.SECRETARY_ID
+        WHERE srs.STUDENT_SERIAL_NUMBER = ?
+        AND DATE(srs.REWARD_SUGGESTED_AT) >= ?
+        AND DATE(srs.REWARD_SUGGESTED_AT) <= ?
+        ORDER BY srs.REWARD_SUGGESTED_AT DESC
+    ";
+
+    $stmt = $conn->prepare($rewardsQuery);
+    if (!$stmt) {
+        echo json_encode(['success' => false, 'message' => 'Query preparation failed: ' . $conn->error]);
+        $conn->close();
+        exit;
+    }
+
+    $stmt->bind_param("sss", $serial_number, $start_date, $end_date);
+    $stmt->execute();
+    $rewardsResult = $stmt->get_result();
+
+    $rewards = [];
+    while ($row = $rewardsResult->fetch_assoc()) {
+        $secFirstName = ($lang === 'ar' && !empty($row['SECRETARY_FIRST_NAME_AR'])) ? $row['SECRETARY_FIRST_NAME_AR'] : $row['SECRETARY_FIRST_NAME_EN'];
+        $secLastName = ($lang === 'ar' && !empty($row['SECRETARY_LAST_NAME_AR'])) ? $row['SECRETARY_LAST_NAME_AR'] : $row['SECRETARY_LAST_NAME_EN'];
+        $rewards[] = [
+            'reward_id' => $row['REWARD_ID'],
+            'reward_date_and_time' => $row['REWARD_SUGGESTED_AT'],
+            'reward_label' => $row['REWARD_LABEL'],
+            'reward_note' => $row['REWARD_NOTE'],
+            'secretary_name' => htmlspecialchars(trim($secFirstName . ' ' . $secLastName))
+        ];
+    }
+    $stmt->close();
+
     // Prepare student name based on language
     $studentFirstName = ($lang === 'ar' && !empty($student['STUDENT_FIRST_NAME_AR'])) ? $student['STUDENT_FIRST_NAME_AR'] : $student['STUDENT_FIRST_NAME_EN'];
     $studentLastName = ($lang === 'ar' && !empty($student['STUDENT_LAST_NAME_AR'])) ? $student['STUDENT_LAST_NAME_AR'] : $student['STUDENT_LAST_NAME_EN'];
@@ -448,7 +540,9 @@ try {
             ]
         ],
         'absences' => $absences,
-        'observations' => $observations
+        'observations' => $observations,
+        'punishments' => $punishments,
+        'rewards' => $rewards
     ]);
 
 } catch (Exception $e) {

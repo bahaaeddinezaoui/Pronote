@@ -150,13 +150,16 @@ $conn->close();
         }
         .hero-section {
             grid-column: 1 / -1;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-            color: white;
+            background: var(--glass-bg-strong);
+            color: var(--text-primary);
             padding: 3rem 2rem;
             border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--glass-border);
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
         }
         .hero-content {
             position: relative;
@@ -170,17 +173,53 @@ $conn->close();
         }
         .hero-section p {
             font-size: 1.1rem;
-            opacity: 0.9;
+            opacity: 0.88;
         }
         .hero-date {
             margin-top: 1.5rem;
             display: inline-block;
-            background: rgba(255,255,255,0.2);
+            background: rgba(99, 102, 241, 0.12);
             padding: 0.5rem 1rem;
             border-radius: var(--radius-md);
             font-weight: 600;
             font-size: 0.9rem;
             backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(99, 102, 241, 0.18);
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            inset: -40%;
+            background:
+                radial-gradient(500px 320px at 30% 30%, rgba(99, 102, 241, 0.26), transparent 60%),
+                radial-gradient(520px 360px at 78% 18%, rgba(139, 92, 246, 0.18), transparent 62%),
+                radial-gradient(560px 380px at 60% 85%, rgba(16, 185, 129, 0.14), transparent 62%);
+            filter: blur(18px);
+            opacity: 0.9;
+            transform: translateZ(0);
+            pointer-events: none;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 45%);
+            pointer-events: none;
+        }
+
+        [data-theme="dark"] .hero-section {
+            background: rgba(15, 23, 42, 0.52);
+            border-color: rgba(148, 163, 184, 0.18);
+            box-shadow: 0 26px 55px rgba(0, 0, 0, 0.45);
+        }
+
+        [data-theme="dark"] .hero-date {
+            background: rgba(99, 102, 241, 0.14);
+            border-color: rgba(99, 102, 241, 0.22);
+            color: rgba(248, 250, 252, 0.92);
         }
         
         .info-card {
