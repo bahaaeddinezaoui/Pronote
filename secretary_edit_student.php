@@ -1216,8 +1216,8 @@ function selectedAttr($current, $value) {
 
         <div class="home-container">
             <div style="margin-bottom: 2rem;">
-                <h1><?php echo t('welcome_secretary', h($secretary_name)); ?></h1>
-                <p style="color: var(--text-secondary);"><?php echo t('edit_student_info'); ?></p>
+                <h1><?php echo t('welcome_secretary_edit'); ?></h1>
+                <p style="color: var(--text-secondary);"><?php echo t('edit_student_subtitle'); ?></p>
             </div>
 
             <?php if ($message): ?>

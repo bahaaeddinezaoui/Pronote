@@ -68,6 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 sps.PUNISHMENT_ID,
                 sps.PUNISHMENT,
                 sps.PUNISHMENT_SUGGESTED_AT,
+                sps.PUNISHMENT_START_DATE,
+                sps.PUNISHMENT_END_DATE,
                 sps.PUNISHMENT_NOTE,
                 pt.PUNISHMENT_LABEL_EN,
                 pt.PUNISHMENT_LABEL_AR,
@@ -99,19 +101,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($action === 'add_punishment') {
         $serial = trim($_POST['serial_number'] ?? '');
         $type_id = isset($_POST['punishment_type_id']) ? (int)$_POST['punishment_type_id'] : 0;
+        $start_date = trim($_POST['start_date'] ?? '');
+        $end_date = trim($_POST['end_date'] ?? '');
         $note = trim($_POST['note'] ?? '');
 
-        if ($serial === '' || $type_id <= 0) {
+        if ($serial === '' || $type_id <= 0 || $start_date === '' || $end_date === '') {
             echo json_encode(['success' => false, 'message' => t('error_missing_fields') ?: 'Missing required fields.']);
             exit;
         }
 
         $stmt = $conn->prepare("
             INSERT INTO secretary_punishes_student
-                (STUDENT_SERIAL_NUMBER, SECRETARY_ID, PUNISHMENT_TYPE_ID, PUNISHMENT_SUGGESTED_AT, PUNISHMENT_NOTE)
-            VALUES (?, ?, ?, NOW(), ?)
+                (STUDENT_SERIAL_NUMBER, SECRETARY_ID, PUNISHMENT_TYPE_ID, PUNISHMENT_SUGGESTED_AT, PUNISHMENT_START_DATE, PUNISHMENT_END_DATE, PUNISHMENT_NOTE)
+            VALUES (?, ?, ?, NOW(), ?, ?, ?)
         ");
-        $stmt->bind_param("siis", $serial, $secretary_id, $type_id, $note);
+        $stmt->bind_param("siissss", $serial, $secretary_id, $type_id, $start_date, $end_date, $note);
         if ($stmt->execute()) {
             echo json_encode(['success' => true, 'message' => t('punishment_added_success') ?: 'Punishment added successfully.']);
         } else {
@@ -124,13 +128,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($action === 'add_punishment_bulk') {
         $serials_raw = (string)($_POST['serial_numbers'] ?? '');
         $type_id = isset($_POST['punishment_type_id']) ? (int)$_POST['punishment_type_id'] : 0;
+        $start_date = trim($_POST['start_date'] ?? '');
+        $end_date = trim($_POST['end_date'] ?? '');
         $note = trim($_POST['note'] ?? '');
 
         $serials = array_values(array_unique(array_filter(array_map('trim', explode(',', $serials_raw)), function ($v) {
             return $v !== '';
         })));
 
-        if (count($serials) < 1 || $type_id <= 0) {
+
+        if (count($serials) < 1 || $type_id <= 0 || $start_date === '' || $end_date === '') {
             echo json_encode(['success' => false, 'message' => t('error_missing_fields') ?: 'Missing required fields.']);
             exit;
         }
@@ -142,11 +149,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
         $conn->begin_transaction();
         try {
-            $stmt = $conn->prepare("INSERT INTO secretary_punishes_student (STUDENT_SERIAL_NUMBER, SECRETARY_ID, PUNISHMENT_TYPE_ID, PUNISHMENT_SUGGESTED_AT, PUNISHMENT_NOTE) VALUES (?, ?, ?, NOW(), ?)");
+            $stmt = $conn->prepare("INSERT INTO secretary_punishes_student (STUDENT_SERIAL_NUMBER, SECRETARY_ID, PUNISHMENT_TYPE_ID, PUNISHMENT_SUGGESTED_AT, PUNISHMENT_START_DATE, PUNISHMENT_END_DATE, PUNISHMENT_NOTE) VALUES (?, ?, ?, NOW(), ?, ?, ?)");
 
             $failed = [];
             foreach ($serials as $serial) {
-                $stmt->bind_param('siis', $serial, $secretary_id, $type_id, $note);
+                $stmt->bind_param('siissss', $serial, $secretary_id, $type_id, $start_date, $end_date, $note);
                 if (!$stmt->execute()) {
                     $failed[] = $serial;
                 }
@@ -175,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
 // Load punishment types for select
 $punishment_types = [];
-$res = $conn->query("SELECT PUNISHMENT_TYPE_ID, PUNISHMENT_LABEL_EN, PUNISHMENT_LABEL_AR FROM punishment_type ORDER BY PUNISHMENT_LABEL_EN");
+$res = $conn->query("SELECT PUNISHMENT_TYPE_ID, PUNISHMENT_LABEL_EN, PUNISHMENT_LABEL_AR, PUNISHMENT_DURATION FROM punishment_type ORDER BY PUNISHMENT_LABEL_EN");
 if ($res) {
     while ($r = $res->fetch_assoc()) {
         $punishment_types[] = $r;
@@ -319,11 +326,22 @@ $conn->close();
 
         .form-group { margin-bottom: 0.9rem; }
         .form-group label { display: block; margin-bottom: 0.25rem; font-size: 0.85rem; color: var(--text-secondary); }
-        .form-group select, .form-group input[type="text"], .form-group textarea {
-            width: 100%; padding: 0.5rem 0.6rem;
-            border-radius: 0.5rem; border: 1px solid var(--border-color);
+        .form-group select, .form-group input[type="date"], .form-group textarea {
+            width: 100%; padding: 0.65rem 0.8rem;
+            border-radius: 0.75rem; border: 1px solid var(--border-color);
             background: var(--background-color); color: var(--text-primary);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group select:focus, .form-group input[type="date"]:focus, .form-group textarea:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+        .form-group input[readonly] {
+            background: var(--border-color);
+            opacity: 0.7;
+            cursor: not-allowed;
         }
         .form-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem; }
 
@@ -421,7 +439,7 @@ $conn->close();
                             <select id="punishmentType" name="punishment_type_id" required>
                                 <option value=""><?php echo t('select_option') ?: 'Select...'; ?></option>
                                 <?php foreach ($punishment_types as $pt): ?>
-                                    <option value="<?php echo (int)$pt['PUNISHMENT_TYPE_ID']; ?>">
+                                    <option value="<?php echo (int)$pt['PUNISHMENT_TYPE_ID']; ?>" data-duration="<?php echo (int)$pt['PUNISHMENT_DURATION']; ?>">
                                         <?php
                                         echo htmlspecialchars(
                                             $LANG === 'ar' && !empty($pt['PUNISHMENT_LABEL_AR'])
@@ -432,6 +450,14 @@ $conn->close();
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="punishmentStartDate"><?php echo t('start_date') ?: 'Start date'; ?></label>
+                            <input type="date" id="punishmentStartDate" name="start_date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="punishmentEndDate"><?php echo t('end_date') ?: 'End date'; ?></label>
+                            <input type="date" id="punishmentEndDate" name="end_date" readonly>
                         </div>
                         <div class="form-group">
                             <label for="punishmentNote"><?php echo t('note') ?: 'Note'; ?></label>
@@ -622,8 +648,9 @@ $conn->close();
                     <thead>
                         <tr>
                             <th><?php echo t('date'); ?></th>
+                            <th><?php echo t('start_date') ?: 'Start'; ?></th>
+                            <th><?php echo t('end_date') ?: 'End'; ?></th>
                             <th><?php echo t('punishment_type'); ?></th>
-                            <th><?php echo t('punishment_label') ?: 'Punishment'; ?></th>
                             <th><?php echo t('note'); ?></th>
                             <th><?php echo t('secretary'); ?></th>
                         </tr>
@@ -632,6 +659,8 @@ $conn->close();
                         ${rows.map(r => `
                             <tr>
                                 <td>${escapeHtmlAttr(r.PUNISHMENT_SUGGESTED_AT || '')}</td>
+                                <td>${escapeHtmlAttr(r.PUNISHMENT_START_DATE || '')}</td>
+                                <td>${escapeHtmlAttr(r.PUNISHMENT_END_DATE || '')}</td>
                                 <td><span class="badge-pill">${
                                     escapeHtmlAttr(<?php echo $LANG === 'ar' ? 'r.PUNISHMENT_LABEL_AR' : 'r.PUNISHMENT_LABEL_EN'; ?> || '')
                                 }</span></td>
@@ -676,6 +705,27 @@ $conn->close();
         document.getElementById('punishmentModal').classList.remove('active');
     }
 
+    function calculateEndDate() {
+        const typeSelect = document.getElementById('punishmentType');
+        const startDateInput = document.getElementById('punishmentStartDate');
+        const endDateInput = document.getElementById('punishmentEndDate');
+        
+        const selectedOption = typeSelect.options[typeSelect.selectedIndex];
+        const duration = parseInt(selectedOption?.dataset?.duration || 0);
+        const startDate = startDateInput.value;
+
+        if (startDate && duration > 0) {
+            const date = new Date(startDate);
+            date.setDate(date.getDate() + duration);
+            endDateInput.value = date.toISOString().split('T')[0];
+        } else {
+            endDateInput.value = '';
+        }
+    }
+
+    document.getElementById('punishmentType').addEventListener('change', calculateEndDate);
+    document.getElementById('punishmentStartDate').addEventListener('change', calculateEndDate);
+
     async function submitPunishment(e) {
         e.preventDefault();
         if (modalMode === 'single' && !selectedStudent) {
@@ -687,6 +737,8 @@ $conn->close();
             return;
         }
         const typeId = document.getElementById('punishmentType').value;
+        const startDate = document.getElementById('punishmentStartDate').value;
+        const endDate = document.getElementById('punishmentEndDate').value;
         if (!typeId) {
             showStatus('statusModal', '<?php echo t('msg_select_required') ?: 'Please select a punishment type.'; ?>', 'error');
             return;
@@ -702,6 +754,8 @@ $conn->close();
             formData.set('serial_number', selectedStudent.serial);
         }
         formData.set('punishment_type_id', typeId);
+        formData.set('start_date', startDate);
+        formData.set('end_date', endDate);
         formData.set('note', note);
 
         showStatus('statusModal', '<?php echo t('saving'); ?>...', '');

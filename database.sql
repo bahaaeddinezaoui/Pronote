@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Hôte : 127.0.0.1:3306
--- Généré le : lun. 16 mars 2026 à 08:24
--- Version du serveur : 9.1.0
--- Version de PHP : 8.3.14
+-- Host: 127.0.0.1:3306
+-- Generation Time: Mar 17, 2026 at 12:12 AM
+-- Server version: 9.1.0
+-- PHP Version: 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `edutrack`
+-- Database: `edutrack`
 --
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `absence`
+-- Table structure for table `absence`
 --
 
 DROP TABLE IF EXISTS `absence`;
@@ -39,71 +39,10 @@ CREATE TABLE IF NOT EXISTS `absence` (
   KEY `FK_ABSENCE_MOTIF` (`ABSENCE_MOTIF_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `absence`
---
-
-INSERT INTO `absence` (`ABSENCE_ID`, `STUDY_SESSION_ID`, `ABSENCE_DATE_AND_TIME`, `ABSENCE_OBSERVATION`, `ABSENCE_MOTIF_ID`) VALUES
-(1, 1, '2026-02-19 10:36:33', '', 6),
-(2, 1, '2026-02-19 10:36:33', '', 1),
-(3, 1, '2026-02-19 10:36:33', '', 6),
-(4, 1, '2026-02-19 10:36:33', '', 6),
-(5, 1, '2026-02-19 10:36:33', '', 6),
-(6, 1, '2026-02-19 10:36:33', '', 6),
-(7, 1, '2026-02-19 10:36:33', '', 6),
-(8, 1, '2026-02-19 10:36:33', '', 6),
-(9, 1, '2026-02-19 10:36:33', '', 10),
-(10, 1, '2026-02-19 10:36:33', '', 10),
-(11, 1, '2026-02-19 10:36:33', '', 10),
-(12, 1, '2026-02-19 10:36:33', '', 10),
-(13, 2, '2026-02-19 11:23:44', '', 4),
-(14, 2, '2026-02-19 11:23:44', '', 4),
-(15, 3, '2026-02-22 09:06:33', '', 4),
-(16, 3, '2026-02-22 09:06:33', '', 4),
-(17, 3, '2026-02-22 09:06:33', '', 4),
-(18, 3, '2026-02-22 09:06:33', '', 4),
-(19, 3, '2026-02-22 09:06:33', '', 4),
-(20, 3, '2026-02-22 09:06:33', '', 4),
-(21, 3, '2026-02-22 09:06:33', '', 4),
-(22, 4, '2026-02-22 10:08:22', '', 7),
-(23, 4, '2026-02-22 10:08:22', '', 7),
-(24, 4, '2026-02-22 10:08:22', '', 7),
-(25, 4, '2026-02-22 10:08:22', '', 4),
-(26, 4, '2026-02-22 10:08:22', '', 4),
-(27, 4, '2026-02-22 10:08:22', '', 4),
-(28, 4, '2026-02-22 10:08:22', '', 7),
-(29, 4, '2026-02-22 10:08:22', '', 4),
-(30, 4, '2026-02-22 10:08:22', '', 4),
-(31, 4, '2026-02-22 10:08:22', '', 4),
-(32, 5, '2026-02-22 10:11:58', '', 7),
-(33, 5, '2026-02-22 10:11:58', '', 7),
-(34, 5, '2026-02-22 10:11:58', '', 4),
-(35, 5, '2026-02-22 10:11:58', '', 4),
-(36, 5, '2026-02-22 10:11:58', '', 4),
-(37, 5, '2026-02-22 10:11:58', '', 4),
-(38, 5, '2026-02-22 10:11:58', '', 7),
-(39, 5, '2026-02-22 10:11:58', '', 4),
-(40, 5, '2026-02-22 10:11:58', '', 7),
-(41, 5, '2026-02-22 10:11:58', '', 4),
-(42, 5, '2026-02-22 10:11:58', '', 4),
-(43, 5, '2026-02-22 10:11:58', '', 4),
-(44, 7, '2026-02-22 10:48:02', '', 10),
-(45, 14, '2026-02-24 13:50:57', '', 7),
-(46, 14, '2026-02-24 13:50:57', '', 2),
-(47, 17, '2026-03-03 13:11:20', '', 6),
-(48, 19, '2026-03-08 11:09:09', '', 4),
-(49, 19, '2026-03-08 11:09:09', '', 4),
-(50, 19, '2026-03-08 11:09:09', '', 4),
-(51, 19, '2026-03-08 11:09:09', '', 4),
-(52, 19, '2026-03-08 11:09:09', '', 4),
-(53, 19, '2026-03-08 11:09:09', '', 4),
-(54, 19, '2026-03-08 11:09:09', '', 4),
-(55, 19, '2026-03-08 11:09:09', '', 4);
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `absence_motif`
+-- Table structure for table `absence_motif`
 --
 
 DROP TABLE IF EXISTS `absence_motif`;
@@ -112,28 +51,12 @@ CREATE TABLE IF NOT EXISTS `absence_motif` (
   `ABSENCE_MOTIF_EN` varchar(60) DEFAULT NULL,
   `ABSENCE_MOTIF_AR` varchar(60) DEFAULT NULL,
   PRIMARY KEY (`ABSENCE_MOTIF_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `absence_motif`
---
-
-INSERT INTO `absence_motif` (`ABSENCE_MOTIF_ID`, `ABSENCE_MOTIF_EN`, `ABSENCE_MOTIF_AR`) VALUES
-(1, 'Going to the nursery', 'الذهاب إلى العيادة'),
-(2, 'Gone on a mission', 'الذهاب في مهمة'),
-(3, 'Recovery', 'استشفاء'),
-(4, 'Unjustified absence', 'غياب غير مبرر'),
-(5, 'Participating in a sports competition', 'المشاركة في منافسة رياضية'),
-(6, '48H permit', 'إجازة 48 ساعة'),
-(7, '72H permit', 'إجازة 72 ساعة'),
-(8, 'Medical exemption', 'إعفاء طبي'),
-(9, 'Outing', 'نزهة'),
-(10, 'At the student brigade', 'على مستوى لواء الطلبة');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `academic_level`
+-- Table structure for table `academic_level`
 --
 
 DROP TABLE IF EXISTS `academic_level`;
@@ -143,19 +66,12 @@ CREATE TABLE IF NOT EXISTS `academic_level` (
   `ACADEMIC_LEVEL_AR` varchar(30) NOT NULL,
   PRIMARY KEY (`ACADEMIC_LEVEL_ID`),
   UNIQUE KEY `UK_ACADEMIC_LEVEL_EN` (`ACADEMIC_LEVEL_EN`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `academic_level`
---
-
-INSERT INTO `academic_level` (`ACADEMIC_LEVEL_ID`, `ACADEMIC_LEVEL_EN`, `ACADEMIC_LEVEL_AR`) VALUES
-(1, 'بكالوريا', 'بكالوريا');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `address`
+-- Table structure for table `address`
 --
 
 DROP TABLE IF EXISTS `address`;
@@ -170,21 +86,12 @@ CREATE TABLE IF NOT EXISTS `address` (
   PRIMARY KEY (`ADDRESS_ID`),
   KEY `FK_ADDR_COMMUNE` (`COMMUNE_ID`),
   KEY `FK_ADDR_COUNTRY` (`COUNTRY_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `address`
---
-
-INSERT INTO `address` (`ADDRESS_ID`, `ADDRESS_STREET_EN`, `ADDRESS_STREET_AR`, `COMMUNE_ID`, `DAIRA_ID`, `WILAYA_ID`, `COUNTRY_ID`) VALUES
-(18, '', '', 1398, 4301, 43, 1),
-(19, '', '', NULL, NULL, NULL, 1),
-(20, '', '', NULL, NULL, NULL, 1);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `administrator`
+-- Table structure for table `administrator`
 --
 
 DROP TABLE IF EXISTS `administrator`;
@@ -202,20 +109,10 @@ CREATE TABLE IF NOT EXISTS `administrator` (
   KEY `FK_ADMIN_USER` (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `administrator`
---
-
-INSERT INTO `administrator` (`ADMINISTRATOR_ID`, `USER_ID`, `ADMINISTRATOR_FIRST_NAME_EN`, `ADMINISTRATOR_LAST_NAME_EN`, `ADMINISTRATOR_FIRST_NAME_AR`, `ADMINISTRATOR_LAST_NAME_AR`, `ADMINISTRATOR_POSITION`, `ADMINISTRATOR_PHOTO`, `ADMINISTRATOR_GRADE_ID`) VALUES
-(1, 1, 'Said', 'SIDI OUIS', 'سعيد', 'سيدي ويس', 'Commandant de l\'Ecole', 'resources\\photos\\admins\\1.jpg', 4),
-(2, 2, 'Yacine', 'ROUABHIA', 'ياسين', 'روابحية', 'Chef Brigade', '', 6),
-(3, 3, 'Mohamed Taher', 'BADI', 'محمد الطاهر', 'بادي', 'DGE', '', 5),
-(4, 4, 'Charafeddine', 'KEDAYA', 'شرف الدين', 'كداية', 'IT Bureau Chief', '', 6);
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `admin_read_observation`
+-- Table structure for table `admin_read_observation`
 --
 
 DROP TABLE IF EXISTS `admin_read_observation`;
@@ -227,18 +124,10 @@ CREATE TABLE IF NOT EXISTS `admin_read_observation` (
   KEY `FK_ARO_ADMIN` (`ADMINISTRATOR_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `admin_read_observation`
---
-
-INSERT INTO `admin_read_observation` (`OBSERVATION_ID`, `ADMINISTRATOR_ID`, `READ_AT`) VALUES
-(1, 1, '2026-03-08 08:45:21'),
-(1, 4, '2026-03-03 13:12:02');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `army`
+-- Table structure for table `army`
 --
 
 DROP TABLE IF EXISTS `army`;
@@ -251,41 +140,10 @@ CREATE TABLE IF NOT EXISTS `army` (
   PRIMARY KEY (`ARMY_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `army`
---
-
-INSERT INTO `army` (`ARMY_ID`, `ARMY_LABEL_EN`, `ARMY_LABEL_AR`, `ARMY_NAME_EN`, `ARMY_NAME_AR`) VALUES
-(1, 'L.F.C.', 'ق.ق.ب.', 'Land Forces Command', 'قيادة القوات البرية'),
-(2, 'A.F.C.', 'ق.ق.ج.', 'Air Forces Command', 'قيادة القوات الجوية'),
-(3, 'N.F.C.', 'ق.ق.ب.', 'Naval Forces Command', 'قيادة القوات البحرية'),
-(4, 'T.A.D.F.C.', 'ق.ق.د.ج.ع.إ.', 'Territorial Air Defense Forces Command', 'قيادة قوات الدفاع الجوي عن الإقليم'),
-(5, 'N.G.C.', 'ق.د.و.', 'National Gendarmerie Command', 'قيادة الدرك الوطني'),
-(6, 'R.G.C.', 'ق.ح.ج.', 'Republican Guard Command', 'قيادة الحرس الجمهوري'),
-(7, 'D.T.I.S.E.W.', 'د.إ.أ.م.ح.إ.', 'Special Forces', 'دائرة الإشارة وأنظمة المعلومات والحرب الإلكترونية'),
-(8, 'S.F.', 'ق.ح.', 'Department of Transmissions, Information Systems, and Electr', 'القوات الخاصة'),
-(9, 'C.D.M.E.', 'م.م.ع.', 'Central Directorate of Military Equipment', 'المديرية المركزية للعتاد'),
-(10, 'C.D.M.H.S.', 'م.م.م.ص.ع.', 'Central Directorate of Military Health Services', 'المديرية المركزية لمصالح الصحة العسكرية'),
-(11, 'D.A.C.S.', 'م.إ.م.م.', 'Directorate of Administration and Common Services', 'مديرية الإدارة والمصالح المشتركة'),
-(12, 'C.D.C.', 'م.م.م.', 'Central Directorate of Commissariat (Logistics)', 'المديرية المركزية للمعتمدية'),
-(13, 'C.D.F.', 'م.م.و.', 'Central Directorate of Fuel', 'المديرية المركزية للوقود'),
-(14, 'D.I.C.(D.M.C.O).', 'م.إ.إ.(م.إ.إ.ت).', 'Directorate of Information and Communication (Directorate of', 'مديرية الإعلام والإتصال (مديرية الإعلام والإتصال والتوجيه)'),
-(15, 'D.M.I.', 'م.ص.ع.', 'Directorate of Military Industries', 'مديرية الصناعات العسكرية'),
-(16, 'D.N.S.', 'م.خ.و.', 'Directorate of National Service', 'مديرية الخدمة الوطنية'),
-(17, 'M.S.S.', 'م.ر.ع.', 'Military Sports Service', 'مصلحة الرياضة العسكرية'),
-(18, 'D.S.S.', 'م.م.إ.', 'Directorate of Social Services', 'مديرية المصالح الإجتماعية'),
-(19, 'C.D.D.I.S.', 'م.م.ر.أ.م.', 'Central Directorate for Digitization and Information Systems', 'المديرية المركزية للرقمنة وأنظمة المعلومات'),
-(20, 'D.M.J.', 'م.ق.ع.', 'Directorate of Military Justice', 'مديرية القضاء العسكري'),
-(21, 'C.S.P.R.', 'م.م.ل.ج.', 'Common Services of the Presidency of the Republic', 'المصالح المشتركة لرئاسة الجمهورية'),
-(22, 'C.F.S.', 'م.م.م.', 'Central Financial Services', 'المصالح المركزية للمالية'),
-(23, 'D.P.', 'م.م.', 'Directorate of Personnel (Users)', 'مديرية المستخدمين'),
-(24, 'C.D.A.S.', 'م.م.أ.ج.', 'Central Directorate of Army Security', 'المديرية المركزية لأمن الجيش'),
-(25, 'C.S.', 'م.ش.', 'Cipher (Encryption) Service', 'مصلحة الشيفرة');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `category`
+-- Table structure for table `category`
 --
 
 DROP TABLE IF EXISTS `category`;
@@ -296,24 +154,10 @@ CREATE TABLE IF NOT EXISTS `category` (
   PRIMARY KEY (`CATEGORY_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `category`
---
-
-INSERT INTO `category` (`CATEGORY_ID`, `CATEGORY_NAME_EN`, `CATEGORY_NAME_AR`) VALUES
-(1, 'LMD 1', 'ل.م.د.1'),
-(2, 'LMD 2', 'ل.م.د.2'),
-(3, 'LMD 3', 'ل.م.د.3'),
-(4, 'Perfectionning', 'الإتقان'),
-(5, 'Recycling', 'الرسكلة'),
-(6, 'Specialization', 'التخصص'),
-(7, 'Professional Master', 'ماستر مهني'),
-(8, 'Etat-Major', 'القيادة والأركان');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `class`
+-- Table structure for table `class`
 --
 
 DROP TABLE IF EXISTS `class`;
@@ -324,41 +168,10 @@ CREATE TABLE IF NOT EXISTS `class` (
   PRIMARY KEY (`CLASS_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `class`
---
-
-INSERT INTO `class` (`CLASS_ID`, `CLASS_NAME_EN`, `CLASS_NAME_AR`) VALUES
-(1, 'Class 1', 'القاعة 1'),
-(2, 'Class 2', 'القاعة 2'),
-(3, 'Class 3', 'القاعة 3'),
-(4, 'Class 4', 'القاعة 4'),
-(5, 'Class 5', 'القاعة 5'),
-(6, 'Class 6', 'القاعة 6'),
-(7, 'Class 7', 'القاعة 7'),
-(8, 'Class 8', 'القاعة 8'),
-(9, 'Class 9', 'القاعة 9'),
-(10, 'Class 10', 'القاعة 10'),
-(11, 'Class 11', 'القاعة 11'),
-(12, 'Class 12', 'القاعة 12'),
-(13, 'Class 13', 'القاعة 13'),
-(14, 'Class 14', 'القاعة 14'),
-(15, 'Class 15', 'القاعة 15'),
-(16, 'Class 16', 'القاعة 16'),
-(17, 'Class 17', 'القاعة 17'),
-(18, 'Class 18', 'القاعة 18'),
-(19, 'Class 19', 'القاعة 19'),
-(20, 'Class 20', 'القاعة 20'),
-(21, 'Class 21', 'القاعة 21'),
-(22, 'Class 22', 'القاعة 22'),
-(23, 'Amphi', 'المدرج'),
-(24, 'Amphi Eldjilali BELAADJINE (Cinema)', 'المدرج بلعجين الجيلالي (السينما)'),
-(25, 'Computer Science Class', 'قاعة الإعلام الآلي');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `commune`
+-- Table structure for table `commune`
 --
 
 DROP TABLE IF EXISTS `commune`;
@@ -369,1560 +182,12 @@ CREATE TABLE IF NOT EXISTS `commune` (
   `COMMUNE_NAME_AR` varchar(100) NOT NULL,
   PRIMARY KEY (`COMMUNE_ID`),
   KEY `FK_COMMUNE_DAIRA` (`DAIRA_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1542 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `commune`
---
-
-INSERT INTO `commune` (`COMMUNE_ID`, `DAIRA_ID`, `COMMUNE_NAME_EN`, `COMMUNE_NAME_AR`) VALUES
-(1, 101, 'Adrar', 'أدرار'),
-(2, 112, 'Akabli', 'اقبلي'),
-(3, 123, 'Aougrout', 'أوقروت'),
-(4, 112, 'Aoulef', 'أولف'),
-(5, 125, 'Bordj Badji Mokhtar', 'برج باجي مختار'),
-(6, 101, 'Bouda', 'بودة'),
-(7, 103, 'Charouine', 'شروين'),
-(8, 123, 'Deldoul', 'دلدول'),
-(9, 115, 'Fenoughil', 'فنوغيل'),
-(10, 111, 'In Zghmir', 'إن زغمير'),
-(11, 116, 'Ksar Kaddour', 'قصر قدور'),
-(12, 123, 'Metarfa', 'المطارفة'),
-(13, 101, 'Ouled Ahmed Timmi', 'أولاد أحمد تيمي'),
-(14, 103, 'Ouled Aissa', 'أولاد عيسى'),
-(15, 109, 'Ouled Said', 'أولاد السعيد'),
-(16, 104, 'Reggane', 'رقان'),
-(17, 104, 'Sali', 'سالي'),
-(18, 108, 'Sebaa', 'السبع'),
-(19, 103, 'Talmine', 'طالمين'),
-(20, 115, 'Tamantit', 'تامنطيط'),
-(21, 115, 'Tamest', 'تامست'),
-(22, 112, 'Timekten', 'تيمقتن'),
-(23, 125, 'Timiaouine', 'تيمياوين'),
-(24, 109, 'Timimoun', 'تيميمون'),
-(25, 116, 'Tinerkouk', 'تنركوك'),
-(26, 112, 'Tit', 'تيت'),
-(27, 108, 'Tsabit', 'تسابيت'),
-(28, 111, 'Zaouiet Kounta', 'زاوية كنتة'),
-(29, 222, 'Abou El Hassane', 'أبو الحسن'),
-(30, 232, 'Ain Merane', 'عين مران'),
-(31, 220, 'Benairia', 'بنايرية'),
-(32, 204, 'Beni  Bouattab', 'بني بوعتاب'),
-(33, 207, 'Beni Haoua', 'بني حواء'),
-(34, 229, 'Beni Rached', 'بني راشد'),
-(35, 212, 'Boukadir', 'بوقادير'),
-(36, 220, 'Bouzeghaia', 'بوزغاية'),
-(37, 207, 'Breira', 'بريرة'),
-(38, 210, 'Chettia', 'الشطية'),
-(39, 201, 'Chlef', 'الشلف'),
-(40, 206, 'Dahra', 'الظهرة'),
-(41, 230, 'El Hadjadj', 'الحجاج'),
-(42, 204, 'El Karimia', 'الكريمية'),
-(43, 223, 'El Marsa', 'المرسى'),
-(44, 204, 'Harchoun', 'حرشون'),
-(45, 232, 'Herenfa', 'الهرانفة'),
-(46, 210, 'Labiod Medjadja', 'الأبيض مجاجة'),
-(47, 223, 'Moussadek', 'مصدق'),
-(48, 229, 'Oued Fodda', 'وادي الفضة'),
-(49, 207, 'Oued Goussine', 'وادي قوسين'),
-(50, 212, 'Oued Sly', 'وادي سلي'),
-(51, 229, 'Ouled Abbes', 'أولاد عباس'),
-(52, 230, 'Ouled Ben Abdelkader', 'أولاد بن عبد القادر'),
-(53, 210, 'Ouled Fares', 'أولاد فارس'),
-(54, 201, 'Oum Drou', 'أم الدروع'),
-(55, 201, 'Sendjas', 'سنجاس'),
-(56, 202, 'Sidi Abderrahmane', 'سيدي عبد الرحمن'),
-(57, 202, 'Sidi Akkacha', 'سيدي عكاشة'),
-(58, 212, 'Sobha', 'الصبحة'),
-(59, 222, 'Tadjena', 'تاجنة'),
-(60, 222, 'Talassa', 'تلعصة'),
-(61, 206, 'Taougrit', 'تاوقريت'),
-(62, 202, 'Tenes', 'تنس'),
-(63, 220, 'Zeboudja', 'الزبوجة'),
-(64, 319, 'Aflou', 'أفلو'),
-(65, 307, 'Ain Madhi', 'عين ماضي'),
-(66, 310, 'Ain Sidi Ali', 'عين سيدي علي'),
-(67, 310, 'El Beidha', 'البيضاء'),
-(68, 302, 'Benacer Benchohra', 'بن ناصر بن شهرة'),
-(69, 313, 'Brida', 'بريدة'),
-(70, 304, 'El Assafia', 'العسافية'),
-(71, 314, 'El Ghicha', 'الغيشة'),
-(72, 307, 'El Haouaita', 'الحويطة'),
-(73, 310, 'Gueltat Sidi Saad', 'قلتة سيدي سعد'),
-(74, 313, 'Hadj Mechri', 'الحاج مشري'),
-(75, 306, 'Hassi Delaa', 'حاسي الدلاعة'),
-(76, 306, 'Hassi R\'mel', 'حاسي الرمل'),
-(77, 307, 'Kheneg', 'الخنق'),
-(78, 302, 'Ksar El Hirane', 'قصر الحيران'),
-(79, 301, 'Laghouat', 'الأغواط'),
-(80, 321, 'Oued Morra', 'وادي مرة'),
-(81, 321, 'Oued M\'zi', 'وادي مزي'),
-(82, 319, 'Sebgag', 'سبقاق'),
-(83, 319, 'Sidi Bouzid', 'سيدي بوزيد'),
-(84, 304, 'Sidi Makhlouf', 'سيدي مخلوف'),
-(85, 307, 'Tadjemout', 'تاجموت'),
-(86, 307, 'Tadjrouna', 'تاجرونة'),
-(87, 313, 'Taouiala', 'تاويالة'),
-(88, 408, 'Ain Babouche', 'عين ببوش'),
-(89, 402, 'Ain Beida', 'عين البيضاء'),
-(90, 408, 'Ain Diss', 'عين الديس'),
-(91, 425, 'Ain Fekroun', 'عين فكرون'),
-(92, 412, 'Ain Kercha', 'عين كرشة'),
-(93, 403, 'Ain M\'lila', 'عين مليلة'),
-(94, 401, 'Ain Zitoun', 'عين الزيتون'),
-(95, 424, 'Behir Chergui', 'بحير الشرقي'),
-(96, 402, 'Berriche', 'بريش'),
-(97, 417, 'Bir Chouhada', 'بئر الشهداء'),
-(98, 411, 'Dhalaa', 'الضلعة'),
-(99, 406, 'El Amiria', 'العامرية'),
-(100, 424, 'El Belala', 'البلالة'),
-(101, 411, 'El Djazia', 'الجازية'),
-(102, 425, 'El Fedjoudj Boughrara Sa', 'الفجوج بوغرارة سعودي'),
-(103, 412, 'El Harmilia', 'الحرملية'),
-(104, 416, 'Fkirina', 'فكيرينة'),
-(105, 412, 'Hanchir Toumghani', 'هنشير تومغني'),
-(106, 422, 'Ksar Sbahi', 'قصر الصباحي'),
-(107, 424, 'Meskiana', 'مسكيانة'),
-(108, 416, 'Oued Nini', 'وادي نيني'),
-(109, 403, 'Ouled Gacem', 'أولاد قاسم'),
-(110, 403, 'Ouled Hamla', 'أولاد حملة'),
-(111, 417, 'Ouled Zouai', 'أولاد زواي'),
-(112, 401, 'Oum El Bouaghi', 'أم البواقي'),
-(113, 424, 'Rahia', 'الرحية'),
-(114, 406, 'Sigus', 'سيقوس'),
-(115, 417, 'Souk Naamane', 'سوق نعمان'),
-(116, 402, 'Zorg', 'الزرق'),
-(117, 519, 'Ain Djasser', 'عين جاسر'),
-(118, 545, 'Ain Touta', 'عين التوتة'),
-(119, 507, 'Ain Yagout', 'عين ياقوت'),
-(120, 516, 'Arris', 'أريس'),
-(121, 543, 'Azil Abedelkader', 'عزيل عبد القادر'),
-(122, 542, 'Barika', 'بريكة'),
-(123, 501, 'Batna', 'باتنة'),
-(124, 545, 'Beni Foudhala El Hakania', 'بني فضالة الحقانية'),
-(125, 542, 'Bitam', 'بيطام'),
-(126, 536, 'Boulhilat', 'بولهيلات'),
-(127, 509, 'Boumagueur', 'بومقر'),
-(128, 507, 'Boumia', 'بومية'),
-(129, 535, 'Bouzina', 'بوزينة'),
-(130, 536, 'Chemora', 'الشمرة'),
-(131, 547, 'Chir', 'شير'),
-(132, 507, 'Djerma', 'جرمة'),
-(133, 543, 'Djezzar', 'الجزار'),
-(134, 519, 'El Hassi', 'الحاسي'),
-(135, 507, 'El Madher', 'المعذر'),
-(136, 501, 'Fesdis', 'فسديس'),
-(137, 530, 'Foum Toub', 'فم الطوب'),
-(138, 544, 'Ghassira', 'غسيرة'),
-(139, 551, 'Gosbat', 'القصبات'),
-(140, 551, 'Guigba', 'القيقبة'),
-(141, 504, 'Hidoussa', 'حيدوسة'),
-(142, 530, 'Ichemoul', 'إشمول'),
-(143, 530, 'Inoughissen', 'إينوغيسن'),
-(144, 544, 'Kimmel', 'كيمل'),
-(145, 504, 'Ksar Bellezma', 'قصر بلزمة'),
-(146, 535, 'Larbaa', 'لارباع'),
-(147, 505, 'Lazrou', 'لازرو'),
-(148, 553, 'Lemcene', 'لمسان'),
-(149, 542, 'M Doukal', 'إمدوكل'),
-(150, 545, 'Maafa', 'معافة'),
-(151, 506, 'Menaa', 'منعة'),
-(152, 504, 'Merouana', 'مروانة'),
-(153, 509, 'N Gaous', 'نقاوس'),
-(154, 501, 'Oued Chaaba', 'وادي الشعبة'),
-(155, 504, 'Oued El Ma', 'وادي الماء'),
-(156, 547, 'Oued Taga', 'وادي الطاقة'),
-(157, 543, 'Ouled Ammar', 'أولاد عمار'),
-(158, 545, 'Ouled Aouf', 'أولاد عوف'),
-(159, 550, 'Ouled Fadel', 'أولاد فاضل'),
-(160, 551, 'Ouled Sellem', 'أولاد سلام'),
-(161, 553, 'Ouled Si Slimane', 'أولاد سي سليمان'),
-(162, 508, 'Ouyoun El Assafir', 'عيون العصافير'),
-(163, 551, 'Rahbat', 'الرحبات'),
-(164, 551, 'Ras El Aioun', 'رأس العيون'),
-(165, 509, 'Sefiane', 'سفيان'),
-(166, 529, 'Seggana', 'سقانة'),
-(167, 505, 'Seriana', 'سريانة'),
-(168, 544, 'T Kout', 'تكوت'),
-(169, 551, 'Talkhamt', 'تالخمت'),
-(170, 553, 'Taxlent', 'تاكسلانت'),
-(171, 508, 'Tazoult', 'تازولت'),
-(172, 547, 'Teniet El Abed', 'ثنية العابد'),
-(173, 516, 'Tighanimine', 'تيغانمين'),
-(174, 506, 'Tigharghar', 'تغرغار'),
-(175, 529, 'Tilatou', 'تيلاطو'),
-(176, 550, 'Timgad', 'تيمقاد'),
-(177, 505, 'Zanet El Beida', 'زانة البيضاء'),
-(178, 624, 'Adekar', 'أدكار'),
-(179, 617, 'Ait R\'zine', 'أيت رزين'),
-(180, 620, 'Ait-Smail', 'أيت إسماعيل'),
-(181, 625, 'Akbou', 'أقبو'),
-(182, 629, 'Akfadou', 'أكفادو'),
-(183, 626, 'Amalou', 'أمالو'),
-(184, 602, 'Amizour', 'أميزور'),
-(185, 622, 'Aokas', 'أوقاس'),
-(186, 634, 'Barbacha', 'برباشة'),
-(187, 601, 'Bejaia', 'بجاية'),
-(188, 602, 'Beni Djellil', 'بني جليل'),
-(189, 624, 'Beni K\'sila', 'بني كسيلة'),
-(190, 627, 'Beni-Mallikeche', 'بني مليكش'),
-(191, 650, 'Benimaouche', 'بني معوش'),
-(192, 627, 'Boudjellil', 'بو جليل'),
-(193, 626, 'Bouhamza', 'بوحمزة'),
-(194, 611, 'Boukhelifa', 'بوخليفة'),
-(195, 625, 'Chellata', 'شلاطة'),
-(196, 629, 'Chemini', 'شميني'),
-(197, 620, 'Darguina', 'درقينة'),
-(198, 644, 'Dra El Caid', 'ذراع القايد'),
-(199, 639, 'Leflaye', 'الفلاي'),
-(200, 640, 'El Kseur', 'القصر'),
-(201, 640, 'Fenaia Il Maten', 'فناية الماثن'),
-(202, 602, 'Feraoun', 'فرعون'),
-(203, 636, 'Ouzellaguen', 'أوزلاقن'),
-(204, 617, 'Ighil-Ali', 'إغيل علي'),
-(205, 625, 'Ighram', 'اغرم'),
-(206, 634, 'Kendira', 'كنديرة'),
-(207, 644, 'Kherrata', 'خراطة'),
-(208, 626, 'M\'cisna', 'مسيسنة'),
-(209, 608, 'Melbou', 'مالبو'),
-(210, 601, 'Oued Ghir', 'وادي غير'),
-(211, 626, 'Seddouk', 'صدوق'),
-(212, 639, 'Sidi Ayad', 'سيدي عياد'),
-(213, 639, 'Sidi-Aich', 'سيدي عيش'),
-(214, 602, 'Smaoun', 'سمعون'),
-(215, 608, 'Souk El Tenine', 'سوق لإثنين'),
-(216, 629, 'Souk Oufella', 'سوق اوفلا'),
-(217, 611, 'Tala Hamza', 'تالة حمزة'),
-(218, 625, 'Tamokra', 'تامقرة'),
-(219, 608, 'Tamridjet', 'تامريجت'),
-(220, 624, 'Taourit Ighil', 'تاوريرت إغيل'),
-(221, 620, 'Taskriout', 'تاسكريوت'),
-(222, 627, 'Tazmalt', 'تازمالت'),
-(223, 629, 'Tibane', 'طيبان'),
-(224, 611, 'Tichy', 'تيشي'),
-(225, 639, 'Tifra', 'تيفرة'),
-(226, 607, 'Timezrit', 'تيمزريت'),
-(227, 639, 'Tinebdar', 'تينبدار'),
-(228, 622, 'Tizi-N\'berber', 'تيزي نبربر'),
-(229, 640, 'Toudja', 'توجة'),
-(230, 711, 'Ain Naga', 'عين الناقة'),
-(231, 717, 'Ain Zaatout', 'عين زعطوط'),
-(232, 708, 'Besbes', 'بسباس'),
-(233, 701, 'Biskra', 'بسكرة'),
-(234, 721, 'Bordj Ben Azzouz', 'برج بن عزوز'),
-(235, 721, 'Bouchakroun', 'بوشقرون'),
-(236, 720, 'Branis', 'برانيس'),
-(237, 705, 'Chaiba', 'الشعيبة'),
-(238, 711, 'Chetma', 'شتمة'),
-(239, 720, 'Djemorah', 'جمورة'),
-(240, 705, 'Doucen', 'الدوسن'),
-(241, 715, 'El Feidh', 'الفيض'),
-(242, 726, 'El Ghrous', 'الغروس'),
-(243, 701, 'El Hadjab', 'الحاجب'),
-(244, 711, 'El Haouch', 'الحوش'),
-(245, 717, 'El Kantara', 'القنطرة'),
-(246, 719, 'El Outaya', 'الوطاية'),
-(247, 726, 'Foughala', 'فوغالة'),
-(248, 715, 'Khenguet Sidi Nadji', 'خنقة سيدي ناجي'),
-(249, 721, 'Lichana', 'ليشانة'),
-(250, 724, 'Lioua', 'ليوة'),
-(251, 712, 'M\'chouneche', 'مشونش'),
-(252, 724, 'Mekhadma', 'مخادمة'),
-(253, 715, 'Meziraa', 'المزيرعة'),
-(254, 724, 'M\'lili', 'مليلي'),
-(255, 705, 'Ouled Djellal', 'أولاد جلال'),
-(256, 724, 'Oumache', 'أوماش'),
-(257, 724, 'Ourlal', 'أورلال'),
-(258, 708, 'Ras El Miad', 'رأس الميعاد'),
-(259, 708, 'Sidi Khaled', 'سيدي  خالد'),
-(260, 711, 'Sidi Okba', 'سيدي عقبة'),
-(261, 721, 'Tolga', 'طولقة'),
-(262, 715, 'Zeribet El Oued', 'زريبة الوادي'),
-(263, 817, 'Abadla', 'العبادلة'),
-(264, 801, 'Bechar', 'بشار'),
-(265, 807, 'Beni-Abbes', 'بني عباس'),
-(266, 818, 'Beni-Ikhlef', 'بن يخلف'),
-(267, 821, 'Beni-Ounif', 'بني ونيف'),
-(268, 806, 'Boukais', 'بوكايس'),
-(269, 814, 'El Ouata', 'الواتة'),
-(270, 817, 'Erg-Ferradj', 'عرق فراج'),
-(271, 811, 'Igli', 'إقلي'),
-(272, 810, 'Kenadsa', 'القنادسة'),
-(273, 818, 'Kerzaz', 'كرزاز'),
-(274, 803, 'Ksabi', 'القصابي'),
-(275, 806, 'Lahmar', 'لحمر'),
-(276, 817, 'Machraa-Houari-Boumediene', 'مشرع هواري بومدين'),
-(277, 810, 'Meridja', 'المريجة'),
-(278, 806, 'Mogheul', 'موغل'),
-(279, 803, 'Ouled-Khodeir', 'أولاد خضير'),
-(280, 812, 'Tabelbala', 'تبلبالة'),
-(281, 813, 'Taghit', 'تاغيت'),
-(282, 807, 'Tamtert', 'تامترت'),
-(283, 818, 'Timoudi', 'تيمودي'),
-(284, 912, 'Ain Romana', 'عين الرمانة'),
-(285, 905, 'Beni Mered', 'بني مراد'),
-(286, 904, 'Beni-Tamou', 'بني تامو'),
-(287, 904, 'Benkhelil', 'بن خليل'),
-(288, 901, 'Blida', 'البليدة'),
-(289, 901, 'Bouarfa', 'بوعرفة'),
-(290, 916, 'Boufarik', 'بوفاريك'),
-(291, 922, 'Bougara', 'بوقرة'),
-(292, 903, 'Bouinan', 'بوعينان'),
-(293, 903, 'Chebli', 'الشبلي'),
-(294, 912, 'Chiffa', 'الشفة'),
-(295, 905, 'Chrea', 'الشريعة'),
-(296, 914, 'Djebabra', 'جبابرة'),
-(297, 907, 'El-Affroun', 'العفرون'),
-(298, 916, 'Guerrouaou', 'قرواو'),
-(299, 922, 'Hammam Elouane', 'حمام ملوان'),
-(300, 917, 'Larbaa', 'الأربعاء'),
-(301, 914, 'Meftah', 'مفتاح'),
-(302, 912, 'Mouzaia', 'موزاية'),
-(303, 907, 'Oued  Djer', 'وادي جر'),
-(304, 904, 'Oued El Alleug', 'وادي العلايق'),
-(305, 922, 'Ouled Slama', 'اولاد سلامة'),
-(306, 905, 'Ouled Yaich', 'أولاد يعيش'),
-(307, 917, 'Souhane', 'صوحان'),
-(308, 916, 'Soumaa', 'الصومعة'),
-(309, 1037, 'Aghbalou', 'أغبالو'),
-(310, 1033, 'Ahl El Ksar', 'أهل القصر'),
-(311, 1035, 'Ain El Hadjar', 'عين الحجر'),
-(312, 1035, 'Ain Laloui', 'عين العلوي'),
-(313, 1001, 'Ain Turk', 'عين الترك'),
-(314, 1035, 'Ain-Bessem', 'عين بسام'),
-(315, 1001, 'Ait Laaziz', 'أيت لعزيز'),
-(316, 1005, 'Aomar', 'أعمر'),
-(317, 1033, 'Bechloul', 'بشلول'),
-(318, 1036, 'Bir Ghbalou', 'بئر غبالو'),
-(319, 1018, 'Bordj Okhriss', 'برج أوخريص'),
-(320, 1013, 'Bouderbala', 'بودربالة'),
-(321, 1001, 'Bouira', 'البويرة'),
-(322, 1013, 'Boukram', 'بوكرم'),
-(323, 1037, 'Chorfa', 'شرفة'),
-(324, 1038, 'Dechmia', 'الدشمية'),
-(325, 1038, 'Dirah', 'ديرة'),
-(326, 1005, 'Djebahia', 'جباحية'),
-(327, 1033, 'El Adjiba', 'العجيبة'),
-(328, 1033, 'El Asnam', 'الأسنام'),
-(329, 1015, 'El Hachimia', 'الهاشمية'),
-(330, 1036, 'El Khabouzia', 'الخبوزية'),
-(331, 1038, 'El-Hakimia', 'الحاكمية'),
-(332, 1004, 'El-Mokrani', 'المقراني'),
-(333, 1013, 'Guerrouma', 'قرومة'),
-(334, 1018, 'Hadjera Zerga', 'الحجرة الزرقاء'),
-(335, 1012, 'Haizer', 'حيزر'),
-(336, 1037, 'Hanif', 'حنيف'),
-(337, 1005, 'Kadiria', 'قادرية'),
-(338, 1013, 'Lakhdaria', 'الأخضرية'),
-(339, 1037, 'M Chedallah', 'أمشدالة'),
-(340, 1013, 'Maala', 'معلة'),
-(341, 1038, 'Maamora', 'المعمورة'),
-(342, 1018, 'Mezdour', 'مزدور'),
-(343, 1015, 'Oued El Berdi', 'وادي البردي'),
-(344, 1033, 'Ouled Rached', 'أولاد راشد'),
-(345, 1036, 'Raouraoua', 'روراوة'),
-(346, 1038, 'Ridane', 'ريدان'),
-(347, 1037, 'Saharidj', 'سحاريج'),
-(348, 1004, 'Souk El Khemis', 'سوق الخميس'),
-(349, 1038, 'Sour El Ghozlane', 'سور الغزلان'),
-(350, 1012, 'Taghzout', 'تاغزوت'),
-(351, 1018, 'Taguedite', 'تاقديت'),
-(352, 1037, 'Ath Mansour', 'آث  منصور'),
-(353, 1013, 'Z\'barbar (El Isseri )', 'زبربر'),
-(354, 1102, 'Abelsa', 'ابلسة'),
-(355, 1101, 'Ain Amguel', 'عين امقل'),
-(356, 1104, 'Ain Guezzam', 'عين قزام'),
-(357, 1108, 'Ain Salah', 'عين صالح'),
-(358, 1108, 'Foggaret Ezzoua', 'فقارة الزوى'),
-(359, 1106, 'Idles', 'أدلس'),
-(360, 1103, 'Inghar', 'إينغر'),
-(361, 1101, 'Tamanrasset', 'تمنراست'),
-(362, 1106, 'Tazrouk', 'تاظروك'),
-(363, 1107, 'Tin Zouatine', 'تين زواتين'),
-(364, 1219, 'Ain Zerga', 'عين الزرقاء'),
-(365, 1213, 'Bedjene', 'بجن'),
-(366, 1211, 'Bekkaria', 'بكارية'),
-(367, 1212, 'Bir Dheheb', 'بئر الذهب'),
-(368, 1210, 'Bir Mokkadem', 'بئر مقدم'),
-(369, 1202, 'Bir-El-Ater', 'بئر العاتر'),
-(370, 1205, 'Boukhadra', 'بوخضرة'),
-(371, 1211, 'Boulhaf Dyr', 'بولحاف الدير'),
-(372, 1203, 'Cheria', 'الشريعة'),
-(373, 1211, 'El Kouif', 'الكويف'),
-(374, 1220, 'El Malabiod', 'الماء الابيض'),
-(375, 1219, 'El Meridj', 'المريج'),
-(376, 1213, 'El Mezeraa', 'المزرعة'),
-(377, 1213, 'El Ogla', 'العقلة'),
-(378, 1202, 'El Ogla El Malha', 'العقلة المالحة'),
-(379, 1205, 'El-Aouinet', 'العوينات'),
-(380, 1220, 'El-Houidjbet', 'الحويجبات'),
-(381, 1209, 'Ferkane', 'فركان'),
-(382, 1210, 'Guorriguer', 'قريقر'),
-(383, 1210, 'Hammamet', 'الحمامات'),
-(384, 1212, 'Morsott', 'مرسط'),
-(385, 1209, 'Negrine', 'نقرين'),
-(386, 1219, 'Ouenza', 'الونزة'),
-(387, 1221, 'Oum Ali', 'أم علي'),
-(388, 1221, 'Saf Saf El Ouesra', 'صفصاف الوسرى'),
-(389, 1213, 'Stah Guentis', 'سطح قنطيس'),
-(390, 1201, 'Tebessa', 'تبسة'),
-(391, 1203, 'Telidjen', 'ثليجان'),
-(392, 1320, 'Ain Fetah', 'عين فتاح'),
-(393, 1350, 'Ain Fezza', 'عين فزة'),
-(394, 1351, 'Ain Ghoraba', 'عين غرابة'),
-(395, 1320, 'Ain Kebira', 'عين الكبيرة'),
-(396, 1303, 'Ain Nehala', 'عين النحالة'),
-(397, 1303, 'Ain Tellout', 'عين تالوت'),
-(398, 1304, 'Ain Youcef', 'عين يوسف'),
-(399, 1350, 'Amieur', 'عمير'),
-(400, 1318, 'Bab El Assa', 'باب العسة'),
-(401, 1317, 'Beni Bahdel', 'بني بهدل'),
-(402, 1338, 'Beni Boussaid', 'بني بوسعيد'),
-(403, 1344, 'Beni Khellad', 'بني خلاد'),
-(404, 1351, 'Beni Mester', 'بني مستر'),
-(405, 1304, 'Beni Ouarsous', 'بني وارسوس'),
-(406, 1313, 'Beni Smiel', 'بني صميل'),
-(407, 1317, 'Beni Snous', 'بني سنوس'),
-(408, 1324, 'Bensekrane', 'بن سكران'),
-(409, 1306, 'Bouhlou', 'بوحلو'),
-(410, 1341, 'Bouihi', 'البويهي'),
-(411, 1350, 'Chetouane', 'شتوان'),
-(412, 1307, 'Dar Yaghmoracen', 'دار يغمراسن'),
-(413, 1340, 'Djebala', 'جبالة'),
-(414, 1335, 'El Aricha', 'العريشة'),
-(415, 1317, 'Azail', 'العزايل'),
-(416, 1304, 'El Fehoul', 'الفحول'),
-(417, 1335, 'El Gor', 'القور'),
-(418, 1320, 'Fellaoucene', 'فلاوسن'),
-(419, 1307, 'Ghazaouet', 'الغزوات'),
-(420, 1327, 'Hammam Boughrara', 'حمام بوغرارة'),
-(421, 1326, 'Hennaya', 'الحناية'),
-(422, 1344, 'Honnaine', 'هنين'),
-(423, 1327, 'Maghnia', 'مغنية'),
-(424, 1351, 'Mansourah', 'منصورة'),
-(425, 1339, 'Marsa Ben M\'hidi', 'مرسى بن مهيدي'),
-(426, 1339, 'M\'sirda Fouaga', 'مسيردة الفواقة'),
-(427, 1340, 'Nedroma', 'ندرومة'),
-(428, 1313, 'Oued Lakhdar', 'وادي الخضر'),
-(429, 1313, 'Ouled Mimoun', 'أولاد ميمون'),
-(430, 1326, 'Ouled Riyah', 'أولاد رياح'),
-(431, 1304, 'Remchi', 'الرمشي'),
-(432, 1306, 'Sabra', 'صبرة'),
-(433, 1304, 'Sebbaa Chioukh', 'سبعة شيوخ'),
-(434, 1335, 'Sebdou', 'سبدو'),
-(435, 1324, 'Sidi Abdelli', 'سيدي العبدلي'),
-(436, 1341, 'Sidi Djillali', 'سيدي الجيلالي'),
-(437, 1338, 'Sidi Medjahed', 'سيدي مجاهد'),
-(438, 1307, 'Souahlia', 'السواحلية'),
-(439, 1318, 'Souani', 'السواني'),
-(440, 1318, 'Souk Tleta', 'سوق الثلاثاء'),
-(441, 1351, 'Terny Beni Hediel', 'تيرني بني هديل'),
-(442, 1307, 'Tianet', 'تيانت'),
-(443, 1301, 'Tlemcen', 'تلمسان'),
-(444, 1326, 'Zenata', 'زناتة'),
-(445, 1413, 'Ain Bouchekif', 'عين بوشقيف'),
-(446, 1406, 'Ain Deheb', 'عين الذهب'),
-(447, 1415, 'Ain Dzarit', 'عين دزاريت'),
-(448, 1427, 'Ain El Hadid', 'عين الحديد'),
-(449, 1428, 'Ain Kermes', 'عين كرمس'),
-(450, 1435, 'Bougara', 'بوقرة'),
-(451, 1406, 'Chehaima', 'شحيمة'),
-(452, 1413, 'Dahmouni', 'دحموني'),
-(453, 1428, 'Djebilet Rosfa', 'جبيلات الرصفاء'),
-(454, 1434, 'Djillali Ben Amar', 'جيلالي بن عمار'),
-(455, 1416, 'Faidja', 'الفايجة'),
-(456, 1427, 'Frenda', 'فرندة'),
-(457, 1414, 'Guertoufa', 'قرطوفة'),
-(458, 1435, 'Hamadia', 'حمادية'),
-(459, 1429, 'Ksar Chellala', 'قصر الشلالة'),
-(460, 1428, 'Madna', 'مادنة'),
-(461, 1415, 'Mahdia', 'مهدية'),
-(462, 1434, 'Mechraa Safa', 'مشرع الصفا'),
-(463, 1428, 'Medrissa', 'مدريسة'),
-(464, 1402, 'Medroussa', 'مدروسة'),
-(465, 1421, 'Meghila', 'مغيلة'),
-(466, 1402, 'Mellakou', 'ملاكو'),
-(467, 1415, 'Nadorah', 'الناظورة'),
-(468, 1406, 'Naima', 'النعيمة'),
-(469, 1433, 'Oued Lilli', 'وادي ليلي'),
-(470, 1414, 'Rahouia', 'الرحوية'),
-(471, 1435, 'Rechaiga', 'الرشايقة'),
-(472, 1415, 'Sebaine', 'السبعين'),
-(473, 1421, 'Sebt', 'السبت'),
-(474, 1429, 'Serghine', 'سرغين'),
-(475, 1416, 'Si Abdelghani', 'سي عبد الغني'),
-(476, 1428, 'Sidi Abderrahmane', 'سيدي عبد الرحمن'),
-(477, 1433, 'Sidi Ali Mellal', 'سيدي علي ملال'),
-(478, 1402, 'Sidi Bakhti', 'سيدي بختي'),
-(479, 1421, 'Sidi Hosni', 'سيدي حسني'),
-(480, 1416, 'Sougueur', 'السوقر'),
-(481, 1434, 'Tagdempt', 'تاقدمت'),
-(482, 1427, 'Takhemaret', 'تخمرت'),
-(483, 1401, 'Tiaret', 'تيارت'),
-(484, 1433, 'Tidda', 'تيدة'),
-(485, 1416, 'Tousnina', 'توسنينة'),
-(486, 1429, 'Zmalet El Emir Abdelkade', 'زمالة  الأمير عبد القادر'),
-(487, 1502, 'Abi-Youcef', 'أبي يوسف'),
-(488, 1537, 'Aghribs', 'أغريب'),
-(489, 1536, 'Agouni-Gueghrane', 'أقني قغران'),
-(490, 1502, 'Ain-El-Hammam', 'عين الحمام'),
-(491, 1510, 'Ain-Zaouia', 'عين الزاوية'),
-(492, 1521, 'Ait Aggouacha', 'أيت عقـواشة'),
-(493, 1536, 'Ait Bouaddou', 'أيت بــوادو'),
-(494, 1548, 'Ait Boumahdi', 'أيت بومهدي'),
-(495, 1550, 'Ait Khellili', 'أيت خليلي'),
-(496, 1510, 'Ait Yahia Moussa', 'أيت يحي موسى'),
-(497, 1524, 'Ait-Aissa-Mimoun', 'أيت عيسى ميمون'),
-(498, 1537, 'Ait-Chafaa', 'أيت شافع'),
-(499, 1532, 'Ait-Mahmoud', 'أيت محمود'),
-(500, 1522, 'Ait-Oumalou', 'أيت  أومالو'),
-(501, 1548, 'Ait-Toudert', 'أيت تودرت'),
-(502, 1502, 'Ait-Yahia', 'أيت يحيى'),
-(503, 1502, 'Akbil', 'اقبيل'),
-(504, 1537, 'Akerrou', 'أقرو'),
-(505, 1540, 'Assi-Youcef', 'أسي يوسف'),
-(506, 1518, 'Azazga', 'عزازقة'),
-(507, 1537, 'Azeffoun', 'أزفون'),
-(508, 1532, 'Beni Zmenzer', 'بنــــي زمنزار'),
-(509, 1532, 'Beni-Aissi', 'بني عيسي'),
-(510, 1532, 'Beni-Douala', 'بني دوالة'),
-(511, 1552, 'Beni-Yenni', 'بني يني'),
-(512, 1534, 'Beni-Zikki', 'بني زيكــي'),
-(513, 1540, 'Boghni', 'بوغني'),
-(514, 1509, 'Boudjima', 'بوجيمة'),
-(515, 1540, 'Bounouh', 'بونوح'),
-(516, 1534, 'Bouzeguene', 'بوزقــن'),
-(517, 1547, 'Draa-Ben-Khedda', 'ذراع بن خدة'),
-(518, 1510, 'Draa-El-Mizan', 'ذراع الميزان'),
-(519, 1518, 'Freha', 'فريحة'),
-(520, 1510, 'Frikat', 'فريقات'),
-(521, 1552, 'Iboudrarene', 'إبودرارن'),
-(522, 1534, 'Idjeur', 'إيجــار'),
-(523, 1517, 'Iferhounene', 'إفــرحــونان'),
-(524, 1518, 'Ifigha', 'إيفيغاء'),
-(525, 1538, 'Iflissen', 'إفليـــسن'),
-(526, 1517, 'Illilten', 'إيلـيــلتـن'),
-(527, 1534, 'Illoula Oumalou', 'إيلولة أومـــالو'),
-(528, 1517, 'Imsouhal', 'إمســوحال'),
-(529, 1521, 'Irdjen', 'إيرجـــن'),
-(530, 1521, 'Larbaa Nath Irathen', 'الأربعــاء ناث إيراثن'),
-(531, 1529, 'Maatkas', 'معـــاتقة'),
-(532, 1509, 'Makouda', 'ماكودة'),
-(533, 1540, 'Mechtras', 'مشطراس'),
-(534, 1550, 'Mekla', 'مقــلع'),
-(535, 1538, 'Mizrana', 'ميزرانـــة'),
-(536, 1511, 'M\'kira', 'مكيرة'),
-(537, 1548, 'Ouacif', 'واسيف'),
-(538, 1536, 'Ouadhias', 'واضية'),
-(539, 1524, 'Ouaguenoun', 'واقنون'),
-(540, 1547, 'Sidi Namane', 'سيدي نعمان'),
-(541, 1550, 'Souama', 'صوامـــع'),
-(542, 1529, 'Souk-El-Tenine', 'سوق الإثنين'),
-(543, 1547, 'Tadmait', 'تادمايت'),
-(544, 1538, 'Tigzirt', 'تيقـزيرت'),
-(545, 1524, 'Timizart', 'تيمـيزار'),
-(546, 1547, 'Tirmitine', 'تيرمتين'),
-(547, 1536, 'Tizi N\'tleta', 'تيزي نثلاثة'),
-(548, 1511, 'Tizi-Gheniff', 'تيزي غنيف'),
-(549, 1501, 'Tizi-Ouzou', 'تيزي وزو'),
-(550, 1522, 'Tizi-Rached', 'تيزي راشد'),
-(551, 1518, 'Yakourene', 'إعــكورن'),
-(552, 1552, 'Yatafene', 'يطــافن'),
-(553, 1518, 'Zekri', 'زكري'),
-(554, 1652, 'Ain Benian', 'عين بنيان'),
-(555, 1620, 'Ain Taya', 'عين طاية'),
-(556, 1602, 'Alger Centre', 'الجزائر الوسطى'),
-(557, 1605, 'Bab El Oued', 'باب الوادي'),
-(558, 1620, 'Bab Ezzouar', 'باب الزوار'),
-(559, 1649, 'Baba Hassen', 'بابا حسن'),
-(560, 1613, 'Bachedjerah', 'باش جراح'),
-(561, 1614, 'Baraki', 'براقي'),
-(562, 1611, 'Ben Aknoun', 'ابن عكنون'),
-(563, 1611, 'Beni Messous', 'بني مسوس'),
-(564, 1609, 'Bir Mourad Rais', 'بئر مراد رايس'),
-(565, 1609, 'Birkhadem', 'بئر خادم'),
-(566, 1636, 'Bir Touta', 'بئر توتة'),
-(567, 1605, 'Bologhine Ibnou Ziri', 'بولوغين بن زيري'),
-(568, 1620, 'Bordj El Bahri', 'برج البحري'),
-(569, 1620, 'Bordj El Kiffan', 'برج الكيفان'),
-(570, 1613, 'Bourouba', 'بوروبة'),
-(571, 1611, 'Bouzareah', 'بوزريعة'),
-(572, 1605, 'Casbah', 'القصبة'),
-(573, 1652, 'Cheraga', 'الشراقة'),
-(574, 1620, 'Dar El Beida', 'الدار البيضاء'),
-(575, 1652, 'Dely Ibrahim', 'دالي ابراهيم'),
-(576, 1609, 'Djasr Kasentina', 'جسر قسنطينة'),
-(577, 1649, 'Douira', 'الدويرة'),
-(578, 1649, 'Draria', 'الدرارية'),
-(579, 1649, 'El Achour', 'العاشور'),
-(580, 1611, 'El Biar', 'الابيار'),
-(581, 1613, 'El Harrach', 'الحراش'),
-(582, 1602, 'El Madania', 'المدنية'),
-(583, 1617, 'El Magharia', 'المغارية'),
-(584, 1620, 'El Marsa', 'المرسى'),
-(585, 1602, 'El Mouradia', 'المرادية'),
-(586, 1652, 'Hammamet', 'الحمامات'),
-(587, 1638, 'Herraoua', 'هراوة'),
-(588, 1617, 'Hussein Dey', 'حسين داي'),
-(589, 1609, 'Hydra', 'حيدرة'),
-(590, 1649, 'Khraissia', 'الخرايسية'),
-(591, 1617, 'Kouba', 'القبة'),
-(592, 1614, 'Les Eucalyptus', 'الكاليتوس'),
-(593, 1644, 'Maalma', 'المعالمة'),
-(594, 1617, 'Mohamed Belouzdad', 'محمد بلوزداد'),
-(595, 1620, 'Mohammadia', 'المحمدية'),
-(596, 1605, 'Oued Koriche', 'وادي قريش'),
-(597, 1613, 'Oued Smar', 'وادي السمار'),
-(598, 1636, 'Ouled Chebel', 'اولاد شبل'),
-(599, 1652, 'Ouled Fayet', 'اولاد فايت'),
-(600, 1644, 'Rahmania', 'الرحمانية'),
-(601, 1605, 'Rais Hamidou', 'الرايس حميدو'),
-(602, 1638, 'Reghaia', 'رغاية'),
-(603, 1638, 'Rouiba', 'الرويبة'),
-(604, 1609, 'Sehaoula', 'السحاولة'),
-(605, 1602, 'Sidi M\'hamed', 'سيدي امحمد'),
-(606, 1614, 'Sidi Moussa', 'سيدي موسى'),
-(607, 1644, 'Souidania', 'سويدانية'),
-(608, 1644, 'Staoueli', 'سطاوالي'),
-(609, 1636, 'Tessala El Merdja', 'تسالة المرجة'),
-(610, 1644, 'Zeralda', 'زرالدة'),
-(611, 1714, 'Ain Chouhada', 'عين الشهداء'),
-(612, 1730, 'Ain El Ibel', 'عين الإبل'),
-(613, 1720, 'Ain Fekka', 'عين فقه'),
-(614, 1704, 'Ain Maabed', 'عين معبد'),
-(615, 1731, 'Ain Oussera', 'عين وسارة'),
-(616, 1707, 'Amourah', 'عمورة'),
-(617, 1708, 'Benhar', 'بنهار'),
-(618, 1726, 'Benyagoub', 'بن يعقوب'),
-(619, 1708, 'Birine', 'بيرين'),
-(620, 1720, 'Bouira Lahdab', 'بويرة الأحداب'),
-(621, 1726, 'Charef', 'الشارف'),
-(622, 1725, 'Dar Chioukh', 'دار الشيوخ'),
-(623, 1717, 'Deldoul', 'دلدول'),
-(624, 1701, 'Djelfa', 'الجلفة'),
-(625, 1714, 'Douis', 'دويس'),
-(626, 1726, 'El Guedid', 'القديد'),
-(627, 1714, 'El Idrissia', 'الادريسية'),
-(628, 1719, 'El Khemis', 'الخميس'),
-(629, 1707, 'Faidh El Botma', 'فيض البطمة'),
-(630, 1731, 'Guernini', 'قرنيني'),
-(631, 1717, 'Guettara', 'قطارة'),
-(632, 1720, 'Had Sahary', 'حد الصحاري'),
-(633, 1704, 'Hassi Bahbah', 'حاسي بحبح'),
-(634, 1704, 'Hassi El Euch', 'حاسي العش'),
-(635, 1719, 'Hassi Fedoul', 'حاسي فدول'),
-(636, 1717, 'Messaad', 'مسعد'),
-(637, 1725, 'M\'liliha', 'مليليحة'),
-(638, 1730, 'Moudjebara', 'مجبارة'),
-(639, 1707, 'Oum Laadham', 'أم العظام'),
-(640, 1717, 'Sed Rahal', 'سد الرحال'),
-(641, 1717, 'Selmana', 'سلمانة'),
-(642, 1725, 'Sidi Baizid', 'سيدي بايزيد'),
-(643, 1719, 'Sidi Laadjel', 'سيدي لعجال'),
-(644, 1730, 'Taadmit', 'تعظميت'),
-(645, 1704, 'Zaafrane', 'زعفران'),
-(646, 1730, 'Zaccar', 'زكار'),
-(647, 1807, 'Bordj T\'har', 'برج الطهر'),
-(648, 1817, 'Boudria Beniyadjis', 'بودريعة بني  ياجيس'),
-(649, 1812, 'Bouraoui Belhadef', 'بوراوي بلهادف'),
-(650, 1805, 'Boussif Ouled Askeur', 'بوسيف أولاد عسكر'),
-(651, 1805, 'Chahna', 'الشحنة'),
-(652, 1807, 'Chekfa', 'الشقفة'),
-(653, 1812, 'Djemaa Beni Habibi', 'الجمعة بني حبيبي'),
-(654, 1817, 'Djimla', 'جيملة'),
-(655, 1812, 'El Ancer', 'العنصر'),
-(656, 1803, 'El Aouana', 'العوانة'),
-(657, 1807, 'El Kennar Nouchfi', 'القنار نشفي'),
-(658, 1809, 'El Milia', 'الميلية'),
-(659, 1805, 'Emir Abdelkader', 'الامير عبد القادر'),
-(660, 1804, 'Erraguene Souissi', 'أراقن سويسي'),
-(661, 1811, 'Ghebala', 'غبالة'),
-(662, 1801, 'Jijel', 'جيجل'),
-(663, 1824, 'Kaous', 'قاوس'),
-(664, 1812, 'Khiri Oued Adjoul', 'خيري واد عجول'),
-(665, 1805, 'Oudjana', 'وجانة'),
-(666, 1810, 'Ouled Rabah', 'أولاد رابح'),
-(667, 1809, 'Ouled Yahia Khadrouch', 'أولاد يحيى خدروش'),
-(668, 1803, 'Selma Benziada', 'سلمى بن زيادة'),
-(669, 1811, 'Settara', 'السطارة'),
-(670, 1807, 'Sidi Abdelaziz', 'سيدي عبد العزيز'),
-(671, 1810, 'Sidi Marouf', 'سيدي معروف'),
-(672, 1805, 'Taher', 'الطاهير'),
-(673, 1824, 'Texenna', 'تاكسنة'),
-(674, 1804, 'Ziama Mansouriah', 'زيامة منصورية'),
-(675, 1926, 'Ain Abessa', 'عين عباسة'),
-(676, 1926, 'Ain Arnat', 'عين أرنات'),
-(677, 1940, 'Ain Azel', 'عين أزال'),
-(678, 1902, 'Ain El Kebira', 'عين الكبيرة'),
-(679, 1940, 'Ain Lahdjar', 'عين الحجر'),
-(680, 1928, 'Ain Oulmene', 'عين ولمان'),
-(681, 1922, 'Ain-Legradj', 'عين لقراج'),
-(682, 1943, 'Ain-Roua', 'عين الروى'),
-(683, 1903, 'Ain-Sebt', 'عين السبت'),
-(684, 1930, 'Ait Naoual Mezada', 'أيت نوال مزادة'),
-(685, 1930, 'Ait-Tizi', 'ايت تيزي'),
-(686, 1927, 'Amoucha', 'عموشة'),
-(687, 1916, 'Babor', 'بابور'),
-(688, 1920, 'Bazer-Sakra', 'بازر سكرة'),
-(689, 1940, 'Beidha Bordj', 'بيضاء برج'),
-(690, 1908, 'Bellaa', 'بلاعة'),
-(691, 1922, 'Beni Chebana', 'بني شبانة'),
-(692, 1921, 'Beni Fouda', 'بني فودة'),
-(693, 1922, 'Beni Ourtilane', 'بني ورتيلان'),
-(694, 1943, 'Beni Oussine', 'بني وسين'),
-(695, 1903, 'Beni-Aziz', 'بني عزيز'),
-(696, 1922, 'Beni-Mouhli', 'بني موحلي'),
-(697, 1940, 'Bir Haddada', 'بئر حدادة'),
-(698, 1908, 'Bir-El-Arch', 'بئر العرش'),
-(699, 1930, 'Bouandas', 'بوعنداس'),
-(700, 1943, 'Bougaa', 'بوقاعة'),
-(701, 1930, 'Bousselam', 'بوسلام'),
-(702, 1939, 'Boutaleb', 'بوطالب'),
-(703, 1902, 'Dehamcha', 'الدهامشة'),
-(704, 1921, 'Djemila', 'جميلة'),
-(705, 1950, 'Draa-Kebila', 'ذراع قبيلة'),
-(706, 1920, 'El Eulma', 'العلمة'),
-(707, 1926, 'El Ouricia', 'أوريسيا'),
-(708, 1908, 'El-Ouldja', 'الولجة'),
-(709, 1928, 'Guellal', 'قلال'),
-(710, 1920, 'Guelta Zerka', 'قلتة زرقاء'),
-(711, 1941, 'Guenzet', 'قنزات'),
-(712, 1917, 'Guidjel', 'قجال'),
-(713, 1932, 'Hamam Soukhna', 'حمام السخنة'),
-(714, 1939, 'Hamma', 'الحامة'),
-(715, 1950, 'Hammam Guergour', 'حمام قرقور'),
-(716, 1941, 'Harbil', 'حربيل'),
-(717, 1928, 'Kasr El Abtal', 'قصر الابطال'),
-(718, 1903, 'Maaouia', 'معاوية'),
-(719, 1955, 'Maouaklane', 'ماوكلان'),
-(720, 1926, 'Mezloug', 'مزلوق'),
-(721, 1927, 'Oued El Bared', 'واد البارد'),
-(722, 1902, 'Ouled Addouane', 'أولاد عدوان'),
-(723, 1917, 'Ouled Sabor', 'أولاد صابر'),
-(724, 1928, 'Ouled Si Ahmed', 'أولاد سي أحمد'),
-(725, 1939, 'Ouled Tebben', 'أولاد تبان'),
-(726, 1939, 'Rosfa', 'الرصفة'),
-(727, 1939, 'Salah Bey', 'صالح باي'),
-(728, 1916, 'Serdj-El-Ghoul', 'سرج الغول'),
-(729, 1901, 'Setif', 'سطيف'),
-(730, 1908, 'Tachouda', 'تاشودة'),
-(731, 1955, 'Tala-Ifacene', 'تالة إيفاسن'),
-(732, 1932, 'Taya', 'الطاية'),
-(733, 1932, 'Tella', 'التلة'),
-(734, 1927, 'Tizi N\'bechar', 'تيزي نبشار'),
-(735, 2003, 'Ain El Hadjar', 'عين الحجر'),
-(736, 2010, 'Ain Sekhouna', 'عين السخونة'),
-(737, 2014, 'Ain Soltane', 'عين السلطان'),
-(738, 2006, 'Doui Thabet', 'دوي ثابت'),
-(739, 2010, 'El Hassasna', 'الحساسنة'),
-(740, 2009, 'Hounet', 'هونت'),
-(741, 2010, 'Maamora', 'المعمورة'),
-(742, 2003, 'Moulay Larbi', 'مولاي العربي'),
-(743, 2014, 'Ouled Brahim', 'أولاد إبراهيم'),
-(744, 2009, 'Ouled Khaled', 'أولاد خالد'),
-(745, 2001, 'Saida', 'سعيدة'),
-(746, 2003, 'Sidi Ahmed', 'سيدي احمد'),
-(747, 2009, 'Sidi Amar', 'سيدي عمر'),
-(748, 2009, 'Sidi Boubekeur', 'سيدي بوبكر'),
-(749, 2014, 'Tircine', 'تيرسين'),
-(750, 2006, 'Youb', 'يوب'),
-(751, 2119, 'Ain Bouziane', 'عين بوزيان'),
-(752, 2104, 'Ain Charchar', 'عين شرشار'),
-(753, 2127, 'Ain Kechra', 'عين قشرة'),
-(754, 2103, 'Ain Zouit', 'عين زويت'),
-(755, 2104, 'Azzaba', 'عزابة'),
-(756, 2108, 'Bekkouche Lakhdar', 'بكوش لخضر'),
-(757, 2108, 'Ben Azzouz', 'بن عزوز'),
-(758, 2123, 'Beni Bechir', 'بني بشير'),
-(759, 2119, 'Beni Oulbane', 'بني ولبان'),
-(760, 2110, 'Beni Zid', 'بني زيد'),
-(761, 2126, 'Bin El Ouiden', 'بين الويدان'),
-(762, 2103, 'Bouchetata', 'بوشطاطة'),
-(763, 2110, 'Cheraia', 'الشرايع'),
-(764, 2110, 'Collo', 'القل'),
-(765, 2104, 'Djendel Saadi Mohamed', 'جندل سعدي محمد'),
-(766, 2116, 'El Arrouch', 'الحروش'),
-(767, 2104, 'El Ghedir', 'الغدير'),
-(768, 2103, 'El Hadaiek', 'الحدائق'),
-(769, 2108, 'El Marsa', 'المرسى'),
-(770, 2116, 'Emjez Edchich', 'مجاز الدشيش'),
-(771, 2104, 'Es Sebt', 'السبت'),
-(772, 2101, 'Filfila', 'فلفلة'),
-(773, 2101, 'Hammadi Krouma', 'حمادي كرومة'),
-(774, 2115, 'Kanoua', 'قنواع'),
-(775, 2126, 'Kerkara', 'الكركرة'),
-(776, 2113, 'Khenag Maoune', 'خناق مايو'),
-(777, 2113, 'Oued Zhour', 'وادي الزهور'),
-(778, 2127, 'Ouldja Boulbalout', 'الولجة بولبلوط'),
-(779, 2113, 'Ouled Attia', 'أولاد عطية'),
-(780, 2116, 'Ouled Habbaba', 'أولاد حبابة'),
-(781, 2128, 'Oum Toub', 'أم الطوب'),
-(782, 2123, 'Ramdane Djamel', 'رمضان جمال'),
-(783, 2116, 'Salah Bouchaour', 'صالح بو الشعور'),
-(784, 2119, 'Sidi Mezghiche', 'سيدي مزغيش'),
-(785, 2101, 'Skikda', 'سكيكدة'),
-(786, 2126, 'Tamalous', 'تمالوس'),
-(787, 2116, 'Zerdezas', 'زردازة'),
-(788, 2115, 'Zitouna', 'الزيتونة'),
-(789, 2228, 'Ain El Berd', 'عين البرد'),
-(790, 2208, 'Ain Kada', 'عين قادة'),
-(791, 2202, 'Ain Thrid', 'عين الثريد'),
-(792, 2218, 'Ain Tindamine', 'عين تندمين'),
-(793, 2229, 'Ain- Adden', 'عين أدن'),
-(794, 2214, 'Amarnas', 'العمارنة'),
-(795, 2245, 'Bedrabine El Mokrani', 'بضرابين المقراني'),
-(796, 2204, 'Belarbi', 'بلعربي'),
-(797, 2245, 'Ben Badis', 'بن باديس'),
-(798, 2217, 'Benachiba Chelia', 'بن عشيبة شلية'),
-(799, 2210, 'Bir El Hammam', 'بئر الحمام'),
-(800, 2229, 'Boudjebaa El Bordj', 'بوجبهة البرج'),
-(801, 2246, 'Boukhanefis', 'بوخنفيس'),
-(802, 2245, 'Chetouane Belaila', 'شيطوان البلايلة'),
-(803, 2205, 'Dhaya', 'الضاية'),
-(804, 2218, 'El Hacaiba', 'الحصيبة'),
-(805, 2217, 'Hassi Dahou', 'حاسي دحو'),
-(806, 2245, 'Hassi Zahana', 'حاسي زهانة'),
-(807, 2208, 'Lamtar', 'لمطار'),
-(808, 2228, 'Makedra', 'مكدرة'),
-(809, 2210, 'Marhoum', 'مرحوم'),
-(810, 2229, 'M\'cid', 'مسيد'),
-(811, 2222, 'Merine', 'مرين'),
-(812, 2205, 'Mezaourou', 'مزاورو'),
-(813, 2204, 'Mostefa  Ben Brahim', 'مصطفى بن ابراهيم'),
-(814, 2218, 'Moulay Slissen', 'مولاي سليسن'),
-(815, 2223, 'Oued Sebaa', 'وادي السبع'),
-(816, 2217, 'Oued Sefioun', 'وادي سفيون'),
-(817, 2222, 'Oued Taourira', 'وادي تاوريرة'),
-(818, 2223, 'Ras El Ma', 'راس الماء'),
-(819, 2223, 'Redjem Demouche', 'رجم دموش'),
-(820, 2202, 'Sehala Thaoura', 'السهالة الثورة'),
-(821, 2229, 'Sfisef', 'سفيزف'),
-(822, 2246, 'Sidi Ali Benyoub', 'سيدي علي بن يوب'),
-(823, 2208, 'Sidi Ali Boussidi', 'سيدي علي بوسيدي'),
-(824, 2201, 'Sidi Bel-Abbes', 'سيدي بلعباس'),
-(825, 2228, 'Sidi Brahim', 'سيدي ابراهيم'),
-(826, 2210, 'Sidi Chaib', 'سيدي شعيب'),
-(827, 2208, 'Sidi Dahou Zairs', 'سيدي دحو الزاير'),
-(828, 2228, 'Sidi Hamadouche', 'سيدي حمادوش'),
-(829, 2214, 'Sidi Khaled', 'سيدي خالد'),
-(830, 2214, 'Sidi Lahcene', 'سيدي لحسن'),
-(831, 2214, 'Sidi Yacoub', 'سيدي يعقوب'),
-(832, 2246, 'Tabia', 'طابية'),
-(833, 2222, 'Taoudmout', 'تاودموت'),
-(834, 2222, 'Tefessour', 'تفسور'),
-(835, 2205, 'Teghalimet', 'تغاليمت'),
-(836, 2205, 'Telagh', 'تلاغ'),
-(837, 2217, 'Tenira', 'تنيرة'),
-(838, 2202, 'Tessala', 'تسالة'),
-(839, 2204, 'Tilmouni', 'تلموني'),
-(840, 2204, 'Zerouala', 'زروالة'),
-(841, 2309, 'Ain El Berda', 'عين الباردة'),
-(842, 2301, 'Annaba', 'عنابة'),
-(843, 2302, 'Berrahal', 'برحال'),
-(844, 2310, 'Chetaibi', 'شطايبي'),
-(845, 2309, 'Cheurfa', 'الشرفة'),
-(846, 2305, 'El Bouni', 'البوني'),
-(847, 2309, 'El Eulma', 'العلمة'),
-(848, 2303, 'El Hadjar', 'الحجار'),
-(849, 2302, 'Oued El Aneb', 'واد العنب'),
-(850, 2301, 'Seraidi', 'سرايدي'),
-(851, 2303, 'Sidi Amar', 'سيدي عمار'),
-(852, 2302, 'Treat', 'التريعات'),
-(853, 2425, 'Ain Ben Beida', 'عين بن بيضاء'),
-(854, 2413, 'Ain Larbi', 'عين العربي'),
-(855, 2413, 'Ain Makhlouf', 'عين مخلوف'),
-(856, 2404, 'Ain Regada', 'عين رقادة'),
-(857, 2415, 'Ain Sandel', 'عين صندل'),
-(858, 2418, 'Belkheir', 'بلخير'),
-(859, 2401, 'Bendjarah', 'بن جراح'),
-(860, 2418, 'Beni Mezline', 'بني مزلين'),
-(861, 2404, 'Bordj Sabath', 'برج صباط'),
-(862, 2415, 'Bou Hachana', 'بوحشانة'),
-(863, 2419, 'Bou Hamdane', 'بوحمدان'),
-(864, 2426, 'Bouati Mahmoud', 'بوعاتي محمود'),
-(865, 2425, 'Bouchegouf', 'بوشقوف'),
-(866, 2418, 'Boumahra Ahmed', 'بومهرة أحمد'),
-(867, 2422, 'Dahouara', 'الدهوارة'),
-(868, 2418, 'Djeballah Khemissi', 'جبالة الخميسي'),
-(869, 2426, 'El Fedjoudj', 'الفجوج'),
-(870, 2418, 'Guelaat Bou Sbaa', 'قلعة بوصبع'),
-(871, 2401, 'Guelma', 'قالمة'),
-(872, 2419, 'Hammam Debagh', 'حمام دباغ'),
-(873, 2422, 'Hammam N\'bail', 'حمام النبايل'),
-(874, 2426, 'Heliopolis', 'هيليوبوليس'),
-(875, 2418, 'Nechmaya', 'نشماية'),
-(876, 2415, 'Khezaras', 'لخزارة'),
-(877, 2427, 'Medjez Amar', 'مجاز عمار'),
-(878, 2425, 'Medjez Sfa', 'مجاز الصفاء'),
-(879, 2427, 'Houari Boumedienne', 'هواري بومدين'),
-(880, 2422, 'Oued Cheham', 'وادي الشحم'),
-(881, 2425, 'Oued Ferragha', 'وادي فراغة'),
-(882, 2404, 'Oued Zenati', 'وادي الزناتي'),
-(883, 2427, 'Ras El Agba', 'رأس العقبة'),
-(884, 2419, 'Roknia', 'الركنية'),
-(885, 2427, 'Sellaoua Announa', 'سلاوة عنونة'),
-(886, 2413, 'Tamlouka', 'تاملوكة'),
-(887, 2507, 'Ain Abid', 'عين عبيد'),
-(888, 2506, 'Ain Smara', 'عين السمارة'),
-(889, 2507, 'Ben Badis', 'أبن باديس الهرية'),
-(890, 2504, 'Beni Hamidane', 'بني حميدان'),
-(891, 2501, 'Constantine', 'قسنطينة'),
-(892, 2502, 'Didouche Mourad', 'ديدوش مراد'),
-(893, 2506, 'El Khroub', 'الخروب'),
-(894, 2502, 'Hamma Bouziane', 'حامة بوزيان'),
-(895, 2512, 'Ibn Ziad', 'ابن زياد'),
-(896, 2512, 'Messaoud Boudjeriou', 'بوجريو مسعود'),
-(897, 2506, 'Ouled Rahmoun', 'أولاد رحمون'),
-(898, 2504, 'Zighoud Youcef', 'زيغود يوسف'),
-(899, 2604, 'Ain Boucif', 'عين بوسيف'),
-(900, 2618, 'Ain Ouksir', 'عين اقصير'),
-(901, 2652, 'Aissaouia', 'العيساوية'),
-(902, 2632, 'Aziz', 'عزيز'),
-(903, 2607, 'Baata', 'بعطة'),
-(904, 2602, 'Ben Chicao', 'بن شكاو'),
-(905, 2646, 'Beni Slimane', 'بني سليمان'),
-(906, 2647, 'Berrouaghia', 'البرواقية'),
-(907, 2609, 'Bir Ben Laabed', 'بئر بن عابد'),
-(908, 2658, 'Boghar', 'بوغار'),
-(909, 2638, 'Bouaiche', 'بوعيش'),
-(910, 2644, 'Bouaichoune', 'بوعيشون'),
-(911, 2626, 'Bouchrahil', 'بوشراحيل'),
-(912, 2638, 'Boughzoul', 'بوغزول'),
-(913, 2646, 'Bouskene', 'بوسكن'),
-(914, 2638, 'Chabounia', 'الشهبونية'),
-(915, 2618, 'Chelalet El Adhaoura', 'شلالة العذاورة'),
-(916, 2618, 'Cheniguel', 'شنيقل'),
-(917, 2632, 'Derrag', 'دراق'),
-(918, 2633, 'Djouab', 'جواب'),
-(919, 2601, 'Draa Esmar', 'ذراع السمار'),
-(920, 2636, 'El Azizia', 'العزيزية'),
-(921, 2609, 'El Guelbelkebir', 'القلب الكبير'),
-(922, 2602, 'El Hamdania', 'الحمدانية'),
-(923, 2652, 'El Haoudane', 'الحوضان'),
-(924, 2607, 'El Omaria', 'العمارية'),
-(925, 2604, 'El Ouinet', 'العوينات'),
-(926, 2643, 'Hannacha', 'حناشة'),
-(927, 2604, 'Kef Lakhdar', 'الكاف الاخضر'),
-(928, 2626, 'Khams Djouamaa', 'خمس جوامع'),
-(929, 2635, 'Ksar El Boukhari', 'قصر البخاري'),
-(930, 2636, 'Maghraoua', 'مغراوة'),
-(931, 2601, 'Medea', 'المدية'),
-(932, 2648, 'Medjebar', 'مجبر'),
-(933, 2652, 'Mezerana', 'مزغنة'),
-(934, 2635, 'M\'fatha', 'مفاتحة'),
-(935, 2636, 'Mihoub', 'ميهوب'),
-(936, 2643, 'Ouamri', 'عوامري'),
-(937, 2643, 'Oued Harbil', 'وادي حربيل'),
-(938, 2658, 'Ouled Antar', 'أولاد عنتر'),
-(939, 2644, 'Ouled Bouachra', 'أولاد بوعشرة'),
-(940, 2607, 'Ouled Brahim', 'أولاد إبراهيم'),
-(941, 2647, 'Ouled Deid', 'أولاد دايد'),
-(942, 2604, 'Ouled Emaaraf', 'أولاد امعرف'),
-(943, 2658, 'Ouled Hellal', 'أولاد هلال'),
-(944, 2632, 'Oum El Djellil', 'أم الجليل'),
-(945, 2602, 'Ouzera', 'وزرة'),
-(946, 2647, 'Rebaia', 'الربعية'),
-(947, 2635, 'Saneg', 'السانق'),
-(948, 2609, 'Sedraya', 'سدراية'),
-(949, 2648, 'Seghouane', 'سغوان'),
-(950, 2644, 'Si Mahdjoub', 'سي المحجوب'),
-(951, 2604, 'Sidi Demed', 'سيدي دامد'),
-(952, 2626, 'Sidi Naamane', 'سيدي نعمان'),
-(953, 2646, 'Sidi Rabie', 'سيدي الربيع'),
-(954, 2633, 'Sidi Zahar', 'سيدي زهار'),
-(955, 2633, 'Sidi Ziane', 'سيدي زيان'),
-(956, 2633, 'Souagui', 'السواقي'),
-(957, 2652, 'Tablat', 'تابلاط'),
-(958, 2618, 'Tafraout', 'تفراوت'),
-(959, 2601, 'Tamesguida', 'تمسقيدة'),
-(960, 2602, 'Tizi Mahdi', 'تيزي مهدي'),
-(961, 2648, 'Tletat Ed Douair', 'ثلاث دوائر'),
-(962, 2648, 'Zoubiria', 'الزبيرية'),
-(963, 2717, 'Achaacha', 'عشعاشة'),
-(964, 2711, 'Ain-Boudinar', 'عين بودينار'),
-(965, 2705, 'Ain-Nouissy', 'عين نويسي'),
-(966, 2722, 'Ain-Sidi Cherif', 'عين سيدي الشريف'),
-(967, 2707, 'Ain-Tedles', 'عين تادلس'),
-(968, 2716, 'Benabdelmalek Ramdane', 'بن عبد المالك رمضان'),
-(969, 2719, 'Bouguirat', 'بوقيراط'),
-(970, 2705, 'Fornaka', 'فرناقة'),
-(971, 2716, 'Hadjadj', 'حجاج'),
-(972, 2706, 'Hassi Mameche', 'حاسي ماماش'),
-(973, 2705, 'Hassiane', 'الحسيان (بني ياحي'),
-(974, 2717, 'Khadra', 'خضرة'),
-(975, 2711, 'Kheir-Eddine', 'خير الدين'),
-(976, 2722, 'Mansourah', 'منصورة'),
-(977, 2706, 'Mazagran', 'مزغران'),
-(978, 2722, 'Mesra', 'ماسرة'),
-(979, 2701, 'Mostaganem', 'مستغانم'),
-(980, 2717, 'Nekmaria', 'نكمارية'),
-(981, 2707, 'Oued El Kheir', 'وادي الخير'),
-(982, 2717, 'Ouled Boughalem', 'أولاد بوغالم'),
-(983, 2712, 'Ouled-Maalah', 'أولاد مع الله'),
-(984, 2719, 'Safsaf', 'صفصاف'),
-(985, 2711, 'Sayada', 'صيادة'),
-(986, 2712, 'Sidi Ali', 'سيدي علي'),
-(987, 2707, 'Sidi Belaattar', 'سيدي بلعطار'),
-(988, 2716, 'Sidi-Lakhdar', 'سيدي لخضر'),
-(989, 2719, 'Sirat', 'سيرات'),
-(990, 2719, 'Souaflia', 'السوافلية'),
-(991, 2707, 'Sour', 'سور'),
-(992, 2706, 'Stidia', 'ستيدية'),
-(993, 2712, 'Tazgait', 'تزقايت'),
-(994, 2722, 'Touahria', 'الطواهرية'),
-(995, 2817, 'Ain El Hadjel', 'عين الحجل'),
-(996, 2841, 'Ain El Melh', 'عين الملح'),
-(997, 2841, 'Ain Fares', 'عين فارس'),
-(998, 2811, 'Ain Khadra', 'عين الخضراء'),
-(999, 2841, 'Ain Rich', 'عين الريش'),
-(1000, 2811, 'Belaiba', 'بلعايبة'),
-(1001, 2824, 'Ben Srour', 'بن سرور'),
-(1002, 2816, 'Beni Ilmane', 'بني يلمان'),
-(1003, 2821, 'Benzouh', 'بن زوه'),
-(1004, 2811, 'Berhoum', 'برهوم'),
-(1005, 2841, 'Bir Foda', 'بئر فضة'),
-(1006, 2820, 'Bou Saada', 'بوسعادة'),
-(1007, 2816, 'Bouti Sayeh', 'بوطي السايح'),
-(1008, 2809, 'Chellal', 'شلال'),
-(1009, 2811, 'Dehahna', 'دهاهنة'),
-(1010, 2847, 'Djebel Messaad', 'جبل مساعد'),
-(1011, 2820, 'El Hamel', 'الهامل'),
-(1012, 2807, 'El Houamed', 'الحوامد'),
-(1013, 2803, 'Hammam Dalaa', 'حمام الضلعة'),
-(1014, 2809, 'Khettouti Sed-El-Jir', 'خطوطي سد الجير'),
-(1015, 2807, 'Khoubana', 'خبانة'),
-(1016, 2804, 'Maadid', 'المعاضيد'),
-(1017, 2809, 'Maarif', 'معاريف'),
-(1018, 2811, 'Magra', 'مقرة'),
-(1019, 2807, 'M\'cif', 'مسيف'),
-(1020, 2842, 'Medjedel', 'امجدل'),
-(1021, 2842, 'Menaa', 'مناعة'),
-(1022, 2824, 'Mohamed Boudiaf', 'محمد بوضياف'),
-(1023, 2801, 'M\'sila', 'المسيلة'),
-(1024, 2804, 'M\'tarfa', 'المطارفة'),
-(1025, 2803, 'Ouanougha', 'ونوغة'),
-(1026, 2804, 'Ouled Addi Guebala', 'أولاد عدي لقبالة'),
-(1027, 2804, 'Ouled Derradj', 'أولاد دراج'),
-(1028, 2809, 'Ouled Madhi', 'أولاد ماضي'),
-(1029, 2803, 'Ouled Mansour', 'أولاد منصور'),
-(1030, 2821, 'Ouled Sidi Brahim', 'أولاد سيدي ابراهيم'),
-(1031, 2824, 'Ouled Slimane', 'أولاد سليمان'),
-(1032, 2820, 'Oulteme', 'ولتام'),
-(1033, 2816, 'Sidi Aissa', 'سيدي عيسى'),
-(1034, 2822, 'Sidi Ameur', 'سيدي عامر'),
-(1035, 2817, 'Sidi Hadjeres', 'سيدي هجرس'),
-(1036, 2841, 'Sidi M\'hamed', 'سيدي امحمد'),
-(1037, 2847, 'Slim', 'سليم'),
-(1038, 2804, 'Souamaa', 'السوامع'),
-(1039, 2822, 'Tamsa', 'تامسة'),
-(1040, 2803, 'Tarmount', 'تارمونت'),
-(1041, 2824, 'Zarzour', 'زرزور'),
-(1042, 2924, 'Ain Fares', 'عين فارس'),
-(1043, 2918, 'Ain Fekan', 'عين فكان'),
-(1044, 2910, 'Ain Ferah', 'عين فراح'),
-(1045, 2918, 'Ain Frass', 'عين أفرص'),
-(1046, 2927, 'Alaimia', 'العلايمية'),
-(1047, 2923, 'Aouf', 'عوف'),
-(1048, 2923, 'Benian', 'بنيان'),
-(1049, 2926, 'Bou Henni', 'بوهني'),
-(1050, 2902, 'Bouhanifia', 'بوحنيفية'),
-(1051, 2926, 'Chorfa', 'الشرفاء'),
-(1052, 2917, 'El Bordj', 'البرج'),
-(1053, 2930, 'El Gaada', 'القعدة'),
-(1054, 2931, 'El Ghomri', 'الغمري'),
-(1055, 2902, 'El Gueitena', 'القطنة'),
-(1056, 2907, 'El Hachem', 'الحشم'),
-(1057, 2903, 'El Keurt', 'القرط'),
-(1058, 2924, 'El Mamounia', 'المأمونية'),
-(1059, 2917, 'El Menaouer', 'المنور'),
-(1060, 2931, 'Ferraguig', 'فراقيق'),
-(1061, 2903, 'Froha', 'فروحة'),
-(1062, 2923, 'Gharrous', 'غروس'),
-(1063, 2912, 'Ghriss', 'غريس'),
-(1064, 2922, 'Guerdjoum', 'قرجوم'),
-(1065, 2902, 'Hacine', 'حسين'),
-(1066, 2917, 'Khalouia', 'خلوية'),
-(1067, 2912, 'Makhda', 'ماقضة'),
-(1068, 2912, 'Maoussa', 'ماوسة'),
-(1069, 2901, 'Mascara', 'معسكر'),
-(1070, 2912, 'Matemore', 'المطمور'),
-(1071, 2931, 'Mocta-Douz', 'مقطع الدوز'),
-(1072, 2931, 'Mohammadia', 'المحمدية'),
-(1073, 2907, 'Nesmot', 'نسمط'),
-(1074, 2927, 'Oggaz', 'عقاز'),
-(1075, 2910, 'Oued El Abtal', 'وادي الأبطال'),
-(1076, 2922, 'Oued Taria', 'وادي التاغية'),
-(1077, 2927, 'Ras El Ain Amirouche', 'رأس عين عميروش'),
-(1078, 2931, 'Sedjerara', 'سجرارة'),
-(1079, 2906, 'Sehailia', 'السهايلية'),
-(1080, 2910, 'Sidi Abdeldjebar', 'سيدي عبد الجبار'),
-(1081, 2931, 'Sidi Abdelmoumene', 'سيدي عبد المومن'),
-(1082, 2912, 'Sidi Boussaid', 'سيدي بوسعيد'),
-(1083, 2906, 'Sidi Kada', 'سيدي قادة'),
-(1084, 2926, 'Sig', 'سيق'),
-(1085, 2906, 'Tighennif', 'تيغنيف'),
-(1086, 2903, 'Tizi', 'تيزي'),
-(1087, 2930, 'Zahana', 'زهانة'),
-(1088, 2907, 'Zelamta', 'زلامطة'),
-(1089, 3011, 'Ain Beida', 'عين البيضاء'),
-(1090, 3015, 'Benaceur', 'بن ناصر'),
-(1091, 3016, 'Blidet Amor', 'بلدة اعمر'),
-(1092, 3014, 'El Alia', 'العالية'),
-(1093, 3021, 'El Borma', 'البرمة'),
-(1094, 3014, 'El-Hadjira', 'الحجيرة'),
-(1095, 3011, 'Hassi Ben Abdellah', 'حاسي بن عبد الله'),
-(1096, 3004, 'Hassi Messaoud', 'حاسي مسعود'),
-(1097, 3019, 'Megarine', 'المقارين'),
-(1098, 3015, 'M\'naguer', 'المنقر'),
-(1099, 3013, 'Nezla', 'النزلة'),
-(1100, 3003, 'N\'goussa', 'انقوسة'),
-(1101, 3001, 'Ouargla', 'ورقلة'),
-(1102, 3001, 'Rouissat', 'الرويسات'),
-(1103, 3011, 'Sidi Khouiled', 'سيدي خويلد'),
-(1104, 3019, 'Sidi Slimane', 'سيدي سليمان'),
-(1105, 3015, 'Taibet', 'الطيبات'),
-(1106, 3013, 'Tebesbest', 'تبسبست'),
-(1107, 3016, 'Temacine', 'تماسين'),
-(1108, 3013, 'Touggourt', 'تقرت'),
-(1109, 3013, 'Zaouia El Abidia', 'الزاوية العابدية'),
-(1110, 3107, 'Ain Biya', 'عين البية'),
-(1111, 3124, 'Ain Kerma', 'عين الكرمة'),
-(1112, 3109, 'Ain Turk', 'عين الترك'),
-(1113, 3106, 'Arzew', 'أرزيو'),
-(1114, 3102, 'Ben Freha', 'بن فريحة'),
-(1115, 3107, 'Bethioua', 'بطيوة'),
-(1116, 3103, 'Bir El Djir', 'بئر الجير'),
-(1117, 3111, 'Boufatis', 'بوفاتيس'),
-(1118, 3109, 'Bousfer', 'بوسفر'),
-(1119, 3124, 'Boutlelis', 'بوتليليس'),
-(1120, 3109, 'El Ancor', 'العنصر'),
-(1121, 3111, 'El Braya', 'البراية'),
-(1122, 3105, 'El Kerma', 'الكرمة'),
-(1123, 3105, 'Es Senia', 'السانية'),
-(1124, 3102, 'Gdyel', 'قديل'),
-(1125, 3103, 'Hassi Ben Okba', 'حاسي بن عقبة'),
-(1126, 3103, 'Hassi Bounif', 'حاسي بونيف'),
-(1127, 3102, 'Hassi Mefsoukh', 'حاسي مفسوخ'),
-(1128, 3107, 'Marsat El Hadjadj', 'مرسى الحجاج'),
-(1129, 3109, 'Mers El Kebir', 'المرسى الكبير'),
-(1130, 3124, 'Messerghin', 'مسرغين'),
-(1131, 3101, 'Oran', 'وهران'),
-(1132, 3111, 'Oued Tlelat', 'وادي تليلات'),
-(1133, 3106, 'Sidi Ben Yebka', 'سيدي بن يبقى'),
-(1134, 3105, 'Sidi Chami', 'سيدي الشحمي'),
-(1135, 3111, 'Tafraoui', 'طفراوي'),
-(1136, 3205, 'Ain El Orak', 'عين العراك'),
-(1137, 3205, 'Arbaouat', 'اربوات'),
-(1138, 3204, 'Boualem', 'بوعلام'),
-(1139, 3206, 'Bougtoub', 'بوقطب'),
-(1140, 3207, 'Boussemghoun', 'بوسمغون'),
-(1141, 3203, 'Brezina', 'بريزينة'),
-(1142, 3202, 'Cheguig', 'الشقيق'),
-(1143, 3208, 'Chellala', 'شلالة'),
-(1144, 3201, 'El Bayadh', 'البيض'),
-(1145, 3205, 'Labiodh Sidi Cheikh', 'الأبيض سيدي الشيخ'),
-(1146, 3205, 'El Bnoud', 'البنود'),
-(1147, 3206, 'El Kheiter', 'الخيثر'),
-(1148, 3208, 'El Mehara', 'المحرة'),
-(1149, 3203, 'Ghassoul', 'الغاسول'),
-(1150, 3202, 'Kef El Ahmar', 'الكاف الأحمر'),
-(1151, 3203, 'Krakda', 'كراكدة'),
-(1152, 3202, 'Rogassa', 'رقاصة'),
-(1153, 3204, 'Sidi Ameur', 'سيدي عامر'),
-(1154, 3204, 'Sidi Slimane', 'سيدي سليمان'),
-(1155, 3204, 'Sidi Tiffour', 'سيدي طيفور'),
-(1156, 3204, 'Stitten', 'ستيتن'),
-(1157, 3206, 'Tousmouline', 'توسمولين'),
-(1158, 3302, 'Bordj El Haouass', 'برج الحواس'),
-(1159, 3306, 'Bordj Omar Driss', 'برج عمر إدريس'),
-(1160, 3306, 'Debdeb', 'دبداب'),
-(1161, 3302, 'Djanet', 'جانت'),
-(1162, 3301, 'Illizi', 'إيليزي'),
-(1163, 3306, 'In Amenas', 'إن أمناس'),
-(1164, 3408, 'Ain Taghrout', 'عين تاغروت'),
-(1165, 3402, 'Ain Tesra', 'عين تسرة'),
-(1166, 3401, 'B. B. Arreridj', 'برج بوعريرج'),
-(1167, 3409, 'Belimour', 'بليمور'),
-(1168, 3404, 'Ben Daoud', 'بن داود'),
-(1169, 3431, 'Bir Kasdali', 'بئر قاصد علي'),
-(1170, 3409, 'Bordj Ghedir', 'برج الغدير'),
-(1171, 3403, 'Bordj Zemmoura', 'برج زمورة'),
-(1172, 3415, 'Colla', 'القلة'),
-(1173, 3415, 'Djaafra', 'جعافرة'),
-(1174, 3411, 'El Euch', 'العش'),
-(1175, 3413, 'El Achir', 'الياشير'),
-(1176, 3409, 'El Annasseur', 'العناصر'),
-(1177, 3411, 'Elhammadia', 'الحمادية'),
-(1178, 3415, 'El Main', 'الماين'),
-(1179, 3404, 'El M\'hir', 'المهير'),
-(1180, 3409, 'Ghailasa', 'غيلاسة'),
-(1181, 3404, 'Haraza', 'حرازة'),
-(1182, 3413, 'Hasnaoua', 'حسناوة'),
-(1183, 3431, 'Khelil', 'خليل'),
-(1184, 3411, 'Ksour', 'القصور'),
-(1185, 3404, 'Mansoura', 'المنصورة'),
-(1186, 3413, 'Medjana', 'مجانة'),
-(1187, 3402, 'Ouled Brahem', 'أولاد أبراهم'),
-(1188, 3403, 'Ouled Dahmane', 'أولاد دحمان'),
-(1189, 3404, 'Ouled Sidi-Brahim', 'أولاد سيدي ابراهيم'),
-(1190, 3411, 'Rabta', 'الرابطة'),
-(1191, 3402, 'Ras El Oued', 'رأس الوادي'),
-(1192, 3431, 'Sidi-Embarek', 'سيدي أمبارك'),
-(1193, 3415, 'Tefreg', 'تفرق'),
-(1194, 3409, 'Taglait', 'تقلعيت'),
-(1195, 3403, 'Tassamert', 'تسامرت'),
-(1196, 3413, 'Teniet En Nasr', 'ثنية النصر'),
-(1197, 3408, 'Tixter', 'تيكستار'),
-(1198, 3523, 'Afir', 'أعفير'),
-(1199, 3514, 'Ammal', 'عمال'),
-(1200, 3505, 'Baghlia', 'بغلية'),
-(1201, 3523, 'Ben Choud', 'بن شود'),
-(1202, 3514, 'Beni Amrane', 'بني عمران'),
-(1203, 3504, 'Bordj Menaiel', 'برج منايل'),
-(1204, 3502, 'Boudouaou', 'بودواو'),
-(1205, 3502, 'Boudouaou El Bahri', 'بودواو البحري'),
-(1206, 3501, 'Boumerdes', 'بومرداس'),
-(1207, 3502, 'Bouzegza Keddara', 'بوزقزة قدارة'),
-(1208, 3509, 'Chabet El Ameur', 'شعبة العامر'),
-(1209, 3501, 'Corso', 'قورصو'),
-(1210, 3523, 'Dellys', 'دلس'),
-(1211, 3504, 'Djinet', 'جنات'),
-(1212, 3502, 'El Kharrouba', 'الخروبة'),
-(1213, 3531, 'Hammedi', 'حمادي'),
-(1214, 3509, 'Isser', 'يسر'),
-(1215, 3531, 'Khemis El Khechna', 'خميس الخشنة'),
-(1216, 3531, 'Larbatache', 'الاربعطاش'),
-(1217, 3504, 'Leghata', 'لقاطة'),
-(1218, 3507, 'Naciria', 'الناصرية'),
-(1219, 3507, 'Ouled Aissa', 'أولاد عيسى'),
-(1220, 3502, 'Ouled Hedadj', 'أولاد هداج'),
-(1221, 3531, 'Ouled Moussa', 'أولاد موسى'),
-(1222, 3509, 'Si Mustapha', 'سي مصطفى'),
-(1223, 3505, 'Sidi Daoud', 'سيدي داود'),
-(1224, 3514, 'Souk El Had', 'سوق الحد'),
-(1225, 3505, 'Taourga', 'تاورقة'),
-(1226, 3514, 'Thenia', 'الثنية'),
-(1227, 3501, 'Tidjelabine', 'تيجلابين'),
-(1228, 3509, 'Timezrit', 'تيمزريت'),
-(1229, 3504, 'Zemmouri', 'زموري'),
-(1230, 3601, 'Ain El Assel', 'عين العسل'),
-(1231, 3602, 'Ain Kerma', 'عين الكرمة'),
-(1232, 3616, 'Asfour', 'عصفور'),
-(1233, 3603, 'Ben M Hidi', 'بن مهيدي'),
-(1234, 3603, 'Berrihane', 'بريحان'),
-(1235, 3616, 'Besbes', 'البسباس'),
-(1236, 3601, 'Bougous', 'بوقوس'),
-(1237, 3602, 'Bouhadjar', 'بوحجار'),
-(1238, 3608, 'Bouteldja', 'بوثلجة'),
-(1239, 3613, 'Chebaita Mokhtar', 'شبيطة مختار'),
-(1240, 3608, 'Chefia', 'الشافية'),
-(1241, 3613, 'Chihani', 'شحاني'),
-(1242, 3613, 'Drean', 'الذرعـان'),
-(1243, 3603, 'Echatt', 'الشط'),
-(1244, 3605, 'El Aioun', 'العيون'),
-(1245, 3605, 'El Kala', 'القالة'),
-(1246, 3601, 'El Tarf', 'الطارف'),
-(1247, 3602, 'Hammam Beni Salah', 'حمام بني صالح'),
-(1248, 3608, 'Lac Des Oiseaux', 'بحيرة الطيور'),
-(1249, 3602, 'Oued Zitoun', 'وادي الزيتون'),
-(1250, 3605, 'Raml Souk', 'رمل السوق'),
-(1251, 3605, 'Souarekh', 'السوارخ'),
-(1252, 3616, 'Zerizer', 'زريزر'),
-(1253, 3601, 'Zitouna', 'الزيتونة'),
-(1254, 3701, 'Oum El Assel', 'أم العسل'),
-(1255, 3701, 'Tindouf', 'تندوف'),
-(1256, 3813, 'Ammari', 'عماري'),
-(1257, 3802, 'Beni Chaib', 'بني شعيب'),
-(1258, 3802, 'Beni Lahcene', 'بني لحسن'),
-(1259, 3802, 'Bordj Bounaama', 'برج بونعامة'),
-(1260, 3809, 'Bordj El Emir Abdelkader', 'برج الأمير عبد القادر'),
-(1261, 3804, 'Boucaid', 'بوقائد'),
-(1262, 3811, 'Khemisti', 'خميستي'),
-(1263, 3804, 'Larbaa', 'الأربعاء'),
-(1264, 3806, 'Lardjem', 'لرجام'),
-(1265, 3811, 'Layoune', 'العيون'),
-(1266, 3804, 'Lazharia', 'الأزهرية'),
-(1267, 3813, 'Maacem', 'المعاصم'),
-(1268, 3806, 'Melaab', 'الملعب'),
-(1269, 3801, 'Ouled Bessam', 'أولاد بسام'),
-(1270, 3813, 'Sidi Abed', 'سيدي عابد'),
-(1271, 3803, 'Sidi Boutouchent', 'سيدي بوتوشنت'),
-(1272, 3806, 'Sidi Lantri', 'سيدي العنتري'),
-(1273, 3802, 'Sidi Slimane', 'سيدي سليمان'),
-(1274, 3806, 'Tamellahet', 'تملاحت'),
-(1275, 3803, 'Theniet El Had', 'ثنية الاحد'),
-(1276, 3801, 'Tissemsilt', 'تيسمسيلت'),
-(1277, 3809, 'Youssoufia', 'اليوسفية'),
-(1278, 3904, 'Bayadha', 'البياضة'),
-(1279, 3914, 'Ben Guecha', 'بن  قشة'),
-(1280, 3911, 'Debila', 'الدبيلة'),
-(1281, 3928, 'Djamaa', 'جامعة'),
-(1282, 3914, 'Douar El Maa', 'دوار الماء'),
-(1283, 3902, 'El Ogla', 'العقلة'),
-(1284, 3927, 'El-M\'ghaier', 'المغير'),
-(1285, 3901, 'El-Oued', 'الوادي'),
-(1286, 3906, 'Guemar', 'قمار'),
-(1287, 3908, 'Hamraia', 'الحمراية'),
-(1288, 3911, 'Hassani Abdelkrim', 'حساني عبد الكريم'),
-(1289, 3913, 'Hassi Khalifa', 'حاسي خليفة'),
-(1290, 3901, 'Kouinine', 'كوينين'),
-(1291, 3918, 'Magrane', 'المقرن'),
-(1292, 3926, 'Mih Ouansa', 'اميه وانسة'),
-(1293, 3928, 'M\'rara', 'المرارة'),
-(1294, 3902, 'Nakhla', 'النخلة'),
-(1295, 3926, 'Oued El Alenda', 'وادي العلندة'),
-(1296, 3927, 'Oum Touyour', 'أم الطيور'),
-(1297, 3906, 'Ourmes', 'ورماس'),
-(1298, 3908, 'Reguiba', 'الرقيبة'),
-(1299, 3902, 'Robbah', 'الرباح'),
-(1300, 3928, 'Sidi Amrane', 'سيدي عمران'),
-(1301, 3918, 'Sidi Aoun', 'سيدي عون'),
-(1302, 3927, 'Sidi Khelil', 'سيدي خليل'),
-(1303, 3927, 'Still', 'سطيل'),
-(1304, 3906, 'Taghzout', 'تغزوت'),
-(1305, 3914, 'Taleb Larbi', 'الطالب العربي'),
-(1306, 3928, 'Tenedla', 'تندلة'),
-(1307, 3913, 'Trifaoui', 'الطريفاوي'),
-(1308, 4006, 'Ain Touila', 'عين الطويلة'),
-(1309, 4013, 'Babar', 'بابار'),
-(1310, 4005, 'Baghai', 'بغاي'),
-(1311, 4008, 'Bouhmama', 'بوحمامة'),
-(1312, 4011, 'Chechar', 'ششار'),
-(1313, 4008, 'Chelia', 'شلية'),
-(1314, 4011, 'Djellal', 'جلال'),
-(1315, 4005, 'El Hamma', 'الحامة'),
-(1316, 4016, 'El Mahmal', 'المحمل'),
-(1317, 4011, 'El Oueldja', 'الولجة'),
-(1318, 4005, 'Ensigha', 'انسيغة'),
-(1319, 4003, 'Kais', 'قايس'),
-(1320, 4001, 'Khenchela', 'خنشلة'),
-(1321, 4011, 'Khirane', 'خيران'),
-(1322, 4008, 'M\'sara', 'مصارة'),
-(1323, 4006, 'M\'toussa', 'متوسة'),
-(1324, 4016, 'Ouled Rechache', 'أولاد رشاش'),
-(1325, 4003, 'Remila', 'الرميلة'),
-(1326, 4005, 'Tamza', 'طامزة'),
-(1327, 4003, 'Taouzianat', 'تاوزيانت'),
-(1328, 4008, 'Yabous', 'يابوس'),
-(1329, 4102, 'Ain Soltane', 'عين سلطان'),
-(1330, 4105, 'Ain Zana', 'عين الزانة'),
-(1331, 4114, 'Bir Bouhouche', 'بئر بوحوش'),
-(1332, 4108, 'Drea', 'الدريعة'),
-(1333, 4110, 'Haddada', 'الحدادة'),
-(1334, 4104, 'Hanencha', 'الحنانشة'),
-(1335, 4110, 'Khedara', 'الخضارة'),
-(1336, 4102, 'Khemissa', 'خميسة'),
-(1337, 4104, 'Machroha', 'المشروحة'),
-(1338, 4115, 'M\'daourouche', 'مداوروش'),
-(1339, 4112, 'Merahna', 'المراهنة'),
-(1340, 4116, 'Oued Kebrit', 'وادي الكبريت'),
-(1341, 4105, 'Ouled Driss', 'أولاد إدريس'),
-(1342, 4110, 'Ouled Moumen', 'أولاد مومن'),
-(1343, 4116, 'Oum El Adhaim', 'أم العظايم'),
-(1344, 4112, 'Ouillen', 'ويلان'),
-(1345, 4115, 'Ragouba', 'الراقوبة'),
-(1346, 4114, 'Safel El Ouiden', 'سافل الويدان'),
-(1347, 4102, 'Sedrata', 'سدراتة'),
-(1348, 4112, 'Sidi Fredj', 'سيدي فرج'),
-(1349, 4101, 'Souk Ahras', 'سوق أهراس'),
-(1350, 4108, 'Taoura', 'تاورة'),
-(1351, 4116, 'Terraguelt', 'ترقالت'),
-(1352, 4115, 'Tiffech', 'تيفاش'),
-(1353, 4108, 'Zaarouria', 'الزعرورية'),
-(1354, 4114, 'Zouabi', 'الزوابي'),
-(1355, 4210, 'Aghbal', 'أغبال'),
-(1356, 4219, 'Ahmer El Ain', 'أحمر العين'),
-(1357, 4218, 'Ain Tagourait', 'عين تاقورايت'),
-(1358, 4224, 'Attatba', 'الحطاطبة'),
-(1359, 4215, 'Beni Mileuk', 'بني ميلك'),
-(1360, 4218, 'Bou Haroun', 'بوهارون'),
-(1361, 4218, 'Bou Ismail', 'بواسماعيل'),
-(1362, 4219, 'Bourkika', 'بورقيقة'),
-(1363, 4224, 'Chaiba', 'الشعيبة'),
-(1364, 4214, 'Cherchell', 'شرشال'),
-(1365, 4215, 'Damous', 'الداموس'),
-(1366, 4217, 'Douaouda', 'دواودة'),
-(1367, 4217, 'Fouka', 'فوكة'),
-(1368, 4210, 'Gouraya', 'قوراية'),
-(1369, 4208, 'Hadjout', 'حجوط'),
-(1370, 4214, 'Hadjret Ennous', 'حجرة النص'),
-(1371, 4218, 'Khemisti', 'خميستي'),
-(1372, 4224, 'Kolea', 'القليعة'),
-(1373, 4215, 'Larhat', 'الأرهاط');
-INSERT INTO `commune` (`COMMUNE_ID`, `DAIRA_ID`, `COMMUNE_NAME_EN`, `COMMUNE_NAME_AR`) VALUES
-(1374, 4209, 'Menaceur', 'مناصر'),
-(1375, 4208, 'Merad', 'مراد'),
-(1376, 4210, 'Messelmoun', 'مسلمون'),
-(1377, 4209, 'Nador', 'الناظور'),
-(1378, 4214, 'Sidi Ghiles', 'سيدي غيلاس'),
-(1379, 4219, 'Sidi Rached', 'سيدي راشد'),
-(1380, 4214, 'Sidi Semiane', 'سيدي سميان'),
-(1381, 4209, 'Sidi-Amar', 'سيدي عامر'),
-(1382, 4201, 'Tipaza', 'تيبازة'),
-(1383, 4310, 'Ahmed Rachedi', 'أحمد راشدي'),
-(1384, 4330, 'Ain Beida Harriche', ' عين البيضاء أحريش'),
-(1385, 4303, 'Ain Mellouk', 'عين الملوك'),
-(1386, 4301, 'Ain Tine', 'عين التين'),
-(1387, 4323, 'Amira Arres', 'اعميرة اراس'),
-(1388, 4308, 'Benyahia Abderrahmane', 'بن يحي عبد الرحمن'),
-(1389, 4314, 'Bouhatem', 'بوحاتم'),
-(1390, 4303, 'Chelghoum Laid', 'شلغوم العيد'),
-(1391, 4318, 'Chigara', 'الشيقارة'),
-(1392, 4314, 'Derrahi Bousselah', 'دراحي بوصلاح'),
-(1393, 4330, 'El Ayadi Barbes', 'العياضي برباس'),
-(1394, 4306, 'El Mechira', 'مشيرة'),
-(1395, 4302, 'Ferdjioua', 'فرجيوة'),
-(1396, 4317, 'Grarem Gouga', 'القرارم قوقة'),
-(1397, 4317, 'Hamala', 'حمالة'),
-(1398, 4301, 'Mila', 'ميلة'),
-(1399, 4319, 'Minar Zarza', 'مينار زارزة'),
-(1400, 4303, 'Oued Athmenia', 'وادي العثمانية'),
-(1401, 4310, 'Oued Endja', 'وادي النجاء'),
-(1402, 4306, 'Oued Seguen', 'وادي سقان'),
-(1403, 4308, 'Ouled Khalouf', 'أولاد اخلوف'),
-(1404, 4315, 'Rouached', 'الرواشد'),
-(1405, 4301, 'Sidi Khelifa', 'سيدي خليفة'),
-(1406, 4318, 'Sidi Merouane', 'سيدي مروان'),
-(1407, 4308, 'Tadjenanet', 'تاجنانت'),
-(1408, 4319, 'Tassadane Haddada', 'تسدان حدادة'),
-(1409, 4306, 'Teleghma', 'التلاغمة'),
-(1410, 4323, 'Terrai Bainen', 'ترعي باينان'),
-(1411, 4323, 'Tassala Lematai', 'تسالة لمطاعي'),
-(1412, 4315, 'Tiberguent', 'تيبرقنت'),
-(1413, 4302, 'Yahia Beniguecha', 'يحي بني قشة'),
-(1414, 4310, 'Zeghaia', 'زغاية'),
-(1415, 4405, 'Ain-Benian', 'عين البنيان'),
-(1416, 4411, 'Ain-Bouyahia', 'عين بويحيى'),
-(1417, 4401, 'Ain-Defla', 'عين الدفلى'),
-(1418, 4414, 'Ain-Lechiakh', 'عين الاشياخ'),
-(1419, 4414, 'Ain-Soltane', 'عين السلطان'),
-(1420, 4405, 'Ain-Torki', 'عين التركي'),
-(1421, 4408, 'Arib', 'عريب'),
-(1422, 4412, 'Birbouche', 'بربوش'),
-(1423, 4431, 'Bathia', 'بطحية'),
-(1424, 4431, 'Belaas', 'بلعاص'),
-(1425, 4402, 'Ben Allal', 'بن علال'),
-(1426, 4422, 'Bir-Ould-Khelifa', 'بئر ولد خليفة'),
-(1427, 4422, 'Bordj-Emir-Khaled', 'برج الأمير خالد'),
-(1428, 4403, 'Boumedfaa', 'بومدفع'),
-(1429, 4407, 'Bourached', 'بوراشد'),
-(1430, 4407, 'Djelida', 'جليدة'),
-(1431, 4407, 'Djemaa Ouled Cheikh', 'جمعة أولاد الشيخ'),
-(1432, 4412, 'Djendel', 'جندل'),
-(1433, 4411, 'El-Abadia', 'العبادية'),
-(1434, 4408, 'El-Amra', 'العامرة'),
-(1435, 4410, 'El-Attaf', 'العطاف'),
-(1436, 4416, 'El-Maine', 'الماين'),
-(1437, 4405, 'Hammam-Righa', 'حمام ريغة'),
-(1438, 4431, 'Hassania', 'الحسانية'),
-(1439, 4403, 'Hoceinia', 'الحسينية'),
-(1440, 4404, 'Khemis-Miliana', 'خميس مليانة'),
-(1441, 4408, 'Mekhatria', 'المخاطرية'),
-(1442, 4402, 'Miliana', 'مليانة'),
-(1443, 4412, 'Oued Chorfa', 'وادي الشرفاء'),
-(1444, 4414, 'Oued Djemaa', 'واد الجمعة'),
-(1445, 4416, 'Rouina', 'الروينة'),
-(1446, 4404, 'Sidi-Lakhdar', 'سيدي الأخضر'),
-(1447, 4411, 'Tacheta Zegagha', 'تاشتة زقاغة'),
-(1448, 4422, 'Tarik-Ibn-Ziad', 'طارق بن زياد'),
-(1449, 4410, 'Tiberkanine', 'تبركانين'),
-(1450, 4416, 'Zeddine', 'زدين'),
-(1451, 4502, 'Ain Ben Khelil', 'عين بن خليل'),
-(1452, 4503, 'Ain Sefra', 'عين الصفراء'),
-(1453, 4507, 'Asla', 'عسلة'),
-(1454, 4506, 'Djenienne Bourezg', 'جنين بورزق'),
-(1455, 4502, 'El Biodh', 'البيوض'),
-(1456, 4510, 'Kasdir', 'القصدير'),
-(1457, 4510, 'Makmen Ben Amar', 'مكمن بن عمار'),
-(1458, 4502, 'Mecheria', 'المشرية'),
-(1459, 4506, 'Moghrar', 'مغرار'),
-(1460, 4501, 'Naama', 'النعامة'),
-(1461, 4505, 'Sfissifa', 'سفيسيفة'),
-(1462, 4503, 'Tiout', 'تيوت'),
-(1463, 4622, 'Aghlal', 'أغلال'),
-(1464, 4609, 'Ain El Arbaa', 'عين الأربعاء'),
-(1465, 4622, 'Ain Kihal', 'عين الكيحل'),
-(1466, 4601, 'Ain Temouchent', 'عين تموشنت'),
-(1467, 4622, 'Ain Tolba', 'عين الطلبة'),
-(1468, 4622, 'Aoubellil', 'عقب الليل'),
-(1469, 4623, 'Beni Saf', 'بني صاف'),
-(1470, 4619, 'Bouzedjar', 'بوزجار'),
-(1471, 4614, 'Chaabat El Ham', 'شعبة اللحم'),
-(1472, 4604, 'Chentouf', 'شنتوف'),
-(1473, 4619, 'El Amria', 'العامرية'),
-(1474, 4614, 'El Maleh', 'المالح'),
-(1475, 4619, 'El Messaid', 'المساعيد'),
-(1476, 4623, 'Emir Abdelkader', 'الأمير عبد القادر'),
-(1477, 4604, 'Hammam Bou Hadjar', 'حمام بوحجر'),
-(1478, 4604, 'Hassasna', 'الحساسنة'),
-(1479, 4619, 'Hassi El Ghella', 'حاسي الغلة'),
-(1480, 4604, 'Oued Berkeche', 'وادي برقش'),
-(1481, 4609, 'Oued Sebbah', 'وادي الصباح'),
-(1482, 4619, 'Ouled Boudjemaa', 'أولاد بوجمعة'),
-(1483, 4614, 'Ouled Kihal', 'أولاد الكيحل'),
-(1484, 4625, 'Oulhaca El Gheraba', 'ولهاصة الغرابة'),
-(1485, 4601, 'Sidi Ben Adda', 'سيدي بن عدة'),
-(1486, 4609, 'Sidi Boumediene', 'سيدي بومدين'),
-(1487, 4625, 'Sidi Ouriache', 'سيدي ورياش'),
-(1488, 4623, 'Sidi Safi', 'سيدي صافي'),
-(1489, 4609, 'Tamzoura', 'تامزورة'),
-(1490, 4614, 'Terga', 'تارقة'),
-(1491, 4704, 'Berriane', 'بريان'),
-(1492, 4710, 'Bounoura', 'بونورة'),
-(1493, 4703, 'Dhayet Bendhahoua', 'ضاية بن ضحوة'),
-(1494, 4710, 'El Atteuf', 'العطف'),
-(1495, 5801, 'El Meniaa', 'المنيعة'),
-(1496, 4701, 'Ghardaia', 'غرداية'),
-(1497, 4706, 'El Guerrara', 'القرارة'),
-(1498, 5802, 'Hassi Fehal', 'حاسي الفحل'),
-(1499, 5801, 'Hassi Gara', 'حاسي القارة'),
-(1500, 4713, 'Mansoura', 'المنصورة'),
-(1501, 4705, 'Metlili', 'متليلي'),
-(1502, 4705, 'Sebseb', 'سبسب'),
-(1503, 4708, 'Zelfana', 'زلفانة'),
-(1504, 4825, 'Ain Rahma', 'عين الرحمة'),
-(1505, 4819, 'Ain-Tarek', 'عين طارق'),
-(1506, 4811, 'Ammi Moussa', 'عمي موسى'),
-(1507, 4817, 'Belaassel Bouzagza', 'بلعسل بوزقزة'),
-(1508, 4801, 'Bendaoud', 'بن داود'),
-(1509, 4812, 'Beni Dergoun', 'بني درقن'),
-(1510, 4808, 'Beni Zentis', 'بني زنطيس'),
-(1511, 4812, 'Dar Ben Abdelah', 'دار بن عبد الله'),
-(1512, 4814, 'Djidiouia', 'جديوية'),
-(1513, 4811, 'El Hassi', 'الحاسي'),
-(1514, 4807, 'El H\'madna', 'الحمادنة'),
-(1515, 4811, 'El Ouldja', 'الولجة'),
-(1516, 4822, 'El-Guettar', 'القطار'),
-(1517, 4817, 'El-Matmar', 'المطمر'),
-(1518, 4819, 'Had Echkalla', 'حد الشكالة'),
-(1519, 4814, 'Hamri', 'حمري'),
-(1520, 4825, 'Kalaa', 'القلعة'),
-(1521, 4802, 'Lahlef', 'لحلاف'),
-(1522, 4822, 'Mazouna', 'مازونة'),
-(1523, 4808, 'Mediouna', 'مديونة'),
-(1524, 4828, 'Mendes', 'منداس'),
-(1525, 4802, 'Merdja Sidi Abed', 'مرجة سيدي عابد'),
-(1526, 4802, 'Ouarizane', 'واريزان'),
-(1527, 4807, 'Oued El Djemaa', 'وادي الجمعة'),
-(1528, 4828, 'Oued Essalem', 'وادي السلام'),
-(1529, 4802, 'Oued-Rhiou', 'وادي رهيو'),
-(1530, 4811, 'Ouled Aiche', 'أولاد يعيش'),
-(1531, 4814, 'Ouled Sidi Mihoub', 'أولاد سيدي الميهوب'),
-(1532, 4827, 'Ramka', 'الرمكة'),
-(1533, 4801, 'Relizane', 'غليزان'),
-(1534, 4817, 'Sidi Khettab', 'سيدي  خطاب'),
-(1535, 4828, 'Sidi Lazreg', 'سيدي لزرق'),
-(1536, 4808, 'Sidi M\'hamed Benali', 'سيدي أمحمد بن علي'),
-(1537, 4817, 'Sidi M\'hamed Benaouda', 'سيدي امحمد بن عودة'),
-(1538, 4825, 'Sidi Saada', 'سيدي سعادة'),
-(1539, 4827, 'Souk El Had', 'سوق الحد'),
-(1540, 4825, 'Yellel', 'يلل'),
-(1541, 4812, 'Zemmoura', 'زمورة');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `country`
+-- Table structure for table `country`
 --
 
 DROP TABLE IF EXISTS `country`;
@@ -1933,29 +198,12 @@ CREATE TABLE IF NOT EXISTS `country` (
   `COUNTRY_NAME_AR` varchar(100) NOT NULL,
   PRIMARY KEY (`COUNTRY_ID`),
   UNIQUE KEY `UK_COUNTRY_CODE` (`COUNTRY_CODE`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `country`
---
-
-INSERT INTO `country` (`COUNTRY_ID`, `COUNTRY_CODE`, `COUNTRY_NAME_EN`, `COUNTRY_NAME_AR`) VALUES
-(1, 'DZ', 'Algeria', 'الجزائر'),
-(2, 'PS', 'Palestine', 'فلسطين'),
-(3, 'CM', 'Cameroon', 'الكاميرون'),
-(4, 'CD', 'Democratic Republic of the Congo (Congo-Kinshasa)', 'جمهورية الكونغو الديمقراطية'),
-(5, 'CG', 'Republic of the Congo (Congo-Brazzaville)', 'جمهورية الكونغو'),
-(6, 'ML', 'Mali', 'جمهورية مالي'),
-(7, 'EH', 'Western Sahara', 'الصحراء الغربية'),
-(8, 'MR', 'Mauritania', 'الجمهورية الإسلامية الموريتانية'),
-(9, 'NE', 'Niger', 'النيجر'),
-(10, 'TN', 'Tunisia', 'تونس'),
-(11, 'LY', 'Libya', 'ليبيا');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `daira`
+-- Table structure for table `daira`
 --
 
 DROP TABLE IF EXISTS `daira`;
@@ -1966,566 +214,12 @@ CREATE TABLE IF NOT EXISTS `daira` (
   `DAIRA_NAME_AR` varchar(100) NOT NULL,
   PRIMARY KEY (`DAIRA_ID`),
   KEY `FK_DAIRA_WILAYA` (`WILAYA_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5803 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `daira`
---
-
-INSERT INTO `daira` (`DAIRA_ID`, `WILAYA_ID`, `DAIRA_NAME_EN`, `DAIRA_NAME_AR`) VALUES
-(101, 1, 'Adrar', 'أدرار'),
-(103, 49, 'Charouine', 'شروين'),
-(104, 1, 'Reggane', 'رقان'),
-(108, 1, 'Tsabit', 'تسابيت'),
-(109, 49, 'Timimoun', 'تيميمون'),
-(111, 1, 'Zaouiat Kounta', 'زاوية كنتة'),
-(112, 1, 'Aoulef', 'أولف'),
-(115, 1, 'Fenoughil', 'فنوغيل'),
-(116, 49, 'Tinerkouk', 'تنركوك'),
-(123, 49, 'Aougrout', 'أوقروت'),
-(125, 50, 'Bordj Badji Mokhtar', 'برج باجي مختار'),
-(201, 2, 'Chlef', 'الشلف'),
-(202, 2, 'Tenes', 'تنس'),
-(204, 2, 'El Karimia', 'الكريمية'),
-(206, 2, 'Taougrit', 'تاوقريت'),
-(207, 2, 'Beni Haoua', 'بني حواء'),
-(210, 2, 'Ouled Fares', 'أولاد فارس'),
-(212, 2, 'Boukadir', 'بوقادير'),
-(220, 2, 'Zeboudja', 'الزبوجة'),
-(222, 2, 'Abou El Hassane', 'أبو الحسن'),
-(223, 2, 'El Marsa', 'المرسى'),
-(229, 2, 'Oued Fodda', 'وادي الفضة'),
-(230, 2, 'Ouled Ben Abdelkader', 'أولاد بن عبد القادر'),
-(232, 2, 'Ain Merane', 'عين مران'),
-(301, 3, 'Laghouat', 'الأغواط'),
-(302, 3, 'Ksar El Hirane', 'قصر الحيران'),
-(304, 3, 'Sidi Makhlouf', 'سيدي مخلوف'),
-(306, 3, 'Hassi R\'mel', 'حاسي الرمل'),
-(307, 3, 'Ain Madhi', 'عين ماضي'),
-(310, 3, 'Gueltat Sidi Saad', 'قتلة سيدي سعيد'),
-(313, 3, 'Brida', 'بريدة'),
-(314, 3, 'El Ghicha', 'الغيشة'),
-(319, 3, 'Aflou', 'أفلو'),
-(321, 3, 'Oued Morra', 'وادي مرة'),
-(401, 4, 'Oum El Bouaghi', 'أم البواقي'),
-(402, 4, 'Ain Beida', 'عين البيضاء'),
-(403, 4, 'Ain M\'lila', 'عين مليلة'),
-(406, 4, 'Sigus', 'سيقوس'),
-(408, 4, 'Ain Babouche', 'عين ببوش'),
-(411, 4, 'Dhalaa', 'الضلعة'),
-(412, 4, 'Ain Kercha', 'عين كرشة'),
-(416, 4, 'F\'kirina', 'فكيرينة'),
-(417, 4, 'Souk Naamane', 'سوق نعمان'),
-(422, 4, 'Ksar Sbahi', 'قصر الصباحي'),
-(424, 4, 'Meskiana', 'مسكيانة'),
-(425, 4, 'Ain Fekroun', 'عين فكرون'),
-(501, 5, 'Batna', 'باتنة'),
-(504, 5, 'Merouana', 'مروانة'),
-(505, 5, 'Seriana', 'سريانة'),
-(506, 5, 'Menaa', 'منعة'),
-(507, 5, 'El Madher', 'المعذر'),
-(508, 5, 'Tazoult', 'تازولت'),
-(509, 5, 'N\'gaous', 'نقاوس'),
-(516, 5, 'Arris', 'أريس'),
-(519, 5, 'Ain Djasser', 'عين جاسر'),
-(529, 5, 'Seggana', 'سقانة'),
-(530, 5, 'Ichemoul', 'إشمول'),
-(535, 5, 'Bouzina', 'بوزينة'),
-(536, 5, 'Chemora', 'الشمرة'),
-(542, 5, 'Barika', 'بريكة'),
-(543, 5, 'Djezzar', 'الجزار'),
-(544, 5, 'Tkout', 'تكوت'),
-(545, 5, 'Ain Touta', 'عين التوتة'),
-(547, 5, 'Theniet El Abed', 'ثنية العابد'),
-(550, 5, 'Timgad', 'تيمقاد'),
-(551, 5, 'Ras El Aioun', 'رأس العيون'),
-(553, 5, 'Ouled Si Slimane', 'أولاد سي سليمان'),
-(601, 6, 'Bejaia', 'بجاية'),
-(602, 6, 'Amizour', 'أميزور'),
-(607, 6, 'Timezrit', 'تيمزريت'),
-(608, 6, 'Souk El Tenine', 'سوق الإثنين'),
-(611, 6, 'Tichy', 'تيشي'),
-(617, 6, 'Ighil Ali', 'إغيل علي'),
-(620, 6, 'Darguina', 'درقينة'),
-(622, 6, 'Aokas', 'أوقاس'),
-(624, 6, 'Adekar', 'أدكار'),
-(625, 6, 'Akbou', 'أقبو'),
-(626, 6, 'Seddouk', 'صدوق'),
-(627, 6, 'Tazmalt', 'تازملت'),
-(629, 6, 'Chemini', 'شميني'),
-(634, 6, 'Barbacha', 'برباشة'),
-(636, 6, 'Ifri Ouzellaguene', 'إفري أوزلاقن'),
-(639, 6, 'Sidi Aich', 'سيدي عيش'),
-(640, 6, 'El Kseur', 'القصر'),
-(644, 6, 'Kherrata', 'خراطة'),
-(650, 6, 'Beni Maouche', 'بني معوش'),
-(701, 7, 'Biskra', 'بسكرة'),
-(705, 51, 'Ouled Djellal', 'أولاد جلال'),
-(708, 51, 'Sidi Khaled', 'سيدي  خالد'),
-(711, 7, 'Sidi Okba', 'سيدي عقبة'),
-(712, 7, 'Mechouneche', 'مشونش'),
-(715, 7, 'Zeribet El Oued', 'زريبة الوادي'),
-(717, 7, 'El Kantara', 'القنطرة'),
-(719, 7, 'El Outaya', 'الوطاية'),
-(720, 7, 'Djemorah', 'جمورة'),
-(721, 7, 'Tolga', 'طولقة'),
-(724, 7, 'Ourlal', 'أورلال'),
-(726, 7, 'Foughala', 'فوغالة'),
-(801, 8, 'Bechar', 'بشار'),
-(803, 52, 'Ouled Khodeir', 'أولاد خضير'),
-(806, 8, 'Lahmar', 'لحمر'),
-(807, 52, 'Beni Abbes', 'بني عباس'),
-(810, 8, 'Kenadsa', 'القنادسة'),
-(811, 52, 'Igli', 'إقلي'),
-(812, 8, 'Tabelbala', 'تبلبالة'),
-(813, 8, 'Taghit', 'تاغيت'),
-(814, 52, 'El Ouata', 'الواتة'),
-(817, 8, 'Abadla', 'العبادلة'),
-(818, 52, 'Kerzaz', 'كرزاز'),
-(821, 8, 'Beni Ounif', 'بني ونيف'),
-(901, 9, 'Blida', 'البليدة'),
-(903, 9, 'Bouinan', 'بوعينان'),
-(904, 9, 'Oued El Alleug', 'وادي العلايق'),
-(905, 9, 'Ouled Yaich', 'أولاد يعيش'),
-(907, 9, 'El Affroun', 'العفرون'),
-(912, 9, 'Mouzaia', 'موزاية'),
-(914, 9, 'Meftah', 'مفتاح'),
-(916, 9, 'Boufarik', 'بوفاريك'),
-(917, 9, 'Larbaa', 'الأربعاء'),
-(922, 9, 'Bougara', 'بوقرة'),
-(1001, 10, 'Bouira', 'البويرة'),
-(1004, 10, 'Souk El Khemis', 'سوق الخميس'),
-(1005, 10, 'Kadiria', 'القادرية'),
-(1012, 10, 'Haizer', 'الحيزر'),
-(1013, 10, 'Lakhdaria', 'الأخضرية'),
-(1015, 10, 'El Hachimia', 'الهاشمية'),
-(1018, 10, 'Bordj Okhriss', 'برج أوخريص'),
-(1033, 10, 'Bechloul', 'بشلول'),
-(1035, 10, 'Ain Bessem', 'عين بسام'),
-(1036, 10, 'Bir Ghbalou', 'بئر غبالو'),
-(1037, 10, 'M\'chedallah', 'مشد الله'),
-(1038, 10, 'Sour El Ghozlane', 'سور الغزلان'),
-(1101, 11, 'Tamanrasset', 'تمنراست'),
-(1102, 11, 'Silet', 'سيلت'),
-(1103, 53, 'In Ghar', 'إينغر'),
-(1104, 54, 'In Guezzam', 'عين قزام'),
-(1106, 11, 'Tazrouk', 'تاظروك'),
-(1107, 54, 'Tin Zouatine', 'تين زواتين'),
-(1108, 53, 'In Salah', 'عين صالح'),
-(1201, 12, 'Tebessa', 'تبسة'),
-(1202, 12, 'Bir El Ater', 'بئر العاتر'),
-(1203, 12, 'Cheria', 'الشريعة'),
-(1205, 12, 'El Aouinet', 'العوينات'),
-(1209, 12, 'Negrine', 'نقرين'),
-(1210, 12, 'Bir Mokadem', 'بئر مقدم'),
-(1211, 12, 'El Kouif', 'الكويف'),
-(1212, 12, 'Morsott', 'مرسط'),
-(1213, 12, 'El Ogla', 'العقلة'),
-(1219, 12, 'Ouenza', 'الونزة'),
-(1220, 12, 'El Malabiod', 'الماء الابيض'),
-(1221, 12, 'Oum Ali', 'أم علي'),
-(1301, 13, 'Tlemcen', 'تلمسان'),
-(1303, 13, 'Ain Tellout', 'عين تالوت'),
-(1304, 13, 'Remchi', 'الرمشي'),
-(1306, 13, 'Sabra', 'صبرة'),
-(1307, 13, 'Ghazaouet', 'الغزوات'),
-(1313, 13, 'Ouled Mimoun', 'أولاد ميمون'),
-(1317, 13, 'Beni Snous', 'بني سنوس'),
-(1318, 13, 'Bab El Assa', 'باب العسة'),
-(1320, 13, 'Fellaoucene', 'فلاوسن'),
-(1324, 13, 'Bensekrane', 'بن سكران'),
-(1326, 13, 'Hennaya', 'الحناية'),
-(1327, 13, 'Maghnia', 'مغنية'),
-(1335, 13, 'Sebdou', 'سبدو'),
-(1338, 13, 'Beni Boussaid', 'بني بوسعيد'),
-(1339, 13, 'Marsa Ben Mehdi', 'مرسى بن مهيدي'),
-(1340, 13, 'Nedroma', 'ندرومة'),
-(1341, 13, 'Sidi Djillali', 'سيدي الجيلالي'),
-(1344, 13, 'Honnaine', 'هنين'),
-(1350, 13, 'Chetouane', 'شتوان'),
-(1351, 13, 'Mansourah', 'منصورة'),
-(1401, 14, 'Tiaret', 'تيارت'),
-(1402, 14, 'Medroussa', 'مدروسة'),
-(1406, 14, 'Ain Deheb', 'عين الذهب'),
-(1413, 14, 'Dahmouni', 'دحموني'),
-(1414, 14, 'Rahouia', 'رحوية'),
-(1415, 14, 'Mahdia', 'مهدية'),
-(1416, 14, 'Sougueur', 'السوقر'),
-(1421, 14, 'Meghila', 'مغيلة'),
-(1427, 14, 'Frenda', 'فرندة'),
-(1428, 14, 'Ain Kermes', 'عين كرمس'),
-(1429, 14, 'Ksar Chellala', 'قصر الشلالة'),
-(1433, 14, 'Oued Lili', 'وادي ليلي'),
-(1434, 14, 'Mechraa Sfa', 'مشرع الصفا'),
-(1435, 14, 'Hamadia', 'حمادية'),
-(1501, 15, 'Tizi Ouzou', 'تيزي وزو'),
-(1502, 15, 'Ain El Hammam', 'عين الحمام'),
-(1509, 15, 'Makouda', 'ماكودة'),
-(1510, 15, 'Draa El Mizan', 'ذراع الميزان'),
-(1511, 15, 'Tizi-Ghenif', 'تيزي غنيف'),
-(1517, 15, 'Iferhounene', 'إفرحونان'),
-(1518, 15, 'Azazga', 'عزازقة'),
-(1521, 15, 'Larbaa Nath Iraten', 'الأربعاء ناث إيراثن'),
-(1522, 15, 'Tizi Rached', 'تيزي راشد'),
-(1524, 15, 'Ouaguenoun', 'واقنون'),
-(1529, 15, 'Maatkas', 'معاتقة'),
-(1532, 15, 'Beni Douala', 'بني دوالة'),
-(1534, 15, 'Bouzeguene', 'بوزقن'),
-(1536, 15, 'Ouadhias', 'واضية'),
-(1537, 15, 'Azeffoun', 'أزفون'),
-(1538, 15, 'Tigzirt', 'تيقزيرت'),
-(1540, 15, 'Boghni', 'بوغني'),
-(1547, 15, 'Draa Ben Khedda', 'ذراع بن خدة'),
-(1548, 15, 'Ouacif', 'واسيف'),
-(1550, 15, 'Mekla', 'مقلع'),
-(1552, 15, 'Benni Yenni', 'بني يني'),
-(1602, 16, 'Sidi M\'hamed', 'سيدي امحمد'),
-(1605, 16, 'Bab El Oued', 'باب الوادي'),
-(1609, 16, 'Bir Mourad Rais', 'بئر مراد رايس'),
-(1611, 16, 'Bouzareah', 'بوزريعة'),
-(1613, 16, 'El Harrach', 'الحراش'),
-(1614, 16, 'Baraki', 'براقي'),
-(1617, 16, 'Hussein Dey', 'حسين داي'),
-(1620, 16, 'Dar El Beida', 'الدار البيضاء'),
-(1636, 16, 'Birtouta', 'بئر توتة'),
-(1638, 16, 'Rouiba', 'الرويبة'),
-(1644, 16, 'Zeralda', 'زرالدة'),
-(1649, 16, 'Draria', 'الدرارية'),
-(1652, 16, 'Cheraga', 'الشراقة'),
-(1701, 17, 'Djelfa', 'الجلفة'),
-(1704, 17, 'Hassi Bahbah', 'حاسي بحبح'),
-(1707, 17, 'Faidh El Botma', 'فيض البطمة'),
-(1708, 17, 'Birine', 'بيرين'),
-(1714, 17, 'El Idrissia', 'الادريسية'),
-(1717, 17, 'Messaad', 'مسعد'),
-(1719, 17, 'Sidi Laadjel', 'سيدي لعجال'),
-(1720, 17, 'Had Sahary', 'حد الصحاري'),
-(1725, 17, 'Dar Chioukh', 'دار الشيوخ'),
-(1726, 17, 'Charef', 'الشارف'),
-(1730, 17, 'Ain El Ibel', 'عين الإبل'),
-(1731, 17, 'Ain Oussera', 'عين وسارة'),
-(1801, 18, 'Jijel', 'جيجل'),
-(1803, 18, 'El Aouana', 'العوانة'),
-(1804, 18, 'Ziamah Mansouriah', 'زيامة منصورية'),
-(1805, 18, 'Taher', 'الطاهير'),
-(1807, 18, 'Chekfa', 'الشقفة'),
-(1809, 18, 'El Milia', 'الميلية'),
-(1810, 18, 'Sidi Marouf', 'سيدي معروف'),
-(1811, 18, 'Settara', 'السطارة'),
-(1812, 18, 'El Ancer', 'العنصر'),
-(1817, 18, 'Djimla', 'جيملة'),
-(1824, 18, 'Texenna', 'تاكسنة'),
-(1901, 19, 'Setif', 'سطيف'),
-(1902, 19, 'Ain El Kebira', 'عين الكبيرة'),
-(1903, 19, 'Beni Aziz', 'بني عزيز'),
-(1908, 19, 'Bir El Arch', 'بئر العرش'),
-(1916, 19, 'Babor', 'بابور'),
-(1917, 19, 'Guidjel', 'قجال'),
-(1920, 19, 'El Eulma', 'العلمة'),
-(1921, 19, 'Djemila', 'جميلة'),
-(1922, 19, 'Beni Ourtilane', 'بني ورتيلان'),
-(1926, 19, 'Ain Arnat', 'عين أرنات'),
-(1927, 19, 'Amoucha', 'عموشة'),
-(1928, 19, 'Ain Oulmene', 'عين ولمان'),
-(1930, 19, 'Bouandas', 'بوعنداس'),
-(1932, 19, 'Hammam Sokhna', 'حمام السخنة'),
-(1939, 19, 'Salah Bey', 'صالح باي'),
-(1940, 19, 'Ain Azel', 'عين أزال'),
-(1941, 19, 'Guenzet', 'قنزات'),
-(1943, 19, 'Bougaa', 'بوقاعة'),
-(1950, 19, 'Hammam Guergour', 'حمام قرقور'),
-(1955, 19, 'Maoklane', 'ماوكلان'),
-(2001, 20, 'Saida', 'سعيدة'),
-(2003, 20, 'Ain El Hadjar', 'عين الحجر'),
-(2006, 20, 'Youb', 'يوب'),
-(2009, 20, 'Sidi Boubekeur', 'سيدي بوبكر'),
-(2010, 20, 'El Hassasna', 'الحساسنة'),
-(2014, 20, 'Ouled Brahim', 'أولاد ابراهيم'),
-(2101, 21, 'Skikda', 'سكيكدة'),
-(2103, 21, 'El Hadaiek', 'الحدائق'),
-(2104, 21, 'Azzaba', 'عزابة'),
-(2108, 21, 'Ben Azzouz', 'بن عزوز'),
-(2110, 21, 'Collo', 'القل'),
-(2113, 21, 'Ouled Attia', 'أولاد عطية'),
-(2115, 21, 'Zitouna', 'الزيتونة'),
-(2116, 21, 'El Harrouch', 'الحروش'),
-(2119, 21, 'Sidi Mezghiche', 'سيدي مزغيش'),
-(2123, 21, 'Ramdane Djamel', 'رمضان جمال'),
-(2126, 21, 'Tamalous', 'تمالوس'),
-(2127, 21, 'Ain Kechra', 'عين قشرة'),
-(2128, 21, 'Oum Toub', 'أم الطوب'),
-(2201, 22, 'Sidi Bel Abbes', 'سيدي بلعباس'),
-(2202, 22, 'Tessala', 'تسالة'),
-(2204, 22, 'Mostefa  Ben Brahim', 'مصطفى بن ابراهيم'),
-(2205, 22, 'Telagh', 'تلاغ'),
-(2208, 22, 'Sidi Ali Boussidi', 'سيدي علي بوسيدي'),
-(2210, 22, 'Marhoum', 'مرحوم'),
-(2214, 22, 'Sidi Lahcene', 'سيدي لحسن'),
-(2217, 22, 'Tenira', 'تنيرة'),
-(2218, 22, 'Moulay Slissen', 'مولاي سليسن'),
-(2222, 22, 'Merine', 'مرين'),
-(2223, 22, 'Ras El Ma', 'راس الماء'),
-(2228, 22, 'Ain El Berd', 'عين البرد'),
-(2229, 22, 'Sfisef', 'سفيزف'),
-(2245, 22, 'Ben Badis', 'بن باديس'),
-(2246, 22, 'Sidi Ali Ben Youb', 'سيدي علي بن يوب'),
-(2301, 23, 'Annaba', 'عنابة'),
-(2302, 23, 'Berrahal', 'برحال'),
-(2303, 23, 'El Hadjar', 'الحجار'),
-(2305, 23, 'El Bouni', 'البوني'),
-(2309, 23, 'Ain El Berda', 'عين الباردة'),
-(2310, 23, 'Chetaibi', 'شطايبي'),
-(2401, 24, 'Guelma', 'قالمة'),
-(2404, 24, 'Oued Zenati', 'وادي الزناتي'),
-(2413, 24, 'Ain Makhlouf', 'عين مخلوف'),
-(2415, 24, 'Khezaras', 'خزارة'),
-(2418, 24, 'Guelaat Bousbaa', 'قلعة بوصبع'),
-(2419, 24, 'Hammam Debagh', 'حمام دباغ'),
-(2422, 24, 'Hammam N\'bails', 'حمام النبايل'),
-(2425, 24, 'Bouchegouf', 'بوشقوف'),
-(2426, 24, 'Heliopolis', 'هيليوبوليس'),
-(2427, 24, 'Ain Hessainia', 'عين حساينية'),
-(2501, 25, 'Constantine', 'قسنطينة'),
-(2502, 25, 'Hamma Bouziane', 'حامة بوزيان'),
-(2504, 25, 'Zighoud Youcef', 'زيغود يوسف'),
-(2506, 25, 'El Khroub', 'الخروب'),
-(2507, 25, 'Ain Abid', 'عين عبيد'),
-(2512, 25, 'Ibn Ziad', 'ابن زياد'),
-(2601, 26, 'Medea', 'المدية'),
-(2602, 26, 'Ouzera', 'وزرة'),
-(2604, 26, 'Ain Boucif', 'عين بوسيف'),
-(2607, 26, 'El Omaria', 'العمارية'),
-(2609, 26, 'Guelb El Kebir', 'القلب الكبير'),
-(2618, 26, 'Chellalat El Adhaoura', 'شلالة العذاورة'),
-(2626, 26, 'Sidi Naamane', 'سيدي نعمان'),
-(2632, 26, 'Aziz', 'عزيز'),
-(2633, 26, 'Souaghi', 'السواقي'),
-(2635, 26, 'Ksar El Boukhari', 'قصر البخاري'),
-(2636, 26, 'El Azizia', 'العزيزية'),
-(2638, 26, 'Chahbounia', 'الشهبونية'),
-(2643, 26, 'Ouamri', 'عوامري'),
-(2644, 26, 'Si Mahdjoub', 'سي المحجوب'),
-(2646, 26, 'Beni Slimane', 'بني سليمان'),
-(2647, 26, 'Berrouaghia', 'البرواقية'),
-(2648, 26, 'Seghouane', 'سغوان'),
-(2652, 26, 'Tablat', 'تابلاط'),
-(2658, 26, 'Ouled Antar', 'أولاد عنتر'),
-(2701, 27, 'Mostaganem', 'مستغانم'),
-(2705, 27, 'Ain Nouicy', 'عين نويسي'),
-(2706, 27, 'Hassi Mameche', 'حاسي ماماش'),
-(2707, 27, 'Ain Tedeles', 'عين تادلس'),
-(2711, 27, 'Kheir Eddine', 'خير الدين'),
-(2712, 27, 'Sidi Ali', 'سيدي علي'),
-(2716, 27, 'Sidi Lakhdar', 'سيدي لخضر'),
-(2717, 27, 'Achaacha', 'عشعاشة'),
-(2719, 27, 'Bouguirat', 'بوقيراط'),
-(2722, 27, 'Mesra', 'ماسرة'),
-(2801, 28, 'M\'sila', 'المسيلة'),
-(2803, 28, 'Hammam Dalaa', 'حمام الضلعة'),
-(2804, 28, 'Ouled Derradj', 'أولاد دراج'),
-(2807, 28, 'Khoubana', 'خبانة'),
-(2809, 28, 'Chellal', 'شلال'),
-(2811, 28, 'Magra', 'مقرة'),
-(2816, 28, 'Sidi Aissa', 'سيدي عيسى'),
-(2817, 28, 'Ain El Hadjel', 'عين الحجل'),
-(2820, 28, 'Bousaada', 'بوسعادة'),
-(2821, 28, 'Ouled Sidi Brahim', 'أولاد سيدي ابراهيم'),
-(2822, 28, 'Sidi Ameur', 'سيدي عامر'),
-(2824, 28, 'Ben Srour', 'بن سرور'),
-(2841, 28, 'Ain El Melh', 'عين الملح'),
-(2842, 28, 'Medjedel', 'امجدل'),
-(2847, 28, 'Djebel Messaad', 'جبل مساعد'),
-(2901, 29, 'Mascara', 'معسكر'),
-(2902, 29, 'Bouhanifia', 'بوحنيفية'),
-(2903, 29, 'Tizi', 'تيزي'),
-(2906, 29, 'Tighennif', 'تيغنيف'),
-(2907, 29, 'Hachem', 'الحشم'),
-(2910, 29, 'Oued El Abtal', 'وادي الأبطال'),
-(2912, 29, 'Ghriss', 'غريس'),
-(2917, 29, 'El Bordj', 'البرج'),
-(2918, 29, 'Ain Fekan', 'عين فكان'),
-(2922, 29, 'Oued Taria', 'وادي التاغية'),
-(2923, 29, 'Aouf', 'عوف'),
-(2924, 29, 'Ain Fares', 'عين فارس'),
-(2926, 29, 'Sig', 'سيق'),
-(2927, 29, 'Oggaz', 'عقاز'),
-(2930, 29, 'Zahana', 'زهانة'),
-(2931, 29, 'Mohammadia', 'المحمدية'),
-(3001, 30, 'Ouargla', 'ورقلة'),
-(3003, 30, 'N\'goussa', 'انقوسة'),
-(3004, 30, 'Hassi Messaoud', 'حاسي مسعود'),
-(3011, 30, 'Sidi Khouiled', 'سيدي خويلد'),
-(3013, 55, 'Touggourt', 'تقرت'),
-(3014, 55, 'El-Hadjira', 'الحجيرة'),
-(3015, 55, 'Taibet', 'الطيبات'),
-(3016, 55, 'Temacine', 'تماسين'),
-(3019, 55, 'Megarine', 'المقارين'),
-(3021, 30, 'El Borma', 'البرمة'),
-(3101, 31, 'Oran', 'وهران'),
-(3102, 31, 'Gdyel', 'قديل'),
-(3103, 31, 'Bir El Djir', 'بئر الجير'),
-(3105, 31, 'Es Senia', 'السانية'),
-(3106, 31, 'Arzew', 'أرزيو'),
-(3107, 31, 'Bethioua', 'بطيوة'),
-(3109, 31, 'Ain Turk', 'عين الترك'),
-(3111, 31, 'Oued Tlelat', 'وادي تليلات'),
-(3124, 31, 'Boutlelis', 'بوتليليس'),
-(3201, 32, 'El Bayadh', 'البيض'),
-(3202, 32, 'Rogassa', 'رقاصة'),
-(3203, 32, 'Brezina', 'بريزينة'),
-(3204, 32, 'Boualem', 'بوعلام'),
-(3205, 32, 'Labiodh Sidi Cheikh', 'الأبيض سيدي الشيخ'),
-(3206, 32, 'Bougtoub', 'بوقطب'),
-(3207, 32, 'Boussemghoun', 'بوسمغون'),
-(3208, 32, 'Chellala', 'شلالة'),
-(3301, 33, 'Illizi', 'إيليزي'),
-(3302, 56, 'Djanet', 'جانت'),
-(3306, 33, 'In Amenas', 'إن أمناس'),
-(3401, 34, 'Bordj Bou Arreridj', 'برج بوعريريج'),
-(3402, 34, 'Ras El Oued', 'رأس الوادي'),
-(3403, 34, 'Bordj Zemmoura', 'برج زمورة'),
-(3404, 34, 'Mansourah', 'المنصورة'),
-(3408, 34, 'Ain Taghrout', 'عين تاغروت'),
-(3409, 34, 'Bordj Ghedir', 'برج الغدير'),
-(3411, 34, 'El Hamadia', 'الحمادية'),
-(3413, 34, 'Medjana', 'مجانة'),
-(3415, 34, 'Djaafra', 'جعافرة'),
-(3431, 34, 'Bir Kasdali', 'بئر قاصد علي'),
-(3501, 35, 'Boumerdes', 'بومرداس'),
-(3502, 35, 'Boudouaou', 'بودواو'),
-(3504, 35, 'Bordj Menaiel', 'برج منايل'),
-(3505, 35, 'Baghlia', 'بغلية'),
-(3507, 35, 'Naciria', 'الناصرية'),
-(3509, 35, 'Isser', 'يسر'),
-(3514, 35, 'Thenia', 'الثنية'),
-(3523, 35, 'Dellys', 'دلس'),
-(3531, 35, 'Khemis El Khechna', 'خميس الخشنة'),
-(3601, 36, 'El Tarf', 'الطارف'),
-(3602, 36, 'Bouhadjar', 'بوحجار'),
-(3603, 36, 'Ben M\'hidi', 'بن مهيدي'),
-(3605, 36, 'El Kala', 'القالة'),
-(3608, 36, 'Bouteldja', 'بوثلجة'),
-(3613, 36, 'Drean', 'الذرعان'),
-(3616, 36, 'Besbes', 'البسباس'),
-(3701, 37, 'Tindouf', 'تندوف'),
-(3801, 38, 'Tissemsilt', 'تيسمسيلت'),
-(3802, 38, 'Bordj Bounaama', 'برج بونعامة'),
-(3803, 38, 'Theniet El Had', 'ثنية الاحد'),
-(3804, 38, 'Lazharia', 'الأزهرية'),
-(3806, 38, 'Lardjem', 'لرجام'),
-(3809, 38, 'Bordj Emir Abdelkader', 'برج الأمير عبد القادر'),
-(3811, 38, 'Khemisti', 'خميستي'),
-(3813, 38, 'Ammari', 'عماري'),
-(3901, 39, 'El Oued', 'الوادي'),
-(3902, 39, 'Robbah', 'الرباح'),
-(3904, 39, 'Bayadha', 'البياضة'),
-(3906, 39, 'Guemar', 'قمار'),
-(3908, 39, 'Reguiba', 'الرقيبة'),
-(3911, 39, 'Debila', 'الدبيلة'),
-(3913, 39, 'Hassi Khalifa', 'حاسي خليفة'),
-(3914, 39, 'Taleb Larbi', 'الطالب العربي'),
-(3918, 39, 'Magrane', 'المقرن'),
-(3926, 39, 'Mih Ouensa', 'اميه وانسة'),
-(3927, 57, 'El Meghaier', 'المغير'),
-(3928, 57, 'Djamaa', 'جامعة'),
-(4001, 40, 'Khenchela', 'خنشلة'),
-(4003, 40, 'Kais', 'قايس'),
-(4005, 40, 'El Hamma', 'الحامة'),
-(4006, 40, 'Ain Touila', 'عين الطويلة'),
-(4008, 40, 'Bouhmama', 'بوحمامة'),
-(4011, 40, 'Chechar', 'ششار'),
-(4013, 40, 'Babar', 'بابار'),
-(4016, 40, 'Ouled Rechache', 'أولاد رشاش'),
-(4101, 41, 'Souk Ahras', 'سوق أهراس'),
-(4102, 41, 'Sedrata', 'سدراتة'),
-(4104, 41, 'Mechroha', 'المشروحة'),
-(4105, 41, 'Ouled Driss', 'أولاد إدريس'),
-(4108, 41, 'Taoura', 'تاورة'),
-(4110, 41, 'Haddada', 'الحدادة'),
-(4112, 41, 'Merahna', 'المراهنة'),
-(4114, 41, 'Bir Bouhouche', 'بئر بوحوش'),
-(4115, 41, 'M\'daourouche', 'مداوروش'),
-(4116, 41, 'Oum El Adhaim', 'أم العظايم'),
-(4201, 42, 'Tipaza', 'تيبازة'),
-(4208, 42, 'Hadjout', 'حجوط'),
-(4209, 42, 'Sidi Amar', 'سيدي أعمر'),
-(4210, 42, 'Gouraya', 'قوراية'),
-(4214, 42, 'Cherchell', 'شرشال'),
-(4215, 42, 'Damous', 'الداموس'),
-(4217, 42, 'Fouka', 'فوكة'),
-(4218, 42, 'Bou Ismail', 'بواسماعيل'),
-(4219, 42, 'Ahmar El Ain', 'أحمر العين'),
-(4224, 42, 'Kolea', 'القليعة'),
-(4301, 43, 'Mila', 'ميلة'),
-(4302, 43, 'Ferdjioua', 'فرجيوة'),
-(4303, 43, 'Chelghoum Laid', 'شلغوم العيد'),
-(4306, 43, 'Teleghma', 'التلاغمة'),
-(4308, 43, 'Tadjenanet', 'تاجنانت'),
-(4310, 43, 'Oued Endja', 'وادي النجاء'),
-(4314, 43, 'Bouhatem', 'بوحاتم'),
-(4315, 43, 'Rouached', 'الرواشد'),
-(4317, 43, 'Grarem Gouga', 'القرارم قوقة'),
-(4318, 43, 'Sidi Merouane', 'سيدي مروان'),
-(4319, 43, 'Tassadane Haddada', 'تسدان حدادة'),
-(4323, 43, 'Terrai Bainen', 'ترعي باينان'),
-(4330, 43, 'Ain Beida Harriche', 'عين البيضاء أحريش'),
-(4401, 44, 'Ain Defla', 'عين الدفلى'),
-(4402, 44, 'Miliana', 'مليانة'),
-(4403, 44, 'Boumedfaa', 'بومدفع'),
-(4404, 44, 'Khemis', 'خميس'),
-(4405, 44, 'Hammam Righa', 'حمام ريغة'),
-(4407, 44, 'Djelida', 'جليدة'),
-(4408, 44, 'El Amra', 'العامرة'),
-(4410, 44, 'El Attaf', 'العطاف'),
-(4411, 44, 'El Abadia', 'العبادية'),
-(4412, 44, 'Djendel', 'جندل'),
-(4414, 44, 'Ain Lechiakh', 'عين الاشياخ'),
-(4416, 44, 'Rouina', 'الروينة'),
-(4422, 44, 'Bordj El Emir Khaled', 'برج الأمير خالد'),
-(4431, 44, 'Bathia', 'بطحية'),
-(4501, 45, 'Naama', 'النعامة'),
-(4502, 45, 'Mecheria', 'المشرية'),
-(4503, 45, 'Ain Sefra', 'عين الصفراء'),
-(4505, 45, 'Sfissifa', 'سفيسيفة'),
-(4506, 45, 'Moghrar', 'مغرار'),
-(4507, 45, 'Asla', 'عسلة'),
-(4510, 45, 'Mekmen Ben Amar', 'مكمن بن عمار'),
-(4601, 46, 'Ain Temouchent', 'عين تموشنت'),
-(4604, 46, 'Hammam Bou Hadjar', 'حمام بوحجر'),
-(4609, 46, 'Ain Larbaa', 'عين الأربعاء'),
-(4614, 46, 'El Maleh', 'المالح'),
-(4619, 46, 'El Amria', 'العامرية'),
-(4622, 46, 'Ain Kihel', 'عين الكيحل'),
-(4623, 46, 'Beni Saf', 'بني صاف'),
-(4625, 46, 'Oulhassa Gheraba', 'ولهاصة الغرابة'),
-(4701, 47, 'Ghardaia', 'غرداية'),
-(4703, 47, 'Dhayet Ben Dhahoua', 'ضاية بن ضحوة'),
-(4704, 47, 'Berriane', 'بريان'),
-(4705, 47, 'Metlili', 'متليلي'),
-(4706, 47, 'El Guerrara', 'القرارة'),
-(4708, 47, 'Zelfana', 'زلفانة'),
-(4710, 47, 'Bounoura', 'بونورة'),
-(4713, 47, 'Mansourah', 'المنصورة'),
-(4801, 48, 'Relizane', 'غليزان'),
-(4802, 48, 'Oued Rhiou', 'وادي رهيو'),
-(4807, 48, 'El H\'madna', 'الحمادنة'),
-(4808, 48, 'Sidi M\'hamed Ben Ali', 'سيدي أمحمد بن علي'),
-(4811, 48, 'Ammi Moussa', 'عمي موسى'),
-(4812, 48, 'Zemmoura', 'زمورة'),
-(4814, 48, 'Djidiouia', 'جديوية'),
-(4817, 48, 'El Matmar', 'المطمر'),
-(4819, 48, 'Ain Tarek', 'عين طارق'),
-(4822, 48, 'Mazouna', 'مازونة'),
-(4825, 48, 'Yellel', 'يلل'),
-(4827, 48, 'Ramka', 'الرمكة'),
-(4828, 48, 'Mendes', 'منداس'),
-(5801, 58, 'El Menia', 'المنيعة'),
-(5802, 58, 'Mansourah', 'المنصورة');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `grade`
+-- Table structure for table `grade`
 --
 
 DROP TABLE IF EXISTS `grade`;
@@ -2540,43 +234,10 @@ CREATE TABLE IF NOT EXISTS `grade` (
   PRIMARY KEY (`GRADE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `grade`
---
-
-INSERT INTO `grade` (`GRADE_ID`, `GRADE_LABEL_EN`, `GRADE_NAME_EN`, `GRADE_TYPE_EN`, `GRADE_NAME_AR`, `GRADE_LABEL_AR`, `GRADE_TYPE_AR`) VALUES
-(1, 'G.A.', 'General of the Army', 'General Officer', 'فريق أول', 'ف.أ.', 'ضابط عميد'),
-(2, 'G.L.', 'Lieutenant General', 'General Officer', 'فريق', 'فر.', 'ضابط عميد'),
-(3, 'M.G.', 'Major General', 'General Officer', 'لواء', 'لو.', 'ضابط عميد'),
-(4, 'B.G.', 'Brigadier General', 'General Officer', 'عميد', 'عم.', 'ضابط عميد'),
-(5, 'Col.', 'Colonel', 'Senior Officers', 'عقيد', 'عق.', 'ضابط سامي'),
-(6, 'Lt. Col.', 'Lieutenant Colonel', 'Senior Officers', 'مقدم', 'مق.', 'ضابط سامي'),
-(7, 'Maj.', 'Major', 'Senior Officers', 'رائد', 'را.', 'ضابط سامي'),
-(8, 'Cap.', 'Captain', 'Junior Officers', 'نقيب', 'نق.', 'ضابط مرؤوس'),
-(9, 'F. Ltn.', 'First Lieutenant', 'Junior Officers', 'ملازم أول', 'ملا.أ.', 'ضابط مرؤوس'),
-(10, 'Ltn.', 'Second Lieutenant', 'Junior Officers', 'ملازم', 'ملا.', 'ضابط مرؤوس'),
-(11, 'Asp.', 'Aspirant', 'Junior Officers', 'ملازم مرشح', 'ملا.مر.', 'ضابط مرؤوس'),
-(12, 'Pr. Serg.', 'Principal Sergeant', 'Senior Non-Commissioned Office', 'مساعد رئيسي', 'مسا.', 'ضابط صف'),
-(13, 'Mas. Serg.', 'Master Sergeant', 'Senior Non-Commissioned Office', 'مساعد أول', 'مسا. أ.', 'ضابط صف'),
-(14, 'Serg. F. C.', 'Sergeant First Class', 'Senior Non-Commissioned Office', 'مساعد', 'مسا. م.', 'ضابط صف'),
-(15, 'Sta. Serg.', 'Staff Sergeant', 'Junior Non-Commissioned Office', 'رقيب أول', 'رقي. أ', 'ضابط صف'),
-(16, 'Serg. F. C.', 'Sergeant', 'Junior Non-Commissioned Office', 'رقيب', 'رقي.', 'ضابط صف'),
-(17, 'Corp. F. C.', 'Corporal First Class', 'Enlisted', 'عريف أول', 'عري. أ.', 'رجل صف'),
-(18, 'Corp. F. C.', 'Corporal', 'Enlisted', 'عريف', 'عري.', 'رجل صف'),
-(19, 'Sold.', 'Soldier', 'Enlisted', 'جندي', 'جند.', 'رجل صف'),
-(20, 'A.C.P. (PCA)', 'Assimilated Civilian Personnel', 'Civilian', 'مستخدم مدني شبيه', 'م.م.ش.', 'مستخدم مدني'),
-(21, 'C.C.P. (PCC)', 'Contractual Civilian Personnel', 'Civilian', 'مستخدم مدني متعاقد', 'م.م.مت.', 'مستخدم مدني'),
-(22, 'N.A.C.P. (PCNA)', 'Non-assimilated Civilian Perso', 'Civilian', 'مستخدم مدني غير عامل', 'م.م.غ.ش.', 'مستخدم مدني'),
-(23, 'E.C.P. (PCE)', 'Economic Civilian Personnel', 'Civilian', 'مستخدم مدني إقتصادي', 'م.م.إ', 'مستخدم مدني'),
-(24, 'S.C.P (PCD)', 'Seconded Civilian Personnel', 'Civilian', 'مستخدم مدني منتدب', 'م.م.من.', 'مستخدم مدني'),
-(25, 'A.O.S', 'Active Officer Student', 'Trainee', 'طالب ضابط عامل', 'ط.ض.ع ', 'متربص'),
-(26, 'P.U', 'professeur universitaire', 'ENSEIGNANT', 'استاذ جامعي', 'ا.ج', 'استاذ'),
-(27, 'M.R', ' MELITAIRE RETRAITEE', 'ENSEIGNANT', 'عسكري متقاعد', 'ع.م', 'استاذ');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `health_status`
+-- Table structure for table `health_status`
 --
 
 DROP TABLE IF EXISTS `health_status`;
@@ -2586,23 +247,12 @@ CREATE TABLE IF NOT EXISTS `health_status` (
   `health_status_ar` varchar(60) NOT NULL,
   PRIMARY KEY (`health_status_id`),
   UNIQUE KEY `UK_HEALTH_STATUS_EN` (`health_status_en`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `health_status`
---
-
-INSERT INTO `health_status` (`health_status_id`, `health_status_en`, `health_status_ar`) VALUES
-(1, 'Very good', 'جيدة جدا'),
-(2, 'Good', 'جيدة'),
-(3, 'Average', 'متوسطة'),
-(4, 'Bad', 'سيئة'),
-(5, 'Very bad', 'سيئة جدا');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `hobby`
+-- Table structure for table `hobby`
 --
 
 DROP TABLE IF EXISTS `hobby`;
@@ -2612,26 +262,12 @@ CREATE TABLE IF NOT EXISTS `hobby` (
   `hobby_name_ar` varchar(30) NOT NULL,
   PRIMARY KEY (`hobby_id`),
   UNIQUE KEY `UK_HOBBY_EN` (`hobby_name_en`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `hobby`
---
-
-INSERT INTO `hobby` (`hobby_id`, `hobby_name_en`, `hobby_name_ar`) VALUES
-(1, 'Football', 'كرة القدم'),
-(2, 'Karate Do', 'كاراتي دو'),
-(3, 'Music', 'الموسيقى'),
-(4, 'Drawing', 'الرسم'),
-(5, 'Poetry', 'الشعر'),
-(6, 'Basketball', 'كرة السلة'),
-(7, 'Handball', 'كرة اليد'),
-(8, 'Volley Ball', 'الكرة الطائرة');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `major`
+-- Table structure for table `major`
 --
 
 DROP TABLE IF EXISTS `major`;
@@ -2642,168 +278,10 @@ CREATE TABLE IF NOT EXISTS `major` (
   PRIMARY KEY (`MAJOR_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `major`
---
-
-INSERT INTO `major` (`MAJOR_ID`, `MAJOR_NAME_EN`, `MAJOR_NAME_AR`) VALUES
-('1', 'Tactique Generale', 'التكتيك العام '),
-('10', 'Soutien Medical', 'التامين الطبي'),
-('100', 'Marketing', 'تسويق'),
-('101', 'Corruption Et Déontologie De Travail', 'الفساد وأخلاقيات العمل'),
-('102', 'Théorie Des Organisations', 'نظرية التنظيمات'),
-('103', 'Management Stratégique', 'إدارة أعمال إستراتيجية'),
-('104', 'Management Des Ressources Humaines', 'إدارة أعمال الموارد البشرية'),
-('105', 'Recherche Opérationnelle Et Prise De Décision', 'بحوث العمليات واتخاذ القرار'),
-('106', 'Contrôle De Gestion', 'مراقبة التسيير'),
-('107', 'Droit Budgétaire', 'قانون الميزانية'),
-('108', 'Technologie Alimentaire (Lmd3)', 'تكنولوجية التغذية'),
-('109', 'Histoire D’Algérie', 'تاريخ الجزائر'),
-('11', 'Organisation Du Soutien Logistique', 'تنظيم التأمين اللوجستي'),
-('110', 'Management De La Qualité', 'إدارة أعمال النوعية'),
-('111', 'Management De La Production Et Des Opérations', 'إدارة أعمال الإنتاج والعمليات'),
-('112', 'Management Des Projets', 'إدارة أعمال المشاريع'),
-('113', 'Gestion Des Stocks', 'تسيير المخازن'),
-('114', 'Technique De Rédaction Administrative', 'تقنيات التحرير الإداري'),
-('115', 'Projet Fin D’Étude (Ou Rapport De Stage )', 'مشروع نهاية التربص'),
-('116', 'Droit Fiscal (3°Lmd)', 'قانون جبائي'),
-('117', 'Droit Des Marchés Publics', 'قانون الصفقات العمومية'),
-('118', 'Technologie Textile', 'تكنولوجية النسيج'),
-('119', 'Gestion Strategique Des Entreprises', '  تسير إستراتيجي للمؤسسات'),
-('12', 'Soutien Carburant', 'التأمين بالوقود'),
-('120', 'Marketing International', 'تسويق دولي'),
-('121', 'Gestion Financière', 'تسيير مالي'),
-('122', 'Audit Interne Et Control De Gestion ', 'تدقيق داخلي و مراقبة التسيير'),
-('123', 'Comptabilité National ', 'محاسبة وطنية'),
-('124', 'Technique De Communication Administrative Et De ', 'تقنيات الإتصال الإداري و المفوضات التجارية'),
-('125', 'Droit Pénal', 'قانون جزائي'),
-('126', 'Economie De Défense (3°Lmd)', 'إقتصاد الدفاع (3°LMD)'),
-('127', 'Séminaires (Master 2)', 'الملتقيات (ندوة)'),
-('128', 'Technologie Alimentaire (Master 2)', 'تكنولوجيا مواد التغذية'),
-('129', 'Droit International Humanitaire', 'قانون الدولي الإنساني'),
-('13', 'Organisation Du Transport Et De La Circulation', 'تنظيم النقل والمرور'),
-('130', 'Techniques De Communication', 'تقنيات الاتصال'),
-('131', 'Langue Anglaise', 'اللغة الإنجليزية'),
-('132', 'Informatique', 'إعلام الآلي'),
-('133', 'Technique De Synthèse Et De Rédaction', 'تقنيات التحليل والتحرير'),
-('134', 'Gestion Des Crises', 'إدارة الأزمات'),
-('135', 'Formation Pédagogique Des Formateurs', 'التكوين البيداغوجي للمكونين'),
-('136', 'Tutorat ', 'وصاية'),
-('137', 'New-Headway', 'نيو هاد واي'),
-('138', 'Athlétisme ', 'رياضة ألعاب القوى'),
-('139', 'Natation', 'رياضة السباحة'),
-('14', 'Soutien Technique', 'التأمين التقني'),
-('140', 'Judo', 'رياضة الجيدو'),
-('141', 'Karaté', 'رياضة كراتي'),
-('142', 'Basket-Ball', 'رياضة كرة السلة'),
-('143', 'Volley-Ball', 'رياضة  كرة الطائرة'),
-('144', 'Football', 'رياضة  كرة القدم'),
-('145', 'Hand-Ball', 'رياضة كرة اليد'),
-('146', 'Management Stratégique De L’Entreprise', 'تسيير إستراتيجي للمؤسسات'),
-('147', 'Economie De Défense (Master 2)', 'إقتصاد الدفاع ( ماستر 02)'),
-('148', 'Psycho-Sociologie', 'علم الإجتماع النفسي'),
-('149', 'Informatique 2+3', 'إعلام آلي 2+3'),
-('15', 'Soutien En Armement Et Munition', 'التأمين بالأسلحة والذخيرة'),
-('150', 'Tir', 'الرمي'),
-('151', 'Exercice De Commandement Et Service D Etat Major', 'تمرين قيادة القوات وخدمة الأركان'),
-('152', 'Education Physique Militaire', 'التربية البدنية العسكرية'),
-('16', 'Commandementet Conduite Des Arrieres', 'القيادة و السيطرة على المؤخرات'),
-('17', 'Soutien Intendance', 'التأمين بالمعتمدية'),
-('18', 'Cyber Defense', 'الدفاع السيبراني'),
-('19', 'Guerre Electronique', 'الحرب الإلكترونية'),
-('2', 'Commandement Et Service D Etat Major', 'قيادة القوات وخدمة الأركان'),
-('20', 'Formation Sur Le Système Dinformation Et De Comm', 'الوسيط'),
-('21', 'Lutte Anti Subversive Et Terrorisme', 'مكافحة الشغب والإرهاب'),
-('22', 'Geopolitique', 'الجيوسياسية'),
-('23', 'Psychologie Militaire', 'علم النفس العسكري'),
-('24', 'Sociologie Militaire', 'علم الإجتماع العسكري'),
-('25', 'Recherche Opérationnelle ', 'البحث العملياتي'),
-('26', 'Art Du Commandement', 'فن القيادة'),
-('27', 'Lutte Anti Terrorisme', 'مكافحة الإرهاب'),
-('28', 'Protection Contre Les Armes Nbc', 'الوقاية من الأسلحة النووية والبكترولوجية والكيماوية'),
-('29', 'Commandement Des Arrieres', 'قيادة المؤخرات'),
-('3', 'Preparation Au Combat', 'التحضير القتالي'),
-('30', 'Organisation Du Transport ', 'تنظيم النقل '),
-('31', 'Soutien Intendance', 'الإسناد بالمعتمدية'),
-('32', 'Soutien Medical', 'الإسناد الصحي'),
-('33', 'Arrieres Immediats', 'المؤخرات الفورية '),
-('34', 'Soutien Technique', 'الإسناد التقني'),
-('35', 'Soutien En Carburant', 'الإسناد بالوقود'),
-('36', 'Cntrole Interne', 'المراقبة الداخلية'),
-('37', 'Marches Publics Du Mdn', 'الصفقات العمومية لوزارة الدفاع الوطني'),
-('38', 'Transmission', 'الإشارة'),
-('39', 'Organisation De Larme Nationale Populaire', 'تنظيم الجيش الوطني الشعبي'),
-('4', 'Reconnaissance Et Armèe Ètrangère', 'الإستطلاع والجيوش الأجنبية'),
-('40', 'Administration Des Centres De Responsabilite', 'إدارة مراكز المسؤولية'),
-('41', 'Correspondance Militaire', 'المراسلة العسكرية'),
-('42', 'Gestion De Ressources Humaines', 'تسيير الموارد البشرية'),
-('43', 'Gestion Du Materiel Subsistance', 'تسيير عتاد الإعاشة'),
-('44', 'Gestion Du Materiels Techniques', 'تسيير العتاد التقني'),
-('45', 'Comptabilite Financiere', 'محاسبة مالية'),
-('46', 'Budgets De Fonctionnement De Lunite', 'ميزانيات تسيير الوحدة'),
-('47', 'Soldes Et Indemnites', 'الرواتب و المنح'),
-('48', 'Droit Dalimantation', 'حقوق التغذية'),
-('49', 'Subsistance', 'الإعاشة'),
-('5', 'Defense Contre Aeronefs', 'الدفاع المضاد للطيران'),
-('50', 'Foyers', 'النوادي'),
-('51', 'Ordinaire Et Mess', 'إطعام ومطاعم'),
-('52', 'Transport Et Deplacement', 'النقل والتنقل'),
-('53', 'Pension Militaire Et Prestation Sociales', 'المعاشات العسكرية والخدمات الاجتماعية'),
-('54', 'Contrôle Administratif Et Verification Comptable', 'المراقبة الإدارية وتدقيق المحاسبة'),
-('55', 'Maintien En Condition Du Materiel De Lintendance', 'صيانة عتاد المعتمدية'),
-('56', 'Code De La Justice Militaire', 'قانون القضاء العسكري'),
-('57', 'Gestion Des Archives', 'تسيير الأرشيف'),
-('58', 'Art Du Commandement(Groupe1)', 'فن القيادة  (فوج 1)'),
-('59', 'Art Du Commandement(Groupe2)', 'فن القيادة  (فوج 2)'),
-('6', 'Soutien Genie', 'التأمين الهندسي'),
-('60', 'Art Du Commandement(Groupe3)', 'فن القيادة  (فوج 3)'),
-('61', 'Art Du Commandement(Groupe4)', 'فن القيادة  (فوج 4)'),
-('62', 'Contrôle General De Larmee', 'المراقبة العامة للجيش'),
-('63', 'Gestion Du Materiel Hcca', 'تسيير عتاد  الألبسة و الإرقاد و التخييم و التأثيث  '),
-('64', 'Marches Du Mdn Et Procedures De Realisation', 'صفقات وزارة الدفاع وإجراءات الإنجاز'),
-('65', 'Principes Des Systems Dinformation Et De Command', 'مبادئ أنظمة الإعلام و القيادة'),
-('66', 'Gestion De Materiels Hcca Au Niveau Centrale Et ', 'تسيير الألبسة و الإرقاد و التخييم و التأثيث  على المستوي الم'),
-('67', 'Gestion Des Materiels Techniques De Subsistance ', 'تسيير عتاد الإعاشة على المستوى المركزي و الجهوي'),
-('68', 'Gestion Du Subsistance Au Niveau Centrale Et Reg', 'تسيير الإعاشة  على المستوى المركزي و الجهوي'),
-('69', 'Dignostic Interne', 'الفحص الداخلي'),
-('7', 'Protection Contre Les Armes De Destruction Massi', 'الوقاية من أسلحة الدمار الشامل'),
-('70', 'Methodologie Dinstruction Au Combat', 'منهجية التدريب القتالي '),
-('71', 'Operation De Maintien De La Paix', 'عمليات حفظ السلام'),
-('72', 'Technologie Automobile', 'تقنية السيارات '),
-('73', 'Prevention Et Securite De Larmee', 'الوقاية وأمن الجيش'),
-('74', 'Introduction À L’Économie', 'مدخل إلى الاقتصاد'),
-('75', 'Micro-Économie 1+2', 'اقتصاد جزئي 1+2'),
-('76', 'Comptabilité Générale 1+2', 'محاسبة عامة 1+2'),
-('77', 'Histoire Des Faits Économiques', 'تاريخ أحداث الاقتصاد'),
-('78', 'Statistique 1+2', 'إحصائيات 1+ 2'),
-('79', 'Mathématiques 1+2', 'رياضيات 1+2'),
-('8', 'Artillaria De Campagne', 'مدفعية الميدان'),
-('80', 'Méthodologie De La Recherche 1', 'منهجية البحث 1'),
-('81', 'Introduction Au Droit', 'مدخل إلى القانون'),
-('82', 'Introduction À La Sociologie', 'مدخل إلى علم الإجتماع'),
-('83', 'Langue Anglaise 1+2', 'اللغة الانجليزية 1+2'),
-('84', 'Introduction Au Management', 'مدخل إلى إدارة الأعمال'),
-('85', 'Informatique 1', 'إعلام آلي 1'),
-('86', 'Droit Commercial', 'قانون تجاري'),
-('87', 'Sociologie Des Organisations', 'علم اجتماع المنظمات'),
-('88', 'Gestion D Entreprise', 'تسيير المؤسسة'),
-('89', 'Macro-Économie 1+2', 'اقتصاد كلي 1+2'),
-('9', 'Topographie Militaire', 'الطبوغرافيا العسكرية'),
-('90', 'Comptabilité Analytique', 'محاسبة تحليلية'),
-('91', 'Statistiques 3', 'إحصائيات 3'),
-('92', 'Mathématique De L’Entreprise', 'رياضيات المؤسسة'),
-('93', 'Méthodologie 2', 'منهجية 2'),
-('94', 'Informatique 4+3/2', 'الإعلام الآلي 2/ 3+4'),
-('95', 'Economie Monétaire Et Marchés Financiers', 'الاقتصاد النقدي والصفقات المالية'),
-('96', 'Langue Françaises ', 'اللغة الفرنسية'),
-('97', 'Economie De L’Entreprise', 'اقتصاد المؤسسة'),
-('98', 'Mathématiques Financière', 'رياضيات مالية'),
-('99', 'Finances Publiques', 'مالية عامة');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `military_certificate`
+-- Table structure for table `military_certificate`
 --
 
 DROP TABLE IF EXISTS `military_certificate`;
@@ -2813,19 +291,12 @@ CREATE TABLE IF NOT EXISTS `military_certificate` (
   `military_certificate_ar` varchar(60) NOT NULL,
   PRIMARY KEY (`military_certificate_id`),
   UNIQUE KEY `UK_MIL_CERT_EN` (`military_certificate_en`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `military_certificate`
---
-
-INSERT INTO `military_certificate` (`military_certificate_id`, `military_certificate_en`, `military_certificate_ar`) VALUES
-(1, 'Certificate of Basic Common Military Training', 'شهادة تكوين قاعدي عسكري مشترك');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `notification`
+-- Table structure for table `notification`
 --
 
 DROP TABLE IF EXISTS `notification`;
@@ -2837,7 +308,7 @@ CREATE TABLE IF NOT EXISTS `notification` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `observation`
+-- Table structure for table `observation`
 --
 
 DROP TABLE IF EXISTS `observation`;
@@ -2848,17 +319,10 @@ CREATE TABLE IF NOT EXISTS `observation` (
   KEY `FK_OBS_SESSION` (`STUDY_SESSION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `observation`
---
-
-INSERT INTO `observation` (`OBSERVATION_ID`, `STUDY_SESSION_ID`) VALUES
-(1, 17);
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `observation_motif`
+-- Table structure for table `observation_motif`
 --
 
 DROP TABLE IF EXISTS `observation_motif`;
@@ -2867,26 +331,12 @@ CREATE TABLE IF NOT EXISTS `observation_motif` (
   `OBSERVATION_MOTIF_EN` varchar(60) DEFAULT NULL,
   `OBSERVATION_MOTIF_AR` varchar(60) DEFAULT NULL,
   PRIMARY KEY (`OBSERVATION_MOTIF_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `observation_motif`
---
-
-INSERT INTO `observation_motif` (`OBSERVATION_MOTIF_ID`, `OBSERVATION_MOTIF_EN`, `OBSERVATION_MOTIF_AR`) VALUES
-(1, 'Using the phone', 'إستعمال الهاتف النقال'),
-(2, 'Sleeping during the session', 'النوم أثناء الحصة'),
-(3, 'Causing disturbance in class', 'إثارة الفوضى في القسم'),
-(4, 'Disrespecting the teacher', 'عدم إحترام الأستاذ'),
-(5, 'Not bringing the school supplies', 'عدم إحضار الأدوات المدرسية'),
-(6, 'Not doing homework', 'عدم القيام بالواجبات'),
-(7, 'Qutting without permission', 'الخروج بدون إذن'),
-(8, 'Quitting without comeback', 'الخروج بدون عودة');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `profession`
+-- Table structure for table `profession`
 --
 
 DROP TABLE IF EXISTS `profession`;
@@ -2896,22 +346,27 @@ CREATE TABLE IF NOT EXISTS `profession` (
   `profession_name_ar` varchar(60) NOT NULL,
   PRIMARY KEY (`profession_id`),
   UNIQUE KEY `UK_PROFESSION_EN` (`profession_name_en`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `profession`
---
-
-INSERT INTO `profession` (`profession_id`, `profession_name_en`, `profession_name_ar`) VALUES
-(1, 'Doctor', 'طبيب'),
-(2, 'Nurse', 'ممرض'),
-(3, 'Teacher', 'أستاذ'),
-(4, 'Pharmacist', 'صيدلي');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `recruitment_source`
+-- Table structure for table `punishment_type`
+--
+
+DROP TABLE IF EXISTS `punishment_type`;
+CREATE TABLE IF NOT EXISTS `punishment_type` (
+  `PUNISHMENT_TYPE_ID` int NOT NULL AUTO_INCREMENT,
+  `PUNISHMENT_LABEL_EN` varchar(100) NOT NULL,
+  `PUNISHMENT_LABEL_AR` varchar(100) NOT NULL,
+  `PUNISHMENT_DURATION` int DEFAULT NULL,
+  PRIMARY KEY (`PUNISHMENT_TYPE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recruitment_source`
 --
 
 DROP TABLE IF EXISTS `recruitment_source`;
@@ -2924,29 +379,12 @@ CREATE TABLE IF NOT EXISTS `recruitment_source` (
   `ECN_SCHOOL_WILAYA_ID` int DEFAULT NULL,
   PRIMARY KEY (`RECRUITMENT_SOURCE_ID`),
   KEY `FK_RECRUIT_WILAYA` (`ECN_SCHOOL_WILAYA_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `recruitment_source`
---
-
-INSERT INTO `recruitment_source` (`RECRUITMENT_SOURCE_ID`, `RECRUITMENT_TYPE_EN`, `RECRUITMENT_TYPE_AR`, `ECN_SCHOOL_NAME_EN`, `ECN_SCHOOL_NAME_AR`, `ECN_SCHOOL_WILAYA_ID`) VALUES
-(1, 'Civil', 'الحياة المدنية', NULL, NULL, NULL),
-(2, 'ECN', 'مدرسة أشبال الأمة', 'Cadets of Nation School - Blida', 'مدرسة أشبال الأمة - البليدة', 9),
-(3, 'ECN', 'مدرسة أشبال الأمة', 'Cadets of Nation School - M\'Sila', 'مدرسة أشبال الأمة - المسيلة', 28),
-(4, 'ECN', 'مدرسة أشبال الأمة', 'Cadets of Nation School - Oran', 'مدرسة أشبال الأمة - وهران', 31),
-(5, 'ECN', 'مدرسة أشبال الأمة', 'Cadets of Nation School - Tiaret', 'مدرسة أشبال الأمة - تيارت', 14),
-(6, 'ECN', 'مدرسة أشبال الأمة', 'Cadets of Nation School - Béchar', 'مدرسة أشبال الأمة - بشار', 8),
-(7, 'ECN', 'مدرسة أشبال الأمة', 'Cadets of Nation School - Laghouat', 'مدرسة أشبال الأمة - الأغواط', 3),
-(8, 'ECN', 'مدرسة أشبال الأمة', 'Cadets of Nation School - Sétif', 'مدرسة أشبال الأمة - سطيف', 19),
-(9, 'ECN', 'مدرسة أشبال الأمة', 'Cadets of Nation School - Batna', 'مدرسة أشبال الأمة - باتنة', 5),
-(10, 'ECN', 'مدرسة أشبال الأمة', 'Cadets of Nation School - Béjaïa', 'مدرسة أشبال الأمة - بجاية', 6),
-(11, 'ECN', 'مدرسة أشبال الأمة', 'Cadets of Nation School - Tamanrasset', 'مدرسة أشبال الأمة - تمنراست', 11);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `relation`
+-- Table structure for table `relation`
 --
 
 DROP TABLE IF EXISTS `relation`;
@@ -2956,19 +394,27 @@ CREATE TABLE IF NOT EXISTS `relation` (
   `relation_name_ar` varchar(24) NOT NULL,
   PRIMARY KEY (`relation_id`),
   UNIQUE KEY `UK_RELATION_EN` (`relation_name_en`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `relation`
---
-
-INSERT INTO `relation` (`relation_id`, `relation_name_en`, `relation_name_ar`) VALUES
-(1, 'Mother', 'الأم');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `secretary`
+-- Table structure for table `reward_type`
+--
+
+DROP TABLE IF EXISTS `reward_type`;
+CREATE TABLE IF NOT EXISTS `reward_type` (
+  `REWARD_TYPE_ID` int NOT NULL AUTO_INCREMENT,
+  `REWARD_LABEL_EN` varchar(100) NOT NULL,
+  `REWARD_LABEL_AR` varchar(100) NOT NULL,
+  `REWARD_DURATION` int DEFAULT NULL,
+  PRIMARY KEY (`REWARD_TYPE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `secretary`
 --
 
 DROP TABLE IF EXISTS `secretary`;
@@ -2989,19 +435,55 @@ CREATE TABLE IF NOT EXISTS `secretary` (
   KEY `FK_SECRETARY_EDIT_CAT` (`SECRETARY_EDITABLE_CATEGORY_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- --------------------------------------------------------
+
 --
--- Déchargement des données de la table `secretary`
+-- Table structure for table `secretary_punishes_student`
 --
 
-INSERT INTO `secretary` (`SECRETARY_ID`, `USER_ID`, `SECRETARY_FIRST_NAME_EN`, `SECRETARY_LAST_NAME_EN`, `SECRETARY_FIRST_NAME_AR`, `SECRETARY_LAST_NAME_AR`, `SECRETARY_GRADE_ID`, `SECRETARY_POSITION`, `SECRETARY_PHOTO`, `SECRETARY_EDITABLE_CATEGORY_ID`) VALUES
-(1, 666, 'Yahia Mehdi', 'KHERBOUCHE', 'يحيى مهدي', 'خربوش', 2, 'IT Bureau Secretary', '', 1),
-(2, 888, 'Yacine', 'SAOULI', 'ياسين', 'صاولي', 0, NULL, NULL, 2),
-(3, 555, 'Abderrahman', 'SAYAH', 'عبد الرحمن', 'سايح', 0, NULL, NULL, 3);
+DROP TABLE IF EXISTS `secretary_punishes_student`;
+CREATE TABLE IF NOT EXISTS `secretary_punishes_student` (
+  `PUNISHMENT_ID` int NOT NULL AUTO_INCREMENT,
+  `STUDENT_SERIAL_NUMBER` varchar(16) NOT NULL,
+  `SECRETARY_ID` int NOT NULL,
+  `PUNISHMENT_TYPE_ID` int NOT NULL,
+  `PUNISHMENT` varchar(255) DEFAULT NULL,
+  `PUNISHMENT_SUGGESTED_AT` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `PUNISHMENT_START_DATE` date DEFAULT NULL,
+  `PUNISHMENT_END_DATE` date DEFAULT NULL,
+  `PUNISHMENT_NOTE` text,
+  PRIMARY KEY (`PUNISHMENT_ID`),
+  KEY `FK_SPS_STUDENT` (`STUDENT_SERIAL_NUMBER`),
+  KEY `FK_SPS_SECRETARY` (`SECRETARY_ID`),
+  KEY `FK_SPS_TYPE` (`PUNISHMENT_TYPE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `section`
+-- Table structure for table `secretary_rewards_student`
+--
+
+DROP TABLE IF EXISTS `secretary_rewards_student`;
+CREATE TABLE IF NOT EXISTS `secretary_rewards_student` (
+  `REWARD_ID` int NOT NULL AUTO_INCREMENT,
+  `STUDENT_SERIAL_NUMBER` varchar(16) NOT NULL,
+  `SECRETARY_ID` int NOT NULL,
+  `REWARD_TYPE_ID` int NOT NULL,
+  `REWARD_SUGGESTED_AT` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `REWARD_START_DATE` date DEFAULT NULL,
+  `REWARD_END_DATE` date DEFAULT NULL,
+  `REWARD_NOTE` text,
+  PRIMARY KEY (`REWARD_ID`),
+  KEY `FK_SRS_STUDENT` (`STUDENT_SERIAL_NUMBER`),
+  KEY `FK_SRS_SECRETARY` (`SECRETARY_ID`),
+  KEY `FK_SRS_TYPE` (`REWARD_TYPE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `section`
 --
 
 DROP TABLE IF EXISTS `section`;
@@ -3014,36 +496,10 @@ CREATE TABLE IF NOT EXISTS `section` (
   KEY `FK_SECTION_CAT` (`CATEGORY_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `section`
---
-
-INSERT INTO `section` (`SECTION_ID`, `CATEGORY_ID`, `SECTION_NAME_EN`, `SECTION_NAME_AR`) VALUES
-(1, 1, 'Section 1 LMD 1', 'الفصيلة 1 ل.م.د. 1'),
-(2, 1, 'Section 2 LMD 1', 'الفصيلة 2 ل.م.د. 1'),
-(3, 1, 'Section 3 LMD 1', 'الفصيلة 3 ل.م.د. 1'),
-(4, 1, 'Section 4 LMD 1', 'الفصيلة 4 ل.م.د. 1'),
-(5, 2, 'Section 1 LMD 2', 'الفصيلة 1 ل.م.د. 2'),
-(6, 2, 'Section 2 LMD 2', 'الفصيلة 2 ل.م.د. 2'),
-(7, 2, 'Section 3 LMD 2', 'الفصيلة 3 ل.م.د. 2'),
-(8, 2, 'Section 4 LMD 2', 'الفصيلة 4 ل.م.د. 2'),
-(9, 3, 'Section 1 LMD 3', 'الفصيلة 1 ل.م.د. 3'),
-(10, 3, 'Section 2 LMD 3', 'الفصيلة 2 ل.م.د. 3'),
-(11, 3, 'Section 3 LMD 3', 'الفصيلة 3 ل.م.د. 3'),
-(12, 3, 'Section 4 LMD 3', 'الفصيلة 4 ل.م.د. 3'),
-(13, 5, 'Section 1 Specialization', 'الفصيلة 1 تخصص'),
-(14, 5, 'Section 2 Specialization', 'الفصيلة 2 تخصص'),
-(15, 5, 'Section 3 Specialization', 'الفصيلة 3 تخصص'),
-(16, 5, 'Section 4 Specialization', 'الفصيلة 4 تخصص'),
-(17, 4, 'Section 1 Perfectioning', 'الفصيلة 1 إتقان'),
-(18, 8, 'Section 1 Etat-major', 'الفصيلة 1 أركان'),
-(19, 7, 'Section 1 Recyclage', 'الفصيلة 1 رسكلة'),
-(20, 6, 'Section 1 Master', 'الفصيلة 1 ماستر');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `student`
+-- Table structure for table `student`
 --
 
 DROP TABLE IF EXISTS `student`;
@@ -3099,757 +555,10 @@ CREATE TABLE IF NOT EXISTS `student` (
   KEY `FK_STUDENT_HEALTH_STATUS` (`STUDENT_HEALTH_STATUS_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `student`
---
-
-INSERT INTO `student` (`STUDENT_SERIAL_NUMBER`, `CATEGORY_ID`, `SECTION_ID`, `STUDENT_FIRST_NAME_EN`, `STUDENT_LAST_NAME_EN`, `STUDENT_FIRST_NAME_AR`, `STUDENT_LAST_NAME_AR`, `STUDENT_GRADE_ID`, `STUDENT_SEX`, `STUDENT_BIRTH_DATE`, `STUDENT_BLOOD_TYPE`, `STUDENT_PERSONAL_PHONE`, `STUDENT_HEIGHT_CM`, `STUDENT_WEIGHT_KG`, `STUDENT_IS_FOREIGN`, `STUDENT_ACADEMIC_AVERAGE`, `STUDENT_SPECIALITY_ID`, `STUDENT_ACADEMIC_LEVEL_ID`, `STUDENT_BACCALAUREATE_SUB_NUMBER`, `STUDENT_EDUCATIONAL_CERTIFICATES`, `STUDENT_SCHOOL_SUB_DATE`, `STUDENT_SCHOOL_SUB_CARD_NUMBER`, `STUDENT_LAPTOP_SERIAL_NUMBER`, `STUDENT_BIRTHDATE_CERTIFICATE_NUMBER`, `STUDENT_ID_CARD_NUMBER`, `STUDENT_POSTAL_ACCOUNT_NUMBER`, `STUDENT_HEALTH_STATUS_ID`, `STUDENT_MILITARY_NECKLACE`, `STUDENT_NUMBER_OF_SIBLINGS`, `STUDENT_NUMBER_OF_SISTERS`, `STUDENT_ORDER_AMONG_SIBLINGS`, `STUDENT_ARMY_ID`, `STUDENT_ORPHAN_STATUS`, `STUDENT_PARENTS_SITUATION`, `STUDENT_BIRTH_PLACE_ID`, `STUDENT_PERSONAL_ADDRESS_ID`, `STUDENT_RECRUITMENT_SOURCE_ID`, `STUDENT_PHOTO`) VALUES
-('120230020241', 2, 5, 'Andy Lauren', 'EKOAN BELLA', 'آندي لورين', 'إكوان بيلا', 25, '', '0000-00-00', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', 'دولة الكاميرون', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230020241.jpg'),
-('120230020242', 2, 6, 'Ossaketo', 'ARSIAL', 'أوساكيتو', 'أرسيال', 25, '', '0000-00-00', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230020242.jpg'),
-('120230020243', 2, 7, 'Mamadou', 'COULIBALY', 'مامادو', 'كوليبالي', 25, '', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230020243.jpg'),
-('120230020244', 2, 7, 'Lehbib', 'SIDELEMINE', 'لحبيب', 'سيد الامين', 25, '', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230020244.jpg'),
-('120230020245', 2, 8, 'Nouhoum', 'DOUMBIA', 'نوهوم', 'دومبيا', 25, '', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230020245.jpg'),
-('120230025130', 2, 8, 'Nadia', 'YAAKOUBI', 'نادية', 'يعقوبي', 25, '', '2005-06-06', 'AB+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '413729953', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230025130.jpg'),
-('120230025722', 2, 8, 'Ines Meriem', 'GUIRAD', 'إيناس مريم', 'قيراد', 25, '', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230025722.jpg'),
-('120230030029', 2, 8, 'Fouad', 'SAHTOUT', 'فؤاد', 'سحتوت', 25, '', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230030029.jpg'),
-('120230030145', 2, 8, 'Ayoub', 'BEN AYAD', 'أيوب', 'بن عياد', 25, '', '2005-07-12', '', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '414491502', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230030145.jpg'),
-('120230031114', 2, 8, 'Douaa Mebarka', 'ACHOUR', 'دعاء مباركة', 'عاشور', 25, '', '2005-07-18', 'B+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031114.jpg'),
-('120230031140', 2, 8, 'Ahmed', 'BENDJEMIL', 'أحمد', 'بن جميل', 25, '', '2006-03-30', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '407872560', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031140.jpg'),
-('120230031210', 2, 5, 'Alaedine', 'MAHIDOUN', 'علاء الدين', 'محيدون', 25, '', '2005-04-30', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '404734898', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031210.jpg'),
-('120230031214', 2, 8, 'Malek', 'MAARIF ', 'ملك', 'معاريف', 25, '', '2006-08-18', 'O-', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031214.jpg'),
-('120230031228', 2, 6, 'Omar', 'OTHMANI', 'عمر', 'عثماني', 25, '', '2005-06-28', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '412262150', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031228.jpg'),
-('120230031244', 2, 7, 'Nour El Houda', 'SI TAIEB', 'نور الهدى', 'سي الطيب', 25, '', '2005-05-20', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031244.jpg'),
-('120230031258', 2, 8, 'Imane', 'ZIANE CHRIF', 'إيمان', 'زيان شريف', 25, '', '2005-07-05', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031258.jpg'),
-('120230031314', 2, 5, 'Oussama Seif Eddine', 'GUEGTOUL', 'أسامة سيف الدين', 'قجتول', 25, '', '2006-05-13', 'B+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205620718', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031314.jpg'),
-('120230031327', 2, 5, 'Abdelkader', 'BOUHAMIDI', 'عبد القادر', 'بوحميدي', 25, '', '2005-02-16', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '412231494', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031327.jpg'),
-('120230031328', 2, 6, 'Malak', 'OUSSIF', 'ملاك', 'وصيف', 25, '', '2005-11-21', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '413490892', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031328.jpg'),
-('120230031329', 2, 7, 'Ali', 'DJELFI', 'علي', 'جلفي', 25, '', '2005-09-24', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '116997412', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031329.jpg'),
-('120230031330', 2, 5, 'Fares', 'CHEREF', 'فارس', 'شرف', 25, '', '2006-02-03', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '116920775', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031330.jpg'),
-('120230031362', 2, 7, 'Ferhat', 'BOUACHERINE', 'فرحات', 'بوعشرين', 25, '', '2003-02-13', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '405705147', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031362.jpg'),
-('120230031410', 2, 5, 'Alicia Nourelhouda', 'AIT MOUHOUB', 'أليسيا نور الهدى', 'آيت موهوب', 25, '', '0000-00-00', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031410.jpg'),
-('120230031411', 2, 8, 'Katia', 'BENSALEM', 'كاتية', 'بن سالم', 25, '', '0000-00-00', 'A-', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031411.jpg'),
-('120230031412', 2, 6, 'Abde Raouf', 'BOUCHELAALA', 'عبد الرؤوف', 'بوشلعلع', 25, '', '2005-08-13', 'AB+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '412163167', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031412.jpg'),
-('120230031413', 2, 7, 'Serine', 'DAHMANI', 'سيرين', 'دحماني', 25, '', '2005-07-08', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031413.jpg'),
-('120230031414', 2, 6, 'Houdhaifa', 'CHEBILI', 'حذيفة', 'شبيلي', 25, '', '2005-06-07', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '117040173', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031414.jpg'),
-('120230031523', 2, 7, 'Ahmed Nazim', 'CHERGUI', 'أحمد نزيم', 'شرقي', 25, '', '2005-05-26', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '204945904', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031523.jpg'),
-('120230031531', 2, 8, 'Yacine', 'SAOULI', 'ياسين', 'صاولي', 25, '', '2005-05-26', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '403816148', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031531.jpg'),
-('120230031586', 2, 7, 'Haythem', 'BOURETAA', 'هيثم', 'بورتاع', 25, '', '2005-08-08', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031586.jpg'),
-('120230031587', 2, 6, 'Ihab', 'BOUCHAREB', 'إيهاب', 'بوشارب', 25, '', '2005-11-29', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '211398990', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031587.jpg'),
-('120230031588', 2, 8, 'Djaber', 'BOUCHOUCHA', 'جابر', 'بوشوشة', 25, '', '2005-03-02', 'O-', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '116904897', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031588.jpg'),
-('120230031589', 2, 6, 'Oussama Youcef', 'ZERAFI', 'أسامة يوسف', 'زرافي', 25, '', '2005-05-24', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '210764402', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031589.jpg'),
-('120230031590', 2, 5, 'Ayoub', 'LEMOUI', 'أيوب', 'لموي', 25, '', '2005-06-24', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205795587', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031590.jpg'),
-('120230031622', 2, 6, 'Mehdi', 'ZEKRI', 'مهدي', 'زكري', 25, '', '2006-02-02', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '210698297', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031622.jpg'),
-('120230031623', 2, 7, 'Aymen', 'LAZRI', 'أيمن', 'لعزري', 25, '', '2006-02-18', 'A-', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '116361283', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031623.jpg'),
-('120230031624', 2, 7, 'Ahmed Islem', 'DOUHI', 'أحمد إسلام', 'دوحي', 25, '', '2006-01-26', 'B+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '205620749', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031624.jpg'),
-('120230031625', 2, 7, 'Mohammed El Amine', 'BOUNKIB', 'محمد الأمين', 'بونقيب', 25, '', '2006-01-03', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '413486832', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031625.jpg'),
-('120230031633', 2, 6, 'Maisem', 'KHMISSI', 'ميسم', 'خميسي', 25, '', '2005-07-01', 'AB+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '212102253', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031633.jpg'),
-('120230031634', 2, 5, 'Ali Raid', 'DERNOUNI', 'علي رائد', 'درنوني', 25, '', '2006-03-26', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205521747', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031634.jpg'),
-('120230031635', 2, 8, 'Bochra', 'ABDELHADI', 'بشرى', 'عبد الهادي', 25, '', '2005-04-24', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031635.jpg'),
-('120230031642', 2, 6, 'Moussa', 'BOUSSALEM', 'موسى', 'بوسالم', 25, '', '2005-05-28', 'B+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205794141', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031642.jpg'),
-('120230031664', 2, 5, 'Mohammed Amine', 'SABEG ANIS', 'أنيس محمد أمين', 'سابق', 25, '', '2005-07-18', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '404177054', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031664.jpg'),
-('120230031700', 2, 5, 'Younes', 'AMRAOUI', 'يونس', 'عمراوي', 25, '', '2005-07-08', 'O-', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '116418192', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031700.jpg'),
-('120230031701', 2, 5, 'Diaa El Hak', 'BEN SAID', 'ضياء الحق', 'بن سعيد', 25, '', '2005-09-16', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205620862', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031701.jpg'),
-('120230031702', 2, 5, 'Abdel Baset', 'REGHIS', 'عبد الباسط', 'رغيس', 25, '', '2005-10-30', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '115257217', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031702.jpg'),
-('120230031703', 2, 6, 'Brahim Abd Aldjabar', 'OUCHENE', 'إبراهيم عبد الجبار', 'اوشن', 25, '', '2005-07-17', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205551796', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031703.jpg'),
-('120230031704', 2, 7, 'Atef', 'ZIAD MOHAMED', 'محمد عاطف', 'زياد', 25, '', '2005-08-22', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '116390186', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031704.jpg'),
-('120230031705', 2, 7, 'Mohammed Lakhdar', 'SOUDANI ', 'محمد لخضر', 'سوداني', 25, '', '2005-06-23', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '116270040', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031705.jpg'),
-('120230031706', 2, 6, 'Fadhl', 'BENBELLAT', 'فاضل', 'بن بلاط', 25, '', '2006-08-04', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '211985770', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031706.jpg'),
-('120230031707', 2, 5, 'Abd El Basset', 'MEHENNAOUI', 'عبد الباسط', 'مهنّاوي', 25, '', '2005-10-09', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205276516', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031707.jpg'),
-('120230031708', 2, 5, 'Abd Elhamid', 'BOUTRAA', 'عبد الحميد', 'بوترعة', 25, '', '2005-01-01', 'B+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '116976951', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031708.jpg'),
-('120230031709', 2, 6, 'Mossab', 'BENKRAMA', 'مصعب', 'بن كرامة', 25, '', '2005-02-25', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205552176', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031709.jpg'),
-('120230031710', 2, 8, 'Ayoub', 'DEBBAGH', 'أيوب', 'دباغ', 25, '', '2005-08-11', 'AB+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '116949316', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031710.jpg'),
-('120230031711', 2, 7, 'Abdelmounaam', 'MERZOUG', 'عبد المنعم', 'مرزوق', 25, '', '2005-07-12', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '205697678', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031711.jpg'),
-('120230031712', 2, 5, 'Abdeldjalil', 'AMIR', 'عبد الجليل', 'أمير', 25, '', '2005-01-12', 'B+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205514928', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031712.jpg'),
-('120230031713', 2, 6, 'Youssouf', 'BENGUELLAH', 'يوسف', 'بن قلة', 25, '', '2005-01-04', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '204966205', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031713.jpg'),
-('120230031714', 2, 7, 'Abd El Basset', 'BOULTIF', 'عبد الباسط', 'بولطيف', 25, '', '2005-08-05', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031714.jpg'),
-('120230031715', 2, 7, 'Mohamed El Amine', 'SIDI AISSA', 'محمد الأمين', 'سيدي عيسى', 25, '', '2005-05-16', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '118009906', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031715.jpg'),
-('120230031717', 2, 6, 'Amdjed', 'BOUZIDI', 'أمجد', 'بوزيدي', 25, '', '2005-07-07', 'AB+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205811481', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031717.jpg'),
-('120230031718', 2, 5, 'Islam', 'ADOUI', 'إسلام', 'عدوي', 25, '', '2005-10-28', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '116380150', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031718.jpg'),
-('120230031719', 2, 5, 'Mohammed Seddik', 'ZAHTANI', 'محمد صديق', 'زحتاني', 25, '', '2005-01-25', 'AB-', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '111586615', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031719.jpg'),
-('120230031816', 2, 7, 'Wail', 'BOUHEBEL', 'وائل', 'بوحبل', 25, '', '2004-10-25', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '412165043', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031816.jpg'),
-('120230031979', 2, 5, 'Djaouad', 'BELGHERBI', 'جواد', 'بلغربي', 25, '', '2005-07-28', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205628230', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031979.jpg'),
-('120230031993', 2, 6, 'Mohammed Riadh', 'BENZOUKHA', 'محمد رياض', 'بن زوخة', 25, '', '2005-07-30', 'B+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '211596796', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230031993.jpg'),
-('120230032015', 2, 6, 'Djacem', 'DJELLABI', 'جاسم', 'جلابي', 25, '', '2005-04-24', 'O-', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '205616818', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032015.jpg'),
-('120230032033', 2, 6, 'Choaib', 'HACHEMI', 'شعيب', 'هاشمي', 25, '', '0000-00-00', 'B+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205616877', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032033.jpg'),
-('120230032045', 2, 5, 'Islem Eddine', 'KEBSI', 'إسلام', 'كبسي', 25, '', '2004-10-30', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '209657403', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032045.jpg'),
-('120230032074', 2, 8, 'Ahmed Yacine', 'MESSAOUDI', 'أحمد ياسين', 'مسعودي', 25, '', '2005-09-21', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '205858905', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032074.jpg'),
-('120230032087', 2, 6, 'Younes', 'OULADNOUI', 'يونس', 'أولاد النوي', 25, '', '2005-11-23', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205616804', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032087.jpg'),
-('120230032118', 2, 8, 'Ihab Abd Elghani', 'ZAHOUF', 'إيهاب عبد الغني', 'زحوف', 25, '', '2004-07-31', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '406689051', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032118.jpg'),
-('120230032315', 2, 7, 'Louai', 'BOUCHEHDANE', 'لؤي', 'بوشحدان', 25, '', '2005-07-28', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '414486101', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032315.jpg'),
-('120230032318', 2, 6, 'Fethi', 'BOUCHENKIR', 'فتحي', 'بوشنقير', 25, '', '2005-08-24', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '116310831', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032318.jpg'),
-('120230032346', 2, 6, 'Ahmed Yacine', 'BOURKEB', 'أحمد ياسين', 'بوركاب', 25, '', '2005-09-19', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032346.jpg'),
-('120230032354', 2, 7, 'Amir', 'BOUZENDA', 'أمير', 'بوزندة', 25, '', '2005-03-12', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '115413201', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032354.jpg'),
-('120230032355', 2, 5, 'Oussama', 'BOUZIDA', 'أسامة', 'بوزيدة', 25, '', '2005-10-11', 'B+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '115203236', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032355.jpg'),
-('120230032358', 2, 8, 'Belkis', 'BRAKTIA', 'بلقيس', 'براكتية', 25, '', '2005-02-16', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032358.jpg'),
-('120230032402', 2, 6, 'Bouthaina', 'DAOUDI', 'بثينة', 'داودي', 25, '', '2005-02-28', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '117965939', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032402.jpg'),
-('120230032404', 2, 7, 'Abdeldjawad', 'DELFI', 'عبد الجواد', 'ضلفي', 25, '', '2005-12-17', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '412116659', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032404.jpg'),
-('120230032442', 2, 8, 'Hani', 'KARKAH', 'هاني', 'قرقاح', 25, '', '2006-02-03', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '116946463', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032442.jpg'),
-('120230032493', 2, 7, 'Wail', 'LACHOURI', 'وائل', 'لعشوري', 25, '', '2005-09-18', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '414508553', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032493.jpg'),
-('120230032495', 2, 5, 'Rabiaa', 'LAGEUL', 'ربيعة', 'العاقل', 25, '', '2006-01-25', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032495.jpg'),
-('120230032510', 2, 6, 'Mohammed El Hadi', 'MADHI', 'محمد الهادي', 'ماضي', 25, '', '2004-02-23', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '402923248', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032510.jpg'),
-('120230032520', 2, 6, 'Kossai', 'MEDJABRI', 'قصي', 'مجابري', 25, '', '2005-04-20', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032520.jpg'),
-('120230032550', 2, 5, 'Abdelwadoud', 'MOUBIEN', 'عبد الودود', 'موبيان', 25, '', '2005-11-13', 'B+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '12044385', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032550.jpg'),
-('120230032596', 2, 7, 'Mohamed Seddik', 'SENAGUIGUE', 'محمد صديق', 'سناقيق', 25, '', '2005-10-25', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '413472167', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032596.jpg'),
-('120230032601', 2, 8, 'Ahmad Yassine', 'ABBAS', 'احمد ياسين', 'عباس ', 25, '', '2005-08-13', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '116894252', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032601.jpg'),
-('120230032609', 2, 5, 'Roufaida', 'AISSANI', 'رفيدة', 'عيساني', 25, '', '0000-00-00', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032609.jpg'),
-('120230032625', 2, 5, 'Khaola', 'BAADACHE', 'خولة', 'بعداش', 25, '', '0000-00-00', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032625.jpg'),
-('120230032763', 2, 8, 'Massinissa', 'BAGDI', 'ماسينيسا', 'باقدي', 25, '', '2003-08-24', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '407534308', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230032763.jpg'),
-('120230033074', 2, 6, 'Manel', 'ELAICHI', 'منال', 'العيشي', 25, '', '2005-02-28', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '118028851', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033074.jpg'),
-('120230033076', 2, 6, 'Abdennour', 'SENOUSSAOUI', 'عبد النور', 'سنوساوي', 25, '', '2005-11-01', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205795677', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033076.jpg'),
-('120230033077', 2, 6, 'Houria', 'ABBES SKOURA', 'سكورة حورية', 'عباس ', 25, '', '2005-07-12', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '211392805', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033077.jpg'),
-('120230033078', 2, 7, 'Dahman', 'AMRI ELHADJ', 'الحاج دحمان', 'عمري', 25, '', '2005-06-08', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '211673253', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033078.jpg'),
-('120230033079', 2, 5, 'Nouha', 'AOUAR', 'نهى', 'عوار', 25, '', '0000-00-00', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033079.jpg'),
-('120230033080', 2, 8, 'Hiba', 'FALI', 'هبة الرحمن', 'فالي', 25, '', '0000-00-00', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033080.jpg'),
-('120230033164', 2, 7, 'Isam', 'BENTABET', 'عصام معز الدين', 'بن تابث', 25, '', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033164.jpg'),
-('120230033165', 2, 7, 'Fekhr El Islam', 'BADRA MOHAMMED', 'محمد فخر الإسلام', 'بدرة', 25, '', '2005-04-15', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '211470620', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033165.jpg'),
-('120230033166', 2, 6, 'Fares', 'LAROUCI', 'فارس', 'لعروسي', 25, '', '2005-06-15', 'B-', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205616906', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033166.jpg'),
-('120230033167', 2, 6, 'Abderrezzaq', 'MENDAS', 'عبد الرزاق', 'منداس', 25, '', '2005-08-04', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '416633346', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033167.jpg'),
-('120230033168', 2, 5, 'Youcef', 'ABED', 'يوسف', 'عابد', 25, '', '2005-06-06', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '402386199', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033168.jpg'),
-('120230033169', 2, 8, 'Rayane Abd Eselam', 'MEHDAOUI', 'ريان عبد السلام', 'مهداوي', 25, '', '2005-07-20', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '116329849', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033169.jpg'),
-('120230033170', 2, 7, 'Firas Dhyaa Eddine', 'MEBYOUE', 'فراس ضياء الدين', 'مبيوع', 25, '', '2005-06-29', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '116994380', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033170.jpg'),
-('120230033171', 2, 5, 'Haithem', 'KERROUZI', 'هيثم', 'قروزي', 25, '', '2005-10-12', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '404985926', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033171.jpg'),
-('120230033172', 2, 7, 'Ala Eddine', 'SAIDI', 'علاء الدين', 'سعيدي', 25, '', '2005-08-07', 'AB+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '211608420', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033172.jpg'),
-('120230033173', 2, 5, 'Ayoub', 'BENSEGHIR', 'أيوب', 'بن صغير', 25, '', '2005-05-03', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '405654514', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033173.jpg'),
-('120230033492', 2, 8, 'Rayane', 'FETIHANI', 'ريان', 'فتيحاني', 25, '', '2005-12-28', 'B+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '411841151', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033492.jpg'),
-('120230033505', 2, 7, 'Kamel Eddine', 'SELLAM', 'كمال الدين', 'سلام', 25, '', '2005-04-12', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '116870387', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033505.jpg'),
-('120230033662', 2, 8, 'Imed', 'ZAHAF', 'عماد', 'زحاف', 25, '', '2005-06-17', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033662.jpg'),
-('120230033673', 2, 5, 'Ibrahim', 'KASMI', 'إبراهيم', 'قاسمي', 25, '', '2006-01-25', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '4192588', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033673.jpg'),
-('120230033674', 2, 7, 'Rahma', 'HAMLIL', 'رحمة', 'حمليل', 25, '', '0000-00-00', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033674.jpg'),
-('120230033833', 2, 8, 'Mohammed Abdelmounaim', 'MEZIANE', 'محمد عبد المنعم', 'مزيان', 25, '', '2005-08-13', 'A-', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '408001529', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033833.jpg'),
-('120230033844', 2, 6, 'Ratiba', 'BERDAN', 'رتيبة', 'بردان', 25, '', '2005-09-12', 'B+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '414542981', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033844.jpg'),
-('120230033847', 2, 7, 'Ghizlene', 'GHOMRI', 'غزلان', 'غمري', 25, '', '2005-03-02', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033847.jpg'),
-('120230033874', 2, 5, 'Abderrahmene', 'BOUMEHDI', 'عبد الرحمن', 'بومهدي', 25, '', '2005-08-06', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '114267931', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033874.jpg'),
-('120230033875', 2, 6, 'Assala', 'ZIOUANE', 'أصالة منال', 'زيوان', 25, '', '2006-05-26', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '413733855', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033875.jpg'),
-('120230033876', 2, 5, 'Israa Nourhane', 'FRIFRA', 'إسراء نورهان', 'فريفرة', 25, '', '2006-02-19', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '415522504', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033876.jpg'),
-('120230033877', 2, 8, 'Douaa', 'KADRI MALEK', 'ملاك دعاء', 'قادري', 25, '', '2006-06-27', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033877.jpg'),
-('120230033878', 2, 6, 'Lamia', 'KERRAZ', 'لامية', 'كرراز', 25, '', '2005-07-07', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '417102335', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033878.jpg'),
-('120230033879', 2, 5, 'Omaima', 'MEDIOUN', 'أميمة', 'مديون', 25, '', '0000-00-00', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033879.jpg'),
-('120230033903', 2, 5, 'Laaredj Amine', 'TAAKOUK', 'لعرج أمين', 'تكوك', 25, '', '2004-02-04', 'O-', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '406331729', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033903.jpg'),
-('120230033911', 2, 8, 'Riad', 'KAMRI', 'رياض', 'قمري', 25, '', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033911.jpg'),
-('120230033915', 2, 5, 'Azzdden Abdlkhalek', 'BOUMEDYEN', 'عز الدين عبد الخالق', 'بومدين', 25, '', '2005-02-11', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '407968626', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033915.jpg'),
-('120230033930', 2, 8, 'Mohamed Nadir', 'BARDJEM', 'محمد نذير', 'برجم', 25, '', '2005-12-20', 'B+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '11154515', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033930.jpg'),
-('120230033931', 2, 7, 'Abdelkader Zahreddin', 'MANSOURI', 'عبد القادر زهر الدين', 'منصوري', 25, '', '2005-06-28', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '412195767', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033931.jpg'),
-('120230033932', 2, 5, 'Attafia', 'HARATI ', 'العطافية', 'حراتي ', 25, '', '2005-08-12', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033932.jpg'),
-('120230033933', 2, 7, 'Abdarrahmane', 'CHIKHAOUI', 'عبد الرحمن', 'شيخاوي', 25, '', '2005-08-29', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '114140743', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033933.jpg'),
-('120230033934', 2, 5, 'Ismail', 'BOUROUROU', 'إسماعيل', 'بورورو', 25, '', '2006-01-05', 'B-', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '407955151', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033934.jpg'),
-('120230033935', 2, 7, 'Houssem Eddine', 'BENATIA', 'حسام الدين', 'بن عطية', 25, '', '2005-09-23', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '412192214', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033935.jpg'),
-('120230033974', 2, 8, 'Abdelkader', 'BOURAKBA', 'عبد القادر', 'بوركبة', 25, '', '2004-08-11', 'B+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033974.jpg'),
-('120230033993', 2, 8, 'Abdelwahab', 'AZOUZ', 'عبد الوهاب سيد', 'عزوز', 25, '', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033993.jpg'),
-('120230033994', 2, 8, 'Yacine', 'AZZOUZ AZIZ', 'عزيز ياسين', 'عزوز', 25, '', '2005-05-13', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '205503731', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230033994.jpg'),
-('120230034001', 2, 8, 'Soumia', 'FEKHAR', 'سمية', 'فخار', 25, '', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034001.jpg'),
-('120230034011', 2, 7, 'Mouatassime Billah', 'KERRACHE', 'معتصم بالله', 'كراش', 25, '', '2005-05-23', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '211676666', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034011.jpg'),
-('120230034030', 2, 7, 'Mohamed', 'MESSAOUDI', 'محمد', 'مسعودي', 25, '', '2005-01-14', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '210353324', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034030.jpg'),
-('120230034034', 2, 7, 'Rania', 'MAASKRI', 'رانية', 'معسكري', 25, '', '2005-12-31', 'O+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034034.jpg'),
-('120230034043', 2, 6, 'Hakim', 'MILOUD', 'حكيم', 'ميلود', 25, '', '2005-10-14', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205522581', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034043.jpg'),
-('120230034053', 2, 8, 'Ihsene', 'OULAD MELHA', 'إحسان', 'ولد ملحة', 25, '', '2005-01-17', '', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034053.jpg'),
-('120230034057', 2, 5, 'Saada', 'BERRAILES', 'سعادة', 'بغيلاس', 25, '', '2004-07-30', 'B+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '111586558', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034057.jpg'),
-('120230034064', 2, 8, 'Zakaria', 'BECHERIF', 'زكرياء', 'بشريف', 25, '', '2005-10-24', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '211009821', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034064.jpg'),
-('120230034074', 2, 6, 'Abdelhak', 'BELARBI', 'عبد الحق', 'بلعربي', 25, '', '2005-11-18', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205512616', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034074.jpg'),
-('120230034102', 2, 6, 'Salah Eddine', 'BOUAZZA', 'صلاح الدين', 'بوعزة', 25, '', '2005-09-01', 'B+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '205271825', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034102.jpg'),
-('120230034114', 2, 6, 'Mohamed Essedik', 'DJERADA', 'محمد الصديق', 'جرادة', 25, '', '2005-11-28', 'B-', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034114.jpg'),
-('120230034124', 2, 7, 'Rafik', 'HAMOU', 'رفيق', 'حمّو', 25, '', '2005-05-02', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '211615626', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034124.jpg'),
-('120230034130', 2, 6, 'Mahieddine', 'DEKDAK', 'محي الدين', 'دقدق', 25, '', '2005-04-29', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '265273115', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034130.jpg'),
-('120230034527', 2, 7, 'Roua', 'BELHADJ', 'رؤى', 'بلحاج', 25, '', '0000-00-00', 'A+', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034527.jpg'),
-('120230034542', 2, 5, 'Belkacem', 'BERGHOUT', 'بلقاسم', 'برغوث', 25, '', '2005-09-11', 'A+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '116894194', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034542.jpg'),
-('120230034555', 2, 5, 'Amine', 'DAINECHE', 'أمين', 'دعينش', 25, '', '2005-01-10', 'O+', 'NULL', 0.00, 0.00, 'No', 0.00, NULL, 1, 'NULL', 'NULL', '0000-00-00', '116980943', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034555.jpg'),
-('120230034576', 2, 8, 'Haithem Abderahman', 'HBIRAT', 'هيثم عبد الرحمن', 'هبيرات', 25, '', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034576.jpg'),
-('120230034598', 2, 8, 'Achref', 'MADANI', 'أشرف', 'مداني', 25, '', '2005-03-05', 'O-', '', 0.00, 0.00, 'No', 0.00, NULL, 1, '', 'NULL', '0000-00-00', '205620723', '', '', '', '', NULL, '', 0, 0, 0, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120230034598.jpg'),
-('120240000011', 1, 1, 'Jawad Inal', 'MINDI', 'جواد إينال', 'مندي', 25, '', '2006-04-20', 'O+', '794104095', 185.00, 77.00, 'Yes', NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240000022', 1, 1, 'Mahmoud', 'DAHI', 'محمود', 'داهي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240000033', 1, 1, 'Soundid', 'PIAJOUTHIM', 'سونديد', 'بياجوشيم', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240046707', 1, 2, 'Kheira', 'BEN HADRIA', 'خيرة', 'بن حضرية', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240048545', 1, 3, 'Nour Islem', 'ATIA', 'نور الإسلام', 'عطية', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240050247', 1, 4, 'Sid Ali', 'AMROUCHE DJILALI', 'سيد علي', 'عمروش جيلالي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240051342', 5, 15, 'Anoir', 'REDDAOUI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240051342.jpg'),
-('120240051500', 5, 15, 'Reda', 'GRAMTIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240051500.jpg'),
-('120240051686', 1, 3, 'Zaid', 'BOUGHARZA', 'زيد', 'بوغرزة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL);
-INSERT INTO `student` (`STUDENT_SERIAL_NUMBER`, `CATEGORY_ID`, `SECTION_ID`, `STUDENT_FIRST_NAME_EN`, `STUDENT_LAST_NAME_EN`, `STUDENT_FIRST_NAME_AR`, `STUDENT_LAST_NAME_AR`, `STUDENT_GRADE_ID`, `STUDENT_SEX`, `STUDENT_BIRTH_DATE`, `STUDENT_BLOOD_TYPE`, `STUDENT_PERSONAL_PHONE`, `STUDENT_HEIGHT_CM`, `STUDENT_WEIGHT_KG`, `STUDENT_IS_FOREIGN`, `STUDENT_ACADEMIC_AVERAGE`, `STUDENT_SPECIALITY_ID`, `STUDENT_ACADEMIC_LEVEL_ID`, `STUDENT_BACCALAUREATE_SUB_NUMBER`, `STUDENT_EDUCATIONAL_CERTIFICATES`, `STUDENT_SCHOOL_SUB_DATE`, `STUDENT_SCHOOL_SUB_CARD_NUMBER`, `STUDENT_LAPTOP_SERIAL_NUMBER`, `STUDENT_BIRTHDATE_CERTIFICATE_NUMBER`, `STUDENT_ID_CARD_NUMBER`, `STUDENT_POSTAL_ACCOUNT_NUMBER`, `STUDENT_HEALTH_STATUS_ID`, `STUDENT_MILITARY_NECKLACE`, `STUDENT_NUMBER_OF_SIBLINGS`, `STUDENT_NUMBER_OF_SISTERS`, `STUDENT_ORDER_AMONG_SIBLINGS`, `STUDENT_ARMY_ID`, `STUDENT_ORPHAN_STATUS`, `STUDENT_PARENTS_SITUATION`, `STUDENT_BIRTH_PLACE_ID`, `STUDENT_PERSONAL_ADDRESS_ID`, `STUDENT_RECRUITMENT_SOURCE_ID`, `STUDENT_PHOTO`) VALUES
-('120240056172', 5, 14, 'Salah Dine', 'AID', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056172.jpg'),
-('120240056181', 1, 1, 'Lina Alaa', 'ISAAD', 'لينة الاء', 'اسعد', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056182', 1, 4, 'Roumaissa', 'ZAIDI', 'رميساء', 'زايدي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056183', 1, 3, 'Faiz', 'BENATA', 'فايز', 'بن عطاء', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056184', 1, 2, 'Anas Abderahmen', 'BOUCHACHIA', 'أنس عبد الرحمن', 'بوشاشية', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056185', 1, 2, 'Iyed Haithem', 'BETICH', 'اياد هيثم', 'بتيش', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056186', 1, 3, 'Younes', 'FEROUDJ', 'يونس', 'فروج', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056194', 1, 4, 'Yanis', 'GATER', 'يانيس', 'قاتر', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056214', 5, 15, 'Chouaib', 'MERBAHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056214.jpg'),
-('120240056220', 5, 13, 'Mohamed Souffi', 'MEFTAHI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056220.jpg'),
-('120240056232', 5, 13, 'Chouki', 'IMMAMOUIN', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056232.jpg'),
-('120240056233', 5, 16, 'Sidali', 'BOUKHEBBACH', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056233.jpg'),
-('120240056234', 5, 13, 'Mohammed Islam', 'BOUDARI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056234.jpg'),
-('120240056235', 5, 16, 'Ishak', 'BIYASLI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056235.jpg'),
-('120240056236', 5, 14, 'Mohammed Wanis', 'ELOKR DAR', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056236.jpg'),
-('120240056238', 5, 15, 'Imad', 'DALI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056238.jpg'),
-('120240056239', 5, 15, 'Adel', 'RABHI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056239.jpg'),
-('120240056251', 1, 2, 'Wassim Amer', 'DAIRI', 'وسيم عامر', 'دايري', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056277', 5, 14, 'Mohammed Imad Eddine', 'BOURAKAA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056277.jpg'),
-('120240056289', 5, 16, 'Chakib', 'FARE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056289.jpg'),
-('120240056392', 5, 13, 'Abdelazize', 'REKKAS', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056392.jpg'),
-('120240056401', 5, 14, 'Djilali', 'ZERGOUNE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056401.jpg'),
-('120240056404', 5, 13, 'Yassine', 'GHERISSI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056404.jpg'),
-('120240056405', 5, 16, 'Hicham', 'ABDOU', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056405.jpg'),
-('120240056416', 1, 2, 'Mohamed', 'YHOUNI', 'محمد', 'يهوني', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056426', 1, 3, 'Idris', 'HASNAOUI', 'إدريس', 'حسناوي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056432', 1, 1, 'Meryem', 'HAOUES', 'مريم', 'حواس', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056445', 5, 15, 'Saide', 'BOUZIDI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056445.jpg'),
-('120240056446', 5, 16, 'Djamal Dinne', 'KAREH', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056446.jpg'),
-('120240056451', 5, 16, 'Islam', 'OUAMRANI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056451.jpg'),
-('120240056455', 5, 14, 'Yasser', 'CHOUTE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056455.jpg'),
-('120240056468', 1, 1, 'Senaa', 'LAZIB', 'سناء', 'لزيب', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056470', 1, 1, 'Mohamed', 'DJERDALI', 'محمد', 'جردالي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056471', 1, 4, 'Islam', 'BOUMEGOIAS', 'إسلام', 'بومقواس', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056474', 1, 4, 'Abd Elwahab', 'BEZERKA', 'عبد الوهاب', 'بزرقة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056480', 1, 1, 'Amer Iyad', 'HADJAR', 'عامر اياد', 'حجار', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056488', 5, 16, 'Hamid', 'ZIANE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056488.jpg'),
-('120240056490', 5, 14, 'Abdelbasset', 'AMALOU', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056490.jpg'),
-('120240056495', 5, 16, 'Riyadh', 'DJEMELI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056495.jpg'),
-('120240056497', 5, 13, 'Mohamed El Amine', 'ALLAN', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056497.jpg'),
-('120240056499', 5, 16, 'Lyes', 'MEALEM', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056499.jpg'),
-('120240056500', 5, 13, 'Ismail', 'MELLAL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056500.jpg'),
-('120240056513', 1, 4, 'Youcef', 'GHAZAL', 'يوسف', 'غزال', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056514', 1, 1, 'Saad Eddin', 'SMAAILI', 'سعد الدين', 'سماعلي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056529', 1, 3, 'Abd Erahman', 'DJEDOU LAKHDAR', 'عبد الرحمان', 'جدو لخضر', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056533', 5, 14, 'Abdelkader', 'MEZAINI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056533.jpg'),
-('120240056551', 1, 4, 'Ibrahim', 'NOUIDJAM', 'إبراهيم', 'نويجم', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056553', 1, 2, 'Abd Alah', 'HOUARI', 'عبد الله', 'هواري', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056574', 5, 14, 'Abdelwahab', 'KELLAZE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056574.jpg'),
-('120240056576', 5, 13, 'Mokhtar', 'DJEDAOUI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056576.jpg'),
-('120240056577', 5, 15, 'Mobarake', 'BEN BEAIRI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056577.jpg'),
-('120240056578', 5, 15, 'Abdennour', 'KENOUDI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056578.jpg'),
-('120240056583', 1, 4, 'Kossay', 'TIRACHE', 'قصي', 'طيرش', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056586', 1, 4, 'Roufeida', 'AMIA', 'رفيدة', 'عمية', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056593', 1, 3, 'Fares', 'KARFAOUI', 'فارس', 'قرفاوي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056598', 1, 4, 'Mouhamed Elaid', 'ZAHANI', 'محمد العيد', 'زهاني', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056601', 1, 2, 'Moslim', 'FADEL', 'مسلم', 'فاضل', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056603', 1, 2, 'Hamza', 'NADJI', 'حمزة', 'ناجي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056614', 1, 2, 'Ali Saif Elislem', 'DJALAL', 'علي سيف الإسلام', 'جلال', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056617', 1, 4, 'Yahia Sofiane', 'DAHAL', 'يحيى سفيان', 'داهل', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056618', 1, 4, 'Ilham', 'HAOUASS', 'إلهام', 'حواص', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056631', 1, 1, 'Sid Ahemed', 'HAMADOUCH', 'سيد أحمد', 'حمادوش', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056635', 1, 3, 'Meroua', 'KERROUCHE', 'مروة', 'كروش', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056638', 1, 1, 'Imad Eddinn', 'HADJ YAHYA', 'عماد الدين', 'حاج يحيى', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056640', 1, 3, 'Rahim', 'SMAIL', 'رحيم', 'سماعيل', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056650', 5, 16, 'Mohammed Anis', 'BOUFRIWA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056650.jpg'),
-('120240056652', 5, 13, 'Younes', 'LAHOUM', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056652.jpg'),
-('120240056659', 5, 16, 'Yahia', 'ZAHANI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056659.jpg'),
-('120240056688', 1, 1, 'Redouwane', 'CHAREF ', 'رضوان', 'شارف', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056697', 5, 14, 'Yacine', 'GHOMRANI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056697.jpg'),
-('120240056701', 5, 16, 'Mostapha', 'ADDOU', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056701.jpg'),
-('120240056702', 5, 15, 'Ali', 'CHEBILI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056702.jpg'),
-('120240056703', 5, 14, 'Walid', 'REMMID', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056703.jpg'),
-('120240056708', 5, 14, 'Salah Eddine', 'BOU ABDELLAH', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056708.jpg'),
-('120240056770', 1, 3, 'Salah Eddine', 'BELKHIR', 'صلاح الدين', 'بلخير', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056772', 1, 3, 'Diaa Eddine', 'KRELOUF', 'ضياء الدين', 'كرلوف', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056774', 1, 1, 'Siradj Eddin', 'HADJI', 'سراج الدين', 'حاجي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056782', 1, 2, 'Ahmad Sami', 'TAYAB', 'أحمد سامي', 'طيب', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056787', 1, 2, 'Yasser', 'WALD TORKI', 'ياسر', 'ولد تركي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056788', 1, 2, 'Imad Eddinn', 'MBARKI', 'عماد الدين', 'مباركي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056790', 1, 2, 'Aboubaker', 'KASEM', 'أبو بكر', 'قاسم', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056792', 1, 3, 'Sid Ahmed', 'RAHMANI', 'سيد احمد', 'رحماني', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056802', 1, 2, 'Nabil', 'CHIRIFI', 'نبيل', 'شريفي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056806', 1, 4, 'Haythem', 'GHODBANE', 'هيثم', 'غضبان', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056812', 1, 4, 'Masaab', 'HAMOUDI', 'مصعب', 'حمودي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056824', 5, 13, 'Abdelkader', 'BELHADJ', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056824.jpg'),
-('120240056826', 5, 15, 'Lakhdar', 'BELLIL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056826.jpg'),
-('120240056849', 5, 16, 'Khalil Rahmane', 'MERINE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056849.jpg'),
-('120240056865', 5, 16, 'Fares', 'OUASSEI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056865.jpg'),
-('120240056869', 1, 1, 'Mohamed Ysaad', 'RGUIGUE', 'محمد يسعد', 'رقيق', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056875', 1, 1, 'Yasmine', 'SAFI', 'ياسمين', 'صافي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056879', 1, 4, 'Ibrahim Abd Elwadoud', 'SEDIKI', 'إبراهيم عبد الودود', 'صديقي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056883', 5, 15, 'Khaled Elmiloud', 'SERBAH', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056883.jpg'),
-('120240056892', 1, 1, 'Haj Ali', 'ABD ELWAHEB', 'الحاج علي', 'عبد الوهاب', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056893', 5, 16, 'Abdelhak', 'ABED', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056893.jpg'),
-('120240056901', 5, 16, 'Imadeddine', 'ARFAOUI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056901.jpg'),
-('120240056923', 1, 3, 'Douaa', 'CHAREF', 'دعاء', 'شارف', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056931', 5, 14, 'Abdelmalek', 'DJELOUL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056931.jpg'),
-('120240056940', 5, 13, 'Okacha', 'GHEWWAL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056940.jpg'),
-('120240056952', 5, 14, 'Ismail', 'HIRECHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056952.jpg'),
-('120240056954', 5, 15, 'Messoud', 'HOUACINE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056954.jpg'),
-('120240056958', 5, 14, 'Mohamed', 'KERMASS', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056958.jpg'),
-('120240056972', 1, 4, 'Ismail', 'BEN ABD ERRAHMAN', 'إسماعيل', 'بن عبد الرحمان', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056980', 1, 1, 'Walid', 'FENI', 'وليد', 'فني', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240056981', 5, 14, 'Douaa', 'FEZIOUI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056981.jpg'),
-('120240056985', 5, 16, 'Mohamed Amine', 'KADI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056985.jpg'),
-('120240056995', 5, 14, 'Eltayeb', 'TALBAOUI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240056995.jpg'),
-('120240057009', 5, 16, 'Imad Dinne', 'BENSAHA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057009.jpg'),
-('120240057023', 1, 1, 'Ahmad Soulaimane Abd Elsamad', 'DOUA', 'احمد سليمان عبد الصمد', 'دوة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057025', 1, 1, 'Mohamed Taha', 'KASSASI', 'محمد طه', 'كساسي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057026', 1, 4, 'Taher Yacine', 'BOUZID', 'طاهر ياسين', 'بوزيد', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057028', 1, 3, 'Abdou', 'HALOUFI', 'عبدو', 'حلوفي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057034', 5, 14, 'Mohamed Taki Dinne', 'ADOUANE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057034.jpg'),
-('120240057064', 1, 1, 'Mourad', 'ZAMOUCH', 'مراد', 'زمّوش', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057078', 1, 3, 'Abdellkader', 'DAROUICHE', 'عبد القادر', 'درويش', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057083', 5, 14, 'Sami', 'KELLALIB', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057083.jpg'),
-('120240057091', 5, 16, 'Houssem Dinne', 'LEBBI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057091.jpg'),
-('120240057102', 1, 3, 'Ilyes', 'ELAATACHI', 'إلياس', 'العطاشي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057211', 5, 15, 'Salah', 'RAHMANIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057211.jpg'),
-('120240057212', 5, 15, 'Abderaouf', 'SARRI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057212.jpg'),
-('120240057213', 5, 16, 'Mahfoud', 'BERAHAL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057213.jpg'),
-('120240057276', 5, 16, 'Islam', 'BOURAGAA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057276.jpg'),
-('120240057277', 5, 13, 'Khaled', 'BOULAHIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057277.jpg'),
-('120240057278', 5, 13, 'Mohamed Islam', 'CHACHOUA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057278.jpg'),
-('120240057279', 5, 13, 'Houssem Eldinne', 'MEAIZIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057279.jpg'),
-('120240057280', 5, 15, 'Salah Dinne', 'AMI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057280.jpg'),
-('120240057281', 5, 15, 'Harroune', 'ROUABEHIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057281.jpg'),
-('120240057282', 5, 13, 'Mohammed Elbachir', 'FETHALLAH AYMEN', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057282.jpg'),
-('120240057283', 5, 13, 'Houssem Eddine', 'MADI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057283.jpg'),
-('120240057284', 5, 14, 'Taki Eddine', 'GOUASMIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057284.jpg'),
-('120240057320', 5, 13, 'Ahmed Rami', 'BOUSETTA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057320.jpg'),
-('120240057324', 5, 15, 'Salah Dinne', 'DAOUIDI AHMED', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057324.jpg'),
-('120240057354', 1, 3, 'Mahdi', 'KHINOOCHE', 'مهدي', 'خينوش', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057373', 5, 13, 'Haithem', 'HELLAIMIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057373.jpg'),
-('120240057374', 5, 16, 'Louai', 'CHEKROUCHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057374.jpg'),
-('120240057489', 1, 2, 'Zeyneb', 'CHERAIFIA', 'زينب', 'شرايفية', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057490', 1, 2, 'Sirine', 'BOULACHEB', 'سيرين', 'بولعشب', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057491', 1, 2, 'Ritadj', 'ABADLIA', 'رتاج', 'عبادلية', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057492', 1, 2, 'Anwar Ritadj', 'MERDAS', 'انوار رتاج', 'مرداس', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057493', 1, 4, 'Mohamed Raid', 'MOKHTARI', 'محمد رائد', 'مختاري', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057494', 1, 1, 'Reda', 'NOURI', 'رضا', 'نوي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057495', 1, 1, 'Mouhamed Taj Eddine', 'FOUGHALI', 'محمد تاج الدين', 'فوغالي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057496', 1, 2, 'Abderahmen', 'BEN NADJEA', 'عبد الرحمن', 'بن ناجع', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057497', 1, 4, 'Abd Erahman', 'GHAWI', 'عبد الرحمان', 'غاوي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057499', 1, 4, 'Abd Errahim', 'SAADI', 'عبد الرحيم', 'سعدي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057500', 1, 1, 'Islam', 'LESWED', 'اسلام', 'لسود', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057501', 1, 2, 'Eltaher', 'DJEBIRI', 'الطاهر', 'جبيري', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057502', 1, 2, 'Nour Elyakin', 'SAHIB IYED', 'نور اليقين', 'صحيب إياد', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057503', 1, 3, 'Moataz Bellah', 'SOLTANI', 'معتز بالله', 'سلطاني', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057571', 1, 2, 'Mohamed Nacer', 'TEKOUK', 'محمد الناصر', 'تكوك', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057589', 5, 15, 'Anouar', 'BEN IDRISS', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057589.jpg'),
-('120240057590', 5, 15, 'Hicham', 'DJEBAR', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057590.jpg'),
-('120240057591', 5, 13, 'Amhamed', 'LEHCENIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057591.jpg'),
-('120240057613', 1, 4, 'Nour Islem', 'CHEAAL', 'نور الإسلام', 'شعال', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057652', 5, 16, 'Morad', 'DJABER', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057652.jpg'),
-('120240057671', 1, 1, 'Kada', 'HAMMOU', 'قادة', 'حمّو', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057672', 1, 2, 'Mohamed Djawad', 'CHWARI', 'محمد جواد', 'شواري', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057673', 1, 4, 'Abd Elatif', 'BELGUENDOUZ', 'عبد الطيف', 'بلقندوز', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057682', 1, 2, 'Mokhtaria Ikram', 'DRIA', 'مختارية إكرام', 'دريع', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057683', 1, 4, 'Mohamed Anwar', 'HASAYAN', 'محمد انوار', 'حساين', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057684', 1, 3, 'Marouane Abd El Ilah', 'DARFOUF', 'مروان عبد الاله', 'درفوف', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057727', 5, 15, 'Ismailikbal', 'BOUJERAD', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057727.jpg'),
-('120240057728', 5, 15, 'Mohammed Elfarouk', 'ALARBAOUI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057728.jpg'),
-('120240057731', 5, 13, 'Aymen', 'BEN SEBAA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057731.jpg'),
-('120240057740', 1, 4, 'Mouhamed Mounir', 'BENYAMINA', 'محمد منير', 'بن يمينة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057751', 5, 14, 'Adnane', 'BEN KOUITEN', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057751.jpg'),
-('120240057752', 5, 13, 'Mohammed El Amine', 'BERRAHMA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057752.jpg'),
-('120240057753', 5, 15, 'Yassine', 'REMDANI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057753.jpg'),
-('120240057754', 5, 15, 'Ilyes', 'LARBI RAMZI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057754.jpg'),
-('120240057755', 5, 15, 'Abdelkader Zakaria', 'OUELDE BABA ALI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057755.jpg'),
-('120240057756', 5, 13, 'Nour Eddine', 'SAHOULI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057756.jpg'),
-('120240057780', 5, 13, 'Aymen', 'ATHAMNIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057780.jpg'),
-('120240057781', 5, 16, 'Abdel Kader', 'MAGHRAOUI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057781.jpg'),
-('120240057782', 5, 15, 'Mahfoud', 'BELMADANI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057782.jpg'),
-('120240057783', 5, 13, 'Yahia', 'JALTI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057783.jpg');
-INSERT INTO `student` (`STUDENT_SERIAL_NUMBER`, `CATEGORY_ID`, `SECTION_ID`, `STUDENT_FIRST_NAME_EN`, `STUDENT_LAST_NAME_EN`, `STUDENT_FIRST_NAME_AR`, `STUDENT_LAST_NAME_AR`, `STUDENT_GRADE_ID`, `STUDENT_SEX`, `STUDENT_BIRTH_DATE`, `STUDENT_BLOOD_TYPE`, `STUDENT_PERSONAL_PHONE`, `STUDENT_HEIGHT_CM`, `STUDENT_WEIGHT_KG`, `STUDENT_IS_FOREIGN`, `STUDENT_ACADEMIC_AVERAGE`, `STUDENT_SPECIALITY_ID`, `STUDENT_ACADEMIC_LEVEL_ID`, `STUDENT_BACCALAUREATE_SUB_NUMBER`, `STUDENT_EDUCATIONAL_CERTIFICATES`, `STUDENT_SCHOOL_SUB_DATE`, `STUDENT_SCHOOL_SUB_CARD_NUMBER`, `STUDENT_LAPTOP_SERIAL_NUMBER`, `STUDENT_BIRTHDATE_CERTIFICATE_NUMBER`, `STUDENT_ID_CARD_NUMBER`, `STUDENT_POSTAL_ACCOUNT_NUMBER`, `STUDENT_HEALTH_STATUS_ID`, `STUDENT_MILITARY_NECKLACE`, `STUDENT_NUMBER_OF_SIBLINGS`, `STUDENT_NUMBER_OF_SISTERS`, `STUDENT_ORDER_AMONG_SIBLINGS`, `STUDENT_ARMY_ID`, `STUDENT_ORPHAN_STATUS`, `STUDENT_PARENTS_SITUATION`, `STUDENT_BIRTH_PLACE_ID`, `STUDENT_PERSONAL_ADDRESS_ID`, `STUDENT_RECRUITMENT_SOURCE_ID`, `STUDENT_PHOTO`) VALUES
-('120240057792', 1, 1, 'Nor El Hoda', 'IBRIR', 'نور الهدى', 'إبرير', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057793', 1, 4, 'Amria', 'HADEF', 'عامرية', 'هادف', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057794', 1, 1, 'Chaia', 'BAKHTI', 'شائعة', 'بختي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057795', 1, 4, 'Yamina', 'DINAR', 'يمينة', 'دينار', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057796', 1, 3, 'Nesrine', 'KHALOUK', 'نسرين', 'خلوق', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057797', 1, 3, 'Maghnia', 'DRAOUI', 'مغنية', 'دراوي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057798', 1, 2, 'Aya', 'AZZEDDINE', 'آية', 'عز الدين', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057800', 5, 14, 'Oussama Ilyes', 'CHENAFA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057800.jpg'),
-('120240057808', 1, 4, 'Nesrine', 'CHIRIFI', 'نسرين', 'شريفي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057822', 5, 13, 'Abdelkarim', 'ZAIDI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057822.jpg'),
-('120240057831', 5, 14, 'Taher Bilal', 'AIT', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057831.jpg'),
-('120240057832', 5, 13, 'Boubaker', 'AKIL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057832.jpg'),
-('120240057866', 1, 1, 'Marouan', 'BOUDRAA', 'مروان', 'بودراع', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057871', 1, 1, 'Mehdi Alla Eddine', 'BOUTARA', 'مهدي علاء الدين', 'بوطارة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057876', 1, 2, 'Aymen', 'CHOUHMAMA', 'أيمن', 'شوحمامة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057878', 5, 14, 'Adlene', 'DEBAGHY', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240057878.jpg'),
-('120240057881', 1, 1, 'Nour Elyakin', 'DJEBAR', 'نور اليقين', 'جبار', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057900', 1, 4, 'Youcef Alaa Edin', 'HMISSI', 'يوسف علاء الدين', 'هميسي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057907', 1, 4, 'Bochra', 'LABAOUB', 'بشرى', 'العبعوب', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057935', 1, 2, 'Abdelkarim', 'RABAI', 'عبد الكريم', 'ربعي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057996', 1, 2, 'Djamal', 'MERRAH', 'جمال', 'مراح', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057997', 1, 2, 'Ferhat', 'BELKHIRI', 'فرحات', 'بلخيري', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057998', 1, 2, 'Mahai Addin', 'BALLOULA', 'محيي الدين', 'بلولة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240057999', 1, 2, 'Khalil', 'NAILI', 'خليل', 'نايلي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058000', 1, 1, 'Youcef', 'BELBACHA', 'يوسف', 'بلباشة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058001', 1, 1, 'Mouhamed Amine', 'BELKHIRI', 'محمد أمين', 'بلخيري', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058022', 1, 3, 'Oussama', 'LATRACH', 'أسامة', 'لطرش', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058023', 1, 4, 'Chihab Edin', 'BEN CHAIRA', 'شهاب الدين', 'بن شعيرة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058024', 1, 1, 'Oussama', 'CHALAT', 'أسامة', 'شلاط', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058027', 1, 1, 'Ahmad Zakaria', 'BAAZIZ ', 'احمد زكريا', 'بعزيز', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058028', 1, 2, 'Salah Eddine', 'GHRARA', 'صلاح الدين', 'غرارة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058029', 1, 3, 'Abd Eraouf', 'BOULOUH', 'عبد الرؤوف', 'بولوح', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058030', 1, 3, 'Yoossoof', 'FOOHAL', 'يوسف', 'فوحال', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058031', 1, 3, 'Adam', 'HADJIDJ', 'آدم', 'حجيج', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058032', 1, 2, 'Youcef', 'HARI', 'يوسف', 'هري', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058033', 1, 4, 'Abdelmonsef', 'SOUALA', 'عبد المنصف', 'صوالة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058034', 1, 4, 'Ishak', 'HOUAMED', 'إسحاق', 'حوامد', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058035', 1, 2, 'Abd Elmoumen', 'GHAKALI ', 'عبد المؤمن', 'غقالي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058036', 1, 3, 'Abd Enour', 'GUEDOUER', 'عبد النور', 'قدوار', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058071', 5, 16, 'Islam', 'YAHIAOUI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058071.jpg'),
-('120240058106', 5, 13, 'El Bachir', 'MAOUCHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058106.jpg'),
-('120240058130', 1, 3, 'Ahmer Ramy', 'SAKHARA', 'أحمر رامي', 'سخارة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058131', 1, 3, 'Yahia Mehdi', 'KHERBOUCHE', 'يحيى مهدي', 'خربوش', 25, 'Male', NULL, NULL, 'NULL', 0.00, 0.00, 'No', NULL, 1, 1, '', '', NULL, '', '', '', '', '', 3, 'No', 2, NULL, NULL, 2, 'None', 'Married', 19, 20, 1, 'resources\\photos\\students\\120240058131.jpg'),
-('120240058132', 1, 3, 'Abderrahmane', 'BECHAKA', 'عبد الرحمن', 'بشقة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058133', 1, 3, 'Younesse', 'BABA HNINI', 'يونس', 'بابا حنيني', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058136', 1, 3, 'Adem', 'BOUHALOUFA', 'آدم', 'بوحلوفة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058199', 1, 2, 'Mohamed Louai', 'SALHI', 'محمد لؤي', 'صالحي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058273', 1, 4, 'Abdassamed', 'SOUIAH', 'عبد الصمد', 'سويح', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058274', 1, 4, 'Rami', 'ZIYADI', 'رامي', 'زيادي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058308', 5, 13, 'Adem', 'BEKHOUCHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058308.jpg'),
-('120240058309', 5, 13, 'Anouir Chemssedine', 'KHERREDINE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058309.jpg'),
-('120240058310', 5, 16, 'Abdellah', 'TAFERGHOUST', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058310.jpg'),
-('120240058311', 5, 13, 'Tarek', 'DEHIMI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058311.jpg'),
-('120240058312', 5, 16, 'Zinedinne', 'KHEDHRI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058312.jpg'),
-('120240058313', 5, 16, 'Akrem', 'ADJNEF', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058313.jpg'),
-('120240058314', 5, 14, 'Oussama', 'EL AGOUNE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058314.jpg'),
-('120240058315', 5, 14, 'Mohamed Siffedinne', 'TERRICHENE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058315.jpg'),
-('120240058328', 1, 3, 'Aya', 'CHELLOUG', 'آية', 'شلوق', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058333', 1, 2, 'Raghad', 'KHENTOUCHE', 'رغد', 'خنتوش', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058334', 1, 2, 'Rofaida', 'BETAZ', 'رفيدة', 'بطاز', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058335', 1, 3, 'Nada', 'AIBECHE', 'ندى', 'عبيش', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058336', 1, 3, 'Ibtihal', 'BELMANAA', 'ابتهال', 'بلمانع', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058337', 1, 4, 'Ibrahim', 'MELAH', 'إبراهيم', 'ملاح', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058338', 1, 3, 'Chaima Serine', 'DAWI', 'شيماء سيرين', 'ضاوي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058339', 1, 4, 'Nour', 'BERKAN', 'نور', 'بركان', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058340', 1, 1, 'Chaima', 'KABA', 'شيماء', 'كابة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058341', 1, 4, 'Aya', 'DERBAL', 'آية', 'دربال', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058342', 1, 2, 'Moncef Bhaa Edin', 'BAATOUCHE', 'منصف بهاء الدين', 'بعطوش', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058349', 5, 13, 'Manar Eddine', 'ZEIIT', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058349.jpg'),
-('120240058350', 5, 13, 'Djaber', 'FEDJIJI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058350.jpg'),
-('120240058351', 5, 13, 'Ayyache', 'ALLOUACHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058351.jpg'),
-('120240058352', 5, 15, 'Mouad', 'NAAMOUN', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058352.jpg'),
-('120240058372', 5, 15, 'Alaadinne', 'BOUZENAK', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058372.jpg'),
-('120240058383', 1, 1, 'Sohaib', 'FATH ALAH', 'صهيب', 'فتح الله', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058403', 5, 13, 'Achref', 'BOUCHETILA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058403.jpg'),
-('120240058404', 5, 13, 'Radouane', 'BAEKIK', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058404.jpg'),
-('120240058405', 5, 16, 'Souhaib', 'OTHMANI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058405.jpg'),
-('120240058406', 5, 16, 'Mohamed Mahdi', 'SAIBE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058406.jpg'),
-('120240058407', 5, 14, 'Aymen', 'FADEN', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058407.jpg'),
-('120240058409', 5, 14, 'Siffedinne', 'HEDDAK', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058409.jpg'),
-('120240058466', 5, 16, 'Mohamed Amine', 'BAHRI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058466.jpg'),
-('120240058467', 1, 1, 'Mouhamed Abd Jalil', 'MSAADIYA', 'محمد عبد الجليل', 'مساعدية', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058470', 1, 3, 'Youcef Abd El Karim', 'RAHLAOUI', 'يوسف عبد الكريم', 'رحلاوي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058471', 1, 2, 'Hadjer Nadia', 'ARUUI', 'هاجر نادية', 'عروي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058490', 5, 16, 'Abdel Malek', 'BEL DJORRA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058490.jpg'),
-('120240058497', 5, 16, 'Ahmed Rami', 'HYDRA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058497.jpg'),
-('120240058513', 5, 13, 'Abdelillah Ibrahim', 'MOUFFAK', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058513.jpg'),
-('120240058529', 5, 15, 'Mohamed Amine', 'CHERRIT', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058529.jpg'),
-('120240058544', 5, 15, 'Boutaleb', 'AHMED BACHA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058544.jpg'),
-('120240058545', 5, 13, 'Oussama', 'GARN', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058545.jpg'),
-('120240058570', 5, 13, 'Hichem', 'REBBAHI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058570.jpg'),
-('120240058571', 5, 16, 'Oussama', 'MHIDI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\120240058571.jpg'),
-('120240058591', 1, 4, 'Mouhamed Elaid', 'ADILA ELMAKKI', 'محمد العيد', 'عديلة المكي', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058592', 1, 4, 'Ilyes', 'NAIL', 'إلياس', 'نايل', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058593', 1, 3, 'Mohamed Seddik', 'HOR ', 'محمد الصديق', 'حر', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058594', 1, 1, 'Mohamed Amine', 'GHOUNUMET', 'محمد امين', 'غنومات', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058595', 1, 3, 'Aboubaker Elsidik', 'ADIB FIRES', 'أبو بكر الصديق', 'أديب فراس', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058596', 1, 1, 'Mohamed Amine', 'KEROUCH', 'محمد امين', 'كروش', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058597', 1, 3, 'Noufel', 'MENAA', 'نوفل', 'مناع', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058611', 1, 4, 'Djilali', 'GHORBAL', 'جيلالي', 'غربال', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058613', 1, 3, 'Fatima', 'SAFA', 'فاطمة', 'صافة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058627', 1, 2, 'Chaima', 'BELAOUDJ', 'شيماء', 'بلعوج', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058628', 1, 1, 'Alaa', 'ASSIA', 'آلاء', 'عاسية', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120240058630', 1, 1, 'Islem Abd Kader', 'MAAROUF', 'إسلام عبد القادر', 'معروف', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('120250058025', 1, 4, 'Adem', 'BOULAABIZA', 'ادم', 'بولعبيزة', 25, '', '0000-00-00', '', 'NULL', 0.00, 0.00, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, NULL),
-('155550034598', 3, 9, 'Nabil', 'BOUKOUCHA ', 'نبيل', 'بوكوشة ', 25, 'Male', '2002-09-22', 'A+', '666649105', 1.00, 70.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '2022-10-18', 'NULL', 'NULL', 'NULL', '100021284007940000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents155550034598.jpg'),
-('166660034598', 3, 9, 'Abderahmen', 'SAYAH', 'السايح', 'عبد الرحمان ', 25, 'Female', '2005-10-04', '', '667183898', 1.00, 69.00, 'No', 0.00, 2, 1, '32087306', 'شهادة البكالوريا', '2022-10-17', 'NULL', '7716', 'NULL', '100050029057720000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents166660034598.jpg'),
-('177770034598', 3, 9, 'Mohamed Essedik', 'LEMBARKIYA', 'لمباركية ', 'محمد الصديق ', 25, 'Male', '2005-02-19', 'O+', '674008747', 1.00, 69.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '2022-10-23', 'NULL', 'NULL', 'NULL', '100050117014790000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents177770034598.jpg'),
-('200713002004', 8, 18, 'Ahmed', 'HAMMOUDI', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200713002004.jpg'),
-('200721006300', 8, 18, 'Issam', 'KHENCHOUL', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200721006300.jpg'),
-('200740003853', 8, 18, 'Nabil', 'BENDJEMAA', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200740003853.jpg'),
-('200743003854', 8, 18, 'Nadir', 'BOUHENACHE', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200743003854.jpg'),
-('200748002655', 8, 18, 'Mohamed El Amine', 'BESMI', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200748002655.jpg'),
-('200802002259', 8, 18, 'Abderrahmen', 'FERHANE', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200802002259.jpg'),
-('200821005894', 8, 18, 'Ismail', 'HALILOU', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200821005894.jpg'),
-('200822002603', 8, 18, 'Mustapha', 'BOUDALI', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200822002603.jpg'),
-('200825004743', 8, 18, 'Hamza', 'MELKI', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200825004743.jpg'),
-('200829001680', 8, 18, 'Djamel-Eddine', 'MOKEDDEM', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200829001680.jpg'),
-('200830001115', 8, 18, 'Ismail', 'BOUANANE', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200830001115.jpg'),
-('200836005980', 8, 18, 'Mohamed Amine', 'SAIHIA', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200836005980.jpg'),
-('200841005873', 8, 18, 'Med Amine', 'REDJIMI', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200841005873.jpg'),
-('200848003190', 8, 18, 'Ahmed', 'BELACEL', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200848003190.jpg'),
-('200906001225', 8, 18, 'Kamel', 'CHACHOU', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200906001225.jpg'),
-('200919001224', 8, 18, 'Abdelghafor', 'SAOUEL', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200919001224.jpg'),
-('200927003853', 8, 18, 'Noureddine', 'MENAD', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200927003853.jpg'),
-('200943006531', 8, 18, 'Khaled', 'BENAIDJA', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\200943006531.jpg'),
-('201004005158', 8, 18, 'Bilal', 'AOUADI', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201004005158.jpg'),
-('201031003041', 8, 18, 'Ihab', 'SOUALMIA', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201031003041.jpg'),
-('201108000974', 8, 18, 'Yasser', 'HENEMI', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201108000974.jpg'),
-('201113003705', 8, 18, 'Mehdi', 'BENAMARA', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201113003705.jpg'),
-('201123008654', 8, 18, 'Mohamed Sofiane', 'LIHOUM', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201123008654.jpg'),
-('201143006207', 8, 18, 'Abdelhadi', 'BOUDENE', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201143006207.jpg'),
-('201146003712', 8, 18, 'Mohamed Amine', 'CHERAKA', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201146003712.jpg'),
-('201207002207', 6, 20, 'Houssameddine', 'LAKEHAL', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201207002207.jpg'),
-('201211000108', 8, 18, 'Mohamed Tadj Eddine', 'DJAZI', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201211000108.jpg'),
-('201222004822', 8, 18, 'Zakaria', 'BEN YELLES', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201222004822.jpg'),
-('201227004628', 6, 20, 'Ahmed', 'MEDJAHED', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201227004628.jpg'),
-('201246004626', 8, 18, 'Ahmed Imad Eddine', 'KADA', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201246004626.jpg'),
-('201314006126', 8, 18, 'Ahmed Sami', 'BLAHA', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201314006126.jpg'),
-('201418009237', 6, 20, 'Abdelmoumen', 'BOUCHEFIRAT', NULL, NULL, 9, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201418009237.jpg'),
-('201516001644', 6, 20, 'Djafer', 'MEDJAHED', NULL, NULL, 9, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201516001644.jpg'),
-('201528010169', 6, 20, 'Hosam', 'TIAIBA', NULL, NULL, 9, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201528010169.jpg'),
-('201531004695', 6, 20, 'Sid Ahmed', 'SENHADJI', NULL, NULL, 9, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201531004695.jpg'),
-('201604008528', 6, 20, 'Salah Eddine', 'LARBES', NULL, NULL, 9, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201604008528.jpg'),
-('201610010530', 6, 20, 'Yacine', 'DJEMAOUNE', '', '', 9, NULL, NULL, 'AB+', '', 1.75, 85.00, 'No', NULL, NULL, NULL, '', '', NULL, '', '', '', '', '', NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, 'resources\\photos\\students\\201610010530.jpg'),
-('201613005064', 6, 20, 'Oussama', 'KERMAD', NULL, NULL, 9, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201613005064.jpg'),
-('201621010864', 6, 20, 'Aymene', 'HALLACI', NULL, NULL, 9, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201621010864.jpg'),
-('201621011562', 6, 20, 'Sid-Ali', 'MECHRI', NULL, NULL, 9, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201621011562.jpg'),
-('201624010980', 6, 20, 'Nedjmeddine', 'BOUZITOUNA', NULL, NULL, 9, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201624010980.jpg'),
-('201624011011', 6, 20, 'Mouhammed Fakhr El-I', 'MESSEN', NULL, NULL, 9, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201624011011.jpg'),
-('201625008299', 6, 20, 'Mohamed Aymene', 'BOUCHAHM', NULL, NULL, 9, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201625008299.jpg'),
-('201635001597', 6, 20, 'Adlene', 'ARAB', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201635001597.jpg'),
-('201643008377', 6, 20, 'Mouhamed', 'KEZIOU', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201643008377.jpg'),
-('201813003814', 6, 20, 'Mohammed', 'MENDIL', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\201813003814.jpg'),
-('202101001019', 5, 16, 'Tiabe', 'OULED ALI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202101001019.jpg'),
-('202102010733', 5, 15, 'Islam', 'SEFSAFA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202102010733.jpg'),
-('202102010997', 5, 15, 'Mohamed', 'CHERRIF BEN FERRAH', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202102010997.jpg'),
-('202102011055', 5, 14, 'Ahmed', 'BEN DAOUADIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202102011055.jpg'),
-('202102011066', 5, 15, 'Ayoub', 'ANTAR', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202102011066.jpg'),
-('202104006875', 5, 15, 'Islam', 'BOUMEDJOU', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202104006875.jpg'),
-('202105006632', 5, 13, 'Moncef Attaa Allah', 'BELKHADRIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202105006632.jpg'),
-('202105006985', 5, 13, 'Khelife', 'BEN ALIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202105006985.jpg'),
-('202106001460', 5, 14, 'Farouk', 'SAMEOUNE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202106001460.jpg'),
-('202108401040', 5, 13, 'Hand', 'BOUDARSA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202108401040.jpg'),
-('202109011033', 5, 15, 'Mohamed', 'KHELFI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202109011033.jpg'),
-('202109011138', 5, 13, 'Fares', 'SAMET', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202109011138.jpg'),
-('202110011057', 5, 14, 'Fares', 'SEGHIR', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202110011057.jpg'),
-('202110011128', 5, 16, 'Abdelkader', 'SERIDJE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202110011128.jpg'),
-('202111400087', 5, 14, 'Amira', 'KESSAB', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202111400087.jpg'),
-('202112009135', 5, 15, 'Walid', 'BOUROUBA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202112009135.jpg'),
-('202112009140', 5, 13, 'Ali', 'SAHRANE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202112009140.jpg'),
-('202113005590', 5, 14, 'Ahmed', 'BENTENNAH', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202113005590.jpg'),
-('202113005655', 5, 13, 'Achref', 'KILAL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202113005655.jpg');
-INSERT INTO `student` (`STUDENT_SERIAL_NUMBER`, `CATEGORY_ID`, `SECTION_ID`, `STUDENT_FIRST_NAME_EN`, `STUDENT_LAST_NAME_EN`, `STUDENT_FIRST_NAME_AR`, `STUDENT_LAST_NAME_AR`, `STUDENT_GRADE_ID`, `STUDENT_SEX`, `STUDENT_BIRTH_DATE`, `STUDENT_BLOOD_TYPE`, `STUDENT_PERSONAL_PHONE`, `STUDENT_HEIGHT_CM`, `STUDENT_WEIGHT_KG`, `STUDENT_IS_FOREIGN`, `STUDENT_ACADEMIC_AVERAGE`, `STUDENT_SPECIALITY_ID`, `STUDENT_ACADEMIC_LEVEL_ID`, `STUDENT_BACCALAUREATE_SUB_NUMBER`, `STUDENT_EDUCATIONAL_CERTIFICATES`, `STUDENT_SCHOOL_SUB_DATE`, `STUDENT_SCHOOL_SUB_CARD_NUMBER`, `STUDENT_LAPTOP_SERIAL_NUMBER`, `STUDENT_BIRTHDATE_CERTIFICATE_NUMBER`, `STUDENT_ID_CARD_NUMBER`, `STUDENT_POSTAL_ACCOUNT_NUMBER`, `STUDENT_HEALTH_STATUS_ID`, `STUDENT_MILITARY_NECKLACE`, `STUDENT_NUMBER_OF_SIBLINGS`, `STUDENT_NUMBER_OF_SISTERS`, `STUDENT_ORDER_AMONG_SIBLINGS`, `STUDENT_ARMY_ID`, `STUDENT_ORPHAN_STATUS`, `STUDENT_PARENTS_SITUATION`, `STUDENT_BIRTH_PLACE_ID`, `STUDENT_PERSONAL_ADDRESS_ID`, `STUDENT_RECRUITMENT_SOURCE_ID`, `STUDENT_PHOTO`) VALUES
-('202114006827', 5, 16, 'Ihab Mohamed Amine', 'HADDOU', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202114006827.jpg'),
-('202114006911', 5, 13, 'Ibrahim El Khalil', 'BOURAHLI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202114006911.jpg'),
-('202114006913', 5, 14, 'Mohamed', 'CHETOUANE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202114006913.jpg'),
-('202114006951', 5, 16, 'Abderahmane', 'ZIANI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202114006951.jpg'),
-('202114006953', 5, 13, 'Ahmed', 'OUANASS', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202114006953.jpg'),
-('202114007237', 5, 13, 'Safi Rahmane', 'HARIR AHMED', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202114007237.jpg'),
-('202114406909', 5, 16, 'Khouala', 'DJABE LAH', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202114406909.jpg'),
-('202114406950', 5, 13, 'Sabah', 'BOUDJELIDA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202114406950.jpg'),
-('202116001592', 5, 13, 'Haithem', 'SAIDI HIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202116001592.jpg'),
-('202116001616', 5, 13, 'Mohamed Raouf', 'BIRI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202116001616.jpg'),
-('202116001618', 5, 16, 'Idriss', 'BOUAROUDJ', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202116001618.jpg'),
-('202116001621', 5, 13, 'Ait Khedache', 'AZZEDINE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202116001621.jpg'),
-('202116001625', 5, 13, 'Abdelghani', 'BOUDJELIDA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202116001625.jpg'),
-('202116001644', 5, 16, 'Mohamed Abdelghani', 'BELACEL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202116001644.jpg'),
-('202116001660', 5, 15, 'Abdelraouf', 'NADJI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202116001660.jpg'),
-('202116001715', 5, 14, 'Walid', 'KERAIRIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202116001715.jpg'),
-('202117011125', 5, 16, 'Saleh Bachir', 'BEN AHRECHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202117011125.jpg'),
-('202118007064', 5, 14, 'Wassime', 'HANACHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202118007064.jpg'),
-('202118007545', 5, 13, 'Akrem', 'MEFTAH', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202118007545.jpg'),
-('202119001521', 5, 16, 'Dalil Dinne Raki', 'DOUHI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202119001521.jpg'),
-('202120004245', 5, 14, 'Mohhamed Nadir', 'AMARI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202120004245.jpg'),
-('202120404190', 5, 16, 'Hadil', 'KAID', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202120404190.jpg'),
-('202121008827', 5, 14, 'Mohamed Aymen', 'BETASE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202121008827.jpg'),
-('202121009095', 5, 15, 'Kheiredine', 'METTATLA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202121009095.jpg'),
-('202121009133', 5, 16, 'Marouane', 'BOUHOUCHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202121009133.jpg'),
-('202121009137', 5, 14, 'Oussama', 'HADJAL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202121009137.jpg'),
-('202122005589', 5, 13, 'Youcef', 'AMROUNE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202122005589.jpg'),
-('202122005645', 5, 13, 'Farouk', 'SETOUTI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202122005645.jpg'),
-('202122005657', 5, 14, 'Wael', 'TANEM', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202122005657.jpg'),
-('202122005676', 5, 15, 'Abdel Aziz', 'KAID FAYCEL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202122005676.jpg'),
-('202123009114', 5, 13, 'Mohamed Ouallaa Dine', 'DJEDID', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202123009114.jpg'),
-('202123009139', 5, 15, 'Ayoube', 'MAKHLOUF', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202123009139.jpg'),
-('202124009136', 5, 13, 'Abdelkader', 'DJAHEMI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202124009136.jpg'),
-('202124409138', 5, 14, 'Ikram', 'ATTAILIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202124409138.jpg'),
-('202125007107', 5, 14, 'Anis Abdenour', 'BENAISSA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202125007107.jpg'),
-('202125007127', 5, 14, 'Ahmed Abdeldjaber', 'SAHELI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202125007127.jpg'),
-('202126011072', 5, 16, 'Zakaria', 'SLIMANI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202126011072.jpg'),
-('202127005592', 5, 15, 'Oussama', 'AISSA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202127005592.jpg'),
-('202128011021', 5, 13, 'Noure El Sadate', 'DAKHOUCHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202128011021.jpg'),
-('202128011049', 5, 14, 'Ayoube', 'HAFFAF', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202128011049.jpg'),
-('202129004202', 5, 16, 'Abdelkader', 'MASSIOUNE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202129004202.jpg'),
-('202129004241', 5, 16, 'Djilali', 'MOUSSAOUI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202129004241.jpg'),
-('202129404231', 5, 15, 'Nidhal', 'BOULILA ', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202129404231.jpg'),
-('202129404240', 5, 15, 'Mokhtaria Samia', 'BENYOUCEF MOKHTARIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202129404240.jpg'),
-('202131005573', 5, 14, 'Marouane', 'SETOUTI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202131005573.jpg'),
-('202131005587', 5, 14, 'Mohamed', 'RAHAL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202131005587.jpg'),
-('202131005591', 5, 14, 'Achref', 'BERREFAS', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202131005591.jpg'),
-('202131405586', 5, 15, 'Cheriffa', 'NEDJAR AMBARAK', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202131405586.jpg'),
-('202131405609', 5, 13, 'Maria', 'HAMADI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202131405609.jpg'),
-('202132004203', 5, 16, 'Youcef', 'ZAOUI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202132004203.jpg'),
-('202132004234', 5, 16, 'Khelifa', 'MOULLAY', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202132004234.jpg'),
-('202136008969', 5, 15, 'Charaf Dinne', 'DJEBAILI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202136008969.jpg'),
-('202136009134', 5, 16, 'Imad Dinne', 'SACI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202136009134.jpg'),
-('202138006985', 5, 15, 'Younes', 'BELAICEL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202138006985.jpg'),
-('202138406980', 5, 15, 'Bouchra', 'AISSE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202138406980.jpg'),
-('202138406994', 5, 16, 'Masouada', 'BOUDJAIBA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202138406994.jpg'),
-('202140007174', 5, 16, 'Abderahim', 'ATTIL', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202140007174.jpg'),
-('202141408956', 5, 16, 'Alaa', 'KHOUFACHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202141408956.jpg'),
-('202141409232', 5, 14, 'Sarah', 'ROUANIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202141409232.jpg'),
-('202142401672', 5, 16, 'Kaouther', 'SAIHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202142401672.jpg'),
-('202142401691', 5, 16, 'Rima', 'BERKANE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202142401691.jpg'),
-('202143007214', 5, 16, 'Aymen', 'KERBACHE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202143007214.jpg'),
-('202143007219', 5, 14, 'Youcef', 'SABAA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202143007219.jpg'),
-('202144011007', 5, 15, 'Mohamed', 'KRIOU', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202144011007.jpg'),
-('202144011077', 5, 13, 'Abderazek', 'BOUZERARI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202144011077.jpg'),
-('202144011102', 5, 13, 'Abdenacer', 'MAHI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202144011102.jpg'),
-('202146005588', 5, 15, 'Meliani', 'SIDI OUIS', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202146005588.jpg'),
-('202147002407', 5, 14, 'Walid', 'KHEDIME', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202147002407.jpg'),
-('202147002408', 5, 15, 'Abdelkarime', 'DAOUIDI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202147002408.jpg'),
-('202148007030', 5, 13, 'Mohamed Rida', 'DIMIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202148007030.jpg'),
-('202148007031', 5, 14, 'Ryadh Abdelillah', 'BELFAKRET', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202148007031.jpg'),
-('202148007039', 5, 15, 'Mohamed', 'DAHMANE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202148007039.jpg'),
-('202148007046', 5, 14, 'Mohamed El Amine', 'BOUFFEDA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202148007046.jpg'),
-('202148007644', 5, 13, 'Hichem', 'BERGIGUE', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\202148007644.jpg'),
-('202202011141', 3, 12, 'Sid Ahmed', 'ADDA', 'سيد أحمد', 'عدة ', 25, 'Male', '2004-09-15', 'O+', '674945552', 1.00, 70.00, 'No', 0.00, 2, 1, '32102518', 'شهادة البكالوريا', '2022-10-17', 'NULL', '5914', 'NULL', '100040029058910000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202202011141.jpg'),
-('202202011150', 3, 12, 'Oudai', 'TAMIMOUNT', 'عدي ', 'تاميمونت ', 25, 'Male', '2004-10-10', 'A+', '667810816', 1.00, 69.00, 'No', 0.00, 2, 1, '32023219', 'شهادة البكالوريا', '2022-09-27', 'NULL', '1750', 'NULL', '100040029063770000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202202011150.jpg'),
-('202202011160', 3, 11, 'Hakim', 'GENDOUZE', 'حكيم ', 'قندوز', 25, 'Male', '2004-11-07', 'O+', '784458219', 1.00, 75.00, 'No', 0.00, 2, 1, '32041408', 'شهادة البكالوريا', '2022-10-24', 'NULL', '5920', 'NULL', '100040044014460000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202202011160.jpg'),
-('202202011161', 3, 12, 'Zohir', 'ELKHROMCHEN', 'زهير ', 'الخرمشن', 25, 'Male', '2004-11-17', 'A+', '666828127', 1.00, 65.00, 'No', 0.00, 2, 1, '32057901', 'شهادة البكالوريا', '2022-10-17', 'NULL', '5879', 'NULL', '100040029071720000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202202011161.jpg'),
-('202202011164', 3, 9, 'Sid Ahmed Yacine', 'BESSAIEH', 'سيد أحمد ياسين ', 'بسايح ', 25, 'Male', '2004-11-21', 'O+', '664494094', 1.00, 88.00, 'No', 0.00, 2, 1, '32049308', 'شهادة البكالوريا', '0000-00-00', 'NULL', '5923', 'NULL', '100040063003340000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202202011164.jpg'),
-('202202011193', 3, 11, 'Ahmed', 'TAHER DJEBAR', 'أحمد', 'طاهر جبار ', 25, 'Male', '2005-05-24', 'O+', '557524770', 1.00, 73.00, 'No', 0.00, 2, 1, '32030304', 'شهادة البكالوريا', '2022-10-16', 'NULL', 'NULL', 'NULL', '100050048000330000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202202011193.jpg'),
-('202202411165', 3, 9, 'Farida', 'FEKIRI', 'فريدة ', 'فقيري ', 25, 'Female', '0000-00-00', '', '', 1.00, 58.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040031003160000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202202411165.jpg'),
-('202205006789', 3, 11, 'Abd El Hak', 'CHIRA', 'عبد الحق ', 'شعيرة ', 25, 'Male', '2004-09-18', 'A+', '658923084', 1.00, 75.00, 'No', 0.00, 2, 1, '37336309', 'شهادة البكالوريا', '2022-09-28', 'NULL', 'NULL', 'NULL', '100040117080590000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202205006789.jpg'),
-('202205006796', 3, 10, 'Nedjm Eddin', 'SLIMANI', 'نجم الدين ', 'سليماني ', 25, 'Male', '2004-07-15', 'O+', '664287265', 1.00, 72.00, 'No', 0.00, 2, 1, '35352515', 'شهادة البكالوريا', '2022-09-29', 'NULL', '1832', 'NULL', '100040135012280000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202205006796.jpg'),
-('202205006811', 3, 11, 'Nasim', 'SASI', 'نسيم ', 'ساسي ', 25, 'Male', '2004-06-25', 'O+', '696073825', 1.00, 69.00, 'No', 0.00, 2, 1, '35023005', 'شهادة البكالوريا', '2022-10-16', 'NULL', 'NULL', 'NULL', '100040117048820000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202205006811.jpg'),
-('202205006833', 3, 11, 'Islem', 'ZERARI', 'إسلام ', 'زراري ', 25, 'Male', '2004-04-23', 'O+', '665666645', 1.00, 54.00, 'No', 0.00, 2, 1, '35352113', 'شهادة البكالوريا', '2022-09-29', 'NULL', '5928', 'NULL', '100040117028440000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202205006833.jpg'),
-('202205006836', 3, 12, 'Mohamed Haithem', 'AOUTTI', 'محمد هيثم ', 'عوتي ', 25, 'Male', '2004-06-23', 'A+', '793732834', 1.00, 85.00, 'No', 0.00, 2, 1, '35355304', 'شهادة البكالوريا', '2022-09-29', 'NULL', '5934', 'NULL', '100040117048020000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202205006836.jpg'),
-('202205006839', 3, 9, 'Farouk', 'BENBIA', 'فاروق ', 'بن بية', 25, 'Male', '2004-06-20', 'O+', '668464003', 1.00, 78.00, 'No', 0.00, 2, 1, '35355218', 'شهادة البكالوريا', '2022-09-29', 'NULL', 'NULL', 'NULL', '100040145000700000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202205006839.jpg'),
-('202205006874', 3, 10, 'Ahmed Ilyes', 'DAHMANI', 'أحمد إلياس ', 'دحماني ', 25, 'Male', '2004-07-11', 'A+', '674602816', 1.00, 62.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '2022-09-27', 'NULL', '5915', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202205006874.jpg'),
-('202205006895', 3, 12, 'Abd El Hamid', 'BEN ARIBA', 'عبد الحميد', 'بن عريبة ', 25, 'Male', '2005-02-04', 'O+', '673869709', 1.00, 69.00, 'No', 0.00, 2, 1, '35353919', 'شهادة البكالوريا', '2022-09-29', 'NULL', '5871', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202205006895.jpg'),
-('202205406882', 3, 9, 'Malek', 'DEY DOUNIA', 'ملاك ', 'داي دنيا ', 25, 'Female', '0000-00-00', '', '793065304', 1.00, 58.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040152016240000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202205406882.jpg'),
-('202206001541', 3, 11, 'Mohamed', 'AGNANA', 'محمد ', 'أقنانة ', 25, 'Male', '2004-10-01', 'B+', '794445199', 1.00, 57.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '2022-09-27', 'NULL', '5945', 'NULL', '100040178003798000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202206001541.jpg'),
-('202207002697', 3, 10, 'Ayoub Zaid', 'SOUISI', 'أيوب زيد', 'سويسي ', 25, 'Male', '2004-03-12', 'O+', '699704604', 1.00, 77.00, 'No', 0.00, 2, 1, '35242808', 'شهادة البكالوريا', '2022-10-23', 'NULL', '1805', 'NULL', '100040252006730000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202207002697.jpg'),
-('202207402698', 3, 9, 'Feriel', 'AOUDJIT', 'فريال', 'اوجيت ', 25, 'Female', '0000-00-00', '', '', 1.00, 70.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110030230035920000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202207402698.jpg'),
-('202209010979', 3, 12, 'Hocine', 'BOUROUBA', 'حسين ', 'بوروبة ', 25, 'Male', '2002-04-26', 'AB+', '667181004', 1.00, 81.00, 'No', 0.00, 2, 1, '32169906', 'شهادة البكالوريا', '2022-10-16', 'NULL', '2753', 'NULL', '100020284027530000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202209010979.jpg'),
-('202209010985', 3, 12, 'Morad', 'HADJ MOHAMED ZAHAFI', 'مراد', 'حاج محمد ', 25, 'Male', '2003-10-27', 'B+', '558263259', 1.00, 80.00, 'No', 0.00, 2, 1, '32507403', 'شهادة البكالوريا', '2022-10-23', 'NULL', '1817', 'NULL', '100020284058250000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202209010985.jpg'),
-('202209010987', 3, 12, 'Hocine Anis', 'CHELLAF', 'حسين أنيس ', 'شلاف ', 25, 'Male', '2002-08-16', 'A-', '550247080', 1.00, 69.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '100020284060750000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202209010987.jpg'),
-('202209011181', 3, 9, 'Ayoub', 'FDAILAINNE', 'أيوب', 'فضلاين ', 25, 'Male', '2005-01-20', 'A+', '670902975', 1.00, 80.00, 'No', 0.00, 2, 1, '32137118', 'شهادة البكالوريا', '2022-09-27', 'NULL', '1766', 'NULL', '100050284006810000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202209011181.jpg'),
-('202210011001', 3, 10, 'Mohamed Anis', 'MOSLIM', 'محمد أنيس ', 'مسلم ', 25, 'Male', '2003-02-01', 'O+', '792621472', 1.00, 95.00, 'No', 0.00, 2, 1, '31400409', 'شهادة البكالوريا', '2022-10-16', 'NULL', '5910', 'NULL', '100030337001330000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202210011001.jpg'),
-('202210011012', 3, 12, 'Islem', 'DAII', 'إسلام ', 'داعي ', 25, 'Male', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202210011012.jpg'),
-('202210411095', 3, 10, 'Fatna', 'SAHRAOUI', 'فاطنة ', 'صحراوي ', 25, 'Female', '0000-00-00', '', '', 1.00, 65.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040352007110000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202210411095.jpg'),
-('202211400074', 3, 11, 'Hiba Alrahmane', 'FASSEKH', 'هيبة الرحمان', 'فاسخ ', 25, 'Female', '0000-00-00', '', '674165539', 1.00, 57.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110043035401919000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202211400074.jpg'),
-('202212008857', 3, 12, 'Zakaria', 'MERRAH', 'زكرياء ', 'مراح ', 25, 'Male', '2004-03-25', 'O+', '673931381', 1.00, 86.00, 'No', 0.00, 2, 1, '34118404', 'شهادة البكالوريا', '2022-10-23', 'NULL', '1166', 'NULL', '100040364011660000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202212008857.jpg'),
-('202212008859', 3, 11, 'Akram Abd Errezak', 'SLIMI', 'أكرم عبدالرزاق ', 'سليمي', 25, 'Male', '2004-02-06', 'O+', '656771059', 1.00, 85.00, 'No', 0.00, 2, 1, '32137106', 'شهادة البكالوريا', '2022-09-27', 'NULL', '1755', 'NULL', '100040365000206000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202212008859.jpg'),
-('202212300123', 3, 10, 'Nathan Ntenzou', 'EUGENE', 'نثان نتنزو ', 'إيقن ', 25, 'Male', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202212300123.jpg'),
-('202212300124', 3, 10, 'Christavel Marie Ful', 'NKEOUA', 'كريستيفال ماري فيل ', 'نكوا', 25, 'Male', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202212300124.jpg'),
-('202212300125', 3, 10, 'Steve Dylan', 'TCHIDJE', 'ستيف ديلان', 'تشيدج ', 25, 'Male', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202212300125.jpg'),
-('202213005467', 3, 9, 'Rabeh Mohamed El Ami', 'BOUKHATEM', 'رابح محمد العلمي', 'بوخاتم ', 25, 'Male', '2002-08-22', 'O+', '658357351', 1.00, 75.00, 'No', 0.00, 2, 1, '37207804', 'شهادة البكالوريا', '2022-10-17', 'NULL', '5900', 'NULL', '100020392047700000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202213005467.jpg'),
-('202213005551', 3, 12, 'Mohamed Chakib', 'MAZAR', 'محمد شكيب ', 'مزار ', 25, 'Male', '2004-10-10', 'O-', '549506987', 1.00, 70.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '2022-09-27', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202213005551.jpg'),
-('202213405572', 3, 10, 'Nihad Lamis', 'BENIECHOU', 'نهاد لميس ', 'بن يشو ', 25, 'Female', '0000-00-00', '', '797790223', 1.00, 65.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040392061540000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202213405572.jpg'),
-('202214406239', 3, 12, 'Nafissa', 'BELLAHRECHE', 'نفيسة ', 'بلحرش ', 25, 'Female', '0000-00-00', '', '', 1.00, 63.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040469004630000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202214406239.jpg'),
-('202214406251', 3, 9, 'Sara', 'SADOUN', 'سارة ', 'سعدون ', 25, 'Female', '0000-00-00', '', '', 1.00, 59.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110050460008230000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202214406251.jpg'),
-('202215011094', 3, 9, 'Masinisa', 'FELISI', 'ماسنيسا ', 'فليسي ', 25, 'Male', '2004-04-27', 'A+', '778743764', 1.00, 70.00, 'No', 0.00, 2, 1, '32137911', 'شهادة البكالوريا', '2022-09-27', 'NULL', '5913', 'NULL', '100040494003660000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202215011094.jpg'),
-('202216001559', 3, 9, 'Chems Eddin', 'BOU ABD ELLAH', 'شمس الدين ', 'بوعيدالله', 25, 'Male', '2003-12-25', 'O+', '774121328', 1.00, 65.00, 'No', 0.00, 2, 1, '32536011', 'شهادة البكالوريا', '2022-10-25', 'NULL', '5850', 'NULL', '100030572073930000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216001559.jpg'),
-('202216001560', 3, 12, 'Haithem', 'DJAIDAR', 'هيثم ', 'جعيدر ', 25, 'Male', '2004-08-04', 'B+', '779290635', 1.00, 78.00, 'No', 0.00, 2, 1, '32138015', 'شهادة البكالوريا', '2022-09-27', 'NULL', 'NULL', 'NULL', '100040593017750000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216001560.jpg'),
-('202216001564', 3, 11, 'Sohaib', 'BEN GHENNAM', 'صهيب ', 'بن غنام ', 25, 'Male', '2004-06-16', 'AB+', '542784212', 1.00, 57.00, 'No', 0.00, 2, 1, '37331504', 'شهادة البكالوريا', '2022-09-28', 'NULL', 'NULL', 'NULL', '100040555037420000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216001564.jpg'),
-('202216001573', 3, 12, 'Taha Mohamed Fouad', 'GERROUNI', 'طه محمد فؤاد', 'قروني ', 25, 'Male', '2003-11-09', 'A+', '794629628', 1.00, 69.00, 'No', 0.00, 2, 1, '31212101', 'شهادة البكالوريا', '2022-10-16', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216001573.jpg'),
-('202216001580', 3, 12, 'Anis', 'IMEKREZ', 'أنيس ', 'إمكراز ', 25, 'Male', '2004-02-18', 'A+', '', 1.00, 62.00, 'No', 0.00, 2, 1, '37331015', 'شهادة البكالوريا', '2022-09-28', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216001580.jpg'),
-('202216001624', 3, 9, 'Abd El Hamid', 'MEDDAN', 'عبد الحميد ', 'مدان ', 25, 'Male', '2003-09-23', 'O+', '661853797', 1.00, 71.00, 'No', 0.00, 2, 1, '31234412', 'شهادة البكالوريا', '2022-10-24', 'NULL', '5946', 'NULL', '100030572056040000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216001624.jpg'),
-('202216001730', 3, 10, 'Abd El Ilah', 'NEDJADI', 'عبدالإله', 'نجادي ', 25, 'Male', '0000-00-00', 'A+', '792578906', 1.00, 65.00, 'No', 0.00, 2, 1, '37333915', 'شهادة البكالوريا', '2022-09-22', 'NULL', 'NULL', 'NULL', '100040596031590000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216001730.jpg'),
-('202216001735', 3, 9, 'Mohamed Mondir', 'GRAIRIA', 'محمد منذر', 'قرايرية ', 25, 'Male', '2004-05-29', 'O+', '657028057', 1.00, 70.00, 'No', 0.00, 2, 1, '37331812', 'شهادة البكالوريا', '2022-10-28', 'NULL', 'NULL', 'NULL', '100040581030770000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216001735.jpg'),
-('202216001763', 3, 12, 'Iheb', 'BEN AMER BEN YOUCEF', 'إيهاب ', 'بن عمر بن يوسف ', 25, 'Male', '2003-11-20', 'A+', '773758143', 1.00, 78.00, 'No', 0.00, 2, 1, '32246215', 'شهادة البكالوريا', '2022-09-27', 'NULL', '5930', 'NULL', '100030566010150000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216001763.jpg'),
-('202216401642', 3, 12, 'Maria', 'MOUHOUBI', 'مارية ', 'موهوبي ', 25, 'Female', '0000-00-00', '', '', 1.00, 65.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216401642.jpg'),
-('202216401760', 3, 9, 'Hadjila El Firdaous', 'KEDDAR', 'حجيلة الفردوس', 'قدار ', 25, 'Female', '0000-00-00', '', '', 1.00, 56.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040581046000000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216401760.jpg'),
-('202216401761', 3, 10, 'Fatiha', 'CHOUDAR', 'فتيحة ', 'شودار ', 25, 'Female', '0000-00-00', '', '', 1.00, 65.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040602007410000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216401761.jpg'),
-('202216401764', 3, 11, 'Zohra Ines', 'BAALI', 'زهرة إناس ', 'بعلي ', 25, 'Female', '0000-00-00', '', '663503796', 1.00, 68.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040571043660000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202216401764.jpg'),
-('202217011176', 3, 10, 'Abd El Fettah Ahmed', 'MISAOUI', 'عبد الفتاح احمد ', 'ميساوي ', 25, 'Male', '2005-01-01', 'A+', '558483218', 1.00, 57.00, 'No', 0.00, 2, 1, '39528211', 'شهادة البكالوريا', '2022-10-19', 'NULL', 'NULL', 'NULL', '100050611000230000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202217011176.jpg'),
-('202218006935', 3, 11, 'Mouhib', 'RAHEL', 'مهيب ', 'رحال ', 25, 'Male', '2004-10-01', 'B+', '660809098', 1.00, 78.00, 'No', 0.00, 2, 1, '32141202', 'شهادة البكالوريا', '2022-09-27', 'NULL', '1775', 'NULL', '100040652018100000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202218006935.jpg'),
-('202218006936', 3, 10, 'Soufien', 'AMIRA', 'سفيان ', 'عميرة', 25, 'Male', '2004-10-27', 'O+', '675444837', 1.00, 75.00, 'No', 0.00, 2, 1, '33245001', 'شهادة البكالوريا', '2022-10-16', 'NULL', '5825', 'NULL', '100040647034490000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202218006936.jpg'),
-('202219001637', 3, 12, 'Abd Errahim', 'FAREH', 'عبد الرحيم ', 'فارح ', 25, 'Male', '2004-07-05', 'B+', '777813971', 1.00, 68.00, 'No', 0.00, 2, 1, '35355216', 'شهادة البكالوريا', '2022-09-29', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202219001637.jpg'),
-('202219001643', 3, 11, 'Seif Eddine', 'BOUASIDI', 'سيف لدين ', 'بوعصيدي ', 25, 'Male', '2004-09-04', 'O+', '783193267', 1.00, 81.00, 'No', 0.00, 2, 1, '35352318', 'شهادة البكالوريا', '2022-09-29', 'NULL', '1727', 'NULL', '100040675078610000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202219001643.jpg'),
-('202219401590', 3, 10, 'Nour El Houda', 'KOUSSA', 'نورالهدي ', 'كوسة ', 25, 'Female', '0000-00-00', '', '675445933', 1.00, 74.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040690028200000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202219401590.jpg'),
-('202220004029', 3, 9, 'Abd Ennaser', 'OMRANI', 'عبدالناصر ', 'عمراني ', 25, 'Male', '2003-08-04', 'O+', '674064136', 1.00, 65.00, 'No', 0.00, 2, 1, '38109809', 'شهادة البكالوريا', '2022-10-13', 'NULL', '1867', 'NULL', '100030748002220000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202220004029.jpg'),
-('202220004036', 3, 9, 'Zohir', 'KADHI', 'زهير ', 'قاضي ', 25, 'Male', '2004-02-08', 'B+', '792048157', 1.00, 65.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '2022-10-23', 'NULL', '1785', 'NULL', '100040735005010000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202220004036.jpg'),
-('202221008853', 3, 9, 'Badr Eddine', 'ABD ENNOURI', 'بدرالدين', 'عبد النوري', 25, 'Male', '2004-06-07', 'A+', '793048717', 1.00, 69.00, 'No', 0.00, 2, 1, '32137304', 'شهادة البكالوريا', '2022-10-16', 'NULL', '5883', 'NULL', '100040773011390000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202221008853.jpg'),
-('202221008854', 3, 9, 'Mohamed Abd El Malek', 'ELASOUI', 'محمد عبد المالك ', 'العصوي', 25, 'Male', '2003-09-02', 'B+', '660835991', 1.00, 78.00, 'No', 0.00, 2, 1, '36095016', 'شهادة البكالوريا', '2022-10-16', 'NULL', 'NULL', 'NULL', '100040145008700000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202221008854.jpg'),
-('202221008860', 3, 11, 'Haithem', 'FELLOUS', 'هيثم ', 'فلوس ', 25, 'Male', '2004-08-30', 'A+', '674479255', 1.00, 75.00, 'No', 0.00, 2, 1, '35352607', 'شهادة البكالوريا', '2022-09-29', 'NULL', '1762', 'NULL', '100040781000550000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202221008860.jpg'),
-('202221008983', 3, 12, 'Abd El Hakim', 'TAYBHLAYES', 'عبد الحكيم ', 'الطيب حلايس ', 25, 'Male', '2005-01-04', 'O-', '783259062', 1.00, 81.00, 'No', 0.00, 2, 1, '35355215', 'شهادة البكالوريا', '2022-09-29', 'NULL', '1851', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202221008983.jpg'),
-('202221008986', 3, 10, 'Ahcen', 'HADJI', 'أحسن', 'حاجي ', 25, 'Male', '2004-11-03', 'AB+', '783802791', 1.00, 72.00, 'No', 0.00, 2, 1, '32142101', 'شهادة البكالوريا', '2022-09-27', 'NULL', '5971', 'NULL', '100040757017260000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202221008986.jpg'),
-('202222005566', 3, 11, 'Mohamed Merouane', 'BOUSMAHA', 'محمد مروان ', 'بوسماحة ', 25, 'Male', '2004-04-25', 'A+', '667986780', 1.00, 54.00, 'No', 0.00, 2, 1, '38287910', 'شهادة البكالوريا', '2022-11-15', 'NULL', '5958', 'NULL', '100040789020229000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202222005566.jpg'),
-('202222405466', 3, 9, 'Douaa', 'BEN ABBOU', 'دعاء', 'بن عبو ', 25, 'Female', '0000-00-00', '', '698756869', 1.00, 57.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040789043740000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202222405466.jpg'),
-('202222405570', 3, 10, 'Meriem Achouak', 'BAGHDADI', 'مريم أشواق ', 'بغدادي ', 25, 'Female', '0000-00-00', '', '697591863', 1.00, 50.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110050789002230000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202222405570.jpg'),
-('202223008858', 3, 9, 'Abd Errahim', 'AMER', 'عبد الرحيم', 'عامر', 25, 'Male', '2005-03-19', 'O+', '655979522', 1.00, 82.00, 'No', 0.00, 2, 1, '36156620', 'شهادة البكالوريا', '2022-10-23', 'NULL', '5800', 'NULL', '100041049024340000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202223008858.jpg'),
-('202223008861', 3, 11, 'Haithem', 'BORDJEM', 'هيثم ', 'برجم ', 25, 'Male', '2004-06-04', 'A+', '698377775', 1.00, 67.00, 'No', 0.00, 2, 1, '32138004', 'شهادة البكالوريا', '2022-09-27', 'NULL', '5849', 'NULL', '100040841040360000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202223008861.jpg'),
-('202224008855', 3, 12, 'Moncef', 'SMAALI', 'منصف ', 'سماعلي ', 25, 'Male', '2003-07-18', 'A+', '666095154', 1.00, 65.00, 'No', 0.00, 2, 1, '36262403', 'شهادة البكالوريا', '2022-10-16', 'NULL', '1832', 'NULL', '100030855005570000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202224008855.jpg'),
-('202224008974', 3, 10, 'Nadir', 'ZIMOUCH', 'نذير ', 'زيموش ', 25, 'Male', '2005-01-25', 'A+', '654102379', 1.00, 73.00, 'No', 0.00, 2, 1, '32138005', 'شهادة البكالوريا', '2022-09-27', 'NULL', '5964', 'NULL', '100050853002930000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202224008974.jpg'),
-('202225006944', 3, 12, 'Fadi Bahaa Eddine', 'BELHAWES', 'فادي بهاء الدين', 'بلحواس   ', 25, 'Male', '2005-01-04', 'B+', '698811407', 1.00, 70.00, 'No', 0.00, 2, 1, '35354110', 'شهادة البكالوريا', '2022-09-29', 'NULL', '5882', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202225006944.jpg'),
-('202225006975', 3, 12, 'Mostafa', 'TAABOUCHE', 'مصطفى ', 'طعبوش ', 25, 'Male', '2004-06-28', 'O+', '667147723', 1.00, 69.00, 'No', 0.00, 2, 1, '32142420', 'شهادة البكالوريا', '2022-09-27', 'NULL', '1761', 'NULL', '100040887089550000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202225006975.jpg'),
-('202225006979', 3, 12, 'Sid Ali', 'DJEDDAR', 'سيد علي ', 'جدار ', 25, 'Male', '2003-02-24', 'A+', '', 0.00, 0.00, 'No', 0.00, 2, 1, '34253913', 'شهادة البكالوريا', '2022-10-24', 'NULL', '5897', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202225006979.jpg'),
-('202225006997', 3, 11, 'Maher', 'MELLIT', 'ماهر ', 'مليط ', 25, 'Male', '2004-05-26', 'A+', '540076748', 1.00, 74.00, 'No', 0.00, 2, 1, '35355301', 'شهادة البكالوريا', '2022-09-29', 'NULL', 'NULL', 'NULL', '100040887068430000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202225006997.jpg'),
-('202225406977', 3, 12, 'Yousra Rym', 'BECHIRI', 'يسرى ريم ', 'بشيري ', 25, 'Female', '0000-00-00', '', '552853884', 1.00, 51.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040887090160000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202225406977.jpg'),
-('202226011111', 3, 10, 'Mohamed', 'BEN MESSOUD', 'محمد', 'بن مسعود ', 25, 'Male', '2004-06-18', 'A+', '796393086', 1.00, 75.00, 'No', 0.00, 2, 1, '32271510', 'شهادة البكالوريا', '2022-10-20', 'NULL', '5903', 'NULL', '100040899022430000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202226011111.jpg'),
-('202226011188', 3, 9, 'Abd El Basset', 'ZEKRINI', 'عبد الباسط ', 'زكريني', 25, 'Male', '2005-03-23', 'O+', '544789138', 1.00, 74.00, 'No', 0.00, 2, 1, '32305705', 'شهادة البكالوريا', '2022-10-16', 'NULL', '1763', 'NULL', '100050907002400000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202226011188.jpg'),
-('202226411087', 3, 11, 'Ines', 'CHABANI', 'إناس ', 'شعباني ', 25, 'Female', '0000-00-00', '', '781454580', 1.00, 56.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040899013490000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202226411087.jpg'),
-('202226411098', 3, 10, 'Ines', 'STOUTAH', 'إناس ', 'سطوطح ', 25, 'Female', '0000-00-00', '', '659503585', 1.00, 65.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202226411098.jpg'),
-('202228011064', 3, 11, 'Haithem', 'BERRABH', 'هيثم ', 'برابح ', 25, 'Male', '2004-01-14', 'O+', '670214701', 1.00, 76.00, 'No', 0.00, 2, 1, '35603415', 'شهادة البكالوريا', '2022-10-16', 'NULL', '5884', 'NULL', '100041001000210000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202228011064.jpg');
-INSERT INTO `student` (`STUDENT_SERIAL_NUMBER`, `CATEGORY_ID`, `SECTION_ID`, `STUDENT_FIRST_NAME_EN`, `STUDENT_LAST_NAME_EN`, `STUDENT_FIRST_NAME_AR`, `STUDENT_LAST_NAME_AR`, `STUDENT_GRADE_ID`, `STUDENT_SEX`, `STUDENT_BIRTH_DATE`, `STUDENT_BLOOD_TYPE`, `STUDENT_PERSONAL_PHONE`, `STUDENT_HEIGHT_CM`, `STUDENT_WEIGHT_KG`, `STUDENT_IS_FOREIGN`, `STUDENT_ACADEMIC_AVERAGE`, `STUDENT_SPECIALITY_ID`, `STUDENT_ACADEMIC_LEVEL_ID`, `STUDENT_BACCALAUREATE_SUB_NUMBER`, `STUDENT_EDUCATIONAL_CERTIFICATES`, `STUDENT_SCHOOL_SUB_DATE`, `STUDENT_SCHOOL_SUB_CARD_NUMBER`, `STUDENT_LAPTOP_SERIAL_NUMBER`, `STUDENT_BIRTHDATE_CERTIFICATE_NUMBER`, `STUDENT_ID_CARD_NUMBER`, `STUDENT_POSTAL_ACCOUNT_NUMBER`, `STUDENT_HEALTH_STATUS_ID`, `STUDENT_MILITARY_NECKLACE`, `STUDENT_NUMBER_OF_SIBLINGS`, `STUDENT_NUMBER_OF_SISTERS`, `STUDENT_ORDER_AMONG_SIBLINGS`, `STUDENT_ARMY_ID`, `STUDENT_ORPHAN_STATUS`, `STUDENT_PARENTS_SITUATION`, `STUDENT_BIRTH_PLACE_ID`, `STUDENT_PERSONAL_ADDRESS_ID`, `STUDENT_RECRUITMENT_SOURCE_ID`, `STUDENT_PHOTO`) VALUES
-('202228011114', 3, 10, 'Mehdi', 'WARDI', 'مهدي ', 'وردي ', 25, 'Male', '2004-06-28', 'A+', '672905130', 1.00, 63.00, 'No', 0.00, 2, 1, '32141201', 'شهادة البكالوريا', '2022-09-27', 'NULL', 'NULL', 'NULL', '100040995027630000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202228011114.jpg'),
-('202228011134', 3, 11, 'Abd Erraouf', 'DAHDOUH', 'عبد الرؤوف ', 'دحدوح ', 25, 'Male', '2004-08-22', 'A+', '668627026', 1.00, 76.00, 'No', 0.00, 2, 1, '37334001', 'شهادة البكالوريا', '2022-09-28', 'NULL', '5919', 'NULL', '100041022029130000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202228011134.jpg'),
-('202228411100', 3, 11, 'Douaa Soujoud', 'HALITIM', 'دعاء سجود ', 'حليتيم ', 25, 'Female', '0000-00-00', '', '657599006', 1.00, 70.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041022014470000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202228411100.jpg'),
-('202229004059', 3, 10, 'Mostafa', 'KERBOUCH', 'مصطفى ', 'كربوش ', 25, 'Male', '2004-08-05', 'A+', '778293472', 1.00, 60.00, 'No', 0.00, 2, 1, '38342308', 'شهادة البكالوريا', '2022-10-17', 'NULL', 'NULL', 'NULL', '100041049020150000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202229004059.jpg'),
-('202229004066', 3, 12, 'Omar El Farouk', 'KADA', 'عمر الفاروق ', 'قادة ', 25, 'Male', '2004-09-20', 'O+', '', 0.00, 0.00, 'No', 0.00, 2, 1, '37334207', 'شهادة البكالوريا', '2022-09-28', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202229004066.jpg'),
-('202229404080', 3, 12, 'Khouloud', 'FERHAT', 'خلود ', 'فرحات ', 25, 'Female', '0000-00-00', '', '696460236', 1.00, 67.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041049031020000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202229404080.jpg'),
-('202231005574', 3, 10, 'Mohamed Abd Errahmen', 'MOKHTARI', 'محمد عبد الرحمان ', 'مختاري ', 25, 'Male', '2004-06-06', 'A+', '659145586', 1.00, 67.00, 'No', 0.00, 2, 1, '37331809', 'شهادة البكالوريا', '2022-09-28', 'NULL', '5972', 'NULL', '100041110059020000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202231005574.jpg'),
-('202231005575', 3, 9, 'Younes', 'MEHDI', 'يونس ', 'مهدي ', 25, 'Male', '2004-06-14', 'AB+', '', 0.00, 0.00, 'No', 0.00, 2, 1, '37335803', 'شهادة البكالوريا', '2022-10-28', 'NULL', '5926', 'NULL', '100041110062790000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202231005575.jpg'),
-('202231405469', 3, 12, 'Wissal', 'ZEROUGAT', 'وصال ', 'زروقات ', 25, 'Female', '0000-00-00', '', '', 0.00, 0.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202231405469.jpg'),
-('202231405470', 3, 11, 'Kheira', 'BEZZAOUCHA', 'خيرة ', 'بزاوشة ', 25, 'Female', '0000-00-00', '', '661405326', 1.00, 58.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202231405470.jpg'),
-('202231405481', 3, 11, 'Sarah', 'HADJ AHMED', 'سارة ', 'حاج أحمد ', 25, 'Female', '0000-00-00', '', '784296441', 1.00, 60.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '130041110119180000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202231405481.jpg'),
-('202231405571', 3, 12, 'Oum Kaltoum', 'BELHEDJ', 'أم كلثوم ', 'بلحاج ', 25, 'Female', '0000-00-00', '', '669326655', 1.00, 60.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041110102640000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202231405571.jpg'),
-('202231405573', 3, 12, 'Djeffal Zohra', 'DAHNOUN', 'جفال زهرة ', 'دهنون ', 25, 'Female', '0000-00-00', '', '793036324', 1.00, 68.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041110040360000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202231405573.jpg'),
-('202231405576', 3, 10, 'Amina', 'OUIDHAH', 'أمينة ', 'ويضاح ', 25, 'Female', '0000-00-00', '', '665913244', 1.00, 64.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041110090640000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202231405576.jpg'),
-('202232004042', 3, 9, 'Walid', 'MILOUDI', 'وليد ', 'ميلودي ', 25, 'Male', '2004-03-30', 'B+', '773722992', 1.00, 92.00, 'No', 0.00, 2, 1, '32421808', 'شهادة البكالوريا', '2022-10-23', 'NULL', 'NULL', 'NULL', '100041152001260000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202232004042.jpg'),
-('202232404041', 3, 10, 'Ahlam', 'BENDJELLAL', 'أحلام ', 'بن جلال ', 25, 'Female', '0000-00-00', '', '668003741', 1.00, 57.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041152001230000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202232404041.jpg'),
-('202236008856', 3, 9, 'Akram Daiaa Eddine', 'SBATA', 'أكرم ضياء الدين ', 'سباتة', 25, 'Male', '2004-07-15', 'O+', '783959980', 1.00, 60.00, 'No', 0.00, 2, 1, '36270310', 'شهادة البكالوريا', '2022-10-17', 'NULL', 'NULL', 'NULL', '100041230004430000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202236008856.jpg'),
-('202238006261', 3, 12, 'Ilyes', 'BAADACH', 'إلياس ', 'بعداش ', 25, 'Male', '2004-08-23', 'O+', '665400827', 1.00, 78.00, 'No', 0.00, 2, 1, '32425202', 'شهادة البكالوريا', '2022-10-16', 'NULL', '5936', 'NULL', '100041271001050000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202238006261.jpg'),
-('202240007047', 3, 10, 'Abd Erraouf', 'BOTI', 'عبد الرؤوف', 'بوطي ', 25, 'Male', '2003-11-17', 'O-', '673023612', 1.00, 69.00, 'No', 0.00, 2, 1, '34371010', 'شهادة البكالوريا', '2022-10-19', 'NULL', '5807', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202240007047.jpg'),
-('202241008985', 3, 11, 'Oussama', 'DJELMOUDI', 'أسامة', 'جلمودي ', 25, 'Male', '2004-07-06', 'A+', '676867034', 1.00, 65.00, 'No', 0.00, 2, 1, '32137103', 'شهادة البكالوريا', '2022-09-27', '', '5942', 'NULL', '100041329021630000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202241008985.jpg'),
-('202241408987', 3, 11, 'Nadjette Nour Chems', 'HADDAD', 'نجاة نور شمس ', 'حداد ', 25, 'Female', '0000-00-00', '', '656733241', 1.00, 65.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041329013670000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202241408987.jpg'),
-('202241408988', 3, 10, 'Hadjer', 'KHEDIM', 'هاجر ', 'خديم ', 25, 'Female', '0000-00-00', '', '662505328', 1.00, 63.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041329010870000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202241408988.jpg'),
-('202242001567', 3, 10, 'Anis', 'SAIB', 'أنيس ', 'سايب ', 25, 'Male', '2003-08-14', 'A+', '670362562', 1.00, 73.00, 'No', 0.00, 2, 1, '32443017', 'شهادة البكالوريا', '2022-10-17', 'NULL', 'NULL', 'NULL', '100031381022540000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202242001567.jpg'),
-('202242001572', 3, 9, 'Youcef', 'TIDHAFI', 'يوسف', 'تيضافي ', 25, 'Male', '2004-03-29', 'A+', '674449963', 1.00, 75.00, 'No', 0.00, 2, 1, '32388819', 'شهادة البكالوريا', '2022-10-17', 'NULL', '1803', 'NULL', '100041365002470000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202242001572.jpg'),
-('202242001610', 3, 11, 'Haitham', 'MENNAI', 'هيثم ', 'مناعي ', 25, 'Male', '2004-07-23', 'B+', '660874365', 1.00, 90.00, 'No', 0.00, 2, 1, '32412806', 'شهادة البكالوريا', '2022-11-16', 'NULL', '5944', 'NULL', '100041356008180000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202242001610.jpg'),
-('202242401563', 3, 12, 'Nour El Houda', 'NEDJADI', 'نور الهدي ', 'نجادي ', 25, 'Female', '0000-00-00', '', '', 1.00, 62.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041381027730000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202242401563.jpg'),
-('202242401758', 3, 10, 'Sarab', 'BEN MADANI', 'سراب ', 'بن مداني ', 25, 'Female', '0000-00-00', '', '', 1.00, 51.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041381026440000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202242401758.jpg'),
-('202242401762', 3, 11, 'Douaa', 'BOUNACEUR', 'دعاء ', 'بوناصر ', 25, 'Female', '0000-00-00', '', '671527621', 1.00, 50.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202242401762.jpg'),
-('202243007072', 3, 12, 'Islem', 'BEN AZZEDINNE', 'إسلام ', 'بن عزالدين ', 25, 'Male', '2002-07-10', 'A+', '655869177', 1.00, 77.00, 'No', 0.00, 2, 1, '34480416', 'شهادة البكالوريا', '2022-11-02', 'NULL', '5893', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202243007072.jpg'),
-('202243007078', 3, 9, 'Yasser', 'ZOUID', 'ياسر', 'زويد', 25, 'Male', '2003-07-21', 'AB+', '673789853', 1.00, 85.00, 'No', 0.00, 2, 1, '34423014', 'شهادة البكالوريا', '2022-10-18', 'NULL', '1850', 'NULL', '100031383001970000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202243007078.jpg'),
-('202243007080', 3, 11, 'Walid', 'KESIR', 'وليد ', 'قصير ', 25, 'Male', '2003-06-25', 'O+', '674454518', 1.00, 84.00, 'No', 0.00, 2, 1, '34517903', 'شهادة البكالوريا', '2022-10-17', 'NULL', '5925', 'NULL', '100031389003300000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202243007080.jpg'),
-('202243007112', 3, 9, 'Mouin', 'NOUAR', 'معين', 'نوار ', 25, 'Male', '2003-06-03', 'AB+', '663077469', 1.00, 78.00, 'No', 0.00, 2, 1, '35465003', 'شهادة البكالوريا', '2022-09-29', 'NULL', '1839', 'NULL', '100031386011670000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202243007112.jpg'),
-('202243407110', 3, 9, 'Douaa', 'MESSALI', 'دعاء ', 'مسالي ', 25, 'Female', '0000-00-00', '', '673024209', 1.00, 59.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041386026290000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202243407110.jpg'),
-('202244010971', 3, 11, 'Abd Errahmen', 'MADANI', 'عبد الرحمان ', 'مداني ', 25, 'Male', '2002-02-27', 'B+', '772151816', 1.00, 79.00, 'No', 0.00, 2, 1, '32517915', 'شهادة البكالوريا', '2022-10-23', 'NULL', 'NULL', 'NULL', '100021429000780000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202244010971.jpg'),
-('202244010991', 3, 10, 'Imad Eddine', 'KIRAT', 'عماد الدين ', 'قيراط ', 25, 'Male', '2002-10-28', 'B+', '792621472', 1.00, 76.00, 'No', 0.00, 2, 1, '32525319', 'شهادة البكالوريا', '2022-10-16', 'NULL', 'NULL', 'NULL', '100021433007370000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202244010991.jpg'),
-('202244011075', 3, 10, 'Idriss', 'ZEROUAL', 'إدريس ', 'زروال ', 25, 'Male', '2004-03-09', 'A+', '792857053', 1.00, 67.00, 'No', 0.00, 2, 1, '37331101', 'شهادة البكالوريا', '2022-09-28', 'NULL', '1782', 'NULL', '100041415004760000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202244011075.jpg'),
-('202244011104', 3, 11, 'Abd Erraouf', 'SEDDOUKI', 'عبد الرؤوف ', 'صدوقي ', 25, 'Male', '2004-05-24', 'O+', '561461479', 1.00, 72.00, 'No', 0.00, 2, 1, '32496112', 'شهادة البكالوريا', '2022-10-18', 'NULL', 'NULL', 'NULL', '100041420008530000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202244011104.jpg'),
-('202244011131', 3, 9, 'Riad', 'GHAZALA', 'رياض', 'غزالة ', 25, 'Male', '2004-08-18', 'O+', '540136432', 1.00, 80.00, 'No', 0.00, 2, 1, '32470103', 'شهادة البكالوريا', '2022-10-17', 'NULL', 'NULL', 'NULL', '100041431008730000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202244011131.jpg'),
-('202244011149', 3, 12, 'Mohamed', 'YETTO', 'محمد ', 'يطو ', 25, 'Male', '2004-10-09', 'A+', '794854506', 1.00, 66.00, 'No', 0.00, 2, 1, '36262403', 'شهادة البكالوريا', '2022-10-17', 'NULL', '1833', 'NULL', '100041433006360000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202244011149.jpg'),
-('202244011169', 3, 10, 'Tahar', 'BEN KADA', 'طاهر ', 'بن قادة ', 25, 'Male', '2004-12-07', 'O+', '658743595', 1.00, 77.00, 'No', 0.00, 2, 1, '32496106', 'شهادة البكالوريا', '2022-10-20', 'NULL', '5904', 'NULL', '100041416028420000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202244011169.jpg'),
-('202244411192', 3, 10, 'Nezha', 'DINE', 'نزهة ', 'دين ', 25, 'Female', '0000-00-00', '', '', 1.00, 72.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110051431004080000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202244411192.jpg'),
-('202245004072', 3, 10, 'Azzeddin Redha', 'BHILIL', 'عزالدين رضا ', 'بهيليل ', 25, 'Male', '2004-10-01', 'O-', '771810943', 1.00, 67.00, 'No', 0.00, 2, 1, '38515913', 'شهادة البكالوريا', '2022-10-16', 'NULL', '5916', 'NULL', '100041452016230000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202245004072.jpg'),
-('202245004083', 3, 9, 'Mohamed El Arbi', 'ATBA DJELLOUL', 'محمد العربي ', 'عتبة جلول ', 25, 'Male', '2005-03-19', 'O+', '', 0.00, 0.00, 'No', 0.00, 2, 1, '37331212', 'شهادة البكالوريا', '2022-09-27', 'NULL', '5939', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202245004083.jpg'),
-('202246405468', 3, 12, 'Meroua', 'LANTRI', 'مروة ', 'لعنتري ', 25, 'Female', '0000-00-00', '', '674513757', 1.00, 67.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041479001890000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202246405468.jpg'),
-('202248006335', 3, 9, 'Omar', 'HADJ SMAHA', 'عمار ', 'حاج سماحة ', 25, 'Male', '2004-11-22', 'O+', '778588490', 1.00, 86.00, 'No', 0.00, 2, 1, '37548502', 'شهادة البكالوريا', '2022-10-16', 'NULL', '5932', 'NULL', '100041504042270000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202248006335.jpg'),
-('202248406313', 3, 9, 'Nour Yamina', 'SOUDANI', 'نوريمينة ', 'سوداني ', 25, 'Female', '0000-00-00', '', '', 1.00, 60.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041504033130000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202248406313.jpg'),
-('202248406314', 3, 10, 'Lalia', 'BEN SLAMA', 'العالية ', 'بن سلامة ', 25, 'Female', '0000-00-00', '', '795420317', 1.00, 52.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041504001830000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202248406314.jpg'),
-('202248406329', 3, 11, 'Romaissa', 'BEN AHMED', 'رميسة ', 'بن أحمد ', 25, 'Female', '0000-00-00', '', '669503915', 1.00, 54.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041504006850000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202248406329.jpg'),
-('202248406330', 3, 12, 'Dalila', 'BEN ADDA', 'دليلة ', 'بن عدة ', 25, 'Female', '0000-00-00', '', '558144281', 1.00, 55.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041536002110000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202248406330.jpg'),
-('202248406331', 3, 9, 'Heyam Radjaa', 'BEN HAMRA', 'هيام رجاء', 'بن حمرة ', 25, 'Male', '0000-00-00', '', '784373881', 1.00, 60.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110041532014800000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents202248406331.jpg'),
-('21', 3, 10, 'Ali Sohaib', 'DILMI', 'علي صهيب ', 'ديلمي ', 25, 'Male', '2005-01-20', 'A+', '553058202', 1.00, 80.00, 'No', 0.00, 2, 1, '31664311', 'شهادة البكالوريا', '2022-10-20', 'NULL', '1697', 'NULL', '100050571003210000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents21.jpg'),
-('22', 3, 10, 'Adel', 'MAAMRIA', 'عادل ', 'معامرية ', 25, 'Male', '2004-05-29', 'A+', '772266130', 1.00, 74.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '2022-09-28', 'NULL', 'NULL', 'NULL', '10004581030860000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents22.jpg'),
-('23', 3, 11, 'Mohammed Mahmoud', 'AHMED TALEB', 'محمد محمود ', 'أحمد طالب ', 25, 'Male', '0000-00-00', '', 'NULL', 0.00, 0.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', 'NULL', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents23.jpg'),
-('24', 3, 11, 'Chaimaa', 'BEKOUCHE', 'شيماء ', 'بكوش ', 25, 'Female', '0000-00-00', '', '697470677', 1.00, 56.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '0000-00-00', 'NULL', 'NULL', 'NULL', '110040853030420000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents24.jpg'),
-('25', 3, 11, 'Taha Abd El Bari', 'CHELOUG', 'طه عبد الباري ', 'شلوق ', 25, 'Male', '2003-01-08', 'A+', '675056251', 1.00, 90.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '2022-09-27', 'NULL', 'NULL', 'NULL', '100030093001000000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents25.jpg'),
-('26', 3, 11, 'Mohammed Lamine', 'FOUKA', 'محمد لمين ', 'فوقة ', 25, 'Male', '2004-01-18', 'B+', '562714321', 1.00, 65.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '2022-09-15', 'NULL', '5848', 'NULL', '100040640061600000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents26.jpg'),
-('27', 3, 11, 'Mohamed Abderaouf', 'GARECH', 'محمد عبد الرؤوف ', 'قارش ', 25, 'Male', '2022-11-22', 'A-', '774859655', 1.00, 66.00, 'No', 0.00, 2, 1, 'NULL', 'شهادة البكالوريا', '2022-10-18', 'NULL', 'NULL', 'NULL', '100020252024130000', 'NULL', 1, 'No', 0, 0, 0, 0, 'None', 'Married', 0, 0, 0, '\resourcesphotosstudents27.jpg'),
-('28753245363', 5, 13, 'Elhachmi', 'TARAFI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\28.jpg'),
-('29', 5, 13, 'Fadoua', 'HAMMAD', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\29.jpg'),
-('30', 5, 13, 'Rabiaa Rania', 'BEN SASSI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\30.jpg'),
-('31', 5, 13, 'Rahma', 'TSOURLI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\31.jpg'),
-('32', 5, 14, 'Koussay', 'SOLTANI', '', '', 10, NULL, NULL, NULL, '', NULL, NULL, 'No', NULL, NULL, NULL, '', '', NULL, '', '', '', '', '', NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, 'resources\\photos\\students\\32.jpg'),
-('33', 5, 14, 'Fatima', 'HAB EDDIN', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\33.jpg'),
-('34', 5, 14, 'Hasnaa', 'SAADAT', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\34.jpg'),
-('35', 5, 15, 'Abderrezak', 'SAIDI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\35.jpg'),
-('36', 5, 15, 'Faycel', 'BEN SAFIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\36.jpg'),
-('37', 5, 15, 'Widad', 'LAMAMRI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\37.jpg'),
-('38', 5, 15, 'Daima', 'MAHIA', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\38.jpg'),
-('39', 5, 15, 'Omar', 'ERKEB FADLI', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\39.jpg'),
-('40', 5, 16, 'Mohamed Anis', 'OULED DIAF', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\40.jpg'),
-('41', 5, 16, 'Achref Abd El Ilah', 'BARKAT', NULL, NULL, 10, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\41.jpg'),
-('42', 8, 18, 'Ndaba', 'KABVOUTA', NULL, NULL, 6, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\42.jpg'),
-('43', 8, 18, 'Rahma', 'AMMAR', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\43.jpg'),
-('44', 8, 18, 'Houssem Eddine', 'GASMIYA ', NULL, NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\44.jpg'),
-('45', 8, 18, 'Hasni Djemlan', 'TAROUT DJAMEL', NULL, NULL, 7, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'No', NULL, NULL, NULL, NULL, 'None', 'Married', NULL, NULL, NULL, '\\resources\\photos\\students\\45.jpg');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `student_combat_outfit`
+-- Table structure for table `student_combat_outfit`
 --
 
 DROP TABLE IF EXISTS `student_combat_outfit`;
@@ -3863,19 +572,10 @@ CREATE TABLE IF NOT EXISTS `student_combat_outfit` (
   PRIMARY KEY (`STUDENT_SERIAL_NUMBER`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `student_combat_outfit`
---
-
-INSERT INTO `student_combat_outfit` (`STUDENT_SERIAL_NUMBER`, `FIRST_OUTFIT_NUMBER`, `FIRST_OUTFIT_SIZE`, `SECOND_OUTFIT_NUMBER`, `SECOND_OUTFIT_SIZE`, `COMBAT_SHOE_SIZE`) VALUES
-('120240058131', '', '3m', '', '', ''),
-('201610010530', '', '', '', '', ''),
-('32', '', '', '', '', '');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `student_emergency_contact`
+-- Table structure for table `student_emergency_contact`
 --
 
 DROP TABLE IF EXISTS `student_emergency_contact`;
@@ -3894,23 +594,12 @@ CREATE TABLE IF NOT EXISTS `student_emergency_contact` (
   KEY `FK_EMERGENCY_STUDENT` (`STUDENT_SERIAL_NUMBER`),
   KEY `FK_EMERGENCY_ADDR` (`CONTACT_ADDRESS_ID`),
   KEY `FK_SEC_RELATION` (`CONTACT_RELATION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `student_emergency_contact`
---
-
-INSERT INTO `student_emergency_contact` (`EMERGENCY_CONTACT_ID`, `STUDENT_SERIAL_NUMBER`, `CONTACT_FIRST_NAME_EN`, `CONTACT_LAST_NAME_EN`, `CONTACT_FIRST_NAME_AR`, `CONTACT_LAST_NAME_AR`, `CONTACT_RELATION_ID`, `CONTACT_PHONE_NUMBER`, `CONTACT_ADDRESS_ID`, `CONSULATE_NUMBER`) VALUES
-(6, '123456', 'رانيا', 'HALFAOUI', 'رانيا', 'HALFAOUI', 1, '0550408987', 16, NULL),
-(7, '120240058131', '', '', '', '', 1, '', 18, NULL),
-(8, '201610010530', '', '', '', '', NULL, '', NULL, NULL),
-(9, '120230033075', '', '', '', '', NULL, '', NULL, NULL),
-(10, '32', '', '', '', '', NULL, '', NULL, NULL);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `student_gets_absent`
+-- Table structure for table `student_gets_absent`
 --
 
 DROP TABLE IF EXISTS `student_gets_absent`;
@@ -3921,72 +610,10 @@ CREATE TABLE IF NOT EXISTS `student_gets_absent` (
   KEY `FK_SGA_ABSENCE` (`ABSENCE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `student_gets_absent`
---
-
-INSERT INTO `student_gets_absent` (`STUDENT_SERIAL_NUMBER`, `ABSENCE_ID`) VALUES
-('120240058627', 1),
-('120240058333', 2),
-('120240057682', 3),
-('120240058471', 4),
-('120240057796', 5),
-('120240058613', 6),
-('120240057797', 7),
-('120240057798', 8),
-('120240056790', 9),
-('120240056470', 10),
-('120240057496', 11),
-('120240057996', 12),
-('120240050247', 13),
-('120240056182', 14),
-('202248006335', 15),
-('202232004042', 16),
-('202213005467', 17),
-('202223008858', 18),
-('202221008853', 19),
-('20', 20),
-('202236008856', 21),
-('120230032358', 22),
-('120230031411', 23),
-('120230032354', 24),
-('120230031329', 25),
-('120230031523', 26),
-('120230031114', 27),
-('120230033080', 28),
-('120230034598', 29),
-('120230032074', 30),
-('120230034053', 31),
-('120230032358', 32),
-('120230031411', 33),
-('120230032354', 34),
-('120230031329', 35),
-('120230031710', 36),
-('120230031523', 37),
-('120230031114', 38),
-('120230033994', 39),
-('120230033080', 40),
-('120230034598', 41),
-('120230032074', 42),
-('120230034053', 43),
-('120240057025', 44),
-('120240056980', 45),
-('120240058340', 46),
-('120230031329', 47),
-('120240056432', 47),
-('120240046707', 48),
-('120240057682', 49),
-('120240058471', 50),
-('120240058627', 51),
-('120240057489', 52),
-('120240057798', 53),
-('120240057490', 54),
-('120240058333', 55);
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `student_hobby`
+-- Table structure for table `student_hobby`
 --
 
 DROP TABLE IF EXISTS `student_hobby`;
@@ -3997,90 +624,10 @@ CREATE TABLE IF NOT EXISTS `student_hobby` (
   KEY `FK_STUDENT_HOBBY_HOBBY` (`hobby_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `student_hobby`
---
-
-INSERT INTO `student_hobby` (`student_serial_number`, `hobby_id`) VALUES
-('120230020241', 1),
-('120230020242', 1),
-('120230031210', 1),
-('120230031214', 1),
-('120230031228', 1),
-('120230031314', 1),
-('120230031327', 1),
-('120230031328', 1),
-('120230031330', 1),
-('120230031410', 1),
-('120230031412', 1),
-('120230031414', 1),
-('120230031587', 1),
-('120230031589', 1),
-('120230031590', 1),
-('120230031622', 1),
-('120230031633', 1),
-('120230031634', 1),
-('120230031642', 1),
-('120230031664', 1),
-('120230031700', 1),
-('120230031701', 1),
-('120230031702', 1),
-('120230031703', 1),
-('120230031706', 1),
-('120230031707', 1),
-('120230031708', 1),
-('120230031709', 1),
-('120230031712', 1),
-('120230031713', 1),
-('120230031717', 1),
-('120230031718', 1),
-('120230031719', 1),
-('120230031979', 1),
-('120230031993', 1),
-('120230032033', 1),
-('120230032045', 1),
-('120230032087', 1),
-('120230032318', 1),
-('120230032346', 1),
-('120230032355', 1),
-('120230032402', 1),
-('120230032495', 1),
-('120230032510', 1),
-('120230032550', 1),
-('120230032601', 1),
-('120230032609', 1),
-('120230032625', 1),
-('120230033074', 1),
-('120230033076', 1),
-('120230033077', 1),
-('120230033079', 1),
-('120230033166', 1),
-('120230033168', 1),
-('120230033171', 1),
-('120230033173', 1),
-('120230033673', 1),
-('120230033844', 1),
-('120230033874', 1),
-('120230033875', 1),
-('120230033876', 1),
-('120230033878', 1),
-('120230033879', 1),
-('120230033903', 1),
-('120230033915', 1),
-('120230033932', 1),
-('120230033934', 1),
-('120230034043', 1),
-('120230034057', 1),
-('120230034074', 1),
-('120230034102', 1),
-('120230034114', 1),
-('120230034542', 1),
-('120230034555', 1);
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `student_military_certificate`
+-- Table structure for table `student_military_certificate`
 --
 
 DROP TABLE IF EXISTS `student_military_certificate`;
@@ -4094,7 +641,7 @@ CREATE TABLE IF NOT EXISTS `student_military_certificate` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `student_parade_uniform`
+-- Table structure for table `student_parade_uniform`
 --
 
 DROP TABLE IF EXISTS `student_parade_uniform`;
@@ -4113,20 +660,10 @@ CREATE TABLE IF NOT EXISTS `student_parade_uniform` (
   PRIMARY KEY (`STUDENT_SERIAL_NUMBER`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `student_parade_uniform`
---
-
-INSERT INTO `student_parade_uniform` (`STUDENT_SERIAL_NUMBER`, `SUMMER_JACKET_SIZE`, `WINTER_JACKET_SIZE`, `SUMMER_TROUSERS_SIZE`, `WINTER_TROUSERS_SIZE`, `SUMMER_SHIRT_SIZE`, `WINTER_SHIRT_SIZE`, `SUMMER_HAT_SIZE`, `WINTER_HAT_SIZE`, `SUMMER_SKIRT_SIZE`, `WINTER_SKIRT_SIZE`) VALUES
-('120230033075', '', '', '', '', '', '', '', '', NULL, NULL),
-('120240058131', '', '', '', '', '', '', '', '', NULL, NULL),
-('201610010530', '', '', '', '', '', '', '', '', NULL, NULL),
-('32', '', '', '', '', '', '', '', '', NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `student_parent_info`
+-- Table structure for table `student_parent_info`
 --
 
 DROP TABLE IF EXISTS `student_parent_info`;
@@ -4147,20 +684,10 @@ CREATE TABLE IF NOT EXISTS `student_parent_info` (
   KEY `FK_SPI_MOTHER_PROF` (`MOTHER_PROFESSION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `student_parent_info`
---
-
-INSERT INTO `student_parent_info` (`STUDENT_SERIAL_NUMBER`, `FATHER_FIRST_NAME_EN`, `FATHER_LAST_NAME_EN`, `FATHER_FIRST_NAME_AR`, `FATHER_LAST_NAME_AR`, `FATHER_PROFESSION_ID`, `MOTHER_FIRST_NAME_EN`, `MOTHER_LAST_NAME_EN`, `MOTHER_FIRST_NAME_AR`, `MOTHER_LAST_NAME_AR`, `MOTHER_PROFESSION_ID`) VALUES
-('120230033075', '', '', '', '', NULL, '', '', '', '', NULL),
-('120240058131', '', '', '', '', 1, '', '', '', '', 1),
-('201610010530', '', '', '', '', NULL, '', '', '', '', NULL),
-('32', '', '', '', '', NULL, '', '', '', '', NULL);
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `student_speciality`
+-- Table structure for table `student_speciality`
 --
 
 DROP TABLE IF EXISTS `student_speciality`;
@@ -4170,20 +697,12 @@ CREATE TABLE IF NOT EXISTS `student_speciality` (
   `speciality_name_ar` varchar(30) NOT NULL,
   PRIMARY KEY (`student_speciality_id`),
   UNIQUE KEY `uk_student_speciality_en` (`speciality_name_en`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `student_speciality`
---
-
-INSERT INTO `student_speciality` (`student_speciality_id`, `speciality_name_en`, `speciality_name_ar`) VALUES
-(1, 'Management', 'مناجمنت'),
-(2, 'Mathematics', 'رياضيات');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `studies`
+-- Table structure for table `studies`
 --
 
 DROP TABLE IF EXISTS `studies`;
@@ -4194,74 +713,10 @@ CREATE TABLE IF NOT EXISTS `studies` (
   KEY `FK_STUDIES_MAJOR` (`MAJOR_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `studies`
---
-
-INSERT INTO `studies` (`SECTION_ID`, `MAJOR_ID`) VALUES
-(5, '100'),
-(6, '100'),
-(7, '100'),
-(8, '100'),
-(9, '111'),
-(10, '111'),
-(11, '111'),
-(12, '111'),
-(1, '129'),
-(2, '129'),
-(3, '129'),
-(4, '129'),
-(1, '136'),
-(2, '136'),
-(3, '136'),
-(4, '136'),
-(5, '149'),
-(6, '149'),
-(7, '149'),
-(8, '149'),
-(9, '40'),
-(10, '40'),
-(11, '40'),
-(12, '40'),
-(5, '71'),
-(6, '71'),
-(7, '71'),
-(8, '71'),
-(5, '72'),
-(6, '72'),
-(7, '72'),
-(8, '72'),
-(1, '75'),
-(2, '75'),
-(3, '75'),
-(4, '75'),
-(1, '76'),
-(2, '76'),
-(3, '76'),
-(4, '76'),
-(1, '78'),
-(2, '78'),
-(3, '78'),
-(4, '78'),
-(3, '83'),
-(4, '83'),
-(1, '85'),
-(2, '85'),
-(3, '85'),
-(4, '85'),
-(5, '89'),
-(6, '89'),
-(7, '89'),
-(8, '89'),
-(5, '94'),
-(6, '94'),
-(7, '94'),
-(8, '94');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `studies_in`
+-- Table structure for table `studies_in`
 --
 
 DROP TABLE IF EXISTS `studies_in`;
@@ -4272,36 +727,10 @@ CREATE TABLE IF NOT EXISTS `studies_in` (
   KEY `FK_SI_SESSION` (`STUDY_SESSION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `studies_in`
---
-
-INSERT INTO `studies_in` (`SECTION_ID`, `STUDY_SESSION_ID`) VALUES
-(2, 1),
-(4, 2),
-(9, 3),
-(8, 4),
-(8, 5),
-(3, 6),
-(4, 7),
-(1, 8),
-(7, 9),
-(7, 10),
-(3, 11),
-(3, 12),
-(1, 13),
-(1, 14),
-(3, 15),
-(8, 16),
-(1, 17),
-(1, 18),
-(2, 19),
-(3, 20);
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `study_session`
+-- Table structure for table `study_session`
 --
 
 DROP TABLE IF EXISTS `study_session`;
@@ -4317,36 +746,10 @@ CREATE TABLE IF NOT EXISTS `study_session` (
   KEY `FK_SESSION_TEACHER` (`TEACHER_SERIAL_NUMBER`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `study_session`
---
-
-INSERT INTO `study_session` (`STUDY_SESSION_ID`, `CLASS_ID`, `TEACHER_SERIAL_NUMBER`, `STUDY_SESSION_DATE`, `STUDY_SESSION_START_TIME`, `STUDY_SESSION_END_TIME`) VALUES
-(1, 2, '201899900017', '2026-02-19', '10:00:00', '12:00:00'),
-(2, 4, '201231200893', '2026-02-19', '10:00:00', '12:00:00'),
-(3, 9, '202122200002', '2026-02-22', '08:00:00', '10:00:00'),
-(4, 8, '202111100002', '2026-02-22', '08:00:00', '10:00:00'),
-(5, 8, '202111100002', '2026-02-22', '10:00:00', '12:00:00'),
-(6, 3, '201231200893', '2026-02-22', '10:00:00', '12:00:00'),
-(7, 4, '201411100078', '2026-02-22', '10:00:00', '12:00:00'),
-(8, 1, '202377700004', '2026-02-23', '08:00:00', '10:00:00'),
-(9, 3, '201912300001', '2026-02-23', '08:00:00', '10:00:00'),
-(10, 7, '201411100114', '2026-02-23', '08:00:00', '10:00:00'),
-(11, 3, '201411100112', '2026-02-23', '08:00:00', '10:00:00'),
-(12, 3, '201411100112', '2026-02-23', '10:00:00', '12:00:00'),
-(13, 1, '202377700010', '2026-02-23', '10:00:00', '12:00:00'),
-(14, 1, '201231200893', '2026-02-24', '13:00:00', '14:30:00'),
-(15, 3, '201231200893', '2026-03-01', '08:00:00', '10:00:00'),
-(16, 1, '200536007768', '2026-03-02', '10:00:00', '12:00:00'),
-(17, 1, '200536007768', '2026-03-03', '13:00:00', '14:30:00'),
-(18, 1, '201231200893', '2026-03-03', '13:00:00', '14:30:00'),
-(19, 2, '201231200893', '2026-03-08', '10:00:00', '12:00:00'),
-(20, 3, '201231200893', '2026-03-11', '13:00:00', '14:30:00');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `teacher`
+-- Table structure for table `teacher`
 --
 
 DROP TABLE IF EXISTS `teacher`;
@@ -4363,156 +766,10 @@ CREATE TABLE IF NOT EXISTS `teacher` (
   KEY `FK_TEACHER_USER` (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `teacher`
---
-
-INSERT INTO `teacher` (`TEACHER_SERIAL_NUMBER`, `USER_ID`, `TEACHER_FIRST_NAME_EN`, `TEACHER_LAST_NAME_EN`, `TEACHER_PHOTO`, `TEACHER_FIRST_NAME_AR`, `TEACHER_LAST_NAME_AR`, `TEACHER_GRADE_ID`) VALUES
-('12345', 144, 'MOUALEK', 'Sabrine', '', 'موالك', 'صابرين', 26),
-('197615000575', 51, 'OUASSINI', 'Slimane', '', 'وسيني', 'سليمان', 27),
-('198012003145', 57, 'SAOUDI', 'Lazhari', '', 'سعودي', 'الازهري', 27),
-('198213001964', 54, 'DAOUED', 'Abdeldjebbar', '', 'داود', 'عبد الجبار', 27),
-('198722002108', 52, 'LARDJOUN', 'Maachou', '', 'العرجون', 'معاشو', 27),
-('198831000610', 53, 'FLITI', 'Mohamed', '', 'فليتي', 'محمد', 27),
-('198831001530', 55, 'BOUZIANE', 'Mohamed', '', 'بوزيان', 'محمد', 27),
-('198922001537', 50, 'TALBI', 'Abess', '', 'طالبي', 'عباس', 27),
-('199824007224', 28, 'DERIDI', 'Ibrahim', '', 'دريدي', 'إبراهيم', 5),
-('200028000293', 35, 'ZAHIR', 'Chokri', '', 'زهير', 'شكري', 6),
-('200029000740', 8, 'TLEMSSANI', 'Mohamed', '', 'تلمساني', 'محمد', 6),
-('200031001387', 26, 'BACHERI', 'Mehamdi', '', 'بشري', 'محمدي', 5),
-('200131200184', 45, 'BOUAINOUCHE', 'Hadj', '', 'بوعينوش', 'الحاج', 20),
-('200143001941', 6, 'SAHLI', 'Moussa', '', 'صالحي', 'موسى', 6),
-('200202033656', 14, 'ZOUAID', 'Mostapha', '', 'زويد', 'مصطفى', 7),
-('200214001694', 24, 'SLIMANI', 'Sid Ali', '', 'سليماني', 'سيدعلي', 5),
-('200240003609', 27, 'ZOUGAGHI', 'Hakim', '', 'زوقاري', 'حكيم', 7),
-('200245000879', 11, 'MSIRDI', 'Kamel', '', 'مسيردي', 'كمال', 7),
-('200308000301', 34, 'DAHBI', 'Alhabib', '', 'ذهبي', 'الحبيب', 6),
-('200331000655', 7, 'BEN AFIA AHMED', 'Mohamed Amin', '', 'بن عافية احمد', 'محمد  امين', 6),
-('200342000624', 25, 'SID ALI', 'Beldjouhar', '', 'سيدعلي', 'بلجوهر', 7),
-('200345000617', 29, 'LAIRG', 'Abdel Malek', '', 'لعيرج', 'عبد المالك', 6),
-('200405004325', 12, 'DJOUALA', 'Younes', '', 'جوالة', 'يونس', 7),
-('200414002123', 9, 'BENAYADA', 'Mokhtar', '', 'بن عيادة', 'مختار', 7),
-('200419000781', 10, 'SMAAIN', 'Samir', '', 'سماعن', 'سمير', 7),
-('200423007037', 20, 'CHOUADELI', 'Abdelkader', '', 'شوادلي', 'عبدالقادر', 6),
-('200429001161', 30, 'HBIBIES', 'Mohamed', '', 'حبيبي', 'محمد', 6),
-('200522001822', 32, 'KENANJA', 'Kada', '', 'كنانجة', 'قادة', 7),
-('200522001856', 31, 'MOURSSLI', 'Rachid', '', 'مرسلي', 'رشيد', 6),
-('200527001857', 40, 'TAHAR', 'Said', '', 'طاهر', 'سعيد', 7),
-('200536007768', 23, 'KEDAYA', 'Charaf Eddine', '', 'كداية', 'شرف الدين', 6),
-('200605004964', 21, 'BOUZID', 'Bilal', '', 'بوزيد', 'بلال', 7),
-('200613002825', 39, 'BOUKHALKHAL', 'Nourddine', '', 'بوخلخال', 'نورالدين', 7),
-('200719000867', 22, 'SAYEH', 'Habib Allah', '', 'سايح', 'حبيب الله', 6),
-('200731001991', 13, 'ALLALI', 'Hamza', '', 'علالي', 'حمزة', 7),
-('200820001662', 37, 'HAMMAMI', 'Youcef', '', 'حمامي', 'يوسف', 8),
-('200838003164', 17, 'NADJOUH', 'Mohamed', '', 'نجوح', 'محمد', 8),
-('200920902424', 36, 'TWIIL', 'Mohamed', '', 'طويل', 'محمد', 8),
-('200929002426', 18, 'MOURAD', 'Abdelkader', '', 'مراد', 'عبد القادر', 8),
-('201131500788', 48, 'KADA', 'Wafa', '', 'قادة', 'وفاء', 21),
-('201145200082', 49, 'KERCIFANE', 'Tadj', '', 'كرسيفان', 'تاج', 21),
-('201205009207', 19, 'OUALMI', 'Zouhir', '', 'عوالمي', 'زهير', 8),
-('201205201593', 38, 'BENANTAR', 'Sami', '', 'بن عنتر', 'سامي', 20),
-('201211100016', 43, 'BOUZIDI', 'Dalila', '', 'بوزيدي', 'دليلة', 26),
-('201211100036', 94, 'BENDJABBOUR', 'Mohamed', '', 'بن جبور', 'محمد', 26),
-('201214500892', 44, 'BOULEFRAD', 'Amel', '', 'بولفراد', 'امال', 20),
-('201231200893', 42, 'MERINE', 'Mohamed', '', 'مرين', 'محمد', 20),
-('201411100039', 62, 'TEFALI', 'Benyounes', '', 'تفالي', 'بن يونس', 26),
-('201411100055', 78, 'GADI', 'Ibtissem', '', 'قاضي', 'ابتسام', 26),
-('201411100078', 41, 'OTHMANI', 'Fafa', '', 'عثماني', 'فافا', 20),
-('201411100112', 63, 'TAIEBI', 'Khadidja', '', 'طيبي', 'خديجة', 26),
-('201411100113', 91, 'BENKAMLA', 'Abdelazize', '', 'بن قملة', 'عبد العزيز', 26),
-('201411100114', 97, 'BELAHCEN', 'Houari', '', 'بلحسن', 'هواري', 26),
-('201411100117', 46, 'BEN CHIKH', 'Mounia', '', 'بن شيخ', 'مونية', 21),
-('201511100010', 60, 'ZIAD', 'Mohamed', '', 'زياد', 'محمد', 26),
-('201544400007', 83, 'CHERCHEM', 'Mohamed', '', 'شرشم', 'محمد', 26),
-('201544400019', 122, 'BELKAID', 'Brahim', '', 'بلقايد', 'إبراهيم', 26),
-('201588800008', 73, 'LEZOUL', 'Mohamed', '', 'لزول', 'محمد', 26),
-('201611100007', 75, 'HIMRI', 'Faiza', '', 'حيمري', 'فايزة', 26),
-('201611100015', 92, 'BENKADA', 'Mahmoud Amine', '', 'بن قادة', 'محمود امين', 26),
-('201620003011', 16, 'HAMADOU', 'Abdelkarim', '', 'حمادو', 'عبد الكريم', 8),
-('201724008170', 33, 'KHALLA', 'Khairddine', '', 'خلة', 'خير الدين', 8),
-('201800100002', 77, 'HAMDI', 'Cherif Montasir', '', 'حمدي', 'شريف منتصر', 26),
-('201800100021', 79, 'DJELOULI', 'Abdelhamid', '', 'جلولي', 'عبد الحميد', 26),
-('201800100029', 64, 'SARI', 'Mohamed', '', 'ساري', 'محمد', 26),
-('201855500036', 80, 'DJABALLAH', 'Houda', '', 'جاب الله', 'هدى', 26),
-('201855500043', 89, 'BOUDAOUED', 'Fatima', '', 'بوداود', 'فطيمة', 26),
-('201899900001', 81, 'DARKAOUI', 'Asmaa', '', 'درقاوي', 'أسماء', 26),
-('201899900002', 69, 'MEZILI', 'Imed', '', 'مزيلي', 'عماد', 26),
-('201899900017', 67, 'MEKHALDI', 'Yahia', '', 'مخالدي', 'يحيى', 26),
-('201899900028', 86, 'BRACHEMI', 'Hasna', '', 'براشمي', 'حسنة', 26),
-('201905500004', 82, 'DAOUDI', 'Mohamed', '', 'داودي', 'محمد', 26),
-('201905500008', 71, 'MALKI', 'Zohir', '', 'مالكي', 'زهير', 26),
-('201912300001', 65, 'SAHRAOUI', 'Mostapha', '', 'صحراوي', 'مصطفى', 26),
-('201912300012', 95, 'BENDAIABDELLAH', 'Asmaa', '', 'بندي عبد الله', 'أسماء', 26),
-('202012300002', 68, 'OUAHRANI', 'Zahra', '', 'وهراني', 'زهرة', 26),
-('202012300005', 84, 'CHAACHOUA', 'Karim', '', 'شعشوعة', 'كريم', 26),
-('202012300009', 85, 'BRAINES', 'Abdelkader', '', 'برينس', 'عبدالقادر', 26),
-('202012300010', 88, 'BOUMDINI', 'Belgacem', '', 'بومديني', 'بلقاسم', 26),
-('202012300011', 56, 'BOUABSA', 'Maazouz', '', 'بوعبسة', 'معزوز', 27),
-('202012300012', 87, 'BOUZIDI', 'Elhouari', '', 'بوزيدي', 'الهواري', 26),
-('202012300016', 76, 'HASSAINE', 'Omar', '', 'حساين', 'عمار', 26),
-('202012300017', 72, 'MABANI', 'Youcef', '', 'مباني', 'يوسف', 26),
-('202012300018', 90, 'BENZIDANE', 'Yacine', '', 'بن زيدان', 'ياسين', 26),
-('202012300022', 74, 'KICHOU', 'Nacer', '', 'كيشو', 'ناصر', 26),
-('202012300023', 70, 'MEKKAOUI', 'Djawed', '', 'مكاوي', 'جواد', 26),
-('202111100002', 61, 'ZENAK', 'Fethia', '', 'زناك', 'فتحية', 26),
-('202122200001', 98, 'BAKHTAOUI', 'Khadidja', '', 'بختاوي', 'خديجة', 26),
-('202122200002', 93, 'BENHADOU', 'Soumia Khadidja', '', 'بن حدو', 'سمية خديجة', 26),
-('202166612458', 59, 'TOUMI', 'Hadjer', '', 'تومي', 'هاجر', 26),
-('202213300002', 66, 'MOKHTARI', 'Faycel', '', 'مختاري', 'فيصل', 26),
-('202213300007', 96, 'BENSAID', 'Mohamed', '', 'بن سعيد', 'محمد', 26),
-('202231405525', 15, 'BELMAKDAD', 'Khaira', '', 'بلمقداد', 'خيرة', 6),
-('202277700002', 99, 'AYED', 'Mohamed', '', 'اياد', 'محمد', 26),
-('202277700004', 100, 'ASLI', 'Houcine', '', 'عسلي', 'حسين', 26),
-('202277700009', 101, 'BENHAMOU', 'Abdellah', '', 'بن حمو', 'عبدالله', 26),
-('202277700010', 102, 'BOUHDIBA', 'El Houari', '', 'بو حديبة', 'الهواري', 26),
-('202277700011', 103, 'BOUMEDIEN', 'Mohamed Rachid', '', 'بو مدين', 'محمد رشيد', 26),
-('202277700012', 104, 'BEKAIE', 'Yassmin', '', 'بقاي', 'ياسمين', 26),
-('202277700013', 105, 'HASSAM', 'Soraya', '', 'حسام', 'صورية', 26),
-('202277700014', 106, 'KERARMA', 'Ahmed', '', 'كرارمة', 'احمد', 26),
-('202277700021', 107, 'SAOULI', 'Abdelghani', '', 'سعولي', 'عبدالغاني', 26),
-('202277700023', 108, 'SETAOUTI', 'Mohamed Djamel El Dine', '', 'سطاوطي', 'محمد جمال الدين', 26),
-('202277700024', 109, 'SAHIL', 'Mokadem', '', 'سهيل', 'مقدم', 26),
-('202377700002', 110, 'AMARI', 'Salah Eddine', '', 'عماري', 'صلاح الدين', 26),
-('202377700003', 111, 'BELGOUM', 'Farid', '', 'بلقوم', 'فريد', 26),
-('202377700004', 112, 'BELLA', 'Nezzar', '', 'بلا', 'نزار', 26),
-('202377700005', 113, 'BENKREIRA', 'Sarah', '', 'بن قريرة', 'سارة', 26),
-('202377700006', 114, 'BENLEFKI', 'Elhachemi', '', 'بن لفكي', 'الهاشمي', 26),
-('202377700007', 115, 'BENYAMINA', 'Necerine', '', 'بن يمينة', 'نسرين', 26),
-('202377700010', 116, 'CHENNOUF', 'Sadek', '', 'شنوف', 'صادق', 26),
-('202377700011', 117, 'DJAAFRI', 'Abdelkader', '', 'جعفري', 'عبدالقادر', 26),
-('202377700013', 118, 'DOUAH', 'Belkacem', '', 'دواح', 'بلقاسم', 26),
-('202377700014', 119, 'MEKKAKAIA', 'Meryem Nihad', '', 'مكاكية', 'مريم نهاد', 26),
-('202377700016', 120, 'TCHAM', 'Kamel', '', 'تشام', 'كمال', 26),
-('202377700019', 58, 'TRAIAKE', 'Djamel', '', 'ترياق', 'جمال', 26),
-('202377700020', 121, 'FNINEKH', 'Nawel', '', 'فنينخ', 'نوال', 26),
-('202477700002', 123, 'GUEDOUAH', 'Youcef', '', 'قدواح', 'يوسف', 26),
-('202477700004', 124, 'HAMAMI', 'Miloud', '', 'حمامي', 'ميلود', 26),
-('202477700007', 125, 'ABOULIL', 'Zahia', '', 'ابوليل', 'زاهية', 26),
-('202477700008', 127, 'SENOUCI', 'Benaoumeur', '', 'سنوسي', 'بن عومر', 26),
-('202477700009', 126, 'SENOUCI', 'Safia Nour Elhouda', '', 'سنوسي', 'صافية نور الهدى', 26),
-('202588800001', 128, 'ALLAM', 'Benaouda', '', 'علام', 'بنعودة', 26),
-('202588800002', 129, 'BEDDANI', 'Hamid', '', 'بداني', 'حميد', 26),
-('202588800003', 130, 'BENACHOUR', 'Salem', '', 'بن عاشور', 'سالم', 26),
-('202588800004', 131, 'BENMESSAOUD', 'Nassreddine', '', 'بن مسعود', 'نصر الدين', 26),
-('202588800005', 132, 'DJEBRANE', 'Sofiane', '', 'جبران', 'سفيان', 26),
-('202588800006', 133, 'HADJEMI', 'Meriem', '', 'حاجمي', 'مريم ', 26),
-('202588800007', 134, 'KADEM', 'Sofiane', '', 'قادم', 'سفيان', 26),
-('202588800008', 135, 'MOKRED', 'Abdallah', '', 'مقراد', 'عبد الله', 26),
-('202588800009', 136, 'OTMANE', 'Abdelatif', '', 'عثمان', 'عبد اللطيف', 26),
-('202588800010', 137, 'RAIS ALI', 'Kheira', '', 'رايس علي', 'خيرة', 26),
-('202588800011', 138, 'SADEKI', 'Sohir', '', 'صدقي', 'سهير', 26),
-('202588800012', 139, 'SAICHI', 'Sauad', '', 'صايشي', 'سعاد', 26),
-('202588800013', 140, 'SAIM', 'Tahar', '', 'صايم', 'طاهر', 26),
-('202588800014', 141, 'TCHIKO', 'Faouzi', '', 'تشيكو', 'فوزي', 26),
-('202588800018', 142, 'REZIGUE', 'Fatima Zohra', '', 'رزيق', 'فطيمة الزهرة', 26),
-('202588800019', 143, 'TOUMI', 'Hadjer', '', 'تومي', 'هاجر', 26),
-('320230001279', 47, 'BENSAHRAOUI', 'Aicha', '', 'بن صحراوي', 'عيشة', 20),
-('999', 999, 'Bahaa Eddine', 'ZAOUI', 'resources\\photos\\teachers\\01.jpg', 'بهاء الدين', 'زاوي', 12);
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `teacher_makes_an_observation_for_a_student`
+-- Table structure for table `teacher_makes_an_observation_for_a_student`
 --
 
 DROP TABLE IF EXISTS `teacher_makes_an_observation_for_a_student`;
@@ -4534,7 +791,7 @@ CREATE TABLE IF NOT EXISTS `teacher_makes_an_observation_for_a_student` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `teaches`
+-- Table structure for table `teaches`
 --
 
 DROP TABLE IF EXISTS `teaches`;
@@ -4545,38 +802,10 @@ CREATE TABLE IF NOT EXISTS `teaches` (
   KEY `FK_TEACHES_TEACHER_REF` (`TEACHER_SERIAL_NUMBER`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `teaches`
---
-
-INSERT INTO `teaches` (`MAJOR_ID`, `TEACHER_SERIAL_NUMBER`) VALUES
-('71', '200031001387'),
-('72', '200429001161'),
-('1', '200536007768'),
-('103', '200536007768'),
-('108', '200536007768'),
-('110', '200536007768'),
-('149', '200536007768'),
-('31', '200536007768'),
-('85', '200536007768'),
-('85', '201231200893'),
-('83', '201411100078'),
-('136', '201411100112'),
-('75', '201411100112'),
-('89', '201411100114'),
-('100', '201855500043'),
-('76', '201899900017'),
-('94', '201912300001'),
-('149', '202111100002'),
-('111', '202122200002'),
-('129', '202377700004'),
-('78', '202377700010'),
-('40', '999');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `user_account`
+-- Table structure for table `user_account`
 --
 
 DROP TABLE IF EXISTS `user_account`;
@@ -4592,165 +821,10 @@ CREATE TABLE IF NOT EXISTS `user_account` (
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table `user_account`
---
-
-INSERT INTO `user_account` (`USER_ID`, `USERNAME`, `PASSWORD_HASH`, `EMAIL`, `ROLE`, `ACCOUNT_STATUS`, `CREATED_AT`, `LAST_LOGIN_AT`) VALUES
-(1, 'cmd_ecole', '$2y$10$oQAv.z0vj3LG8KiYBhyVP.DmvDHUaG6foj6HIEiJRYE8XBzpGC2f6', 'admin1@esam.com', 'Admin', 'Active', '0000-00-00 00:00:00', '2026-03-11 14:04:28'),
-(2, 'admin2', '$2y$10$CqthaDg0uYTHa5gFKd.JhOdvpcLbSso6y1PSawJKJKfD3osAIgNqC', 'NULL', 'Admin', 'Active', '0000-00-00 00:00:00', '2026-02-26 11:03:06'),
-(3, 'admin3', '$2y$10$LWXpgJSZd1S84r/f0EZv.uHvU478.72beR6mIkclDJD.yfbbd0/.y', 'NULL', 'Admin', 'Active', '0000-00-00 00:00:00', '2026-03-11 14:10:25'),
-(4, 'admin4', '$2y$10$rMrapk8NAzb1HQbOFHFkFO7tGzCw.EmI4Nt8R/Bo9m/jiSxYm6ukm', 'NULL', 'Admin', 'Active', '0000-00-00 00:00:00', '2026-03-15 14:33:41'),
-(5, 'admin5', '$2y$10$gLZy3M7C2q2/AOsF6OdpP.WxYbCa1LfCpuHlYjGbDloa5ldY.okam', 'NULL', 'Admin', 'Active', '0000-00-00 00:00:00', NULL),
-(6, 'sahlimoussa', '$2b$12$fPs3kGU2v383TR4aoh8L2OkCoib6KZPxXDAsWE7h6J3zXNYe5afUa', NULL, 'Teacher', 'Active', NULL, NULL),
-(7, 'benafiaahmedmohamedamin', '$2b$12$ioTWQ73cK2CbozRPhAdbIOQO5wNOWr1.ZlErZofp/NiY3Vo90nSxC', NULL, 'Teacher', 'Active', NULL, NULL),
-(8, 'tlemssanimohamed', '$2b$12$t.DskrS4lIozNqRTaxthjOJaJpOyCK7Y77XXDu4CJBd7ITA693ufG', NULL, 'Teacher', 'Active', NULL, NULL),
-(9, 'benayadamokhtar', '$2y$10$2yypKfPSkhMUDuhIGEjVCuan3F.XrUKZmLzLhKOhRLrTedJgL4Ycu', NULL, 'Teacher', 'Active', NULL, NULL),
-(10, 'smaainsamir', '$2y$10$WpDOwaCklc4ToZoqcWG5YuuIgBo.z8w/GWQ/zO3Eh5AhLwM.oaV2a', NULL, 'Teacher', 'Active', NULL, NULL),
-(11, 'msirdikamel', '$2b$12$4crHFc.jU.WhIyIRWvwDDekyMsQzygZiScM8PS8vCII7EbmkV7amG', NULL, 'Teacher', 'Active', NULL, NULL),
-(12, 'djoualayounes', '$2b$12$loKVTnJmMECljdmCHe.c9OoOIG2ZJVqF7Ajinr8OsoD9woGb/jFb6', NULL, 'Teacher', 'Active', NULL, NULL),
-(13, 'allalihamza', '$2b$12$lqJcPwXNjGBhaY/LF098Tu25XfDJwSR10/MrO4KfsuLSsKgg1aFf.', NULL, 'Teacher', 'Active', NULL, NULL),
-(14, 'zouaidmostapha', '$2y$10$uvSbXSMNaWC84m8OQNVSJ.eTmuY5aB7rH.1n3bm3zUTlvYJuJ3Ub6', NULL, 'Teacher', 'Active', NULL, NULL),
-(15, 'belmakdadkhaira', '$2y$10$ZSKE911PI/KLSCjThXoDU.cuH0YyspZhLYQoEtAHGurVY9S0yrovq', NULL, 'Teacher', 'Active', NULL, NULL),
-(16, 'hamadouabdelkarim', '$2b$12$.221d/8.TJIk6iakhK53ZeG4dOcCELzQdgyeev9RWNbzhqGmjhvHq', NULL, 'Teacher', 'Active', NULL, NULL),
-(17, 'nadjouhmohamed', '$2b$12$J/tNbkPNTI9oeAv5m8y5wOo6G4kmEyeojjeIjQT6kmO9uO0Jb5Z3e', NULL, 'Teacher', 'Active', NULL, NULL),
-(18, 'mouradabdelkader', '$2b$12$8bVBgJFluJ7PVNM.27NHgOhO8.5gjkczHiI5vn7cQHzojRukfiQS.', NULL, 'Teacher', 'Active', NULL, NULL),
-(19, 'oualmizouhir', '$2b$12$IDKxa3/zOlQc3qHLFoD3/Oay61dHbTMnLT65uwl7oTPpX7aK6MJm.', NULL, 'Teacher', 'Active', NULL, NULL),
-(20, 'chouadeliabdelkader', '$2b$12$.MOV0ZbZd/vmfR81f88UCORW9x3nl.I.RALTFVebklzagFpnLqH3e', NULL, 'Teacher', 'Active', NULL, NULL),
-(21, 'bouzidbilal', '$2y$10$NMoUR2.SilevlV.sMtKKX.UHzGCBJXnhPT4UQAKNlHBmvsW6tIHlG', NULL, 'Teacher', 'Active', NULL, NULL),
-(22, 'sayehhabiballah', '$2b$12$xZ9mVVA9S0z2xuJ35fcOOuwaXWBmt0LWns3Ohp28T4inaOqIjOG5C', NULL, 'Teacher', 'Active', NULL, NULL),
-(23, 'kedayacharafeddine', '$2y$10$dDj9w0ZEM6z3.s1zSfTbJ.fxsMf4NeLk.OYKKpgqgb.zI1deQpdoW', NULL, 'Teacher', 'Active', NULL, '2026-03-05 09:00:07'),
-(24, 'slimanisidali', '$2b$12$AAnMYtldNT8vtf7mDfYoSOGzIKDqdnXGwsFnJwsErGN00D7o.uU9C', NULL, 'Teacher', 'Active', NULL, NULL),
-(25, 'sidalibeldjouhar', '$2b$12$j9hqGweQ9St1guFrTeYLS.EmkaKUcJLlhFNNW3Bl7x/6LF3/dJFk2', NULL, 'Teacher', 'Active', NULL, NULL),
-(26, 'bacherimehamdi', '$2y$10$Yv6FJy9Ic0hogU4YSLh9mu4CwflTlm1LCM4YMNdntR1zXKBJCBiqm', NULL, 'Teacher', 'Active', NULL, '2026-02-26 10:22:08'),
-(27, 'zougaghihakim', '$2b$12$6XqlIMNKGZ0JbsDi2GqUuey1t5jiGbopQPCWez7gH.Mt8hObsBrrO', NULL, 'Teacher', 'Active', NULL, NULL),
-(28, 'deridiibrahim', '$2b$12$GIMlKB36BBpTrMhWQ9xMceKFGpv3VmBAb52fdQS0OZuELqCfcVJ/i', NULL, 'Teacher', 'Active', NULL, NULL),
-(29, 'lairgabdelmalek', '$2b$12$XNFJHiIiOQi0Zw0ZqGVJqetTd9ayxFL8L0qyyJPBvf7HZPeRJAMIS', NULL, 'Teacher', 'Active', NULL, NULL),
-(30, 'hbibiesmohamed', '$2y$10$RhfFekJEdUHhncigVNbt9uAjoyQqMT.glMfb54kKEDMgx..dai7hS', NULL, 'Teacher', 'Active', NULL, '2026-02-26 10:02:45'),
-(31, 'moursslirachid', '$2b$12$teLm3KlY./2hLmPUULm5E.mZUaN6FrLO8.nJWQwRchiXk/nxxHvhK', NULL, 'Teacher', 'Active', NULL, NULL),
-(32, 'kenanjakada', '$2b$12$DgdVbOZlnkFiLeCR.sYUIeBIvWvnELHwbx/FmnYEQ1tc4JbDkK.RW', NULL, 'Teacher', 'Active', NULL, NULL),
-(33, 'khallakhairddine', '$2b$12$ZXOXhAIaCeYSYUYz.90qUOC.A6osl.hL9XbH39aa2nFOiOpQGFJva', NULL, 'Teacher', 'Active', NULL, NULL),
-(34, 'dahbialhabib', '$2b$12$Qn7pu5qDedxveLQ7/Q3Yxepcj35oPRId43T8hG/cyL.xVgvegLhOu', NULL, 'Teacher', 'Active', NULL, NULL),
-(35, 'zahirchokri', '$2b$12$f16DdDn5X/ZO2GEozMKdc.8/kg7nH/3fXK7OOyBeaJA5qA9m.vRw6', NULL, 'Teacher', 'Active', NULL, NULL),
-(36, 'twiilmohamed', '$2b$12$M9KqKceZQ7tbe78857kXV..Qk9JJoAVpaxJLKyZTJ8IIIKZUqiKJu', NULL, 'Teacher', 'Active', NULL, NULL),
-(37, 'hammamiyoucef', '$2b$12$bHom0ZW1SVZ6EKM7j8nQIuI9H07osnsShpBSph.OkTaIm4Uc8Dku2', NULL, 'Teacher', 'Active', NULL, NULL),
-(38, 'benantarsami', '$2b$12$6Ye0/Bi131kiC4tTeyE4.uGCwlLnBDKIgHb9//vci1AcNDWmpDmKi', NULL, 'Teacher', 'Active', NULL, NULL),
-(39, 'boukhalkhalnourddine', '$2b$12$bJUoJbKCp1eeFfpqDFDLwuQUA7fnnaDDzMtxNcPuRGnF.8cWBj8Ki', NULL, 'Teacher', 'Active', NULL, NULL),
-(40, 'taharsaid', '$2b$12$tYvDJrGjfm80b.QTXVFIYeS/B1SRBll.OtIJnvNfhTWiuUKG6eQuC', NULL, 'Teacher', 'Active', NULL, NULL),
-(41, 'othmanifafa', '$2y$10$MlDpGofOhdgiq8ruRqZIHOsmqXPdgUolIOMAVRLUGOaijxl0qZZs6', NULL, 'Teacher', 'Active', NULL, '2026-02-22 10:45:58'),
-(42, 'merinemohamed', '$2y$10$BU1GfJaH4pM1E4hxecF7m.LA78oqU8U0bN51BErcujqDxkGPzyEz.', NULL, 'Teacher', 'Active', NULL, '2026-03-15 10:49:46'),
-(43, 'bouzididalila', '$2b$12$xi2HbUMbNmB82PpfPmfLJO4jhGAa70BzImzldDqF4sKQZhj87iaEq', NULL, 'Teacher', 'Active', NULL, NULL),
-(44, 'boulefradamel', '$2b$12$gKCsxwW4zvFaf7tN4CHAN.gE81rbJ5QcKkU3rme7PfLTFRKIUuu8K', NULL, 'Teacher', 'Active', NULL, NULL),
-(45, 'bouainouchehadj', '$2b$12$1YNw78Ak3s1utMN0NWpdd.yLit7aBVX8bMOGfA0sstsYGAaP5ta7C', NULL, 'Teacher', 'Active', NULL, NULL),
-(46, 'benchikhmounia', '$2b$12$/a3x9C5YihYha33wrygYZOl02bsgF1uDAizmEop.9XEP4uCIY8x/O', NULL, 'Teacher', 'Active', NULL, NULL),
-(47, 'bensahraouiaicha', '$2b$12$zVuYB4ZzsdVsDNkfeuMCEeOpzaxETVwn90cD7VUd/bCPI6ZoBIJPC', NULL, 'Teacher', 'Active', NULL, NULL),
-(48, 'kadawafa', '$2b$12$h1WMdNlrG8Yz/K6EICA5yujCeZKqIaWki53nYojSJYUp5ggdJOnKm', NULL, 'Teacher', 'Active', NULL, NULL),
-(49, 'kercifanetadj', '$2b$12$7mx9I0Pvh3GF0hD0trjLlugDYhSADIFhg8MvpItaBpEzC22X3O/8y', NULL, 'Teacher', 'Active', NULL, NULL),
-(50, 'talbiabess', '$2b$12$Ew6YqnS4p0xhiQ/wSXrnZOxG1zQadYN4OM.aC01SaTWVWJky2H3E6', NULL, 'Teacher', 'Active', NULL, NULL),
-(51, 'ouassinislimane', '$2b$12$aPIXZwWJjDTri3m1CfWawuy7ehpMWjk3ZSph2c/NnyQ5vD0XLKQt6', NULL, 'Teacher', 'Active', NULL, NULL),
-(52, 'lardjounmaachou', '$2b$12$yklqJM2l8EnW5pJEdbELM.S1FxH37UKAZ4QstV3qqwb2EaHso0g7W', NULL, 'Teacher', 'Active', NULL, NULL),
-(53, 'flitimohamed', '$2b$12$PKtiee1xajvNqp8.GeCCVOkK3KTnLsL9KdXioCYHkftISfA261vce', NULL, 'Teacher', 'Active', NULL, NULL),
-(54, 'daouedabdeldjebbar', '$2b$12$pld99KvVBAmdrnBO6wN1pORPn.alXDH5VXzzfg4NYMv/gi/8eY786', NULL, 'Teacher', 'Active', NULL, NULL),
-(55, 'bouzianemohamed', '$2b$12$U7StyTbxgjzOvBZeJ0IAXeKqNlCpJ0cNx7kA/oJuqDb/dOtkK0o3O', NULL, 'Teacher', 'Active', NULL, NULL),
-(56, 'bouabsamaazouz', '$2b$12$F9jNPrdfZGKGvxZ0/YrvWurt9y/z0A4Ui8U4LakD7Tt9wiJQ.LAZq', NULL, 'Teacher', 'Active', NULL, NULL),
-(57, 'saoudilazhari', '$2b$12$6uD/JTJbsAGvHvXNV4UAcONxFKPThWrHT7N50NtNzFKK6/7CiEyji', NULL, 'Teacher', 'Active', NULL, NULL),
-(58, 'traiakedjamel', '$2b$12$3QHCfkwJb9nKwX8wGE32Beb7MEY4SthdsjBWE4N.0ZiZBnECfhE8q', NULL, 'Teacher', 'Active', NULL, NULL),
-(59, 'toumihadjer', '$2y$10$tsqyECvWvkpP/rpeA2dsbeCJbD6v5fp9bdmUJgL4JBaveIm.oSx5m', NULL, 'Teacher', 'Active', NULL, NULL),
-(60, 'ziadmohamed', '$2y$10$1V4o/J9ZaYGiREB8xoPxA.2RmxQCHtih5Vu.RaCXB5QAtE/yp6uXa', NULL, 'Teacher', 'Active', NULL, '2026-03-02 11:35:28'),
-(61, 'zenakfethia', '$2y$10$cWrLDmbyCNH4z3KqdD.GMeS6ozcUtUN4akigU.1E5GtW2yMm2Bynq', NULL, 'Teacher', 'Active', NULL, '2026-02-22 09:54:26'),
-(62, 'tefalibenyounes', '$2b$12$aypefRhq3qN7v/GKLzZLouN238WZp80YXRv2GOYjqSh/lpNt/ExTe', NULL, 'Teacher', 'Active', NULL, '2026-02-22 08:46:33'),
-(63, 'taiebikhadidja', '$2y$10$4qsSxm9SCuiYmHTdl1S28O25/8tjI6ttk8UajVcY.rEw5xoPfcOn6', NULL, 'Teacher', 'Active', NULL, '2026-02-23 09:56:57'),
-(64, 'sarimohamed', '$2b$12$yM6eMrMlLOcubXf2s9MSNut4BlpSYVE1H3PMV.LO3Rp93zYaeYkSC', NULL, 'Teacher', 'Active', NULL, NULL),
-(65, 'sahraouimostapha', '$2y$10$sLIwm7u9dfUWw4TJt6Cj3.z8WJxRbk1T/yhUOzFWjCpqEObPBsZd.', NULL, 'Teacher', 'Active', NULL, '2026-02-23 11:10:14'),
-(66, 'mokhtarifaycel', '$2b$12$7m8YSr98wWK.9D5bySBVQOX58O2hWjWyi/BUneFP/bNTg/naU6HGK', NULL, 'Teacher', 'Active', NULL, NULL),
-(67, 'mekhaldiyahia', '$2y$10$RSso0P27vRA9pU1Ekfb2qOwOLOI0LRMdICNOga0GbxtmsfMQWctc2', NULL, 'Teacher', 'Active', NULL, '2026-02-19 10:46:21'),
-(68, 'ouahranizahra', '$2b$12$i2ddf.EC0bVzERlonWIe2.KS76NdaQljzCdw8Wh/t7VNtcQwqTS0q', NULL, 'Teacher', 'Active', NULL, NULL),
-(69, 'meziliimed', '$2y$10$bfSMeOY0O.WVYeqBksp1vOm4bRZLJI9kiRC4qz/CrHt/0lzbg2Q8e', NULL, 'Teacher', 'Active', NULL, '2026-03-12 10:35:30'),
-(70, 'mekkaouidjawed', '$2b$12$R8g5CvxBIq/VHYRWtHE/c.pmzHQ0hEsnFaXIbYoxlbBloGQzY1JhW', NULL, 'Teacher', 'Active', NULL, NULL),
-(71, 'malkizohir', '$2b$12$AU67xQIY1CXwvnkfko1TxuBVHGQnV.U2upA2qGClCtypeUsVNFROi', NULL, 'Teacher', 'Active', NULL, NULL),
-(72, 'mabaniyoucef', '$2b$12$4Yogh4jDE4PRiO//dxOSPe2CBsGqUa9t/BRGArZynvYjbZYKQUj.q', NULL, 'Teacher', 'Active', NULL, NULL),
-(73, 'lezoulmohamed', '$2b$12$VF3m3leoryhPvIZJSd1DpO1KEdKaSSnhTaHKU1KG6nF02gCVfGobq', NULL, 'Teacher', 'Active', NULL, NULL),
-(74, 'kichounacer', '$2b$12$hcokMbDDDuTfKAf3J8ECceQube1VJ5OSHMZuflYHqCcJgLgPjSIpG', NULL, 'Teacher', 'Active', NULL, NULL),
-(75, 'himrifaiza', '$2b$12$1oybeO5h3zkiGsj8gh8O.elq.S3XyBo2r5lcpcxi7iLLpO8xkUv/C', NULL, 'Teacher', 'Active', NULL, NULL),
-(76, 'hassaineomar', '$2b$12$75y3hiGpmQRSanVptX0Fpew0spRG6hb0ZW8zX3pkT19uRPuV/VIQW', NULL, 'Teacher', 'Active', NULL, NULL),
-(77, 'hamdicherifmontasir', '$2b$12$NXiJK6l2NudyCNyzKOxtouDNjXQYuA7LMz1y2anZuKfQZ.leYix8.', NULL, 'Teacher', 'Active', NULL, NULL),
-(78, 'gadiibtissem', '$2b$12$7Hte9rsDkzOnAO9lSIrYS.4LLhlHMyRm/wocAzAkn2kVxJF0jrQy6', NULL, 'Teacher', 'Active', NULL, NULL),
-(79, 'djelouliabdelhamid', '$2b$12$BS6SDyLCmEgUp1LVNoUv/uVpKtAU8E4/6Tw6xiJmZu0FMFOnIpxya', NULL, 'Teacher', 'Active', NULL, NULL),
-(80, 'djaballahhouda', '$2b$12$Etg8WSmn.kmCLoQENYFf2et12RFQZqWgnKv7l2ebBL40ohGjb00Re', NULL, 'Teacher', 'Active', NULL, NULL),
-(81, 'darkaouiasmaa', '$2y$10$jn6mV23Sa846y.G/.oCYuOsRSoklthGsPO9TJ8/PTfKHdCtErhaJS', NULL, 'Teacher', 'Active', NULL, '2026-02-23 10:20:36'),
-(82, 'daoudimohamed', '$2b$12$XydCsoU5ZMWb1pa1hlWsIOTRPKvnsN46I/W.JQVoR6Xyv9tFGWbTi', NULL, 'Teacher', 'Active', NULL, NULL),
-(83, 'cherchemmohamed', '$2b$12$Pq1yJx8fI/vPS5ALErfdg.f7tcUG6I.s.P3PDhcFeIcJuWqxv0d2.', NULL, 'Teacher', 'Active', NULL, NULL),
-(84, 'chaachouakarim', '$2b$12$Sq6pvyfWFBRBFm9//aTs.ewsOkjbVWOOo4wOYPNEJyy6UFGnxZ0Ny', NULL, 'Teacher', 'Active', NULL, NULL),
-(85, 'brainesabdelkader', '$2b$12$IBhXKsaG6Y8cY/nhfg8Ec.QxEFglzYf50pgbcTRlswdDj9PAA7t12', NULL, 'Teacher', 'Active', NULL, NULL),
-(86, 'brachemihasna', '$2b$12$VPk.DEQr02tz3iLSvp6Eaux7O6VGlcYKL7/I3T3.3vEKRj61xM7i6', NULL, 'Teacher', 'Active', NULL, NULL),
-(87, 'bouzidielhouari', '$2b$12$OJzWw.AiKiUrCbDO2ShqaeetXERE.doLfmbbYCXLIGCxNIVRjmU5G', NULL, 'Teacher', 'Active', NULL, NULL),
-(88, 'boumdinibelgacem', '$2b$12$.R.3YFKWUuD13KonCNZE8OhgGW4eu4meau03ZlU9TENNtj8rc.18W', NULL, 'Teacher', 'Active', NULL, NULL),
-(89, 'boudaouedfatima', '$2y$10$R3Je7x0/uQamYgefrgT76uC1kJrvoT8GYc8Rgumv8egu1LyrZCbfK', NULL, 'Teacher', 'Active', NULL, '2026-03-01 09:14:15'),
-(90, 'benzidaneyacine', '$2b$12$UPbyLfsSqFJYNL56qS/.IOzZ9cGBb5ZbdjX7o8ipe0xwZlft6dkZO', NULL, 'Teacher', 'Active', NULL, NULL),
-(91, 'benkamlaabdelazize', '$2b$12$.HPhfQnu6caSdSz.08STB.PNyAaREQhuyY5c4AedaxIFbBc4xiNOa', NULL, 'Teacher', 'Active', NULL, '2026-03-02 11:03:14'),
-(92, 'benkadamahmoudamine', '$2b$12$hSIDXrKWJOh1xiTy6Ngj6.WB8xgI0MleNcFkJTCktuf3vyS8xwQkK', NULL, 'Teacher', 'Active', NULL, NULL),
-(93, 'benhadousoumiakhadidja', '$2y$10$HV2uNTmwgABZp2g8LGC0JeroZ6VndPFUzl.MIqV.jKh6LlQydc.Rm', NULL, 'Teacher', 'Active', NULL, '2026-02-22 12:32:27'),
-(94, 'bendjabbourmohamed', '$2b$12$EdCDneV76eXfUN68HkPdbO/mE4UfBF2yLCjBNuquwvPS2aIw/RuKC', NULL, 'Teacher', 'Active', NULL, NULL),
-(95, 'bendaiabdellahasmaa', '$2b$12$xxpZ7KSkTAQC8GPySKx0L.cjUibyzt4tgi5vkniwToYqI89eaZtLa', NULL, 'Teacher', 'Active', NULL, NULL),
-(96, 'bensaidmohamed', '$2b$12$xWgDMRkT2JrJbkScTSq37uhmPTswpdG71F3MReXmUvE3VWeTv1oxW', NULL, 'Teacher', 'Active', NULL, NULL),
-(97, 'belahcenhouari', '$2y$10$OewWgMRfTjqptJlpIJW/3uvN68Wt1UUPxSpzGsdcRfuoQokApv1EK', NULL, 'Teacher', 'Active', NULL, '2026-02-23 09:35:39'),
-(98, 'bakhtaouikhadidja', '$2b$12$oEavhAOnfZVvltgiA0BB1umT2.8SalbHp1bUxKGNY3khACUj05R9e', NULL, 'Teacher', 'Active', NULL, NULL),
-(99, 'ayedmohamed', '$2b$12$NasCZErLXiT/PuSdcQGj7e3JqJ5TWoWzCki/Oy46LONCuUXFxIT8u', NULL, 'Teacher', 'Active', NULL, NULL),
-(100, 'aslihoucine', '$2b$12$BWNQlKNfuo4UF8Ek.ws7k.u6YyPKUKwWvlY5IlQ6REiuY70uPKQom', NULL, 'Teacher', 'Active', NULL, NULL),
-(101, 'benhamouabdellah', '$2y$10$bNjpFLrtKPsAQpn2/Q0ITeHatU.3ZuEBysvKjc5dbb4sWNe7222RK', NULL, 'Teacher', 'Active', NULL, NULL),
-(102, 'bouhdibaelhouari', '$2b$12$QMwl/8QeS0C.hKFgQegDXe8m/EC7I6Mq.IcDghqr7nBZMOb199MPa', NULL, 'Teacher', 'Active', NULL, NULL),
-(103, 'boumedienmohamedrachid', '$2b$12$2c2Drz6eAUa1aShh.I2MP.WpaNx7NIcasFtPiwU667WXLz3UL8EBu', NULL, 'Teacher', 'Active', NULL, NULL),
-(104, 'bekaieyassmin', '$2b$12$M.5yZpNghAF0V0DRo0jj3OOAvmw.ewBzpj4TkPwT8DhgsK/wWWQUK', NULL, 'Teacher', 'Active', NULL, NULL),
-(105, 'hassamsoraya', '$2b$12$9314lBAvgKmfd2oDZ/MnpORAOtOA.aAcdVr7VVuRsp6nLezvJPvaq', NULL, 'Teacher', 'Active', NULL, NULL),
-(106, 'kerarmaahmed', '$2b$12$8anlWFTAi5LSXGtM2win/eTrfY2L4ckjMJN8ymiqX.N7IWRo918OS', NULL, 'Teacher', 'Active', NULL, NULL),
-(107, 'saouliabdelghani', '$2b$12$OPlgZpR6.MH92acvwHMncuT6Lnqk42VWfyGNqVrB76OUGpYCHGkBW', NULL, 'Teacher', 'Active', NULL, NULL),
-(108, 'setaoutimohameddjameleldine', '$2b$12$xrZ5DcBJmAiUohpx58J57eZ1hL/5kvcK6MJsKx0pYetk65eBlOfIi', NULL, 'Teacher', 'Active', NULL, NULL),
-(109, 'sahilmokadem', '$2b$12$xMSyjNUA6SnXc6eK.bU3Sug1aYb3eu7NwGGPVbGHIp7nUYZ6V8JHO', NULL, 'Teacher', 'Active', NULL, NULL),
-(110, 'amarisalaheddine', '$2y$10$l5JYitnQ1cISNe/YFoPZ8.lHzqOKPm/OFsuB.YDHvU8Bw7ZOT2XEy', NULL, 'Teacher', 'Active', NULL, NULL),
-(111, 'belgoumfarid', '$2b$12$hO4TPYjOqeWc7kRl3ZQJtuvBNkbZuuS32Bo6Q9t0sae57LUOGRjYW', NULL, 'Teacher', 'Active', NULL, NULL),
-(112, 'bellanezzar', '$2y$10$z0dWiKq3yo.gmq31tHKUoeX35Jo971N69Tqc3WFg3aYhfS3EGICPe', NULL, 'Teacher', 'Active', NULL, '2026-02-23 09:00:07'),
-(113, 'benkreirasarah', '$2b$12$boV0RvW1Eq0yi4xGvzki5uF2s.UtlFlw48r.0ssRxXBwAv9FRZBU6', NULL, 'Teacher', 'Active', NULL, NULL),
-(114, 'benlefkielhachemi', '$2b$12$BhoOSYF09HXTXhxUwIt6peBL6k0jnkhXRbLxgiIB861bCd7trgvua', NULL, 'Teacher', 'Active', NULL, NULL),
-(115, 'benyaminanecerine', '$2b$12$Qh8/cpxdj/tkStun/4HcCeR3UfO8poAAKhWtaNL8nwitABKjRsDqu', NULL, 'Teacher', 'Active', NULL, NULL),
-(116, 'chennoufsadek', '$2y$10$4IwYH8A6RvwJDOnJPkSpHedhJCUM.CNBx7jpCSAQurssgViH4VnW2', NULL, 'Teacher', 'Active', NULL, '2026-02-23 10:10:32'),
-(117, 'djaafriabdelkader', '$2b$12$a0q91aMkJw9sR09KyyFtWOjnbJR9Nnp3EwRxOWV4is2udc7JaT8YC', NULL, 'Teacher', 'Active', NULL, NULL),
-(118, 'douahbelkacem', '$2b$12$bK40Ilq094Lo1UREDWWbnuWzO0FZfrJIqX.R9UmtaX8vaE4XAUCdG', NULL, 'Teacher', 'Active', NULL, NULL),
-(119, 'mekkakaiameryemnihad', '$2b$12$XjNxudmAyAEEHkZrZyzODOqTboLTyMRZsDgwz75KNh./U6HlwbSii', NULL, 'Teacher', 'Active', NULL, NULL),
-(120, 'tchamkamel', '$2b$12$pSCFA1cF5KXn3vKKwPwK2ueVRrrW7YtFx5kRdNoOQioIMH1bUSgfq', NULL, 'Teacher', 'Active', NULL, NULL),
-(121, 'fninekhnawel', '$2b$12$w2RuKpaAVbIJq6.b6QH8EOx0SRit.fV.CbNE35Vf0.jAf1rGUAc7i', NULL, 'Teacher', 'Active', NULL, NULL),
-(122, 'belkaidbrahim', '$2b$12$CAtR3PX4iDeLun7fPmgc9OvyV1F4sxfa3Lst7QIq7NpiRV058GcHi', NULL, 'Teacher', 'Active', NULL, NULL),
-(123, 'guedouahyoucef', '$2b$12$6jkiwmWRIgis/tuqPuJJ4OdyX5L3wsuVtJPnoi40ZaDF1gow1vsdq', NULL, 'Teacher', 'Active', NULL, NULL),
-(124, 'hamamimiloud', '$2b$12$1XyKxW2qs37wStpYBhAdR.HtrVdAcmvjzOcs0SgZwMV5RJpcbOqMa', NULL, 'Teacher', 'Active', NULL, NULL),
-(125, 'aboulilzahia', '$2b$12$oQF9nSxgWoFgYbrHUT.o.Os6gM.icC7Nyf.1bGnIjYywW4ucgdJru', NULL, 'Teacher', 'Active', NULL, NULL),
-(126, 'senoucisafianourelhouda', '$2b$12$QpojvmyX74.4ao8FhGn6le9FrsM0F6lywz9xoWLnMj2FCESdWi8MW', NULL, 'Teacher', 'Active', NULL, NULL),
-(127, 'senoucibenaoumeur', '$2b$12$ps7WAY3GyvClPATu8z9jEuKsiJWJaVAcoAJ0dDiapBwFOXlhu0Q4O', NULL, 'Teacher', 'Active', NULL, NULL),
-(128, 'allambenaouda', '$2b$12$e3jvw.MzelCsGo6AyzjMS.h/giaiFCeVjqvcGL1AMY.eRDUDjwuPO', NULL, 'Teacher', 'Active', NULL, NULL),
-(129, 'beddanihamid', '$2b$12$wBWKCWptwZ3TidGKxm0Kse16UWkWMNaRRZLi1Fsg8q7EGAdlCmqm6', NULL, 'Teacher', 'Active', NULL, NULL),
-(130, 'benachoursalem', '$2y$10$/pEI6nZZxxFTQXULAf4/vedawkYOLiDmAx90oe7uFUablRq/mfq1y', NULL, 'Teacher', 'Active', NULL, NULL),
-(131, 'benmessaoudnassreddine', '$2b$12$z23M3dRQblHO0/HRPRrg/uVXR3IkZRS8ULqmxubPHhdqQKYwdfbm6', NULL, 'Teacher', 'Active', NULL, NULL),
-(132, 'djebranesofiane', '$2b$12$Q//2xzIQ5WndX.0zNoxTPe9wWSpCSFyqlp4w9sFS4h4D7bUxuIbTq', NULL, 'Teacher', 'Active', NULL, NULL),
-(133, 'hadjemimeriem', '$2b$12$iNwlThhVh6ELZQnen26R8uhYs02QheYqmQqrNI2o1gpCJBDeHFCDu', NULL, 'Teacher', 'Active', NULL, NULL),
-(134, 'kademsofiane', '$2b$12$JUiT7ZWVYw8z9IyS9FzPS.PGoAixtAF0x0EjTyU8YSLxzGQGnqCgC', NULL, 'Teacher', 'Active', NULL, NULL),
-(135, 'mokredabdallah', '$2b$12$l3g4kocZWw5q/Lzq4UhWhuUT7oW/KkbyQyxulGhLUZou1ZdPrJ0kG', NULL, 'Teacher', 'Active', NULL, NULL),
-(136, 'otmaneabdelatif', '$2b$12$zZcb8x8yR9ogNj8rpnR8/.0GtJ7hO8Mj91COyQy4CPyDPTQzfeWcm', NULL, 'Teacher', 'Active', NULL, NULL),
-(137, 'raisalikheira', '$2b$12$45DSxLWOFKClIcxAHGltMuzJJd95x9pgYtwIQ9lLjkNTdVQHqg6Ey', NULL, 'Teacher', 'Active', NULL, NULL),
-(138, 'sadekisohir', '$2b$12$HDbDrbTczvvbKJ0XDwUoIOS9TAU4FtDz4.j8Jx5Dnt0EzGwbdNZwu', NULL, 'Teacher', 'Active', NULL, NULL),
-(139, 'saichisauad', '$2y$10$YEKXO0ALAd1wWmLyLq/4sevUcpvWgQ7qg0s61EieXi4oH60WBau.O', NULL, 'Teacher', 'Active', NULL, NULL),
-(140, 'saimtahar', '$2b$12$1upyJV.rf46magv3SEe0xelzEQi56FNhK4C7YtdnvscJnGlFUGlte', NULL, 'Teacher', 'Active', NULL, NULL),
-(141, 'tchikofaouzi', '$2b$12$boEvPMv0aRS/lH0YdwLUpec2PBlXcfWLHHRVG2cfqFj9gNgSQW42i', NULL, 'Teacher', 'Active', NULL, NULL),
-(142, 'reziguefatimazohra', '$2b$12$r8y9uGPnLSPy.gCDCFmbQ.WiKdWiGvPjxkDkVrqFAbmSkqo2r9uFS', NULL, 'Teacher', 'Active', NULL, NULL),
-(143, 'toumihadjer', '$2b$12$OQTH/AHm5eySevZI1lxOBuBc/tEApoBBNerzSRgT8x1tdvvVcqXDi', NULL, 'Teacher', 'Active', NULL, NULL),
-(144, 'moualeksabrine', '$2b$12$rfd5V357Qo75LbevUpFMp.4KVGnWYBasj4hm/D5E.VL3aTXEE7J5K', NULL, 'Teacher', 'Active', NULL, NULL),
-(145, 'superuser', '$2y$10$7XaU/YqHfzAF1c1H/oxpwuXVffEcXXIJeIB2wle0tVqGbJjSOZ43e', NULL, 'Superuser', 'Active', NULL, '2026-03-15 12:41:08'),
-(555, 'secretary3', '$2y$10$5Te2iUzyDVfqsE994j0SCuLZ3hpMMH12jcmq5bBZ0FNgvYCx8BSPW', NULL, 'Secretary', 'Active', NULL, '2026-03-15 11:05:21'),
-(666, 'secretary1', '$2y$10$7uutpyD5LTf.Eji//ZZwpeagHZSdhKTXKStu/B3vT8ETBGZy75b4G', 'elbahrihouria@gmail.com', 'Secretary', 'Active', '0000-00-00 00:00:00', '2026-03-15 12:41:36'),
-(888, 'secretary2', '$2y$10$bkazoi81aQ3XgdOMif9azuHnCunSaU6jG7T9nknFABd7ZSjB5Ndam', NULL, 'Secretary', 'Active', NULL, '2026-03-15 12:27:04'),
-(999, 'teacher1', '$2y$10$6xKKw6oEKsH6EszAA8Ay/uBrn055Na9ZcLu4mjPezEk6fKz/l51be', 'teacher1@esam.com', 'Teacher', 'Active', '0000-00-00 00:00:00', '2026-02-26 10:16:55');
-
 -- --------------------------------------------------------
 
 --
--- Structure de la table `wilaya`
+-- Table structure for table `wilaya`
 --
 
 DROP TABLE IF EXISTS `wilaya`;
@@ -4762,135 +836,87 @@ CREATE TABLE IF NOT EXISTS `wilaya` (
   `WILAYA_NAME_AR` varchar(50) NOT NULL,
   PRIMARY KEY (`WILAYA_ID`),
   KEY `FK_WILAYA_COUNTRY` (`COUNTRY_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Déchargement des données de la table `wilaya`
---
-
-INSERT INTO `wilaya` (`WILAYA_ID`, `COUNTRY_ID`, `WILAYA_CODE`, `WILAYA_NAME_EN`, `WILAYA_NAME_AR`) VALUES
-(1, 1, '', 'Adrar', 'أدرار'),
-(2, 1, '', 'Chlef', 'الشلف'),
-(3, 1, '', 'Laghouat', 'الأغواط'),
-(4, 1, '', 'Oum El Bouaghi', 'أم البواقي'),
-(5, 1, '', 'Batna', 'باتنة'),
-(6, 1, '', 'Béjaïa', 'بجاية'),
-(7, 1, '', 'Biskra', 'بسكرة'),
-(8, 1, '', 'Béchar', 'بشار'),
-(9, 1, '', 'Blida', 'البليدة'),
-(10, 1, '', 'Bouira', 'البويرة'),
-(11, 1, '', 'Tamanrasset', 'تمنراست'),
-(12, 1, '', 'Tébessa', 'تبسة'),
-(13, 1, '', 'Tlemcen', 'تلمسان'),
-(14, 1, '', 'Tiaret', 'تيارت'),
-(15, 1, '', 'Tizi Ouzou', 'تيزي وزو'),
-(16, 1, '', 'Alger', 'الجزائر'),
-(17, 1, '', 'Djelfa', 'الجلفة'),
-(18, 1, '', 'Jijel', 'جيجل'),
-(19, 1, '', 'Sétif', 'سطيف'),
-(20, 1, '', 'Saïda', 'سعيدة'),
-(21, 1, '', 'Skikda', 'سكيكدة'),
-(22, 1, '', 'Sidi Bel Abbès', 'سيدي بلعباس'),
-(23, 1, '', 'Annaba', 'عنابة'),
-(24, 1, '', 'Guelma', 'قالمة'),
-(25, 1, '', 'Constantine', 'قسنطينة'),
-(26, 1, '', 'Médéa', 'المدية'),
-(27, 1, '', 'Mostaganem', 'مستغانم'),
-(28, 1, '', 'M\'Sila', 'المسيلة'),
-(29, 1, '', 'Mascara', 'معسكر'),
-(30, 1, '', 'Ouargla', 'ورقلة'),
-(31, 1, '', 'Oran', 'وهران'),
-(32, 1, '', 'El Bayadh', 'البيض'),
-(33, 1, '', 'Illizi', 'إليزي'),
-(34, 1, '', 'Bordj Bou Arreridj', 'برج بوعريريج'),
-(35, 1, '', 'Boumerdès', 'بومرداس'),
-(36, 1, '', 'El Tarf', 'الطارف'),
-(37, 1, '', 'Tindouf', 'تندوف'),
-(38, 1, '', 'Tissemsilt', 'تيسمسيلت'),
-(39, 1, '', 'El Oued', 'الوادي'),
-(40, 1, '', 'Khenchela', 'خنشلة'),
-(41, 1, '', 'Souk Ahras', 'سوق أهراس'),
-(42, 1, '', 'Tipaza', 'تيبازة'),
-(43, 1, '', 'Mila', 'ميلة'),
-(44, 1, '', 'Aïn Defla', 'عين الدفلة'),
-(45, 1, '', 'Naâma', 'النعامة'),
-(46, 1, '', 'Aïn Témouchent', 'عين تيموشنت'),
-(47, 1, '', 'Ghardaïa', 'غرداية'),
-(48, 1, '', 'Relizane', 'غليزان'),
-(49, 1, '', 'Timimoun', 'تيميمون'),
-(50, 1, '', 'Bordj Badji Mokhtar', 'برج باجي مختار'),
-(51, 1, '', 'Ouled Djellal', 'أولاد جلال'),
-(52, 1, '', 'Béni Abbès', 'بني عباس'),
-(53, 1, '', 'In Salah', 'عين صالح'),
-(54, 1, '', 'In Guezzam', 'عين قزام'),
-(55, 1, '', 'Touggourt', 'تقرت'),
-(56, 1, '', 'Djanet', 'جانت'),
-(57, 1, '', 'El Meghaier', 'المغير'),
-(58, 1, '', 'El Menia', 'المنيعة');
-
---
--- Contraintes pour les tables déchargées
+-- Constraints for dumped tables
 --
 
 --
--- Contraintes pour la table `absence`
+-- Constraints for table `absence`
 --
 ALTER TABLE `absence`
   ADD CONSTRAINT `FK_ABSENCE_MOTIF` FOREIGN KEY (`ABSENCE_MOTIF_ID`) REFERENCES `absence_motif` (`ABSENCE_MOTIF_ID`),
   ADD CONSTRAINT `FK_ABSENCE_SESSION` FOREIGN KEY (`STUDY_SESSION_ID`) REFERENCES `study_session` (`STUDY_SESSION_ID`);
 
 --
--- Contraintes pour la table `address`
+-- Constraints for table `address`
 --
 ALTER TABLE `address`
   ADD CONSTRAINT `FK_ADDR_COMMUNE` FOREIGN KEY (`COMMUNE_ID`) REFERENCES `commune` (`COMMUNE_ID`),
   ADD CONSTRAINT `FK_ADDR_COUNTRY` FOREIGN KEY (`COUNTRY_ID`) REFERENCES `country` (`COUNTRY_ID`);
 
 --
--- Contraintes pour la table `administrator`
+-- Constraints for table `administrator`
 --
 ALTER TABLE `administrator`
   ADD CONSTRAINT `FK_ADMIN_USER` FOREIGN KEY (`USER_ID`) REFERENCES `user_account` (`USER_ID`);
 
 --
--- Contraintes pour la table `admin_read_observation`
+-- Constraints for table `admin_read_observation`
 --
 ALTER TABLE `admin_read_observation`
   ADD CONSTRAINT `FK_ARO_ADMIN` FOREIGN KEY (`ADMINISTRATOR_ID`) REFERENCES `administrator` (`ADMINISTRATOR_ID`),
   ADD CONSTRAINT `FK_ARO_OBS` FOREIGN KEY (`OBSERVATION_ID`) REFERENCES `observation` (`OBSERVATION_ID`);
 
 --
--- Contraintes pour la table `commune`
+-- Constraints for table `commune`
 --
 ALTER TABLE `commune`
   ADD CONSTRAINT `FK_COMMUNE_DAIRA` FOREIGN KEY (`DAIRA_ID`) REFERENCES `daira` (`DAIRA_ID`);
 
 --
--- Contraintes pour la table `daira`
+-- Constraints for table `daira`
 --
 ALTER TABLE `daira`
   ADD CONSTRAINT `FK_DAIRA_WILAYA` FOREIGN KEY (`WILAYA_ID`) REFERENCES `wilaya` (`WILAYA_ID`);
 
 --
--- Contraintes pour la table `observation`
+-- Constraints for table `observation`
 --
 ALTER TABLE `observation`
   ADD CONSTRAINT `FK_OBS_SESSION` FOREIGN KEY (`STUDY_SESSION_ID`) REFERENCES `study_session` (`STUDY_SESSION_ID`);
 
 --
--- Contraintes pour la table `secretary`
+-- Constraints for table `secretary`
 --
 ALTER TABLE `secretary`
   ADD CONSTRAINT `FK_SECRETARY_EDIT_CAT` FOREIGN KEY (`SECRETARY_EDITABLE_CATEGORY_ID`) REFERENCES `category` (`CATEGORY_ID`) ON DELETE SET NULL ON UPDATE RESTRICT;
 
 --
--- Contraintes pour la table `section`
+-- Constraints for table `secretary_punishes_student`
+--
+ALTER TABLE `secretary_punishes_student`
+  ADD CONSTRAINT `FK_SPS_SECRETARY` FOREIGN KEY (`SECRETARY_ID`) REFERENCES `secretary` (`SECRETARY_ID`),
+  ADD CONSTRAINT `FK_SPS_STUDENT` FOREIGN KEY (`STUDENT_SERIAL_NUMBER`) REFERENCES `student` (`STUDENT_SERIAL_NUMBER`),
+  ADD CONSTRAINT `FK_SPS_TYPE` FOREIGN KEY (`PUNISHMENT_TYPE_ID`) REFERENCES `punishment_type` (`PUNISHMENT_TYPE_ID`);
+
+--
+-- Constraints for table `secretary_rewards_student`
+--
+ALTER TABLE `secretary_rewards_student`
+  ADD CONSTRAINT `FK_SRS_SECRETARY` FOREIGN KEY (`SECRETARY_ID`) REFERENCES `secretary` (`SECRETARY_ID`),
+  ADD CONSTRAINT `FK_SRS_STUDENT` FOREIGN KEY (`STUDENT_SERIAL_NUMBER`) REFERENCES `student` (`STUDENT_SERIAL_NUMBER`),
+  ADD CONSTRAINT `FK_SRS_TYPE` FOREIGN KEY (`REWARD_TYPE_ID`) REFERENCES `reward_type` (`REWARD_TYPE_ID`);
+
+--
+-- Constraints for table `section`
 --
 ALTER TABLE `section`
   ADD CONSTRAINT `FK_SECTION_CAT` FOREIGN KEY (`CATEGORY_ID`) REFERENCES `category` (`CATEGORY_ID`);
 
 --
--- Contraintes pour la table `student`
+-- Constraints for table `student`
 --
 ALTER TABLE `student`
   ADD CONSTRAINT `FK_STUDENT_ACADEMIC_LEVEL` FOREIGN KEY (`STUDENT_ACADEMIC_LEVEL_ID`) REFERENCES `academic_level` (`ACADEMIC_LEVEL_ID`) ON DELETE SET NULL ON UPDATE RESTRICT,
@@ -4905,33 +931,33 @@ ALTER TABLE `student`
   ADD CONSTRAINT `FK_STUDENT_SPECIALITY` FOREIGN KEY (`STUDENT_SPECIALITY_ID`) REFERENCES `student_speciality` (`student_speciality_id`) ON DELETE SET NULL ON UPDATE RESTRICT;
 
 --
--- Contraintes pour la table `student_combat_outfit`
+-- Constraints for table `student_combat_outfit`
 --
 ALTER TABLE `student_combat_outfit`
   ADD CONSTRAINT `FK_COMBAT_STUDENT` FOREIGN KEY (`STUDENT_SERIAL_NUMBER`) REFERENCES `student` (`STUDENT_SERIAL_NUMBER`) ON DELETE CASCADE;
 
 --
--- Contraintes pour la table `student_emergency_contact`
+-- Constraints for table `student_emergency_contact`
 --
 ALTER TABLE `student_emergency_contact`
   ADD CONSTRAINT `FK_SEC_RELATION` FOREIGN KEY (`CONTACT_RELATION_ID`) REFERENCES `relation` (`relation_id`) ON DELETE SET NULL ON UPDATE RESTRICT;
 
 --
--- Contraintes pour la table `student_hobby`
+-- Constraints for table `student_hobby`
 --
 ALTER TABLE `student_hobby`
   ADD CONSTRAINT `FK_STUDENT_HOBBY_HOBBY` FOREIGN KEY (`hobby_id`) REFERENCES `hobby` (`hobby_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_STUDENT_HOBBY_STUDENT` FOREIGN KEY (`student_serial_number`) REFERENCES `student` (`STUDENT_SERIAL_NUMBER`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 --
--- Contraintes pour la table `student_military_certificate`
+-- Constraints for table `student_military_certificate`
 --
 ALTER TABLE `student_military_certificate`
   ADD CONSTRAINT `FK_SMC_CERT` FOREIGN KEY (`military_certificate_id`) REFERENCES `military_certificate` (`military_certificate_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
   ADD CONSTRAINT `FK_SMC_STUDENT` FOREIGN KEY (`student_serial_number`) REFERENCES `student` (`STUDENT_SERIAL_NUMBER`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 --
--- Contraintes pour la table `student_parent_info`
+-- Constraints for table `student_parent_info`
 --
 ALTER TABLE `student_parent_info`
   ADD CONSTRAINT `FK_SPI_FATHER_PROF` FOREIGN KEY (`FATHER_PROFESSION_ID`) REFERENCES `profession` (`profession_id`) ON DELETE SET NULL ON UPDATE RESTRICT,

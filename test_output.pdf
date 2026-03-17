@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <script>if(localStorage.getItem('edutrack_theme')==='dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css" />
+    <title>Login - eNote</title>
+</head>
+<body>
+    <div class="login-wrapper">
+        <!-- Left Side - Login Form -->
+        <div class="login-left">
+            <div class="login-lang-fix"><div class="lang-switcher-container">
+    <a href="/login.php?lang=ar" class="lang-switch-btn">
+        <span class="lang-icon">🌐</span>
+        <span class="lang-label">العربية</span>
+    </a>
+</div>
+</div>
+            
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="login-logo">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="login-title">Welcome to eNote!</h1>
+                    <p class="login-subtitle">eNote</p>
+                </div>
+
+                <form action="index.php" method="post" id="login">
+                    <div class="form-group">
+                        <label class="form-label" for="username">Username:</label>
+                        <input class="form-input" type="text" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password:</label>
+                        <div style="position: relative;">
+                            <input class="form-input" type="password" id="password" name="password" placeholder="Enter your password" required style="padding-right: 40px;">
+                            <span id="togglePassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-secondary); user-select: none; font-size: 1.2rem;">
+                                👁️
+                            </span>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="login_button" class="btn btn-primary">Login</button>
+                    <div id="login_error" class="alert alert-error mt-4" style="display: none; text-align: center;"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Side - Feature Carousel -->
+        <div class="login-right">
+            <div class="carousel-container">
+                <div class="carousel-slides">
+                    <div class="carousel-slide active">
+                        <div class="carousel-icon">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h2 class="carousel-title">Student Management</h2>
+                        <p class="carousel-description">Efficiently manage student records, categories, and sections. Access comprehensive profiles with personal details, academic information, and attendance history.</p>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="carousel-icon">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </div>
+                        <h2 class="carousel-title">Attendance Tracking</h2>
+                        <p class="carousel-description">Record and monitor student attendance with ease. Track absences, identify patterns, and generate detailed reports for better classroom management.</p>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="carousel-icon">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                        </div>
+                        <h2 class="carousel-title">Reports & Records</h2>
+                        <p class="carousel-description">Access detailed student records and generate comprehensive reports. Search, filter, and export data for informed decision-making.</p>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="carousel-icon">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                        </div>
+                        <h2 class="carousel-title">Real-Time Notifications</h2>
+                        <p class="carousel-description">Stay informed with instant alerts for new observations and important events. Never miss critical updates about your students.</p>
+                    </div>
+                </div>
+                <div class="carousel-indicators">
+                    <button class="carousel-dot active" data-slide="0"></button>
+                    <button class="carousel-dot" data-slide="1"></button>
+                    <button class="carousel-dot" data-slide="2"></button>
+                    <button class="carousel-dot" data-slide="3"></button>
+                </div>
+                <div class="carousel-nav">
+                    <button class="carousel-prev">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <button class="carousel-next">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var T = {"app_name":"eNote","title_suffix":"Educational Management System","home":"Home","search":"Search","profile":"Profile","logout":"Logout","login":"Login","student_records":"Student Records","insert_student":"Insert Student","absences":"Absences","observations":"Observations","new_observations":"New Observations","no_new_observations":"No new observations","teacher_label":"Teacher","session_label":"Session","motif_label":"Motif","by":"By","clear_notification":"Clear","clear_all_notifications":"Clear All","notifications_cleared":"All notifications cleared.","welcome":"Welcome","nav_features":"Features","nav_how_it_works":"How It Works","nav_for_teams":"For Teams","hero_title":"Welcome to eNote","hero_subtitle":"A Modern Educational Management System for Teachers and Administrators","hero_subtitle2":"Manage absences, observations, student records, and class sessions with ease","get_started":"Get Started","learn_more":"Learn More","section_main_features":"\u2728 Main Features","section_main_features_sub":"Everything you need to manage your educational institution","feature_student_mgmt":"Student Management","feature_student_mgmt_desc":"Complete student database with categories, sections, and academic grades. Track all student information in one centralized location.","feature_observations":"Observation Tracking","feature_observations_desc":"Teachers can make detailed observations about student performance. Admins receive real-time notifications for new observations.","feature_absences":"Absence Management","feature_absences_desc":"Record and track student absences with dates, times, and motifs. Generate reports and monitor attendance patterns.","feature_sessions":"Study Session Scheduling","feature_sessions_desc":"Schedule classes and study sessions with specific time slots. Associate teachers, sections, and majors with each session.","feature_categories":"Multi-Category Support","feature_categories_desc":"Organize students into multiple categories (EOA 1, EOA 2, Master, etc.) and track different educational programs.","feature_photo_mgmt":"Student Photo Management","feature_photo_mgmt_desc":"Upload and manage student profile photos for easy identification and professional record keeping.","feature_notifications":"Real-Time Notifications","feature_notifications_desc":"Stay updated with instant notifications for new observations and important events in your institution.","feature_sections":"Section Organization","feature_sections_desc":"Organize students into sections within each category for better classroom management and tracking.","feature_dashboard":"Admin Dashboard","feature_dashboard_desc":"Comprehensive dashboard with statistics, recent activities, and quick search for study sessions and records.","section_how_it_works":"\ud83c\udfaf How It Works","quick_start_guide":"Quick Start Guide","step1_title":"1. Login to Your Account","step1_desc":"Use your credentials to access the system as a Teacher or Administrator","step2_title":"2. Navigate Your Dashboard","step2_desc":"View your personalized dashboard with key statistics and recent activities","step3_title":"3. Manage Records","step3_desc":"Create observations, record absences, and manage student information","step4_title":"4. Search & Filter","step4_desc":"Use advanced search to find specific study sessions, students, or records","step5_title":"5. Stay Informed","step5_desc":"Receive notifications for important events and maintain your profile","msg_please_select_date":"Please select a date.","ready_to_start":"Ready to Get Started?","ready_to_start_desc":"Login to access the full power of eNote and streamline your educational management","section_for_roles":"\ud83d\udc65 For Different Roles","section_for_roles_sub":"Designed with different user roles in mind","for_teachers":"\ud83d\udc68\u200d\ud83c\udfeb Teachers","for_teachers_desc":"Record observations about student performance, track absences during your classes, and view your schedule of study sessions. Keep detailed notes on each student's progress.","for_admins":"\ud83d\udc54 Administrators","for_admins_desc":"Oversee all educational operations with a comprehensive dashboard. Manage students, teachers, classes, and receive real-time notifications about observations and absences.","for_secretaries":"\ud83d\udccb Secretaries","for_secretaries_desc":"Register new students with comprehensive forms covering personal details, academic information, uniforms, family data, and emergency contacts. Manage student enrollment efficiently.","analytics_insights":"\ud83d\udcca Analytics & Insights","analytics_insights_desc":"Track institution-wide metrics including total students, teachers, classes, and sessions. Monitor trends in observations and absences to improve educational outcomes.","cta_title":"Ready to Transform Your Educational Management?","cta_sub":"Join educators and administrators using eNote to streamline their operations and improve student outcomes.","login_now":"Login Now","footer_copyright":"\u00a9 2025 eNote - Educational Management System. All rights reserved.","footer_privacy":"Privacy Policy","footer_terms":"Terms of Service","footer_contact":"Contact Support","footer_tagline":"Empowering Education Through Technology","login_welcome":"Welcome to eNote!","username":"Username:","password":"Password:","username_placeholder":"Enter your username","password_placeholder":"Enter your password","login_button":"Login","invalid_credentials":"Invalid username or password.","error_unexpected":"An unexpected error occurred.","db_connection_failed":"Database connection failed","access_denied":"Access denied.","welcome_admin":"Welcome, %s! \ud83d\udc4b","welcome_admin_sub":"Here's an overview of the educational management system","admin_dashboard":"Admin Dashboard","total_students":"Total Students","total_teachers":"Total Teachers","total_classes":"Total Classes","total_majors":"Total Majors","total_sections":"Total Sections","study_sessions":"Study Sessions","total_absences":"Total Absences","total_observations":"Total Observations","recent_observations":"Recent Observations","recent_absences":"Recent Absences","no_recent_observations":"No recent observations","no_recent_absences":"No recent absences","welcome_secretary_insert":"Register New Student","welcome_secretary_edit":"Edit Student Record","insert_student_subtitle":"Fill in the information below to add a new student to the system.","edit_student_subtitle":"Update the student information using the form below.","welcome_secretary":"Welcome, %s","register_student_sub":"Register a new student by filling out the form below.","step_ident":"Identification & Classification","step_personal":"Personal Details","step_academic":"Academic Info","step_other":"Other Details","step_uniforms":"Uniforms","step_family":"Family Information","step_emergency":"Emergency Contact","serial_number":"Serial Number (Required) *","serial_placeholder":"e.g. 20260001","category":"Category *","section":"Section *","select":"Select...","first_name_en":"First Name (EN) *","last_name_en":"Last Name (EN) *","first_name_ar":"First Name (AR)","last_name_ar":"Last Name (AR)","sex":"Sex","male":"Male","female":"Female","birth_date":"Birth Date","birth_place_address":"Birth Place Address","personal_address":"Personal Address","street_en":"Street (EN)","street_ar":"Street (AR)","street_placeholder":"Street Name","street_ar_placeholder":"\u0627\u0633\u0645 \u0627\u0644\u0634\u0627\u0631\u0639","country":"Country","wilaya":"Wilaya","daira":"Daira","commune":"Commune","step_addresses":"Personal & Birth Place Address","select_country":"Select Country...","select_wilaya_first":"Select Country First","select_daira_first":"Select Wilaya First","select_commune_first":"Select Daira First","select_wilaya_opt":"Select Wilaya...","select_daira_opt":"Select Daira...","select_commune_opt":"Select Commune...","personal_phone":"Personal Phone","blood_type":"Blood Type","grade_rank":"Grade \/ Rank","select_grade":"Select Grade...","academic_average":"Academic Average","speciality":"Speciality","academic_level":"Academic Level","bac_number":"Bac Number","recruitment_source":"Recruitment Source","select_recruitment":"Select Recruitment Source","combat_outfit":"Combat Outfit","parade_uniform":"Parade Uniform","1st_outfit_number":"1st Outfit Number","1st_outfit_size":"1st Outfit Size","2nd_outfit_number":"2nd Outfit Number","2nd_outfit_size":"2nd Outfit Size","combat_shoe_size":"Combat Shoe Size","outfit1_number":"1st Outfit Number","outfit1_size":"1st Outfit Size","outfit2_number":"2nd Outfit Number","outfit2_size":"2nd Outfit Size","shoe_size":"Shoe Size","outfit_size_placeholder":"e.g. M, L, XL","shoe_placeholder":"e.g. 42, 43","summer_jacket_size":"Summer Jacket Size","winter_jacket_size":"Winter Jacket Size","summer_trousers_size":"Summer Trousers Size","winter_trousers_size":"Winter Trousers Size","summer_shirt_size":"Summer Shirt Size","winter_shirt_size":"Winter Shirt Size","summer_hat_size":"Summer Hat Size","winter_hat_size":"Winter Hat Size","summer_skirt_size":"Summer Skirt Size","winter_skirt_size":"Winter Skirt Size","family_information":"Family Information","father_first_en":"Father First Name (EN)","father_last_en":"Father Last Name (EN)","father_first_ar":"Father First Name (AR)","father_last_ar":"Father Last Name (AR)","father_profession_en":"Father Profession (EN)","father_profession_ar":"Father Profession (AR)","mother_first_en":"Mother First Name (EN)","mother_last_en":"Mother Last Name (EN)","mother_first_ar":"Mother First Name (AR)","mother_last_ar":"Mother Last Name (AR)","mother_profession_en":"Mother Profession (EN)","mother_profession_ar":"Mother Profession (AR)","emergency_contact":"Emergency Contact","contact_phone":"Contact Phone Number","contact_name_en":"Contact Name (EN)","contact_name_ar":"Contact Name (AR)","contact_first_en":"First Name (EN)","contact_last_en":"Last Name (EN)","contact_relation_en":"Relation (EN)","contact_relation_ar":"Relation (AR)","contact_relation_placeholder":"e.g. Father, Uncle","contact_relation_ar_placeholder":"\u0645\u062b\u0644 \u0627\u0644\u0623\u0628","contact_address":"Contact Address","label_contact_address":"Contact Address","label_consulate_number":"Consulate Number","relation_consulate_note":"* Relation will be automatically set to \"[Birth Country]'s consulate\"","previous":"Previous","next":"Next","add_student_record":"Add Student Record","student_created_success":"Student record created successfully!","error_required_fields":"Please fill in all required fields (Serial Number, Names, Category, Section).","error_serial_exists":"Error: Serial Number '%s' already exists.","error_insert":"Error inserting record: %s","loading":"Loading","error_loading":"Error or None","select_army":"Select Army...","height_cm":"Height (cm)","weight_kg":"Weight (kg)","is_foreign":"Is Foreign?","yes":"Yes","no":"No","school_sub_date":"School Sub Date","parents_situation":"Parents Situation","orphan_status":"Orphan Status","orphan_none":"None","orphan_father":"Father","orphan_mother":"Mother","orphan_both":"Both","num_siblings":"Num Siblings","num_sisters":"Num Sisters","order_siblings":"Order among Siblings","married":"Married","divorced":"Divorced","separated":"Separated","widowed":"Widowed","none":"None","father":"Father","mother":"Mother","both":"Both","school_card_number":"School Card Number","laptop_serial":"Laptop Serial","id_card_number":"ID Card Number","birth_cert_number":"Birth Cert Number","postal_account":"Postal Account","educational_certificates":"Educational Certificates","military_certificates":"Military Certificates","hobbies":"Hobbies","health_status":"Health Status","military_necklace":"Military Necklace?","army":"Army","select_sections":"Select Sections:","welcome_back":"Welcome back, %s!","ready_to_manage":"Ready to manage your classroom today?","recorded_observations":"Recorded Student Observations","record_new":"Record New \u2192","your_majors":"Your Majors","no_majors_assigned":"No majors assigned yet.","start_attendance":"Start Attendance \u2192","absentees_observations":"Absentees and Observations","session_exists_note":"Session already exists for this slot. You can only record observations.","select_class":"Select Class:","select_class_placeholder":"Select a Class","select_class_opt":"Select a Class","select_category":"Select category to teach:","select_category_to_teach":"Select category to teach:","choose_category":"Choose a category","choose_category_first":"Choose a category first","select_major":"Select major to teach:","select_major_to_teach":"Select major to teach:","choose_major":"Choose a major","choose_observation_motif":"Choose an observation motif","choose_absence_motif":"Choose an absence motif","no_majors_found":"No majors found","please_login_teacher":"Please log in as a teacher","please_login_as_teacher":"Please log in as a teacher","no_categories_teacher":"No categories found for this teacher","select_sections_label":"Select Sections:","loading_sections":"Loading sections...","no_sections_found":"No sections found for this major.","presentees":"Presentees","absentees":"Absentees","last_name":"Last Name","first_name":"First Name","motif":"Motif","observation":"Observation","actions":"Actions","add_student":"Add Student","edit":"Edit","delete":"Delete","submit_absences":"Submit Absences","record_observation":"Record an Observation (one student)","student_search_placeholder":"Search student...","motif_max":"Motif (max 30 chars)","note_optional":"Note (optional)","submit_observation":"Submit Observation","absences_done":"Absences (Done)","no_classes_found":"No classes found","submitting":"Submitting...","form_submitted_success":"Form submitted successfully!","error_submitting":"Error submitting form.","please_fill_names":"Please fill first and last name for every added student row.","cannot_more_absentees_than_total":"You cannot have more absentees than the total number of students.","all_students_marked":"All students in the selected section(s) are already marked. You cannot add more absentees.","student_already_added":"This student is already added to the table.","please_select_student":"Please select a student from suggestions.","motif_required":"Motif is required.","observation_recorded":"Observation recorded successfully.","error_saving_observation":"Error saving observation.","error_contacting_server":"Error contacting server.","error_submitting_please_retry":"Error submitting form. Please try again.","please_select_at_least_one_section":"Please select at least one section.","user_profile":"User Profile","user_id":"User ID","grade_level":"Grade \/ Level","position":"Position","access_level":"Access Level","privileges_suffix":"Privileges","search_study_sessions":"Search Study Sessions","select_date":"Select Date:","select_time_slot":"Select Time Slot:","all_time_slots":"All Time Slots","search_sessions":"Search Sessions","please_select_date_search":"Please select a date and click \"Search Sessions\" to view study sessions.","loading_sessions":"Loading sessions...","no_sessions_found":"No sessions found for the selected date\/time.","error_loading_sessions":"Error loading sessions. Please try again.","session_details":"Session details","close":"Close","sections":"Sections:","absences_count":"Absences (%s):","no_absences_recorded":"No absences recorded","observations_count":"Observations (%s):","no_observations_recorded":"No observations recorded","student":"Student","teacher":"Teacher","class_label":"Class","time":"Time","note":"Note","absence_summary":"\ud83d\udcca Absence Summary","students_absent":"Students Absent","most_common_motif":"Most Common Motif","no_absences_for_date":"\u2713 No absences recorded for the selected date and time","student_name":"Student Name","date":"Date","session_details_could_not_load":"Session details could not be loaded.","error_loading_session_details":"Error loading session details.","please_select_date":"Please select a date.","search_student_records":"Search Student Records - Admin","search_students":"Search Students","search_btn":"Search","clear":"Clear","start_date":"Start Date","end_date":"End Date","lang_english":"English","lang_arabic":"\u0627\u0644\u0639\u0631\u0628\u064a\u0629","nav_home":"Home","nav_search":"Search","nav_student_records":"Student Records","nav_student_mgmt":"Management","nav_disciplinary":"Disciplinary","nav_personal":"Personal","nav_punish_student":"Punish Student","nav_reward_student":"Reward Student","selected_students":"Selected students","punishments":"Punishments","rewards":"Rewards","nav_options":"Options","nav_tutorial":"Tutorial","nav_logout":"Logout","logout_disabled_during_onboarding":"Logout is disabled during onboarding. Please complete the setup process.","punishment_type":"Punishment Type","punishment_duration":"Duration (Days)","recent_punishments":"Recent Punishments","add_punishment":"Add Punishment","bulk_add_punishment":"Bulk Punishment","optional_note":"Optional note...","secretary_punishes_student_title":"Assign Punishments","secretary_punishes_student_subtitle":"Search for a student, review punishment history, and add a new punishment.","reward_type":"Reward Type","reward_duration":"Duration (Days)","recent_rewards":"Recent Rewards","add_reward":"Add Reward","bulk_add_reward":"Bulk Reward","secretary_rewards_student_title":"Assign Rewards","secretary_rewards_student_subtitle":"Search for a student, review reward history, and add a new reward.","student_serial_number":"Serial Number","msg_select_required":"Please select an option.","select_option":"Select...","saved":"Saved","cancel":"Cancel","save":"Save","secretary":"Secretary","no_records_found":"No records found.","msg_error_loading":"Error loading data.","msg_select_student_suggestion":"Please select a student from the suggestions","error_missing_fields":"Missing required fields.","error_too_many_students":"Too many students selected.","error_failed_some_students":"Failed for some students.","punishment_added_success":"Punishment added successfully.","error_saving_punishment":"Failed to add punishment.","error_unknown_action":"Unknown action.","reward_added_success":"Reward added successfully.","error_saving_reward":"Failed to add reward.","error_failed_some_students_reward":"Failed for some students.","not_available":"Not Available","saving":"Saving...","nav_weekly_program":"Weekly Program","weekly_program_title":"Weekly Program","weekly_program_not_uploaded":"Weekly program has not been uploaded yet.","weekly_program_last_upload":"Last upload:","weekly_program_upload_title":"Upload Weekly Program","weekly_program_upload_btn":"Upload PDF","weekly_program_upload_hint":"Upload a PDF file. The latest upload replaces the previous weekly program.","weekly_program_uploaded_success":"Weekly program uploaded successfully.","weekly_program_upload_failed":"Weekly program upload failed.","weekly_program_invalid_file":"Invalid file. Please upload a PDF.","weekly_program_invalid_size":"Invalid file size. Maximum allowed is 10 MB.","pdf_viewer_fallback":"It seems your browser cannot display this PDF inline.","download_pdf":"Click here to download the PDF.","nav_upload_weekly_program":"Upload Weekly Program","superuser_dashboard_title":"Superuser Dashboard","weekly_program_available":"Weekly program is available.","options_coming_soon":"Options will be available soon.","change_password":"Change Password","old_password":"Old Password","new_password":"New Password","confirm_new_password":"Confirm New Password","update_password":"Update Password","password_mismatch":"The new passwords do not match.","password_same_as_old":"New password must be different from the old password.","fields_required":"All fields are required.","old_password_incorrect":"Old password is incorrect.","password_change_failed":"Password change failed.","password_updated_logout":"Password updated successfully. You will be logged out now.","unauthorized":"Unauthorized.","stat_total_students":"Total Students","stat_total_teachers":"Total Teachers","stat_total_classes":"Total Classes","stat_total_majors":"Total Majors","stat_total_sections":"Total Sections","stat_study_sessions":"Study Sessions","stat_total_absences":"Total Absences","stat_total_observations":"Total Observations","step_identification":"Identification & Classification","step_personal_details":"Personal Details","step_academic_info":"Academic Info","step_other_details":"Other Details","step_uniforms_labels":"Uniforms","step_family_info":"Family Information","step_emergency_contact":"Emergency Contact","label_first_name_en":"First Name (EN) *","label_last_name_en":"Last Name (EN) *","label_first_name_ar":"First Name (AR)","label_last_name_ar":"Last Name (AR)","label_father_first_en":"Father First Name (EN)","label_father_last_en":"Father Last Name (EN)","label_father_first_ar":"Father First Name (AR)","label_father_last_ar":"Father Last Name (AR)","label_father_name_en":"Father Name (EN)","label_father_name_ar":"Father Name (AR)","label_father_prof_en":"Father Profession (EN)","label_father_prof_ar":"Father Profession (AR)","label_mother_first_en":"Mother First Name (EN)","label_mother_last_en":"Mother Last Name (EN)","label_mother_first_ar":"Mother First Name (AR)","label_mother_last_ar":"Mother Last Name (AR)","label_mother_name_en":"Mother Name (EN)","label_mother_name_ar":"Mother Name (AR)","label_mother_prof_en":"Mother Profession (EN)","label_mother_prof_ar":"Mother Profession (AR)","search_student_name_label":"Student Name (First Name \/ Last Name)","btn_student_records":"\ud83d\udcc2 Student Records","btn_full_information":"\ud83d\udc64 Full Information","loading_student_records":"Loading student records...","label_sex":"Sex","label_birth_date":"Birth Date","label_birth_place_address":"Birth Place Address","label_personal_address":"Personal Address","label_street_en":"Street (EN)","label_street_ar":"Street (AR)","label_country":"Country","label_wilaya":"Wilaya","label_daira":"Daira","label_commune":"Commune","label_blood_type":"Blood Type","label_phone":"Phone","label_is_foreign":"Is Foreign?","label_height":"Height (cm)","label_weight":"Weight (kg)","label_academic_average":"Academic Average","label_speciality":"Speciality","label_academic_level":"Academic Level","label_bac_number":"BAC Number","label_edu_certificates":"Educational Certificates","label_mil_certificates":"Military Certificates","label_school_sub_date":"School Subscription Date","label_school_sub_card":"School Subscription Card Number","label_laptop_serial":"Laptop Serial Number","label_birth_cert_num":"Birth Certificate Number","label_id_card_num":"ID Card Number","id_card_num":"ID Card Number","birth_cert_num":"Birth Certificate Number","label_postal_account":"Postal Account Number","label_hobbies":"Hobbies","label_health_status":"Health Status","label_mil_necklace":"Does (s)he have a military necklace?","label_siblings_count":"Number of Siblings","label_sisters_count":"Number of Sisters","label_order_among_siblings":"Order Among Siblings","label_orphan_status":"Orphan Status","label_parents_situation":"Parents Situation","label_contact_phone":"Contact Phone Number","label_relation_en":"Relation (EN)","label_relation_ar":"Relation (AR)","observation_motif":"Observation Motif","observation_note":"Observation Note","placeholder_type_student_name":"Type student name...","student_photo":"Student Photo","label_student_photo":"Student Photo","placeholder_street":"Street Name","option_select_country":"Select Country...","option_select_country_first":"Select Country First","option_select_wilaya_first":"Select Country First","option_select_daira_first":"Select Wilaya First","option_select_commune_first":"Select Daira First","option_select_grade":"Select Grade...","option_select_army":"Select Army...","msg_select_both_dates":"Please select both start and end dates","msg_start_before_end":"Start date must be before end date","msg_records_loaded_success":"Student records loaded successfully","msg_failed_load_records":"Failed to load student records","msg_error_searching":"Error searching student: ","no_records_period":"No records found in this period.","no_absences_period":"No absences recorded in this period.","no_observations_period":"No observations recorded in this period.","no_punishments_period":"No punishments found in this period.","no_rewards_period":"No rewards found in this period.","administrator":"Administrator","quick_actions":"Quick Actions","generate_report":"Generate Report","onboarding_welcome_title":"Welcome to eNote!","onboarding_welcome_desc":"To ensure you have the best experience, we need to complete a quick two-step setup for your account. This will allow you to manage your students and classroom activities efficiently.","onboarding_step1_title":"Update Security","onboarding_step1_desc":"Change your temporary password to a secure personal one.","onboarding_step2_title":"Classroom Assignment","onboarding_step2_desc":"Select the categories, sections, and majors you are responsible for.","onboarding_get_started":"Get Started","onboarding_select_categories":"Select categories, sections, and majors","onboarding_categories_label":"Categories","onboarding_select_majors":"Select Majors:","onboarding_select_sections_for_major":"Select Sections for each Major:","onboarding_selection_summary":"Selection Summary:","onboarding_summary_text":"You have selected %d major(s) across %d section(s).","onboarding_save":"Save","onboarding_saved_success":"Saved successfully.","onboarding_save_failed":"Save failed.","onboarding_select_at_least_one":"Please select at least one major and section.","onboarding_loading_categories":"Loading categories...","onboarding_failed_load_categories":"Failed to load categories","onboarding_no_categories":"No categories available","onboarding_error_loading_categories":"Error loading categories","onboarding_loading_majors":"Loading majors...","onboarding_failed_load_majors":"Failed to load majors","onboarding_no_majors":"No majors available","onboarding_error_loading_majors":"Error loading majors","onboarding_sections_for":"Sections for %s:","onboarding_loading_sections":"Loading sections...","onboarding_failed_load_sections":"Failed to load sections","onboarding_no_sections":"No sections available for this category","onboarding_error_loading_sections":"Error loading sections","onboarding_select_all_majors":"Select All Majors","onboarding_clear_all_majors":"Clear All Majors","onboarding_select_all":"Select All","onboarding_clear_all":"Clear All","onboarding_password_updated":"Password updated.","onboarding_major_fallback":"Major","tutorial_close":"Close","tutorial_skip":"Skip","tutorial_prev":"Back","tutorial_next":"Next","tutorial_finish":"Finish","tutorial_done_toast":"Tutorial completed!","tutorial_step_home_title":"Home","tutorial_step_home_body":"Use this to go back to your main dashboard.","tutorial_intro_title":"Welcome to eNote","tutorial_intro_body":"This tour will guide you through the main areas of the application. Use Next\/Back to navigate, Skip to stop, and you can restart this tour anytime from the sidebar.","tutorial_outro_title":"You are ready!","tutorial_outro_body":"If you forget something, click \u201cTutorial\u201d in the sidebar to replay this guide.","tutorial_step_sidebar_title":"Sidebar navigation","tutorial_step_sidebar_body":"The sidebar is the main navigation. The highlighted item shows where you are. Use it to switch between features.","tutorial_step_language_title":"Language","tutorial_step_language_body":"Switch between English and Arabic. The whole interface will adapt (including right-to-left layout).","tutorial_step_logout_title":"Logout","tutorial_step_logout_body":"Log out when you finish using the system, especially on shared computers.","tutorial_step_admin_notifications_title":"Notifications","tutorial_step_admin_notifications_body":"New teacher observations appear here as notifications. Click the bell to open the panel and review new items.","tutorial_step_admin_welcome_title":"Dashboard overview","tutorial_step_admin_welcome_body":"This page gives you an overview of activity across the institution.","tutorial_step_admin_stats_title":"Statistics","tutorial_step_admin_stats_body":"These cards show key totals like students, teachers, sessions, absences, and observations.","tutorial_step_admin_recent_title":"Recent activity","tutorial_step_admin_recent_body":"Review the latest observations\/absences to follow up quickly and spot patterns.","tutorial_step_teacher_hero_title":"Your home","tutorial_step_teacher_hero_body":"This is your starting point. From here you can jump quickly to your daily tasks.","tutorial_step_teacher_obs_card_title":"Observations summary","tutorial_step_teacher_obs_card_body":"See how many observations you have recorded and use the shortcut to add a new one.","tutorial_step_teacher_majors_card_title":"Your majors","tutorial_step_teacher_majors_card_body":"This card shows the majors assigned to you, plus a shortcut to start attendance.","tutorial_step_secretary_welcome_title":"Secretary dashboard","tutorial_step_secretary_welcome_body":"This page shows quick stats and helps you access common tasks faster.","tutorial_step_secretary_actions_title":"Quick actions","tutorial_step_secretary_actions_body":"Use these shortcuts to start registering a new student without searching through pages.","tutorial_step_search_title":"Search","tutorial_step_search_body":"Search study sessions by date and time slot.","tutorial_step_records_title":"Student Records","tutorial_step_records_body":"Search students and review their records.","tutorial_step_absences_title":"Absences","tutorial_step_absences_body":"Record attendance for your sessions.","tutorial_step_observations_title":"Observations","tutorial_step_observations_body":"Create observations for student performance.","tutorial_step_insert_student_title":"Insert Student","tutorial_step_insert_student_body":"Register new students using the form.","tutorial_step_profile_title":"Profile","tutorial_step_profile_body":"View your account information and access details.","tutorial_step_options_title":"Options","tutorial_step_options_body":"Change your password and adjust settings.","tutorial_step_restart_title":"Tutorial","tutorial_step_restart_body":"Restart this tutorial anytime from here.","try_demo":"Try Interactive Demo","tutorial_progress":"Complete all 5 steps to finish the tutorial","tutorial_complete":"Tutorial Complete!","demo_login_title":"Login Demo","step1_preview":"Click to learn about logging in","step2_preview":"Explore your personalized dashboard","step3_preview":"Manage student records","step4_preview":"Find what you need quickly","step5_preview":"Stay updated with notifications","check_username":"Enter your username","check_password":"Enter your secure password","check_role":"Select your role (Teacher\/Admin)","check_stats":"View key statistics","check_activities":"Review recent activities","check_navigation":"Navigate using the sidebar","check_observations":"Create observations","check_absences":"Record absences","check_student_info":"Update student information","check_search_student":"Search by student name","check_filter_date":"Filter by date range","check_filter_section":"Filter by section\/major","check_notifications":"View real-time notifications","check_profile":"Update your profile","check_ready":"Ready to get started!","try_it_now":"Try it now","explore_demo":"Explore demo","see_how":"See how it works","try_search":"Try search demo","get_started_now":"Get Started Now","upload_new_program_question":"Would you like to upload a new weekly program?","confirm_selections_title":"Confirm Selections","submit":"Submit","security":"Security","change_password_desc":"Update your account password to stay secure.","carousel_feature_students":"Student Management","carousel_feature_students_desc":"Efficiently manage student records, categories, and sections. Access comprehensive profiles with personal details, academic information, and attendance history.","carousel_feature_attendance":"Attendance Tracking","carousel_feature_attendance_desc":"Record and monitor student attendance with ease. Track absences, identify patterns, and generate detailed reports for better classroom management.","carousel_feature_reports":"Reports & Records","carousel_feature_reports_desc":"Access detailed student records and generate comprehensive reports. Search, filter, and export data for informed decision-making.","carousel_feature_notifications":"Real-Time Notifications","carousel_feature_notifications_desc":"Stay informed with instant alerts for new observations and important events. Never miss critical updates about your students.","edit_student":"Edit Student","edit_student_info":"Edit student information","student_not_found":"Student not found.","personal_details":"Personal Details","academic_info":"Academic Info","uniforms":"Uniforms","save_changes":"Save Changes","and":"&"};
+        const loginForm = document.getElementById('login');
+        const errorDiv = document.getElementById('login_error');
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            errorDiv.style.display = 'none';
+            
+            const formData = new FormData(loginForm);
+            
+            fetch('index.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    errorDiv.textContent = data.message;
+                    errorDiv.style.display = 'block';
+                }
+            })
+            .catch(err => {
+                errorDiv.textContent = (T && T.error_unexpected) ? T.error_unexpected : 'An unexpected error occurred.';
+                errorDiv.style.display = 'block';
+            });
+        });
+
+        // Password toggle logic
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁️' : '🔒';
+        });
+
+        // If the user navigates back to this page while still logged in, bounce them home.
+        window.addEventListener('pageshow', function () {
+            fetch('session_status.php', { credentials: 'same-origin' })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.loggedIn && data.home) {
+                        window.location.replace(data.home);
+                    }
+                })
+                .catch(() => { /* ignore */ });
+        });
+
+        // Carousel functionality
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const prevBtn = document.querySelector('.carousel-prev');
+        const nextBtn = document.querySelector('.carousel-next');
+        let currentSlide = 0;
+        let autoPlayInterval;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            if (index >= slides.length) index = 0;
+            if (index < 0) index = slides.length - 1;
+            
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        function startAutoPlay() {
+            autoPlayInterval = setInterval(nextSlide, 5000);
+        }
+
+        function stopAutoPlay() {
+            clearInterval(autoPlayInterval);
+        }
+
+        prevBtn.addEventListener('click', () => {
+            stopAutoPlay();
+            prevSlide();
+            startAutoPlay();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            stopAutoPlay();
+            nextSlide();
+            startAutoPlay();
+        });
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                stopAutoPlay();
+                showSlide(index);
+                startAutoPlay();
+            });
+        });
+
+        // Start autoplay
+        startAutoPlay();
+    </script>
+</body>
+</html>
+

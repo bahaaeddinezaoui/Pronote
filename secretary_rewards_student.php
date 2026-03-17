@@ -67,9 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             SELECT 
                 srs.REWARD_ID,
                 srs.REWARD_SUGGESTED_AT,
+                srs.REWARD_START_DATE,
+                srs.REWARD_END_DATE,
                 srs.REWARD_NOTE,
                 rt.REWARD_LABEL_EN,
                 rt.REWARD_LABEL_AR,
+                rt.REWARD_DURATION,
                 sec.SECRETARY_FIRST_NAME_EN,
                 sec.SECRETARY_LAST_NAME_EN,
                 sec.SECRETARY_FIRST_NAME_AR,
@@ -97,19 +100,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($action === 'add_reward') {
         $serial = trim($_POST['serial_number'] ?? '');
         $type_id = isset($_POST['reward_type_id']) ? (int)$_POST['reward_type_id'] : 0;
+        $start_date = trim($_POST['start_date'] ?? '');
+        $end_date = trim($_POST['end_date'] ?? '');
         $note = trim($_POST['note'] ?? '');
 
-        if ($serial === '' || $type_id <= 0) {
+        if ($serial === '' || $type_id <= 0 || $start_date === '' || $end_date === '') {
             echo json_encode(['success' => false, 'message' => t('error_missing_fields') ?: 'Missing required fields.']);
             exit;
         }
 
         $stmt = $conn->prepare("
             INSERT INTO secretary_rewards_student
-                (STUDENT_SERIAL_NUMBER, SECRETARY_ID, REWARD_TYPE_ID, REWARD_SUGGESTED_AT, REWARD_NOTE)
-            VALUES (?, ?, ?, NOW(), ?)
+                (STUDENT_SERIAL_NUMBER, SECRETARY_ID, REWARD_TYPE_ID, REWARD_SUGGESTED_AT, REWARD_START_DATE, REWARD_END_DATE, REWARD_NOTE)
+            VALUES (?, ?, ?, NOW(), ?, ?, ?)
         ");
-        $stmt->bind_param("siis", $serial, $secretary_id, $type_id, $note);
+        $stmt->bind_param("siissss", $serial, $secretary_id, $type_id, $start_date, $end_date, $note);
         if ($stmt->execute()) {
             echo json_encode(['success' => true, 'message' => t('reward_added_success') ?: 'Reward added successfully.']);
         } else {
@@ -122,13 +127,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($action === 'add_reward_bulk') {
         $serials_raw = (string)($_POST['serial_numbers'] ?? '');
         $type_id = isset($_POST['reward_type_id']) ? (int)$_POST['reward_type_id'] : 0;
+        $start_date = trim($_POST['start_date'] ?? '');
+        $end_date = trim($_POST['end_date'] ?? '');
         $note = trim($_POST['note'] ?? '');
 
         $serials = array_values(array_unique(array_filter(array_map('trim', explode(',', $serials_raw)), function ($v) {
             return $v !== '';
-        })));
+        }))));
 
-        if (count($serials) < 1 || $type_id <= 0) {
+        if (count($serials) < 1 || $type_id <= 0 || $start_date === '' || $end_date === '') {
             echo json_encode(['success' => false, 'message' => t('error_missing_fields') ?: 'Missing required fields.']);
             exit;
         }
@@ -140,11 +147,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
         $conn->begin_transaction();
         try {
-            $stmt = $conn->prepare("INSERT INTO secretary_rewards_student (STUDENT_SERIAL_NUMBER, SECRETARY_ID, REWARD_TYPE_ID, REWARD_SUGGESTED_AT, REWARD_NOTE) VALUES (?, ?, ?, NOW(), ?)");
+            $stmt = $conn->prepare("INSERT INTO secretary_rewards_student (STUDENT_SERIAL_NUMBER, SECRETARY_ID, REWARD_TYPE_ID, REWARD_SUGGESTED_AT, REWARD_START_DATE, REWARD_END_DATE, REWARD_NOTE) VALUES (?, ?, ?, NOW(), ?, ?, ?)");
 
             $failed = [];
             foreach ($serials as $serial) {
-                $stmt->bind_param('siis', $serial, $secretary_id, $type_id, $note);
+                $stmt->bind_param('siissss', $serial, $secretary_id, $type_id, $start_date, $end_date, $note);
                 if (!$stmt->execute()) {
                     $failed[] = $serial;
                 }
@@ -173,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
 // Load reward types for select
 $reward_types = [];
-$res = $conn->query("SELECT REWARD_TYPE_ID, REWARD_LABEL_EN, REWARD_LABEL_AR FROM reward_type ORDER BY REWARD_LABEL_EN");
+$res = $conn->query("SELECT REWARD_TYPE_ID, REWARD_LABEL_EN, REWARD_LABEL_AR, REWARD_DURATION FROM reward_type ORDER BY REWARD_LABEL_EN");
 if ($res) {
     while ($r = $res->fetch_assoc()) {
         $reward_types[] = $r;
@@ -419,7 +426,7 @@ $conn->close();
                             <select id="rewardType" name="reward_type_id" required>
                                 <option value=""><?php echo t('select_option') ?: 'Select...'; ?></option>
                                 <?php foreach ($reward_types as $rt): ?>
-                                    <option value="<?php echo (int)$rt['REWARD_TYPE_ID']; ?>">
+                                    <option value="<?php echo (int)$rt['REWARD_TYPE_ID']; ?>" data-duration="<?php echo (int)$rt['REWARD_DURATION']; ?>">
                                         <?php
                                         echo htmlspecialchars(
                                             $LANG === 'ar' && !empty($rt['REWARD_LABEL_AR'])
@@ -430,6 +437,14 @@ $conn->close();
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="rewardStartDate"><?php echo t('start_date') ?: 'Start date'; ?></label>
+                            <input type="date" id="rewardStartDate" name="start_date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rewardEndDate"><?php echo t('end_date') ?: 'End date'; ?></label>
+                            <input type="date" id="rewardEndDate" name="end_date" readonly>
                         </div>
                         <div class="form-group">
                             <label for="rewardNote"><?php echo t('note') ?: 'Note'; ?></label>
@@ -620,6 +635,8 @@ $conn->close();
                     <thead>
                         <tr>
                             <th><?php echo t('date'); ?></th>
+                            <th><?php echo t('start_date') ?: 'Start'; ?></th>
+                            <th><?php echo t('end_date') ?: 'End'; ?></th>
                             <th><?php echo t('reward_type'); ?></th>
                             <th><?php echo t('note'); ?></th>
                             <th><?php echo t('secretary'); ?></th>
@@ -629,6 +646,8 @@ $conn->close();
                         ${rows.map(r => `
                             <tr>
                                 <td>${escapeHtmlAttr(r.REWARD_SUGGESTED_AT || '')}</td>
+                                <td>${escapeHtmlAttr(r.REWARD_START_DATE || '')}</td>
+                                <td>${escapeHtmlAttr(r.REWARD_END_DATE || '')}</td>
                                 <td><span class="badge-pill">${
                                     escapeHtmlAttr(<?php echo $LANG === 'ar' ? 'r.REWARD_LABEL_AR' : 'r.REWARD_LABEL_EN'; ?> || '')
                                 }</span></td>
@@ -672,6 +691,27 @@ $conn->close();
         document.getElementById('rewardModal').classList.remove('active');
     }
 
+    function calculateEndDate() {
+        const typeSelect = document.getElementById('rewardType');
+        const startDateInput = document.getElementById('rewardStartDate');
+        const endDateInput = document.getElementById('rewardEndDate');
+        
+        const selectedOption = typeSelect.options[typeSelect.selectedIndex];
+        const duration = parseInt(selectedOption?.dataset?.duration || 0);
+        const startDate = startDateInput.value;
+
+        if (startDate && duration > 0) {
+            const date = new Date(startDate);
+            date.setDate(date.getDate() + duration);
+            endDateInput.value = date.toISOString().split('T')[0];
+        } else {
+            endDateInput.value = '';
+        }
+    }
+
+    document.getElementById('rewardType').addEventListener('change', calculateEndDate);
+    document.getElementById('rewardStartDate').addEventListener('change', calculateEndDate);
+
     async function submitReward(e) {
         e.preventDefault();
         if (modalMode === 'single' && !selectedStudent) {
@@ -683,6 +723,8 @@ $conn->close();
             return;
         }
         const typeId = document.getElementById('rewardType').value;
+        const startDate = document.getElementById('rewardStartDate').value;
+        const endDate = document.getElementById('rewardEndDate').value;
         if (!typeId) {
             showStatus('statusModal', '<?php echo t('msg_select_required') ?: 'Please select a reward type.'; ?>', 'error');
             return;
@@ -698,6 +740,8 @@ $conn->close();
             formData.set('serial_number', selectedStudent.serial);
         }
         formData.set('reward_type_id', typeId);
+        formData.set('start_date', startDate);
+        formData.set('end_date', endDate);
         formData.set('note', note);
 
         showStatus('statusModal', '<?php echo t('saving'); ?>...', '');

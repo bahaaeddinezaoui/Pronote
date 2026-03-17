@@ -1,0 +1,187 @@
+This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex 2026.3.17)  17 MAR 2026 02:16
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**\documentclass{article}\usepackage{fontspec}\setmainfont{Simplified Arabic}\b
+egin{document} بكالوريا \end{document}
+(C:\Users\Bvhvddin\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\Bvhvddin\AppData\Local\Programs\MiKTeX\tex/latex/base\size10.clo
+File: size10.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count271
+\c@section=\count272
+\c@subsection=\count273
+\c@subsubsection=\count274
+\c@paragraph=\count275
+\c@subparagraph=\count276
+\c@figure=\count277
+\c@table=\count278
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen148
+)
+(C:\Users\Bvhvddin\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec.st
+y
+(C:\Users\Bvhvddin\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xp
+arse.sty
+(C:\Users\Bvhvddin\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+Package: expl3 2026-01-19 L3 programming layer (loader) 
+
+(C:\Users\Bvhvddin\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-
+xetex.def
+File: l3backend-xetex.def 2025-10-09 L3 backend support: XeTeX
+\g__graphics_track_int=\count279
+\g__pdfannot_backend_int=\count280
+\g__pdfannot_backend_link_int=\count281
+))
+Package: xparse 2025-10-09 L3 Experimental document command parser
+)
+Package: fontspec 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTeX
+
+(C:\Users\Bvhvddin\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec-xe
+tex.sty
+Package: fontspec-xetex 2025/09/29 v2.9g Font selection for XeLaTeX and LuaLaTe
+X
+\l__fontspec_script_int=\count282
+\l__fontspec_language_int=\count283
+\l__fontspec_strnum_int=\count284
+\l__fontspec_tmp_int=\count285
+\l__fontspec_tmpa_int=\count286
+\l__fontspec_tmpb_int=\count287
+\l__fontspec_tmpc_int=\count288
+\l__fontspec_em_int=\count289
+\l__fontspec_emdef_int=\count290
+\l__fontspec_strong_int=\count291
+\l__fontspec_strongdef_int=\count292
+\l__fontspec_tmpa_dim=\dimen149
+\l__fontspec_tmpb_dim=\dimen150
+\l__fontspec_tmpc_dim=\dimen151
+
+(C:\Users\Bvhvddin\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
+)
+(C:\Users\Bvhvddin\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec.cf
+g)))
+
+Package fontspec Info: 
+(fontspec)             Could not resolve font "Simplified Arabic/I" (it
+(fontspec)             probably doesn't exist).
+
+
+Package fontspec Info: 
+(fontspec)             Font family 'SimplifiedArabic(0)' created for font
+(fontspec)             'Simplified Arabic' with options [Ligatures=TeX].
+(fontspec)              
+(fontspec)              This font family consists of the following NFSS
+(fontspec)             series/shapes:
+(fontspec)              
+(fontspec)             - 'normal' (m/n) with NFSS spec.: <->"Simplified
+(fontspec)             Arabic/OT:language=dflt;mapping=tex-text;"
+(fontspec)             - 'bold' (b/n) with NFSS spec.: <->"Simplified
+(fontspec)             Arabic/B/OT:language=dflt;mapping=tex-text;"
+(fontspec)             - 'bold italic' (b/it) with NFSS spec.: <->"Simplified
+(fontspec)             Arabic/BI/OT:language=dflt;mapping=tex-text;"
+
+ (texput.aux)
+\openout1 = `texput.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+
+Package fontspec Info: 
+(fontspec)             Adjusting the maths setup (use [no-math] to avoid
+(fontspec)             this).
+
+\symlegacymaths=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `legacymaths' in version `bold'
+(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 0.
+LaTeX Font Info:    Redeclaring math accent \acute on input line 0.
+LaTeX Font Info:    Redeclaring math accent \grave on input line 0.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 0.
+LaTeX Font Info:    Redeclaring math accent \tilde on input line 0.
+LaTeX Font Info:    Redeclaring math accent \bar on input line 0.
+LaTeX Font Info:    Redeclaring math accent \breve on input line 0.
+LaTeX Font Info:    Redeclaring math accent \check on input line 0.
+LaTeX Font Info:    Redeclaring math accent \hat on input line 0.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 0.
+LaTeX Font Info:    Redeclaring math accent \mathring on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \colon on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 0.
+LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 0.
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 0.
+LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
+(Font)              `operators' in the math version `normal' on input line 0.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> TU/SimplifiedArabic(0)/m/n on input lin
+e 0.
+LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
+(Font)              `operators' in the math version `bold' on input line 0.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> TU/SimplifiedArabic(0)/m/n on input li
+ne 0.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  TU/SimplifiedArabic(0)/m/n --> TU/SimplifiedArabic(0)/m
+/n on input line 0.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> TU/SimplifiedArabic(0)/m/it on input l
+ine 0.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> TU/SimplifiedArabic(0)/b/n on input li
+ne 0.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> TU/lmss/m/n on input line 0.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/m/n on input line 0.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  TU/SimplifiedArabic(0)/m/n --> TU/SimplifiedArabic(0)/b
+/n on input line 0.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> TU/SimplifiedArabic(0)/b/it on input 
+line 0.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> TU/lmss/b/n on input line 0.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> TU/lmtt/b/n on input line 0.
+ [1
+
+] (texput.aux)
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+ ***********
+ 
+Here is how much of TeX's memory you used:
+ 2891 strings out of 402983
+ 96027 string characters out of 5447861
+ 527095 words of memory out of 5000000
+ 31643 multiletter control sequences out of 15000+600000
+ 627793 words of font info for 49 fonts, out of 8000000 for 9000
+ 1348 hyphenation exceptions out of 8191
+ 72i,5n,93p,332b,244s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+Output written on texput.pdf (1 page).

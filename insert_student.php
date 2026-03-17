@@ -526,71 +526,131 @@ $conn->close();
     <style>
         .home-container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
         .form-card {
-            background: var(--bg-primary); border: 1px solid var(--border-color);
-            border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-md);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+        [data-theme='dark'] .form-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(255, 255, 255, 0.1);
         }
         .form-section-title {
             grid-column: 1 / -1; font-size: 1.1rem; font-weight: 700;
             color: var(--primary-color); margin-top: 1rem; margin-bottom: 0.5rem;
-            border-bottom: 2px solid var(--bg-secondary); padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2); padding-bottom: 0.5rem;
         }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
         .form-group label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.9rem; color: var(--text-primary); }
         .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 0.6rem; border: 1px solid var(--border-color);
-            border-radius: var(--radius-md); font-size: 0.95rem; background: var(--bg-secondary);
+            width: 100%; padding: 0.6rem; 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-md); font-size: 0.95rem; 
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            transition: all 0.3s ease;
+        }
+        [data-theme='dark'] .form-group input, 
+        [data-theme='dark'] .form-group select, 
+        [data-theme='dark'] .form-group textarea {
+            background: rgba(15, 23, 42, 0.5);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            background: rgba(255, 255, 255, 0.8);
+        }
+        [data-theme='dark'] .form-group input:focus, 
+        [data-theme='dark'] .form-group select:focus, 
+        [data-theme='dark'] .form-group textarea:focus {
+            background: rgba(15, 23, 42, 0.8);
         }
         .btn-submit {
-            grid-column: 1 / -1; margin-top: 2rem; background: var(--primary-color);
+            grid-column: 1 / -1; margin-top: 2rem; 
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
             color: white; padding: 1rem; border: none; border-radius: var(--radius-md);
-            font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: background 0.2s;
+            font-size: 1.1rem; font-weight: 700; cursor: pointer; 
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
-        .btn-submit:hover { background: var(--primary-hover); }
-        .alert { padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-weight: 500; }
-        .alert.error { background: var(--bg-error); color: var(--text-error); border: 1px solid #fecaca; }
-        .alert.success { background: var(--bg-success); color: var(--text-success); border: 1px solid #bbf7d0; }
-        .sub-group { padding: 1rem; background: var(--background-color); border: 1px solid var(--border-color); border-radius: 8px; grid-column: 1 / -1; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); }
+        .alert { padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-weight: 500; backdrop-filter: blur(8px); }
+        .alert.error { background: rgba(239, 68, 68, 0.1); color: var(--text-error); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .alert.success { background: rgba(16, 185, 129, 0.1); color: var(--text-success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .sub-group { 
+            padding: 1rem; 
+            background: rgba(255, 255, 255, 0.3); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 8px; grid-column: 1 / -1; 
+        }
+        [data-theme='dark'] .sub-group { background: rgba(15, 23, 42, 0.2); }
         .emergency-section {
-            background: var(--bg-error); border: 1px solid #fecaca; border-radius: 12px;
+            background: rgba(239, 68, 68, 0.05); 
+            border: 1px solid rgba(239, 68, 68, 0.2); 
+            border-radius: 12px;
             padding: 1.5rem; grid-column: 1 / -1; margin-top: 2rem;
             position: relative;
+            backdrop-filter: blur(10px);
         }
         .emergency-section::before {
             content: '🚨'; position: absolute; top: -15px; left: 20px;
-            font-size: 1.5rem; background: var(--surface-color); padding: 0 5px;
+            font-size: 1.5rem; background: var(--bg-primary); border-radius: 50%; padding: 5px;
+            box-shadow: var(--shadow-sm);
         }
         .emergency-section .form-section-title {
-             color: #dc2626; border-color: #fee2e2; margin-top: 0;
+             color: #dc2626; border-color: rgba(220, 38, 38, 0.2); margin-top: 0;
         }
 
         /* Wizard */
         .wizard-steps {
             display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem;
-            padding: 0.75rem; background: var(--bg-secondary); border-radius: var(--radius-lg);
+            padding: 0.75rem; 
+            background: rgba(255, 255, 255, 0.4); 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(10px);
         }
+        [data-theme='dark'] .wizard-steps { background: rgba(15, 23, 42, 0.4); }
         .wizard-step-dot {
-            width: 2rem; height: 2rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
-            font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); background: var(--border-color);
-            cursor: pointer; transition: all 0.2s;
+            width: 2.2rem; height: 2.2rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; font-weight: 700; color: var(--text-secondary); 
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .wizard-step-dot:hover { background: var(--border-color); color: var(--text-primary); }
-        .wizard-step-dot.active { background: var(--primary-color); color: white; }
-        .wizard-step-dot.done { background: #10b981; color: white; }
+        .wizard-step-dot:hover { background: rgba(255, 255, 255, 0.8); color: var(--text-primary); transform: scale(1.1); }
+        .wizard-step-dot.active { 
+            background: var(--primary-color); color: white; 
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+            border-color: var(--primary-color);
+        }
+        .wizard-step-dot.done { background: #10b981; color: white; border-color: #10b981; }
         .wizard-panels { position: relative; min-height: 320px; }
         .wizard-panel { display: none; }
-        .wizard-panel.active { display: block; animation: fadeIn 0.25s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .wizard-panel.active { display: block; animation: slideUpFade 0.4s ease-out; }
+        @keyframes slideUpFade { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
         .wizard-actions {
             display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color); gap: 1rem; flex-wrap: wrap;
+            border-top: 1px solid rgba(255, 255, 255, 0.2); gap: 1rem; flex-wrap: wrap;
         }
         .wizard-actions .btn-prev, .wizard-actions .btn-next {
             padding: 0.75rem 1.5rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer;
-            border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.5); color: var(--text-primary);
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
         }
-        .wizard-actions .btn-prev:hover, .wizard-actions .btn-next:hover { background: var(--border-color); }
+        .wizard-actions .btn-prev:hover, .wizard-actions .btn-next:hover { background: rgba(255, 255, 255, 0.8); transform: translateY(-1px); }
         .wizard-actions .btn-next { background: var(--primary-color); color: white; border-color: var(--primary-color); }
-        .wizard-actions .btn-next:hover { background: var(--primary-hover); }
+        .wizard-actions .btn-next:hover { background: var(--primary-hover); box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
         .wizard-actions .btn-submit { margin-left: auto; }
     </style>
 </head>
@@ -602,8 +662,8 @@ $conn->close();
 
 <div class="home-container">
     <div style="margin-bottom: 2rem;">
-        <h1><?php echo t('welcome_secretary', htmlspecialchars($secretary_name)); ?></h1>
-        <p style="color: var(--text-secondary);"><?php echo t('register_student_sub'); ?></p>
+        <h1><?php echo t('welcome_secretary_insert'); ?></h1>
+        <p style="color: var(--text-secondary);"><?php echo t('insert_student_subtitle'); ?></p>
     </div>
 
     <?php if ($message): ?>

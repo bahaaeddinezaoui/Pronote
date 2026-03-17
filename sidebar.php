@@ -66,6 +66,7 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
         <?php endif; ?>
         
         <?php if ($role === 'Secretary'): ?>
+            <div class="nav-section-title"><?php echo t('nav_student_mgmt') ?: 'Student Management'; ?></div>
              <a href="insert_student.php" id="navInsertStudent" class="sidebar-link <?php echo ($current_page == 'insert_student.php') ? 'active' : ''; ?>">
                 <span class="icon">➕</span>
                 <span class="text" data-tooltip="<?php echo t('insert_student'); ?>"><?php echo t('insert_student'); ?></span>
@@ -76,6 +77,7 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
                 <span class="text" data-tooltip="<?php echo t('edit_student'); ?>"><?php echo t('edit_student'); ?></span>
             </a>
 
+            <div class="nav-section-title"><?php echo t('nav_disciplinary') ?: 'Disciplinary'; ?></div>
             <a href="secretary_punishes_student.php" id="navPunishStudent" class="sidebar-link <?php echo ($current_page == 'secretary_punishes_student.php') ? 'active' : ''; ?>">
                 <span class="icon">⚠️</span>
                 <span class="text" data-tooltip="<?php echo t('nav_punish_student'); ?>"><?php echo t('nav_punish_student'); ?></span>
@@ -85,6 +87,8 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
                 <span class="icon">🏆</span>
                 <span class="text" data-tooltip="<?php echo t('nav_reward_student'); ?>"><?php echo t('nav_reward_student'); ?></span>
             </a>
+            
+            <div class="nav-section-title"><?php echo t('nav_personal') ?: 'Personal'; ?></div>
         <?php endif; ?>
 
         <a href="profile.php" id="navProfile" class="sidebar-link <?php echo ($current_page == 'profile.php') ? 'active' : ''; ?>">

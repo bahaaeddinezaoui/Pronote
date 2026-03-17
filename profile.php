@@ -127,148 +127,151 @@ $conn->close();
     <link rel="stylesheet" href="styles.css">
     <title><?php echo t('user_profile'); ?> - <?php echo t('app_name'); ?></title>
     <style>
-        /* Modern Profile Styles */
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg-muted);
-            color: var(--text-primary);
-            margin: 0;
-            padding: 0;
-        }
-
         .profile-container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         .profile-card {
-            background: var(--surface-color);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            background: var(--glass-bg-strong);
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--glass-shadow);
             overflow: hidden;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--glass-border);
+            position: relative;
         }
 
         .profile-banner {
-            height: 160px;
-            background: linear-gradient(135deg, #6f42c1 0%, #8b5cf6 100%);
+            height: 180px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #8b5cf6 100%);
             position: relative;
+        }
+
+        .profile-banner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('assets/noise.png');
+            opacity: 0.05;
+            pointer-events: none;
         }
 
         .profile-header {
             padding: 0 40px;
-            margin-top: -60px;
+            margin-top: -75px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             position: relative;
             z-index: 10;
         }
 
         .profile-avatar {
-            width: 120px;
-            height: 120px;
+            width: 150px;
+            height: 150px;
             background: var(--surface-color);
             border-radius: 50%;
-            padding: 4px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            margin-bottom: 16px;
+            padding: 6px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 20px;
+            border: 4px solid var(--glass-bg-strong);
         }
 
         .profile-avatar-inner {
             width: 100%;
             height: 100%;
-            background: var(--bg-muted);
+            background: var(--bg-tertiary);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
+            font-size: 56px;
             color: var(--primary-color);
-            font-weight: 700;
+            overflow: hidden;
         }
 
         .profile-name {
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 32px;
+            font-weight: 800;
             color: var(--text-primary);
-            margin: 0 0 4px 0;
+            margin: 0;
+            letter-spacing: -0.025em;
         }
 
         .profile-role-badge {
-            display: inline-block;
-            background: rgba(139, 92, 246, 0.15);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--primary-light);
             color: var(--primary-color);
             padding: 6px 16px;
-            border-radius: 20px;
+            border-radius: 999px;
             font-size: 14px;
-            font-weight: 600;
-            margin-top: 8px;
+            font-weight: 700;
+            margin-top: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .profile-content {
-            padding: 0 40px 40px 40px;
+            padding: 0 40px 50px 40px;
         }
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
             margin-top: 20px;
         }
 
-        .info-card {
-            background: var(--background-color);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
+        .info-item {
             display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            transition: all 0.2s;
+            flex-direction: column;
+            padding: 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            transition: var(--transition);
         }
 
-        .info-card:hover {
+        .info-item:hover {
+            background: var(--glass-bg-strong);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-color: #ddd6fe;
+            border-color: var(--primary-color);
+        }
+
+        .info-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .info-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .info-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(139, 92, 246, 0.15);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-size: 20px;
-            color: var(--primary-color);
-        }
-
-        .info-text label {
-            display: block;
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .info-text div {
-            font-size: 16px;
-            color: var(--text-primary);
-            font-weight: 600;
+            opacity: 0.8;
         }
 
         @media (max-width: 640px) {
-            .profile-header { padding: 0 20px; }
-            .profile-content { padding: 0 20px 30px 20px; }
-            .info-grid { grid-template-columns: 1fr; }
+            .profile-header { padding: 0 20px; margin-top: -60px; }
+            .profile-avatar { width: 120px; height: 120px; }
+            .profile-content { padding: 0 20px 40px 20px; }
+            .profile-name { font-size: 24px; }
         }
     </style>
 </head>
@@ -305,39 +308,39 @@ $conn->close();
 
             <div class="profile-content">
                 <div class="info-grid">
-                    <div class="info-card">
-                        <div class="info-icon">🆔</div>
-                        <div class="info-text">
-                            <label><?php echo t('user_id'); ?></label>
-                            <div>#<?php echo $userId; ?></div>
+                    <div class="info-item">
+                        <div class="info-label"><?php echo t('user_id'); ?></div>
+                        <div class="info-value">
+                            <span class="info-icon">🆔</span>
+                            #<?php echo $userId; ?>
                         </div>
                     </div>
 
                     <?php if ($grade !== "N/A"): ?>
-                    <div class="info-card">
-                        <div class="info-icon">🎓</div>
-                        <div class="info-text">
-                            <label><?php echo t('grade_level'); ?></label>
-                            <div><?php echo $grade; ?></div>
+                    <div class="info-item">
+                        <div class="info-label"><?php echo t('grade_level'); ?></div>
+                        <div class="info-value">
+                            <span class="info-icon">🎓</span>
+                            <?php echo $grade; ?>
                         </div>
                     </div>
                     <?php endif; ?>
 
                     <?php if ($position !== ""): ?>
-                    <div class="info-card">
-                        <div class="info-icon">💼</div>
-                        <div class="info-text">
-                            <label><?php echo t('position'); ?></label>
-                            <div><?php echo $position; ?></div>
+                    <div class="info-item">
+                        <div class="info-label"><?php echo t('position'); ?></div>
+                        <div class="info-value">
+                            <span class="info-icon">💼</span>
+                            <?php echo $position; ?>
                         </div>
                     </div>
                     <?php endif; ?>
 
-                    <div class="info-card">
-                        <div class="info-icon">🛡️</div>
-                        <div class="info-text">
-                            <label><?php echo t('access_level'); ?></label>
-                            <div><?php echo $safeRole; ?> <?php echo t('privileges_suffix'); ?></div>
+                    <div class="info-item">
+                        <div class="info-label"><?php echo t('access_level'); ?></div>
+                        <div class="info-value">
+                            <span class="info-icon">🛡️</span>
+                            <?php echo $safeRole; ?>
                         </div>
                     </div>
                 </div>

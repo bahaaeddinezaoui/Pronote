@@ -570,6 +570,9 @@ $conn->close();
                             <button class="btn-modern btn-modern-secondary" id="btnRewards" onclick="switchView('rewards')">
                                 🌟 <?php echo t('rewards') ?: 'Rewards'; ?>
                             </button>
+                            <button class="btn-modern btn-modern-secondary" id="btnGenerateReport" onclick="generateReport()">
+                                📄 <?php echo t('generate_report') ?: 'Generate Report'; ?>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1150,6 +1153,26 @@ $conn->close();
             }
 
             document.getElementById('fullInfoContainer').innerHTML = html;
+        }
+
+        function generateReport() {
+            if (!selectedStudent) {
+                showError(t('msg_select_student_suggestion'));
+                return;
+            }
+
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            if (!startDate || !endDate) {
+                showError(t('msg_select_both_dates'));
+                return;
+            }
+
+            // Open the report in a new window/tab with cache-busting timestamp
+            const timestamp = Date.now();
+            const url = `generate_report_tcpdf.php?serial_number=${encodeURIComponent(selectedStudent.serialNumber)}&start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}&_t=${timestamp}`;
+            window.open(url, '_blank');
         }
 
         function clearSearch() {
