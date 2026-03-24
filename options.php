@@ -6,6 +6,9 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
+
+$role = $_SESSION['role'] ?? '';
+$isTeacher = ($role === 'Teacher');
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $LANG === 'ar' ? 'ar' : 'en'; ?>" dir="<?php echo $LANG === 'ar' ? 'rtl' : 'ltr'; ?>">
@@ -147,6 +150,7 @@ if (!isset($_SESSION['user_id'])) {
             cursor: pointer;
             color: #9ca3af;
         }
+
     </style>
 </head>
 <body>
@@ -239,6 +243,32 @@ if (!isset($_SESSION['user_id'])) {
                     </label>
                 </div>
             </div>
+
+            <?php if ($isTeacher): ?>
+            <!-- Teaching Assignments Section -->
+            <div class="options-section">
+                <div class="section-header">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color);">
+                        <path d="M12 2l9 4.5-9 4.5-9-4.5L12 2z"></path>
+                        <path d="M3 10.5V17l9 4.5 9-4.5v-6.5"></path>
+                        <path d="M12 11v10"></path>
+                    </svg>
+                    <h2 class="section-title"><?php echo t('onboarding_select_categories') ?? 'Teaching assignments'; ?></h2>
+                </div>
+                
+                <div class="option-item">
+                    <div class="option-info">
+                        <div class="option-label"><?php echo t('onboarding_step2_desc') ?? 'Update what you teach'; ?></div>
+                        <div class="option-desc">
+                            <?php echo t('onboarding_step2_desc') ?? 'Select the categories, majors, and sections you teach.'; ?>
+                        </div>
+                    </div>
+                    <a class="btn btn-primary" href="teacher_teaching_assignments.php" style="width:auto; padding: 8px 16px; text-decoration:none;">
+                        <?php echo t('edit') ?? 'Edit'; ?>
+                    </a>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

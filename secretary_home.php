@@ -1,4 +1,4 @@
-<?php
+teacher_onboarding.php<?php
 // secretary_home.php - Welcome page for Secretary
 session_start();
 date_default_timezone_set('Africa/Algiers');

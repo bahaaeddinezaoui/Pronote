@@ -503,14 +503,45 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                     controlsDiv.appendChild(clearAllBtn);
                     majorsList.appendChild(controlsDiv);
 
+                    // Major search
+                    var searchWrap = document.createElement('div');
+                    searchWrap.style.marginBottom = '12px';
+                    searchWrap.style.display = 'flex';
+                    searchWrap.style.gap = '10px';
+                    searchWrap.style.alignItems = 'center';
+
+                    var searchInput = document.createElement('input');
+                    searchInput.type = 'text';
+                    searchInput.className = 'form-input';
+                    searchInput.placeholder = (T.search_major_placeholder || 'Search majors...');
+                    searchInput.style.maxWidth = '420px';
+
+                    searchWrap.appendChild(searchInput);
+                    majorsList.appendChild(searchWrap);
+
                     var majorsGrid = document.createElement('div');
                     majorsGrid.style.display = 'grid';
                     majorsGrid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(250px, 1fr))';
                     majorsGrid.style.gap = '12px';
 
-                    (data.majors || []).forEach(function(m){
+                    function renderMajors(filterText) {
+                        var q = String(filterText || '').trim().toLowerCase();
+                        majorsGrid.innerHTML = '';
+
+                        if (!q) {
+                            majorsGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 16px; color: var(--text-secondary);">' + (T.search_major_prompt || 'Type to search majors.') + '</div>';
+                            return;
+                        }
+
+                        var shown = 0;
+
+                        (data.majors || []).forEach(function(m){
+                            var name = String(m.name || '');
+                            if (q && name.toLowerCase().indexOf(q) === -1) return;
+                            shown++;
+
                         var majorDiv = document.createElement('div');
-                        majorDiv.style.border = '1px solid #e5e7eb';
+                        majorDiv.style.border = '1px solid var(--border-color)';
                         majorDiv.style.borderRadius = '8px';
                         majorDiv.style.padding = '12px';
 
@@ -538,9 +569,9 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                         label.style.fontWeight = '600';
                         label.style.cursor = 'pointer';
                         label.style.flex = '1';
-                        label.textContent = m.name;
+                        label.textContent = name;
 
-                        majorNamesMap[m.id] = m.name;
+                        majorNamesMap[m.id] = name;
 
                         headerDiv.appendChild(checkbox);
                         headerDiv.appendChild(label);
@@ -552,9 +583,20 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                         if (majorSectionsState[m.id]) {
                             loadSectionsForMajor(m.id);
                         }
-                    });
+                        });
+
+                        if (shown === 0) {
+                            majorsGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 16px; color: var(--text-secondary);">' + (T.no_results || 'No results.') + '</div>';
+                        }
+                    }
 
                     majorsList.appendChild(majorsGrid);
+
+                    searchInput.addEventListener('input', function() {
+                        renderMajors(this.value);
+                    });
+
+                    renderMajors();
                 } else {
                     majorsList.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-secondary);">' + (T.onboarding_no_majors || 'No majors available') + '</div>';
                 }
@@ -603,11 +645,11 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
         
         var majorSectionDiv = document.createElement('div');
         majorSectionDiv.id = 'sections_for_major_' + majorId;
-        majorSectionDiv.style.border = '1px solid #e5e7eb';
+        majorSectionDiv.style.border = '1px solid var(--border-color)';
         majorSectionDiv.style.borderRadius = '12px';
         majorSectionDiv.style.padding = '16px';
         majorSectionDiv.style.marginBottom = '16px';
-        majorSectionDiv.style.background = '#f9fafb';
+        majorSectionDiv.style.background = 'var(--surface-color)';
 
         var majorLabelEl = document.querySelector('label[for="major_' + majorId + '"]');
         var majorName = majorLabelEl ? majorLabelEl.textContent : ((T.onboarding_major_fallback || 'Major') + ' ' + majorId);
@@ -647,9 +689,10 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                     selectAllBtn.textContent = T.onboarding_select_all || 'Select All';
                     selectAllBtn.style.marginRight = '8px';
                     selectAllBtn.style.padding = '4px 8px';
-                    selectAllBtn.style.border = '1px solid #d1d5db';
+                    selectAllBtn.style.border = '1px solid var(--border-color)';
                     selectAllBtn.style.borderRadius = '4px';
-                    selectAllBtn.style.background = '#ffffff';
+                    selectAllBtn.style.background = 'var(--surface-color)';
+                    selectAllBtn.style.color = 'var(--text-primary)';
                     selectAllBtn.style.cursor = 'pointer';
                     selectAllBtn.style.fontSize = '12px';
                     selectAllBtn.addEventListener('click', function(){
@@ -664,9 +707,10 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                     clearAllBtn.type = 'button';
                     clearAllBtn.textContent = T.onboarding_clear_all || 'Clear All';
                     clearAllBtn.style.padding = '4px 8px';
-                    clearAllBtn.style.border = '1px solid #d1d5db';
+                    clearAllBtn.style.border = '1px solid var(--border-color)';
                     clearAllBtn.style.borderRadius = '4px';
-                    clearAllBtn.style.background = '#ffffff';
+                    clearAllBtn.style.background = 'var(--surface-color)';
+                    clearAllBtn.style.color = 'var(--text-primary)';
                     clearAllBtn.style.cursor = 'pointer';
                     clearAllBtn.style.fontSize = '12px';
                     clearAllBtn.addEventListener('click', function(){
