@@ -172,23 +172,49 @@ $conn->close();
         }
 
         .welcome-section {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+            background: var(--glass-bg-strong);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--glass-shadow);
+            padding: 2.25rem 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            inset: -40%;
+            background:
+                radial-gradient(520px 360px at 25% 25%, rgba(99, 102, 241, 0.22), transparent 60%),
+                radial-gradient(560px 380px at 85% 20%, rgba(139, 92, 246, 0.18), transparent 62%),
+                radial-gradient(600px 420px at 55% 90%, rgba(16, 185, 129, 0.14), transparent 62%);
+            filter: blur(18px);
+            opacity: 0.9;
+            pointer-events: none;
+        }
+
+        .welcome-section > * {
+            position: relative;
+            z-index: 1;
         }
 
         .welcome-section h1 {
-            margin: 0 0 10px 0;
+            margin: 0 0 0.75rem 0;
             font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: var(--text-primary);
         }
 
         .welcome-section p {
-            margin: 5px 0;
+            margin: 0;
             font-size: 15px;
-            opacity: 0.95;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
 
         .stats-grid {

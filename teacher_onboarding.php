@@ -99,8 +99,8 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
             <!-- Content populated by JS -->
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" id="editBtn" style="width: auto;"><?php echo t('edit') ?? 'Edit'; ?></button>
-            <button class="btn btn-primary" id="confirmSubmitBtn" style="width: auto;"><?php echo t('submit') ?? 'Submit'; ?></button>
+            <button class="btn btn-secondary" id="editBtn" style="width: auto;"><?php echo t('edit'); ?></button>
+            <button class="btn btn-primary" id="confirmSubmitBtn" style="width: auto;"><?php echo t('submit'); ?></button>
         </div>
     </div>
 </div>

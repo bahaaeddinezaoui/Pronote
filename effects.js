@@ -1042,13 +1042,18 @@
         const toggleIcon = document.getElementById('themeToggleIcon');
         const toggleText = document.getElementById('themeToggleText');
         const htmlEl = document.documentElement;
+        
+        // Get translations from global config if available
+        const T = (typeof window.EduTrackTutorialConfig !== 'undefined' && window.EduTrackTutorialConfig.t) ? window.EduTrackTutorialConfig.t : {};
 
         // Ensure theme matches saved preference initially (handles parts not covered by <head> script)
         const savedTheme = localStorage.getItem('edutrack_theme') || 'light';
         if (savedTheme === 'dark') {
             htmlEl.setAttribute('data-theme', 'dark');
             if (toggleIcon) toggleIcon.textContent = '☀️';
-            if (toggleText) toggleText.textContent = toggleText.textContent.includes('Theme') ? 'Light Mode' : 'الوضع الفاتح'; // basic translation fallback
+            if (toggleText) toggleText.textContent = T.light_mode || 'Light Mode';
+        } else {
+            if (toggleText) toggleText.textContent = T.dark_mode || 'Dark Mode';
         }
 
         if (toggleBtn) {
@@ -1062,10 +1067,10 @@
                 
                 if (newTheme === 'dark') {
                     if (toggleIcon) toggleIcon.textContent = '☀️';
-                    if (toggleText) toggleText.textContent = toggleText.textContent.includes('الوضع') ? 'الوضع الفاتح' : 'Light Mode';
+                    if (toggleText) toggleText.textContent = T.light_mode || 'Light Mode';
                 } else {
                     if (toggleIcon) toggleIcon.textContent = '🌙';
-                    if (toggleText) toggleText.textContent = toggleText.textContent.includes('الوضع') ? 'الوضع الداكن' : 'Dark Mode';
+                    if (toggleText) toggleText.textContent = T.dark_mode || 'Dark Mode';
                 }
             });
         }

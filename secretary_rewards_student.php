@@ -133,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
         $serials = array_values(array_unique(array_filter(array_map('trim', explode(',', $serials_raw)), function ($v) {
             return $v !== '';
-        }))));
+        })));
 
         if (count($serials) < 1 || $type_id <= 0 || $start_date === '' || $end_date === '') {
             echo json_encode(['success' => false, 'message' => t('error_missing_fields') ?: 'Missing required fields.']);

@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     
     // Validation
     if (empty($serial) || empty($fname_en) || empty($lname_en) || $category_id <= 0 || $section_id <= 0) {
-        $message = "Please fill in all required fields (Serial Number, Names, Category, Section).";
+        $message = t('error_required_fields');
         $msg_type = "error";
     } else {
         $stmtCheck = $conn->prepare("SELECT 1 FROM student WHERE STUDENT_SERIAL_NUMBER = ? LIMIT 1");
@@ -674,13 +674,13 @@ $conn->close();
         <form method="POST" action="insert_student.php" id="wizardForm">
             <input type="hidden" name="action" value="add_student">
             <div class="wizard-steps">
-                <div class="wizard-step-dot active" data-step="1" title="<?php echo t('step_personal_details'); ?>">1</div>
-                <div class="wizard-step-dot" data-step="2" title="<?php echo t('step_academic_info'); ?>">2</div>
-                <div class="wizard-step-dot" data-step="3" title="<?php echo t('step_family_info'); ?>">3</div>
+                <div class="wizard-step-dot active" data-step="1" title="<?php echo t('step_personal'); ?>">1</div>
+                <div class="wizard-step-dot" data-step="2" title="<?php echo t('step_academic'); ?>">2</div>
+                <div class="wizard-step-dot" data-step="3" title="<?php echo t('step_family'); ?>">3</div>
                 <div class="wizard-step-dot" data-step="4" title="<?php echo t('step_addresses'); ?>">4</div>
-                <div class="wizard-step-dot" data-step="5" title="<?php echo t('step_uniforms_labels'); ?>">5</div>
-                <div class="wizard-step-dot" data-step="6" title="<?php echo t('step_other_details'); ?>">6</div>
-                <div class="wizard-step-dot" data-step="7" title="<?php echo t('step_emergency_contact'); ?>">7</div>
+                <div class="wizard-step-dot" data-step="5" title="<?php echo t('step_other'); ?>">5</div>
+                <div class="wizard-step-dot" data-step="6" title="<?php echo t('step_uniforms'); ?>">6</div>
+                <div class="wizard-step-dot" data-step="7" title="<?php echo t('step_emergency'); ?>">7</div>
             </div>
             <div class="wizard-panels">
                 <div class="wizard-panel active" data-step="1">

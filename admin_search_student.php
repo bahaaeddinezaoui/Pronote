@@ -504,6 +504,91 @@ $conn->close();
                 gap: 0.5rem;
             }
         }
+
+        .tabs-container { display: flex; gap: 2rem; align-items: flex-start; height: calc(100vh - 220px); min-height: 400px; }
+        .tabs-list { display: flex; flex-direction: column; gap: 0.5rem; width: 280px; flex-shrink: 0; position: sticky; top: 2rem; max-height: calc(100vh - 240px); overflow-y: auto; overflow-x: hidden; }
+        .tab-button { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); cursor: pointer; transition: all 0.3s ease; text-align: left; font-weight: 700; color: var(--text-secondary); width: 100%; font-family: inherit; font-size: 0.95rem; }
+        .tab-button:hover { background: rgba(111, 66, 193, 0.05); border-color: var(--primary-color); color: var(--primary-color); transform: translateX(5px); }
+        .tab-button.active { background: var(--primary-color); color: white; border-color: var(--primary-color); box-shadow: 0 4px 12px rgba(111, 66, 193, 0.3); }
+        .tab-button::after { content: '▸'; opacity: 0.5; transition: transform 0.3s ease; }
+        .tab-button.active::after { transform: rotate(90deg); opacity: 1; }
+        .tab-content-container { flex-grow: 1; min-width: 0; }
+        .tab-panel { display: none; animation: fadeIn 0.4s ease; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-md); overflow-y: auto; max-height: 100%; }
+        .tab-panel.active { display: block; }
+
+        [dir="rtl"] .tab-button { text-align: right; }
+        [dir="rtl"] .tab-button:hover { transform: translateX(-5px); }
+
+        /* Collapsible sub-tabs */
+        .tab-button.collapsible { position: relative; }
+        .tab-button.collapsible::before {
+            content: '▾';
+            position: absolute;
+            left: 0.75rem;
+            transition: transform 0.3s ease;
+            opacity: 0.6;
+        }
+        .tab-button.collapsible.expanded::before {
+            transform: rotate(180deg);
+        }
+        [dir="rtl"] .tab-button.collapsible::before {
+            left: auto;
+            right: 0.75rem;
+        }
+
+        .sub-tabs-list {
+            display: none;
+            flex-direction: column;
+            gap: 0.35rem;
+            margin-top: 0.35rem;
+            padding-left: 1rem;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        .sub-tabs-list.expanded {
+            display: flex;
+            max-height: 500px;
+            padding-bottom: 0.25rem;
+        }
+
+        .sub-tab-button {
+            display: flex;
+            align-items: center;
+            padding: 0.65rem 1rem 0.65rem 1.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            width: 100%;
+            font-family: inherit;
+            font-size: 0.85rem;
+        }
+        .sub-tab-button:hover {
+            background: rgba(111, 66, 193, 0.08);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .sub-tab-button.active {
+            background: rgba(111, 66, 193, 0.15);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        [dir="rtl"] .sub-tab-button {
+            text-align: right;
+            padding-left: 1rem;
+            padding-right: 1.5rem;
+        }
+
+        @media (max-width: 992px) {
+            .tabs-container { flex-direction: column; }
+            .tabs-list { width: 100%; position: static; flex-direction: row; overflow-x: auto; padding-bottom: 0.5rem; }
+            .tab-button { white-space: nowrap; width: auto; }
+        }
     </style>
 </head>
 <body>
@@ -554,33 +639,48 @@ $conn->close();
                             <input type="date" id="endDate">
                         </div>
                         <div style="flex-grow: 1;"></div>
-                        <div class="view-toggles" id="viewToggles" style="display:none; gap: 0.5rem; flex-wrap: wrap;">
-                            <button class="btn-modern btn-modern-primary" id="btnAbsences" onclick="switchView('absences')">
-                                � <?php echo t('absences'); ?>
-                            </button>
-                            <button class="btn-modern btn-modern-secondary" id="btnObservations" onclick="switchView('observations')">
-                                📝 <?php echo t('observations'); ?>
-                            </button>
-                            <button class="btn-modern btn-modern-secondary" id="btnFullInfo" onclick="switchView('fullInfo')">
-                                📄 <?php echo t('btn_full_information'); ?>
-                            </button>
-                            <button class="btn-modern btn-modern-secondary" id="btnPunishments" onclick="switchView('punishments')">
-                                ⚠️ <?php echo t('punishments') ?: 'Punishments'; ?>
-                            </button>
-                            <button class="btn-modern btn-modern-secondary" id="btnRewards" onclick="switchView('rewards')">
-                                🌟 <?php echo t('rewards') ?: 'Rewards'; ?>
-                            </button>
-                            <button class="btn-modern btn-modern-secondary" id="btnGenerateReport" onclick="generateReport()">
-                                📄 <?php echo t('generate_report') ?: 'Generate Report'; ?>
-                            </button>
-                        </div>
+                        <button class="btn-modern btn-modern-secondary" id="btnGenerateReport" onclick="generateReport()" style="display:none;">
+                            📄 <?php echo t('generate_report') ?: 'Generate Report'; ?>
+                        </button>
                     </div>
                 </div>
-                <div id="absencesContainer"></div>
-                <div id="observationsContainer" style="display: none;"></div>
-                <div id="fullInfoContainer" style="display: none;"></div>
-                <div id="punishmentsContainer" style="display: none;"></div>
-                <div id="rewardsContainer" style="display: none;"></div>
+
+                <div class="tabs-container" id="recordsTabs" style="display:none;">
+                    <div class="tabs-list" id="recordsTabsList">
+                        <button type="button" class="tab-button active" data-tab-id="tab-absences" data-view="absences">⚠️ <?php echo t('absences'); ?></button>
+                        <button type="button" class="tab-button" data-tab-id="tab-observations" data-view="observations">📝 <?php echo t('observations'); ?></button>
+                        <button type="button" class="tab-button collapsible" data-tab-id="tab-fullInfo" data-view="fullInfo">📄 <?php echo t('btn_full_information'); ?></button>
+                        <div class="sub-tabs-list" id="fullInfoSubTabs">
+                            <button type="button" class="sub-tab-button" data-sub-tab="subtab-personal">👤 <?php echo t('step_personal_details'); ?></button>
+                            <button type="button" class="sub-tab-button" data-sub-tab="subtab-academic">🎓 <?php echo t('step_academic_info'); ?></button>
+                            <button type="button" class="sub-tab-button" data-sub-tab="subtab-family">👪 <?php echo t('step_family_info'); ?></button>
+                            <button type="button" class="sub-tab-button" data-sub-tab="subtab-addresses">📍 <?php echo t('step_addresses'); ?></button>
+                            <button type="button" class="sub-tab-button" data-sub-tab="subtab-uniforms">🪖 <?php echo t('uniforms'); ?></button>
+                            <button type="button" class="sub-tab-button" data-sub-tab="subtab-documents">📄 <?php echo t('step_other_details'); ?></button>
+                            <button type="button" class="sub-tab-button" data-sub-tab="subtab-emergency">🚨 <?php echo t('step_emergency_contact'); ?></button>
+                        </div>
+                        <button type="button" class="tab-button" data-tab-id="tab-punishments" data-view="punishments">⚠️ <?php echo t('punishments') ?: 'Punishments'; ?></button>
+                        <button type="button" class="tab-button" data-tab-id="tab-rewards" data-view="rewards">🌟 <?php echo t('rewards') ?: 'Rewards'; ?></button>
+                    </div>
+
+                    <div class="tab-content-container">
+                        <div id="tab-absences" class="tab-panel active"><div id="absencesContainer"></div></div>
+                        <div id="tab-observations" class="tab-panel"><div id="observationsContainer"></div></div>
+                        <div id="tab-fullInfo" class="tab-panel">
+                            <div id="fullInfoContainer">
+                                <div id="subtab-personal" class="sub-tab-content"></div>
+                                <div id="subtab-academic" class="sub-tab-content" style="display:none;"></div>
+                                <div id="subtab-family" class="sub-tab-content" style="display:none;"></div>
+                                <div id="subtab-addresses" class="sub-tab-content" style="display:none;"></div>
+                                <div id="subtab-uniforms" class="sub-tab-content" style="display:none;"></div>
+                                <div id="subtab-documents" class="sub-tab-content" style="display:none;"></div>
+                                <div id="subtab-emergency" class="sub-tab-content" style="display:none;"></div>
+                            </div>
+                        </div>
+                        <div id="tab-punishments" class="tab-panel"><div id="punishmentsContainer"></div></div>
+                        <div id="tab-rewards" class="tab-panel"><div id="rewardsContainer"></div></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -787,53 +887,88 @@ $conn->close();
             }
         }
 
-        function switchView(view) {
-            const btnAbsences = document.getElementById('btnAbsences');
-            const btnObservations = document.getElementById('btnObservations');
-            const btnFullInfo = document.getElementById('btnFullInfo');
-            const btnPunishments = document.getElementById('btnPunishments');
-            const btnRewards = document.getElementById('btnRewards');
+        function switchTab(evt, tabId, view) {
+            const tabsRoot = document.getElementById('recordsTabs');
+            if (!tabsRoot) return;
 
+            const tabPanels = tabsRoot.querySelectorAll('.tab-panel');
+            const tabButtons = tabsRoot.querySelectorAll('.tab-button');
+
+            tabPanels.forEach(panel => panel.classList.remove('active'));
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            const targetPanel = document.getElementById(tabId);
+            if (targetPanel) targetPanel.classList.add('active');
+
+            let activeButton = null;
+            if (evt && evt.currentTarget) {
+                activeButton = evt.currentTarget;
+            } else {
+                activeButton = tabsRoot.querySelector(`.tab-button[data-tab-id="${tabId}"]`);
+            }
+            if (activeButton) {
+                activeButton.classList.add('active');
+                if (window.innerWidth <= 992) {
+                    activeButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            }
+
+            if (view) {
+                switchView(view);
+            }
+        }
+
+        function toggleCollapsibleTab(btn) {
+            if (!btn || !btn.classList.contains('collapsible')) return;
+            const subTabsList = btn.nextElementSibling;
+            if (!subTabsList || !subTabsList.classList.contains('sub-tabs-list')) return;
+
+            const isExpanded = btn.classList.contains('expanded');
+
+            if (isExpanded) {
+                btn.classList.remove('expanded');
+                subTabsList.classList.remove('expanded');
+            } else {
+                btn.classList.add('expanded');
+                subTabsList.classList.add('expanded');
+            }
+        }
+
+        function switchSubTab(subTabId) {
+            const fullInfoContainer = document.getElementById('fullInfoContainer');
+            if (!fullInfoContainer) return;
+
+            const subContents = fullInfoContainer.querySelectorAll('.sub-tab-content');
+            const subButtons = document.querySelectorAll('.sub-tab-button');
+
+            subContents.forEach(content => content.style.display = 'none');
+            subButtons.forEach(btn => btn.classList.remove('active'));
+
+            const targetContent = document.getElementById(subTabId);
+            if (targetContent) targetContent.style.display = 'block';
+
+            const activeBtn = document.querySelector(`.sub-tab-button[data-sub-tab="${subTabId}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+        }
+
+        function switchView(view) {
             const absencesContainer = document.getElementById('absencesContainer');
             const observationsContainer = document.getElementById('observationsContainer');
             const fullInfoContainer = document.getElementById('fullInfoContainer');
             const punishmentsContainer = document.getElementById('punishmentsContainer');
             const rewardsContainer = document.getElementById('rewardsContainer');
 
-            // reset all
-            if (btnAbsences) btnAbsences.className = 'btn-modern btn-modern-secondary';
-            if (btnObservations) btnObservations.className = 'btn-modern btn-modern-secondary';
-            btnFullInfo.className = 'btn-modern btn-modern-secondary';
-            btnPunishments.className = 'btn-modern btn-modern-secondary';
-            btnRewards.className = 'btn-modern btn-modern-secondary';
-
-            absencesContainer.style.display = 'none';
-            observationsContainer.style.display = 'none';
-            fullInfoContainer.style.display = 'none';
-            punishmentsContainer.style.display = 'none';
-            rewardsContainer.style.display = 'none';
-
-            if (view === 'absences') {
-                btnAbsences.className = 'btn-modern btn-modern-primary';
-                absencesContainer.style.display = 'block';
-            } else if (view === 'observations') {
-                btnObservations.className = 'btn-modern btn-modern-primary';
-                observationsContainer.style.display = 'block';
-            } else if (view === 'fullInfo') {
-                btnFullInfo.className = 'btn-modern btn-modern-primary';
-                fullInfoContainer.style.display = 'block';
-            } else if (view === 'punishments') {
-                btnPunishments.className = 'btn-modern btn-modern-primary';
-                punishmentsContainer.style.display = 'block';
-            } else if (view === 'rewards') {
-                btnRewards.className = 'btn-modern btn-modern-primary';
-                rewardsContainer.style.display = 'block';
-            }
+            if (absencesContainer) absencesContainer.style.display = view === 'absences' ? 'block' : 'none';
+            if (observationsContainer) observationsContainer.style.display = view === 'observations' ? 'block' : 'none';
+            if (fullInfoContainer) fullInfoContainer.style.display = view === 'fullInfo' ? 'block' : 'none';
+            if (punishmentsContainer) punishmentsContainer.style.display = view === 'punishments' ? 'block' : 'none';
+            if (rewardsContainer) rewardsContainer.style.display = view === 'rewards' ? 'block' : 'none';
         }
 
         function displayResults(student, absences, observations, punishments, rewards) {
-            document.getElementById('viewToggles').style.display = 'flex';
-            switchView('absences');
+            document.getElementById('recordsTabs').style.display = 'flex';
+            document.getElementById('btnGenerateReport').style.display = 'inline-flex';
+            switchTab(null, 'tab-absences', 'absences');
 
             const studentPhotoUrl = student.photo ? resolvePhotoUrl(student.photo) : 'assets/placeholder-student.png';
             
@@ -1045,10 +1180,8 @@ $conn->close();
                 </div>
             `;
 
-            let html = '';
-
             // 1. Personal Details
-            html += createSection('👤 ' + t('step_personal_details'), `
+            document.getElementById('subtab-personal').innerHTML = createSection('👤 ' + t('step_personal_details'), `
                 ${cell(t('label_first_name_en'), s.first_name)}
                 ${cell(t('label_last_name_en'), s.last_name)}
                 ${cell(t('label_first_name_ar'), s.first_name_ar)}
@@ -1063,7 +1196,7 @@ $conn->close();
             `);
 
             // 2. Academic
-            html += createSection('🎓 ' + t('step_academic_info'), `
+            document.getElementById('subtab-academic').innerHTML = createSection('🎓 ' + t('step_academic_info'), `
                 ${cell(t('label_speciality'), s.speciality)}
                 ${cell(t('label_academic_level'), s.academic_level)}
                 ${cell(t('label_academic_average'), s.academic_average)}
@@ -1074,7 +1207,7 @@ $conn->close();
             `);
 
             // 3. Parents & Family
-            html += createSection('👪 ' + t('step_family_info'), `
+            document.getElementById('subtab-family').innerHTML = createSection('👪 ' + t('step_family_info'), `
                 ${cell(t('label_father_name_en'), s.father_name_en)}
                 ${cell(t('label_father_name_ar'), s.father_name_ar)}
                 ${cell(t('label_father_prof_en'), s.father_profession)}
@@ -1094,7 +1227,7 @@ $conn->close();
             `);
 
             // 4. Addresses
-            html += createSection('📍 ' + t('step_addresses'), `
+            document.getElementById('subtab-addresses').innerHTML = createSection('📍 ' + t('step_addresses'), `
                 <div class="info-cell" style="grid-column: span 2;">
                     <span class="cell-label">${t('label_birth_place_address')}</span>
                     <span class="cell-value">${s.birth_place || 'N/A'}</span>
@@ -1106,14 +1239,15 @@ $conn->close();
             `);
             
             // 5. Uniforms
+            let uniformsHtml = '';
             if (s.uniforms) {
-                 html += createSection('🪖 ' + t('combat_outfit'), `
+                 uniformsHtml += createSection('🪖 ' + t('combat_outfit'), `
                     ${cell(t('1st_outfit_number') + '/' + t('1st_outfit_size'), s.uniforms.combat.outfit1)}
                     ${cell(t('2nd_outfit_number') + '/' + t('2nd_outfit_size'), s.uniforms.combat.outfit2)}
                     ${cell(t('combat_shoe_size'), s.uniforms.combat.shoe)}
                 `);
 
-                 html += createSection('👔 ' + t('parade_uniform'), `
+                 uniformsHtml += createSection('👔 ' + t('parade_uniform'), `
                     ${cell(t('summer_jacket_size'), s.uniforms.parade.summer_jacket)}
                     ${cell(t('winter_jacket_size'), s.uniforms.parade.winter_jacket)}
                     ${cell(t('summer_trousers_size'), s.uniforms.parade.summer_trousers)}
@@ -1125,10 +1259,13 @@ $conn->close();
                     ${s.sex === 'Female' ? cell(t('summer_skirt_size'), s.uniforms.parade.summer_skirt) : ''}
                     ${s.sex === 'Female' ? cell(t('winter_skirt_size'), s.uniforms.parade.winter_skirt) : ''}
                 `);
+            } else {
+                uniformsHtml = `<div class="glass-card" style="text-align:center; color:var(--text-secondary); padding: 2rem;">${t('not_available') || 'N/A'}</div>`;
             }
+            document.getElementById('subtab-uniforms').innerHTML = uniformsHtml;
 
             // 6. Documents & Misc
-            html += createSection('📄 ' + t('step_other_details'), `
+            document.getElementById('subtab-documents').innerHTML = createSection('📄 ' + t('step_other_details'), `
                 ${cell(t('label_id_card_num'), s.id_card_num)}
                 ${cell(t('label_birth_cert_num'), s.birth_cert_num)}
                 ${cell(t('label_school_sub_card'), s.school_sub_card)}
@@ -1138,8 +1275,9 @@ $conn->close();
             `);
 
             // 7. Emergency Contact
+            let emergencyHtml = '';
             if (s.emergency_contact) {
-                html += createSection('🚨 ' + t('step_emergency_contact'), `
+                emergencyHtml = createSection('🚨 ' + t('step_emergency_contact'), `
                     ${cell(t('contact_name_en'), (s.emergency_contact.first_name_en || '') + ' ' + (s.emergency_contact.last_name_en || ''))}
                     ${cell(t('contact_name_ar'), (s.emergency_contact.first_name_ar || '') + ' ' + (s.emergency_contact.last_name_ar || ''))}
                     ${cell(isArabic ? t('label_relation_ar') : t('label_relation_en'), isArabic ? s.emergency_contact.relation_ar : s.emergency_contact.relation_en)}
@@ -1150,9 +1288,13 @@ $conn->close();
                         <span class="cell-value">${s.emergency_contact.address || 'N/A'}</span>
                     </div>
                 `);
+            } else {
+                emergencyHtml = `<div class="glass-card" style="text-align:center; color:var(--text-secondary); padding: 2rem;">${t('not_available') || 'N/A'}</div>`;
             }
+            document.getElementById('subtab-emergency').innerHTML = emergencyHtml;
 
-            document.getElementById('fullInfoContainer').innerHTML = html;
+            // Set first sub-tab as active
+            switchSubTab('subtab-personal');
         }
 
         function generateReport() {
@@ -1187,8 +1329,9 @@ $conn->close();
             document.getElementById('absencesContainer').innerHTML = '';
             document.getElementById('observationsContainer').innerHTML = '';
             document.getElementById('fullInfoContainer').innerHTML = '';
-            document.getElementById('viewToggles').style.display = 'none';
+            document.getElementById('recordsTabs').style.display = 'none';
             document.getElementById('dateFilterSection').style.display = 'none';
+            document.getElementById('btnGenerateReport').style.display = 'none';
             
             // Reset state
             selectedStudent = null;
@@ -1204,6 +1347,34 @@ $conn->close();
         window.addEventListener('load', function() {
             initializeDates();
             fetchAllStudents();
+
+            const tabsList = document.getElementById('recordsTabsList');
+            if (tabsList) {
+                tabsList.addEventListener('click', function(e) {
+                    const btn = e.target.closest('.tab-button');
+                    if (btn) {
+                        // Handle collapsible tab click
+                        if (btn.classList.contains('collapsible')) {
+                            toggleCollapsibleTab(btn);
+                        }
+                        const tabId = btn.getAttribute('data-tab-id');
+                        const view = btn.getAttribute('data-view');
+                        if (tabId && view) {
+                            switchTab({ currentTarget: btn }, tabId, view);
+                        }
+                        return;
+                    }
+
+                    // Handle sub-tab click
+                    const subBtn = e.target.closest('.sub-tab-button');
+                    if (subBtn) {
+                        const subTabId = subBtn.getAttribute('data-sub-tab');
+                        if (subTabId) {
+                            switchSubTab(subTabId);
+                        }
+                    }
+                });
+            }
         });
 
         document.addEventListener('click', function(e) {

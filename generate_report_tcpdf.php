@@ -1,5 +1,10 @@
 <?php
 // generate_report.php - Generate PDF report for student records using TCPDF
+// Ensure UTF-8 encoding throughout
+mb_internal_encoding('UTF-8');
+mb_http_output('UTF-8');
+ini_set('default_charset', 'UTF-8');
+
 session_start();
 date_default_timezone_set('Africa/Algiers');
 
@@ -34,6 +39,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
 
 // Set TCPDF font directory (must be before including TCPDF)
 define('K_PATH_FONTS', __DIR__ . '/vendor/tcpdf/fonts/');
+
+$FONT_EN = file_exists(K_PATH_FONTS . 'cmunrm.php') ? 'cmunrm' : 'helvetica';
+$FONT_AR = 'trado'; // Traditional Arabic font
 
 // Include TCPDF
 require_once __DIR__ . '/vendor/tcpdf/tcpdf.php';
@@ -292,52 +300,108 @@ try {
 
     // Create PDF
     class MYPDF extends TCPDF {
-        protected $isRTL;
-        protected $lang;
-        
-        public function __construct($isRTL = false, $lang = 'en') {
-            parent::__construct();
-            $this->isRTL = $isRTL;
-            $this->lang = $lang;
-            if ($this->isRTL) {
-                $this->setRTL(true);
-            }
-        }
-        
-        public function Header() {
-            $title = $this->isRTL ? 'إينوت - نظام إدارة التعليم' : 'EduTrack - Educational Management System';
-            $this->SetFont('dejavusans', 'B', 12);
-            $this->Cell(0, 10, $title, 0, 1, 'C');
-            $this->Ln(5);
-        }
-        
-        public function Footer() {
-            $this->SetY(-15);
-            $this->SetFont('dejavusans', '', 8);
-            $pageText = $this->isRTL ? 'صفحة' : 'Page';
-            $this->Cell(0, 10, $pageText . ' ' . $this->getAliasNumPage() . '/' . $this->getAliasNbPages(), 0, 0, 'C');
+    protected $isRTL;
+    protected $lang;
+    protected $reportSerial;
+    
+    public function __construct($isRTL = false, $lang = 'en', $reportSerial = '') {
+        parent::__construct();
+        $this->isRTL = $isRTL;
+        $this->lang = $lang;
+        $this->reportSerial = $reportSerial;
+        if ($this->isRTL) {
+            $this->setRTL(true);
         }
     }
-
-    $pdf = new MYPDF($isRTL, $lang);
-    $pdf->SetCreator('EduTrack System');
-    $pdf->SetAuthor('EduTrack');
     
-    $reportTitle = ($lang === 'ar') ? 'تقرير الطالب: ' . $studentName : 'Student Report: ' . $studentName;
+    public function Header() {
+        global $FONT_EN, $FONT_AR;
+        
+        // Top decorative line
+        $this->SetDrawColor(0, 51, 102);
+        $this->SetLineWidth(1.5);
+        $this->Line(10, 10, $this->getPageWidth() - 10, 10);
+        
+        // Institution header box
+        $this->SetFillColor(0, 51, 102);
+        $this->Rect(10, 12, $this->getPageWidth() - 20, 18, 'F');
+        
+        // Institution name
+        $appName = $this->isRTL ? tr_lang('app_name', 'ar') : 'eNote';
+        $systemName = $this->isRTL ? tr_lang('system_name', 'ar') : 'Educational Management System';
+        
+        $this->SetTextColor(255, 255, 255);
+        $this->SetFont($this->isRTL ? $FONT_AR : $FONT_EN, 'B', 16);
+        $this->SetY(14);
+        $this->Cell(0, 8, $appName, 0, 1, 'C');
+        $this->SetFont($this->isRTL ? $FONT_AR : $FONT_EN, '', 10);
+        $this->Cell(0, 6, $systemName, 0, 1, 'C');
+        
+        // Reset text color
+        $this->SetTextColor(0, 0, 0);
+        
+        // Thin separator line
+        $this->SetDrawColor(0, 51, 102);
+        $this->SetLineWidth(0.3);
+        $this->Line(10, 38, $this->getPageWidth() - 10, 38);
+        
+        $this->SetY(42);
+    }
+    
+    public function Footer() {
+        global $FONT_EN, $FONT_AR;
+        
+        // Footer line
+        $this->SetDrawColor(0, 51, 102);
+        $this->SetLineWidth(0.5);
+        $this->Line(10, $this->getPageHeight() - 18, $this->getPageWidth() - 10, $this->getPageHeight() - 18);
+        
+        $this->SetY(-15);
+        $this->SetFont($this->isRTL ? $FONT_AR : $FONT_EN, '', 8);
+        $this->SetTextColor(80, 80, 80);
+        
+        $pageText = $this->isRTL ? tr_lang('page', 'ar') : 'Page';
+        $this->Cell(60, 8, $pageText . ' ' . $this->getAliasNumPage() . ' / ' . $this->getAliasNbPages(), 0, 0, 'L');
+        
+        // Center text
+        $this->Cell(0, 8, date('Y') . ' © eNote', 0, 0, 'C');
+        
+        // Right text - generated date
+        $this->Cell(60, 8, date('d/m/Y H:i'), 0, 0, 'R');
+        
+        $this->SetTextColor(0, 0, 0);
+    }
+}
+
+    $pdf = new MYPDF($isRTL, $lang, $serial_number);
+    $pdf->SetCreator('eNote Educational Management System');
+    $pdf->SetAuthor('eNote');
+    
+    // Ensure proper Unicode handling
+    $pdf->setFontSubsetting(true); // Embed all font glyphs for Unicode support
+    
+    $reportTitle = ($lang === 'ar') ? tr_lang('student_report', 'ar') . ': ' . $studentName : 'Student Report: ' . $studentName;
     $pdf->SetTitle($reportTitle);
     
+    // Set margins for official document look
+    $pdf->SetMargins(15, 45, 15);
+    $pdf->SetAutoPageBreak(true, 20);
+    
     $pdf->AddPage();
-    $pdf->SetFont('dejavusans', '', 11);
+    $pdf->SetFont($FONT_EN, '', 11);
 
-    // Helper function to add section title
+    // Helper function to add section title with official styling
     function addSection($pdf, $title) {
-        $pdf->SetFont('dejavusans', 'B', 14);
-        $pdf->SetFillColor(99, 102, 241);
+        global $FONT_EN;
+        // Section header with dark navy background
+        $pdf->SetFont($FONT_EN, 'B', 12);
+        $pdf->SetFillColor(0, 51, 102);
         $pdf->SetTextColor(255, 255, 255);
-        $pdf->Cell(0, 10, $title, 0, 1, 'L', true);
+        $pdf->SetDrawColor(0, 51, 102);
+        $pdf->Cell(0, 8, '  ' . $title, 1, 1, 'L', true);
         $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetFont('dejavusans', '', 11);
-        $pdf->Ln(3);
+        $pdf->SetFont($FONT_EN, '', 10);
+        $pdf->Ln(2);
     }
 
     function normalizePdfValue($value) {
@@ -355,9 +419,12 @@ try {
     }
 
     function addBiSection($pdf, $titleEn, $titleAr) {
-        $pdf->SetFont('dejavusans', 'B', 14);
-        $pdf->SetFillColor(99, 102, 241);
+        global $FONT_EN, $FONT_AR;
+        
+        // Official dark navy section header
+        $pdf->SetFillColor(0, 51, 102);
         $pdf->SetTextColor(255, 255, 255);
+        $pdf->SetDrawColor(0, 51, 102);
 
         $margins = $pdf->getMargins();
         $x = $margins['left'];
@@ -365,43 +432,183 @@ try {
         $half = $w / 2;
         $y = $pdf->GetY();
 
-        $pdf->MultiCell($half, 10, $titleEn, 0, 'L', true, 0, $x, $y, true);
-        $pdf->MultiCell($half, 10, $titleAr, 0, 'R', true, 1, $x + $half, $y, true);
+        $pdf->SetFont($FONT_EN, 'B', 11);
+        $pdf->MultiCell($half, 7, '  ' . $titleEn, 0, 'L', true, 0, $x, $y, true);
+        $titleArSafe = htmlspecialchars($titleAr, ENT_QUOTES, 'UTF-8');
+        $pdf->SetFont($FONT_AR, 'B', 11);
+        $pdf->writeHTMLCell(
+            $half,
+            7,
+            $x + $half,
+            $y,
+            '<div dir="rtl" style="text-align:right; background-color:#003366; padding:0 5px;">' . $titleArSafe . '</div>',
+            0,
+            1,
+            true,
+            true,
+            'R',
+            true
+        );
 
+        // Bottom border for section header
+        $pdf->SetDrawColor(0, 51, 102);
+        $pdf->SetLineWidth(0.5);
+        $pdf->Line($x, $y + 7, $x + $w, $y + 7);
+        
         $pdf->SetTextColor(0, 0, 0);
-        $pdf->SetFont('dejavusans', '', 11);
+        $pdf->SetFont($FONT_EN, '', 10);
         $pdf->Ln(3);
     }
 
+    function writeBilingualHeaderCell($pdf, $w, $h, $en, $ar, $ln = 0, $fill = true) {
+        global $FONT_EN, $FONT_AR;
+        $x = $pdf->GetX();
+        $y = $pdf->GetY();
+        $enSafe = htmlspecialchars($en, ENT_QUOTES, 'UTF-8');
+        $arSafe = htmlspecialchars($ar, ENT_QUOTES, 'UTF-8');
+        $html = '<div style="text-align:center; font-family:' . $FONT_EN . '; font-weight:bold; font-size:9pt;">'
+            . $enSafe
+            . '<br/><span dir="rtl" style="text-align:center; font-family:' . $FONT_AR . '; font-weight:bold; font-size:9pt;">'
+            . $arSafe
+            . '</span></div>';
+
+        // Official table header styling - dark navy
+        $pdf->SetFillColor(0, 51, 102);
+        $pdf->SetTextColor(255, 255, 255);
+        $pdf->SetDrawColor(0, 51, 102);
+        $pdf->writeHTMLCell($w, $h, $x, $y, $html, 1, 0, $fill, true, 'C', true);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetXY($x + $w, $y);
+        if ($ln === 1) {
+            $pdf->Ln($h);
+        }
+    }
+
+    function writeBilingualNoData($pdf, $en, $ar) {
+        global $FONT_EN, $FONT_AR;
+        $x = $pdf->GetX();
+        $y = $pdf->GetY();
+        $w = $pdf->getPageWidth() - $pdf->getMargins()['right'] - $x;
+
+        // Styled "no data" box with light background
+        $pdf->SetFillColor(248, 249, 250);
+        $pdf->SetDrawColor(200, 200, 200);
+        $pdf->Rect($x, $y, $w, 14, 'DF');
+
+        // English line (LTR)
+        $pdf->setRTL(false);
+        $pdf->SetFont($FONT_EN, 'I', 9);
+        $pdf->SetTextColor(100, 100, 100);
+        $pdf->MultiCell($w, 5, $en, 0, 'C', false, 1, $x, $y + 2, true);
+
+        // Arabic line (RTL) - force RTL to avoid bidi inversion
+        $pdf->setRTL(true);
+        $pdf->SetFont($FONT_AR, 'I', 9);
+        $pdf->MultiCell($w, 5, $ar, 0, 'C', false, 1, $x, $pdf->GetY(), true);
+        $pdf->setRTL(false);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->Ln(3);
+    }
+
+    function addCenteredRowLabels($pdf, $labelEn, $labelAr, $value) {
+        global $FONT_EN, $FONT_AR;
+        $value = normalizePdfValue($value);
+
+        $margins = $pdf->getMargins();
+        $pageW = $pdf->getPageWidth();
+        $w = $pageW - $margins['left'] - $margins['right'];
+
+        $labelW = 50;
+        $lineH = 7;
+
+        $x = $margins['left'];
+        $y = $pdf->GetY();
+
+        $valueW = $w - (2 * $labelW);
+        if ($valueW < 20) {
+            $valueW = 20;
+        }
+
+        // Light gray background for row
+        static $rowAlt = false;
+        if ($rowAlt) {
+            $pdf->SetFillColor(245, 245, 250);
+            $pdf->Rect($x, $y, $w, $lineH, 'F');
+        }
+        $rowAlt = !$rowAlt;
+
+        // EN label (left) - bold for official look
+        $pdf->SetFont($FONT_EN, 'B', 9);
+        $pdf->SetTextColor(0, 51, 102);
+        $pdf->MultiCell($labelW, $lineH, $labelEn . ':', 0, 'L', false, 0, $x, $y, true);
+
+        // Value centered
+        $pdf->SetTextColor(0, 0, 0);
+        $hasArabicVal = is_string($value) && preg_match('/[\x{0600}-\x{06FF}]/u', $value);
+        $pdf->SetFont($hasArabicVal ? $FONT_AR : $FONT_EN, '', 9);
+        $pdf->MultiCell($valueW, $lineH, (string)$value, 0, 'C', false, 0, $x + $labelW, $y, true);
+
+        // AR label (right) - bold for official look
+        $pdf->SetFont($FONT_AR, 'B', 9);
+        $pdf->SetTextColor(0, 51, 102);
+        $pdf->MultiCell($labelW, $lineH, $labelAr . ':', 0, 'R', false, 1, $x + $labelW + $valueW, $y, true);
+        $pdf->SetTextColor(0, 0, 0);
+    }
+
     function addBiRowLabels($pdf, $labelEn, $labelAr, $valueEn, $valueAr) {
+        global $FONT_EN, $FONT_AR;
         $valueEn = normalizePdfValue($valueEn);
         $valueAr = normalizePdfValue($valueAr);
+
+        // If there is no distinct Arabic equivalent (same value), center the value.
+        // Example: serial number, numeric measures, IDs.
+        $same = ((string)$valueEn === (string)$valueAr);
+        if ($same) {
+            addCenteredRowLabels($pdf, $labelEn, $labelAr, $valueEn);
+            return;
+        }
 
         $margins = $pdf->getMargins();
         $pageW = $pdf->getPageWidth();
         $w = $pageW - $margins['left'] - $margins['right'];
         $half = $w / 2;
 
-        $labelW = 45;
-        $lineH = 8;
+        $labelW = 42;
+        $lineH = 7;
 
         $xLeft = $margins['left'];
         $xRight = $margins['left'] + $half;
         $y = $pdf->GetY();
 
-        // Left (EN)
-        $pdf->SetFont('dejavusans', 'B', 10);
-        $pdf->MultiCell($labelW, $lineH, $labelEn . ':', 0, 'L', false, 0, $xLeft, $y, true);
-        $pdf->SetFont('dejavusans', '', 10);
-        $pdf->MultiCell($half - $labelW, $lineH, (string)$valueEn, 0, 'L', false, 0, $xLeft + $labelW, $y, true);
+        // Light gray background for alternating rows
+        static $rowAltBi = false;
+        if ($rowAltBi) {
+            $pdf->SetFillColor(245, 245, 250);
+            $pdf->Rect($xLeft, $y, $w, $lineH, 'F');
+        }
+        $rowAltBi = !$rowAltBi;
 
-        // Right (AR)
+        // Left (EN) - bold label for official look
+        $pdf->SetFont($FONT_EN, 'B', 9);
+        $pdf->SetTextColor(0, 51, 102);
+        $pdf->MultiCell($labelW, $lineH, $labelEn . ':', 0, 'L', false, 0, $xLeft, $y, true);
+        $pdf->SetTextColor(0, 0, 0);
+        $hasArabicEn = is_string($valueEn) && preg_match('/[\x{0600}-\x{06FF}]/u', $valueEn);
+        $pdf->SetFont($hasArabicEn ? $FONT_AR : $FONT_EN, '', 9);
+        $pdf->MultiCell($half - $labelW, $lineH, (string)$valueEn, 0, $hasArabicEn ? 'R' : 'L', false, 0, $xLeft + $labelW, $y, true);
+
+        // Right (AR) - keep the Arabic label on the far right
         $hasArabic = is_string($valueAr) && preg_match('/[\x{0600}-\x{06FF}]/u', $valueAr);
-        $pdf->SetFont('dejavusans', 'B', 10);
-        $pdf->MultiCell($labelW, $lineH, $labelAr . ':', 0, 'R', false, 0, $xRight, $y, true);
-        $pdf->SetFont('dejavusans', '', 10);
-        $alignAr = $hasArabic ? 'R' : 'R';
-        $pdf->MultiCell($half - $labelW, $lineH, (string)$valueAr, 0, $alignAr, false, 1, $xRight + $labelW, $y, true);
+        $pdf->SetFont($FONT_AR, '', 9);
+        $alignArVal = $hasArabic ? 'R' : 'R';
+        $pdf->MultiCell($half - $labelW, $lineH, (string)$valueAr, 0, $alignArVal, false, 0, $xRight, $y, true);
+
+        // Arabic label with proper RTL using writeHTMLCell - bold for official look
+        $pdf->SetFont($FONT_AR, 'B', 9);
+        $pdf->SetTextColor(0, 51, 102);
+        $htmlLabel = '<span dir="rtl" style="font-family: trado;">' . htmlspecialchars($labelAr, ENT_QUOTES, 'UTF-8') . ':</span>';
+        $pdf->writeHTMLCell($labelW, $lineH, $xRight + ($half - $labelW), $y, $htmlLabel, 0, 1, false, true, 'R');
+        $pdf->SetTextColor(0, 0, 0);
     }
 
     function addBiRowKey($pdf, $labelKey, $valueEn, $valueAr) {
@@ -416,6 +623,7 @@ try {
 
     // Helper function to add key-value row
     function addRow($pdf, $label, $value, $isRTL = false) {
+        global $FONT_AR, $FONT_EN;
         // Normalize missing values
         if ($value === null) {
             $value = 'N/A';
@@ -441,32 +649,54 @@ try {
         $margins = $pdf->getMargins();
 
         // Label
-        $pdf->SetFont('dejavusans', 'B', 10);
+        $pdf->SetFont($FONT_EN, '', 10);
         $pdf->MultiCell($labelW, $lineH, $label . ':', 0, 'L', false, 0, $x, $y, true);
 
         // Value
-        $pdf->SetFont('dejavusans', '', 10);
+        $pdf->SetFont(($hasArabic || $isRTL) ? $FONT_AR : $FONT_EN, '', 10);
         $xVal = $x + $labelW;
         $availableW = $pdf->getPageWidth() - $margins['right'] - $xVal;
         $align = ($hasArabic || $isRTL) ? 'R' : 'L';
         $pdf->MultiCell($availableW, $lineH, (string)$value, 0, $align, false, 1, $xVal, $y, true);
     }
 
-    // Title
-    $pdf->SetFont('dejavusans', 'B', 18);
-    $pdf->Cell(0, 15, $reportTitle, 0, 1, 'C');
-    $pdf->SetFont('dejavusans', '', 10);
-    $dateLabel = ($lang === 'ar') ? 'تاريخ التقرير' : 'Report Date';
-    $pdf->Cell(0, 8, $dateLabel . ': ' . date('Y-m-d H:i:s'), 0, 1, 'C');
-    $pdf->Ln(10);
+    // Title with official document styling
+    $pdf->SetY(45);
+    
+    // Document title box
+    $pdf->SetFillColor(240, 245, 250);
+    $pdf->SetDrawColor(0, 51, 102);
+    $pdf->SetLineWidth(0.8);
+    $titleY = $pdf->GetY();
+    $pdf->Rect(15, $titleY, $pdf->getPageWidth() - 30, 25, 'DF');
+    
+    $pdf->SetFont($isRTL ? $FONT_AR : $FONT_EN, 'B', 16);
+    $pdf->SetTextColor(0, 51, 102);
+    $pdf->Cell(0, 12, $reportTitle, 0, 1, 'C');
+    
+    $pdf->SetFont($isRTL ? $FONT_AR : $FONT_EN, '', 10);
+    $pdf->SetTextColor(80, 80, 80);
+    $dateLabel = ($lang === 'ar') ? tr_lang('report_date', 'ar') : 'Report Date';
+    $pdf->Cell(0, 8, $dateLabel . ': ' . date('d/m/Y H:i'), 0, 1, 'C');
+    $pdf->SetTextColor(0, 0, 0);
+    
+    // Period info
+    $periodText = ($lang === 'ar') 
+        ? tr_lang('start_date', 'ar') . ': ' . $start_date . ' - ' . tr_lang('end_date', 'ar') . ': ' . $end_date
+        : 'Period: ' . $start_date . ' to ' . $end_date;
+    $pdf->SetFont($FONT_EN, 'I', 9);
+    $pdf->SetTextColor(100, 100, 100);
+    $pdf->Cell(0, 6, $periodText, 0, 1, 'C');
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->Ln(8);
 
     // Section 1: Personal Information
-    addBiSection($pdf, '1. Personal Information', '1. المعلومات الشخصية');
+    addBiSection($pdf, '1. ' . tr_lang('personal_information', 'en'), tr_lang('personal_information', 'ar'));
     addBiRowKey($pdf, 'student_serial_number', $student['STUDENT_SERIAL_NUMBER'], $student['STUDENT_SERIAL_NUMBER']);
     addBiRowLabels(
         $pdf,
-        'Full Name',
-        'الاسم الكامل',
+        tr_lang('full_name', 'en'),
+        tr_lang('full_name', 'ar'),
         trim(($student['STUDENT_FIRST_NAME_EN'] ?? '') . ' ' . ($student['STUDENT_LAST_NAME_EN'] ?? '')),
         trim(($student['STUDENT_FIRST_NAME_AR'] ?? '') . ' ' . ($student['STUDENT_LAST_NAME_AR'] ?? ''))
     );
@@ -485,7 +715,7 @@ try {
     $pdf->Ln(5);
 
     // Section 2: Academic Details
-    addBiSection($pdf, '2. Academic Details', '2. التفاصيل الأكاديمية');
+    addBiSection($pdf, '2. ' . tr_lang('academic_details', 'en'), tr_lang('academic_details', 'ar'));
     addBiRowLabels($pdf, tr_lang('grade_rank', 'en'), tr_lang('grade_rank', 'ar'), $student['GRADE_NAME_EN'], $student['GRADE_NAME_AR']);
     addBiRowLabels($pdf, tr_lang('section', 'en'), tr_lang('section', 'ar'), $student['SECTION_NAME_EN'], $student['SECTION_NAME_AR']);
     addBiRowLabels($pdf, tr_lang('category', 'en'), tr_lang('category', 'ar'), $student['CATEGORY_NAME_EN'], $student['CATEGORY_NAME_AR']);
@@ -498,153 +728,197 @@ try {
     $pdf->Ln(5);
 
     // Section 3: Family Information
-    addBiSection($pdf, '3. Family Information', '3. معلومات العائلة');
+    addBiSection($pdf, '3. ' . tr_lang('family_information', 'en'), tr_lang('family_information', 'ar'));
     addBiRowLabels(
         $pdf,
-        'Father Name',
-        'اسم الأب',
+        tr_lang('father_name', 'en'),
+        tr_lang('father_name', 'ar'),
         trim(($student['FATHER_FIRST_NAME_EN'] ?? '') . ' ' . ($student['FATHER_LAST_NAME_EN'] ?? '')),
         trim(($student['FATHER_FIRST_NAME_AR'] ?? '') . ' ' . ($student['FATHER_LAST_NAME_AR'] ?? ''))
     );
     addBiRowLabels(
         $pdf,
-        'Father Profession',
-        'مهنة الأب',
+        tr_lang('father_profession', 'en'),
+        tr_lang('father_profession', 'ar'),
         $student['FATHER_PROFESSION_EN'],
         $student['FATHER_PROFESSION_AR']
     );
     addBiRowLabels(
         $pdf,
-        'Mother Name',
-        'اسم الأم',
+        tr_lang('mother_name', 'en'),
+        tr_lang('mother_name', 'ar'),
         trim(($student['MOTHER_FIRST_NAME_EN'] ?? '') . ' ' . ($student['MOTHER_LAST_NAME_EN'] ?? '')),
         trim(($student['MOTHER_FIRST_NAME_AR'] ?? '') . ' ' . ($student['MOTHER_LAST_NAME_AR'] ?? ''))
     );
     addBiRowLabels(
         $pdf,
-        'Mother Profession',
-        'مهنة الأم',
+        tr_lang('mother_profession', 'en'),
+        tr_lang('mother_profession', 'ar'),
         $student['MOTHER_PROFESSION_EN'],
         $student['MOTHER_PROFESSION_AR']
     );
-    addBiRowLabels($pdf, "Parents' Situation", 'حالة الوالدين', tr_lang(strtolower($student['STUDENT_PARENTS_SITUATION'] ?? 'none'), 'en'), tr_lang(strtolower($student['STUDENT_PARENTS_SITUATION'] ?? 'none'), 'ar'));
+    addBiRowLabels($pdf, tr_lang('parents_situation', 'en'), tr_lang('parents_situation', 'ar'), tr_lang(strtolower($student['STUDENT_PARENTS_SITUATION'] ?? 'none'), 'en'), tr_lang(strtolower($student['STUDENT_PARENTS_SITUATION'] ?? 'none'), 'ar'));
     $orphan_map = ['None' => 'none', 'Father' => 'father', 'Mother' => 'mother', 'Both' => 'both'];
     $orphan_key2 = $orphan_map[$student['STUDENT_ORPHAN_STATUS'] ?? 'None'] ?? 'none';
-    addBiRowLabels($pdf, 'Orphan Status', 'حالة اليتم', tr_lang('orphan_' . $orphan_key2, 'en'), tr_lang('orphan_' . $orphan_key2, 'ar'));
+    addBiRowLabels($pdf, tr_lang('orphan_status', 'en'), tr_lang('orphan_status', 'ar'), tr_lang('orphan_' . $orphan_key2, 'en'), tr_lang('orphan_' . $orphan_key2, 'ar'));
     addBiRowLabels($pdf, tr_lang('label_siblings_count', 'en'), tr_lang('label_siblings_count', 'ar'), $student['STUDENT_NUMBER_OF_SIBLINGS'], $student['STUDENT_NUMBER_OF_SIBLINGS']);
     addBiRowLabels($pdf, tr_lang('label_sisters_count', 'en'), tr_lang('label_sisters_count', 'ar'), $student['STUDENT_NUMBER_OF_SISTERS'], $student['STUDENT_NUMBER_OF_SISTERS']);
     addBiRowLabels($pdf, tr_lang('label_order_among_siblings', 'en'), tr_lang('label_order_among_siblings', 'ar'), $student['STUDENT_ORDER_AMONG_SIBLINGS'], $student['STUDENT_ORDER_AMONG_SIBLINGS']);
     $pdf->Ln(5);
 
     // Section 4: Addresses
-    addBiSection($pdf, '4. Addresses', '4. العناوين');
-    addBiRowLabels($pdf, 'Birth Place - Country', 'مكان الميلاد - البلد', $student['BP_COUNTRY_EN'], $student['BP_COUNTRY_AR']);
-    addBiRowLabels($pdf, 'Personal Address - Country', 'العنوان الشخصي - البلد', $student['PERS_COUNTRY_EN'], $student['PERS_COUNTRY_AR']);
+    addBiSection($pdf, '4. ' . tr_lang('addresses', 'en'), tr_lang('addresses', 'ar'));
+    addBiRowLabels($pdf, tr_lang('birth_place_country', 'en'), tr_lang('birth_place_country', 'ar'), $student['BP_COUNTRY_EN'], $student['BP_COUNTRY_AR']);
+    addBiRowLabels($pdf, tr_lang('personal_address_country', 'en'), tr_lang('personal_address_country', 'ar'), $student['PERS_COUNTRY_EN'], $student['PERS_COUNTRY_AR']);
     $pdf->Ln(5);
 
     // Section 5: Emergency Contact
-    addBiSection($pdf, '5. Emergency Contact', '5. جهة الاتصال في الطوارئ');
+    addBiSection($pdf, '5. ' . tr_lang('emergency_contact', 'en'), tr_lang('emergency_contact', 'ar'));
     addBiRowLabels(
         $pdf,
-        'Name',
-        'الاسم',
+        tr_lang('emergency_name', 'en'),
+        tr_lang('emergency_name', 'ar'),
         trim(($student['CONTACT_FIRST_NAME_EN'] ?? '') . ' ' . ($student['CONTACT_LAST_NAME_EN'] ?? '')),
         trim(($student['CONTACT_FIRST_NAME_AR'] ?? '') . ' ' . ($student['CONTACT_LAST_NAME_AR'] ?? ''))
     );
-    addBiRowLabels($pdf, 'Relation', 'صلة القرابة', $student['CONTACT_RELATION_EN'], $student['CONTACT_RELATION_AR']);
+    addBiRowLabels($pdf, tr_lang('emergency_relation', 'en'), tr_lang('emergency_relation', 'ar'), $student['CONTACT_RELATION_EN'], $student['CONTACT_RELATION_AR']);
     addBiRowLabels($pdf, tr_lang('label_phone', 'en'), tr_lang('label_phone', 'ar'), $student['EMG_PHONE'], $student['EMG_PHONE']);
     addBiRowLabels($pdf, tr_lang('label_consulate_number', 'en'), tr_lang('label_consulate_number', 'ar'), $student['CONSULATE_NUMBER'], $student['CONSULATE_NUMBER']);
     $pdf->Ln(5);
 
     // Section 6: Absences
-    addBiSection($pdf, "6. Absences ($start_date to $end_date)", "6. الغيابات ($start_date إلى $end_date)");
+    addBiSection($pdf, '6. ' . tr_lang('absences', 'en'), tr_lang('absences', 'ar'));
+    // Period info under section header
+    $pdf->SetFont($FONT_EN, 'I', 8);
+    $pdf->SetTextColor(100, 100, 100);
+    $periodText = "($start_date → $end_date)";
+    $pdf->Cell(0, 5, $periodText, 0, 1, 'C');
+    $pdf->SetTextColor(0, 0, 0);
+    $pdf->Ln(2);
+    
     if (empty($absences)) {
-        $noData = 'No absences recorded in this period. / لم يتم تسجيل غيابات في هذه الفترة';
-        $pdf->SetFont('dejavusans', 'I', 10);
-        $pdf->Cell(0, 8, $noData, 0, 1, 'L');
+        writeBilingualNoData($pdf, tr_lang('no_absences_period', 'en'), tr_lang('no_absences_period', 'ar'));
     } else {
-        // Table header
-        $pdf->SetFillColor(240, 240, 240);
-        $pdf->SetFont('dejavusans', 'B', 9);
-        $pdf->Cell(45, 8, tr_lang('date', 'en') . " / " . tr_lang('date', 'ar'), 1, 0, 'C', true);
-        $pdf->Cell(50, 8, 'Motif / السبب', 1, 0, 'C', true);
-        $pdf->Cell(0, 8, tr_lang('note', 'en') . " / " . tr_lang('note', 'ar'), 1, 1, 'C', true);
-        $pdf->SetFont('dejavusans', '', 9);
+        // Table header with official styling
+        $pdf->SetFont($FONT_EN, 'B', 9);
+        writeBilingualHeaderCell($pdf, 45, 10, tr_lang('date', 'en'), tr_lang('date', 'ar'), 0, true);
+        writeBilingualHeaderCell($pdf, 50, 10, tr_lang('motif', 'en'), tr_lang('motif', 'ar'), 0, true);
+        $remainingW = $pdf->getPageWidth() - $pdf->getMargins()['right'] - $pdf->GetX();
+        writeBilingualHeaderCell($pdf, $remainingW, 10, tr_lang('note', 'en'), tr_lang('note', 'ar'), 1, true);
+        $pdf->SetFont($FONT_EN, '', 9);
+        
+        $rowAlt = false;
         foreach ($absences as $a) {
-            $pdf->Cell(45, 7, substr($a['ABSENCE_DATE_AND_TIME'], 0, 19), 1, 0, 'L');
-            $pdf->Cell(50, 7, $a['ABSENCE_MOTIF'] ?: 'N/A', 1, 0, 'L');
-            $pdf->Cell(0, 7, $a['ABSENCE_OBSERVATION'] ?: 'N/A', 1, 1, 'L');
+            // Alternating row colors
+            if ($rowAlt) {
+                $pdf->SetFillColor(248, 250, 252);
+            } else {
+                $pdf->SetFillColor(255, 255, 255);
+            }
+            $rowAlt = !$rowAlt;
+            
+            $pdf->SetDrawColor(0, 51, 102);
+            $pdf->Cell(45, 7, substr($a['ABSENCE_DATE_AND_TIME'], 0, 19), 1, 0, 'L', true);
+            $pdf->Cell(50, 7, $a['ABSENCE_MOTIF'] ?: 'N/A', 1, 0, 'L', true);
+            $pdf->Cell(0, 7, $a['ABSENCE_OBSERVATION'] ?: 'N/A', 1, 1, 'L', true);
         }
     }
     $pdf->Ln(5);
 
     // Section 7: Observations
-    addBiSection($pdf, '7. Observations', '7. الملاحظات');
+    addBiSection($pdf, '7. ' . tr_lang('observations', 'en'), tr_lang('observations', 'ar'));
     if (empty($observations)) {
-        $noData = 'No observations recorded. / لا توجد ملاحظات مسجلة';
-        $pdf->SetFont('dejavusans', 'I', 10);
-        $pdf->Cell(0, 8, $noData, 0, 1, 'L');
+        writeBilingualNoData($pdf, tr_lang('no_observations', 'en'), tr_lang('no_observations', 'ar'));
     } else {
-        $pdf->SetFillColor(240, 240, 240);
-        $pdf->SetFont('dejavusans', 'B', 9);
-        $pdf->Cell(35, 8, tr_lang('date', 'en') . " / " . tr_lang('date', 'ar'), 1, 0, 'C', true);
-        $pdf->Cell(35, 8, 'Motif / السبب', 1, 0, 'C', true);
-        $pdf->Cell(35, 8, tr_lang('teacher_label', 'en') . " / " . tr_lang('teacher_label', 'ar'), 1, 0, 'C', true);
-        $pdf->Cell(0, 8, tr_lang('note', 'en') . " / " . tr_lang('note', 'ar'), 1, 1, 'C', true);
-        $pdf->SetFont('dejavusans', '', 9);
+        $pdf->SetFont($FONT_EN, 'B', 9);
+        writeBilingualHeaderCell($pdf, 35, 10, tr_lang('date', 'en'), tr_lang('date', 'ar'), 0, true);
+        writeBilingualHeaderCell($pdf, 35, 10, tr_lang('motif', 'en'), tr_lang('motif', 'ar'), 0, true);
+        writeBilingualHeaderCell($pdf, 35, 10, tr_lang('teacher_label', 'en'), tr_lang('teacher_label', 'ar'), 0, true);
+        $remainingW = $pdf->getPageWidth() - $pdf->getMargins()['right'] - $pdf->GetX();
+        writeBilingualHeaderCell($pdf, $remainingW, 10, tr_lang('note', 'en'), tr_lang('note', 'ar'), 1, true);
+        $pdf->SetFont($FONT_EN, '', 9);
+        
+        $rowAlt = false;
         foreach ($observations as $o) {
             $teacherName = ($lang === 'ar' && !empty($o['TEACHER_FIRST_NAME_AR']))
                 ? $o['TEACHER_FIRST_NAME_AR'] . ' ' . $o['TEACHER_LAST_NAME_AR']
                 : $o['TEACHER_FIRST_NAME_EN'] . ' ' . $o['TEACHER_LAST_NAME_EN'];
-            $pdf->Cell(35, 7, substr($o['OBSERVATION_DATE_AND_TIME'], 0, 19), 1, 0, 'L');
-            $pdf->Cell(35, 7, $o['OBSERVATION_MOTIF'] ?: 'N/A', 1, 0, 'L');
-            $pdf->Cell(35, 7, $teacherName, 1, 0, 'L');
-            $pdf->Cell(0, 7, $o['OBSERVATION_NOTE'] ?: 'N/A', 1, 1, 'L');
+            
+            // Alternating row colors
+            if ($rowAlt) {
+                $pdf->SetFillColor(248, 250, 252);
+            } else {
+                $pdf->SetFillColor(255, 255, 255);
+            }
+            $rowAlt = !$rowAlt;
+            
+            $pdf->SetDrawColor(0, 51, 102);
+            $pdf->Cell(35, 7, substr($o['OBSERVATION_DATE_AND_TIME'], 0, 19), 1, 0, 'L', true);
+            $pdf->Cell(35, 7, $o['OBSERVATION_MOTIF'] ?: 'N/A', 1, 0, 'L', true);
+            $pdf->Cell(35, 7, $teacherName, 1, 0, 'L', true);
+            $pdf->Cell(0, 7, $o['OBSERVATION_NOTE'] ?: 'N/A', 1, 1, 'L', true);
         }
     }
     $pdf->Ln(5);
 
     // Section 8: Punishments
-    addBiSection($pdf, '8. Punishments', '8. العقوبات');
+    addBiSection($pdf, '8. ' . tr_lang('punishments', 'en'), tr_lang('punishments', 'ar'));
     if (empty($punishments)) {
-        $noData = 'No punishments recorded in this period. / لا توجد عقوبات مسجلة في هذه الفترة';
-        $pdf->SetFont('dejavusans', 'I', 10);
-        $pdf->Cell(0, 8, $noData, 0, 1, 'L');
+        writeBilingualNoData($pdf, tr_lang('no_punishments_period', 'en'), tr_lang('no_punishments_period', 'ar'));
     } else {
-        $pdf->SetFillColor(240, 240, 240);
-        $pdf->SetFont('dejavusans', 'B', 9);
-        $pdf->Cell(45, 8, tr_lang('date', 'en') . " / " . tr_lang('date', 'ar'), 1, 0, 'C', true);
-        $pdf->Cell(50, 8, tr_lang('type', 'en') . " / " . tr_lang('type', 'ar'), 1, 0, 'C', true);
-        $pdf->Cell(0, 8, tr_lang('note', 'en') . " / " . tr_lang('note', 'ar'), 1, 1, 'C', true);
-        $pdf->SetFont('dejavusans', '', 9);
+        $pdf->SetFont($FONT_EN, 'B', 9);
+        writeBilingualHeaderCell($pdf, 45, 10, tr_lang('date', 'en'), tr_lang('date', 'ar'), 0, true);
+        writeBilingualHeaderCell($pdf, 50, 10, tr_lang('type', 'en'), tr_lang('type', 'ar'), 0, true);
+        writeBilingualHeaderCell($pdf, 0, 10, tr_lang('note', 'en'), tr_lang('note', 'ar'), 1, true);
+        $pdf->SetFont($FONT_EN, '', 9);
+        
+        $rowAlt = false;
         foreach ($punishments as $p) {
-            $pdf->Cell(45, 7, substr($p['PUNISHMENT_SUGGESTED_AT'], 0, 19), 1, 0, 'L');
-            $pdf->Cell(50, 7, $p['PUNISHMENT_LABEL'] ?: 'N/A', 1, 0, 'L');
-            $pdf->Cell(0, 7, $p['PUNISHMENT_NOTE'] ?: 'N/A', 1, 1, 'L');
+            // Alternating row colors
+            if ($rowAlt) {
+                $pdf->SetFillColor(248, 250, 252);
+            } else {
+                $pdf->SetFillColor(255, 255, 255);
+            }
+            $rowAlt = !$rowAlt;
+            
+            $pdf->SetDrawColor(0, 51, 102);
+            $pdf->Cell(45, 7, substr($p['PUNISHMENT_SUGGESTED_AT'], 0, 19), 1, 0, 'L', true);
+            $pdf->Cell(50, 7, $p['PUNISHMENT_LABEL'] ?: 'N/A', 1, 0, 'L', true);
+            $pdf->Cell(0, 7, $p['PUNISHMENT_NOTE'] ?: 'N/A', 1, 1, 'L', true);
         }
     }
     $pdf->Ln(5);
 
     // Section 9: Rewards
-    addBiSection($pdf, '9. Rewards', '9. المكافآت');
+    addBiSection($pdf, '9. ' . tr_lang('rewards', 'en'), tr_lang('rewards', 'ar'));
     if (empty($rewards)) {
-        $noData = 'No rewards recorded in this period. / لا توجد مكافآت مسجلة في هذه الفترة';
-        $pdf->SetFont('dejavusans', 'I', 10);
-        $pdf->Cell(0, 8, $noData, 0, 1, 'L');
+        writeBilingualNoData($pdf, tr_lang('no_rewards_period', 'en'), tr_lang('no_rewards_period', 'ar'));
     } else {
-        $pdf->SetFillColor(240, 240, 240);
-        $pdf->SetFont('dejavusans', 'B', 9);
-        $pdf->Cell(45, 8, tr_lang('date', 'en') . " / " . tr_lang('date', 'ar'), 1, 0, 'C', true);
-        $pdf->Cell(50, 8, tr_lang('type', 'en') . " / " . tr_lang('type', 'ar'), 1, 0, 'C', true);
-        $pdf->Cell(0, 8, tr_lang('note', 'en') . " / " . tr_lang('note', 'ar'), 1, 1, 'C', true);
-        $pdf->SetFont('dejavusans', '', 9);
+        $pdf->SetFont($FONT_EN, 'B', 9);
+        writeBilingualHeaderCell($pdf, 45, 10, tr_lang('date', 'en'), tr_lang('date', 'ar'), 0, true);
+        writeBilingualHeaderCell($pdf, 50, 10, tr_lang('type', 'en'), tr_lang('type', 'ar'), 0, true);
+        writeBilingualHeaderCell($pdf, 0, 10, tr_lang('note', 'en'), tr_lang('note', 'ar'), 1, true);
+        $pdf->SetFont($FONT_EN, '', 9);
+        
+        $rowAlt = false;
         foreach ($rewards as $r) {
-            $pdf->Cell(45, 7, substr($r['REWARD_SUGGESTED_AT'], 0, 19), 1, 0, 'L');
-            $pdf->Cell(50, 7, $r['REWARD_LABEL'] ?: 'N/A', 1, 0, 'L');
-            $pdf->Cell(0, 7, $r['REWARD_NOTE'] ?: 'N/A', 1, 1, 'L');
+            // Alternating row colors
+            if ($rowAlt) {
+                $pdf->SetFillColor(248, 250, 252);
+            } else {
+                $pdf->SetFillColor(255, 255, 255);
+            }
+            $rowAlt = !$rowAlt;
+            
+            $pdf->SetDrawColor(0, 51, 102);
+            $pdf->Cell(45, 7, substr($r['REWARD_SUGGESTED_AT'], 0, 19), 1, 0, 'L', true);
+            $pdf->Cell(50, 7, $r['REWARD_LABEL'] ?: 'N/A', 1, 0, 'L', true);
+            $pdf->Cell(0, 7, $r['REWARD_NOTE'] ?: 'N/A', 1, 1, 'L', true);
         }
     }
-
+    
+    
     // Output PDF
     $pdf->Output('student_report_' . $serial_number . '.pdf', 'D');
 

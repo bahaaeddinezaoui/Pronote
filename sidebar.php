@@ -52,6 +52,10 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
                 <span class="icon">📤</span>
                 <span class="text" data-tooltip="<?php echo t('nav_upload_weekly_program'); ?>"><?php echo t('nav_upload_weekly_program'); ?></span>
             </a>
+            <a href="superuser_change_password.php" id="navSuperuserChangePassword" class="sidebar-link <?php echo ($current_page == 'superuser_change_password.php') ? 'active' : ''; ?>">
+                <span class="icon">🔑</span>
+                <span class="text" data-tooltip="<?php echo t('change_password'); ?>"><?php echo t('change_password'); ?></span>
+            </a>
         <?php endif; ?>
 
         <?php if ($role === 'Teacher'): ?>
@@ -115,7 +119,7 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
 
         <a href="#" id="themeToggleBtn" class="sidebar-link">
             <span class="icon" id="themeToggleIcon">🌙</span>
-            <span class="text" id="themeToggleText" data-tooltip="Toggle Theme">Toggle Theme</span>
+            <span class="text" id="themeToggleText" data-tooltip="<?php echo t('theme_toggle'); ?>"><?php echo t('theme_toggle'); ?></span>
         </a>
 
         <a href="logout.php" id="navLogout" class="sidebar-link logout-btn <?php if ($role === 'Teacher' && !empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) echo 'disabled'; ?>" 
@@ -446,10 +450,10 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
     setInterval(fetchNotifications, 30000);
 })();
 </script>
-<script src="effects.js"></script>
+<script src="effects.js?v=2"></script>
 <?php endif; ?>
 <?php if ($role !== 'Admin'): ?>
-<script src="effects.js"></script>
+<script src="effects.js?v=2"></script>
 <?php endif; ?>
 
 <script>

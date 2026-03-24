@@ -5,7 +5,7 @@ $T = [
     'title_suffix' => 'Educational Management System',
     'home' => 'Home',
     'search' => 'Search',
-    'profile' => 'Profile',
+    'nav_profile' => 'Profile',
     'logout' => 'Logout',
     'login' => 'Login',
     'student_records' => 'Student Records',
@@ -39,21 +39,72 @@ $T = [
     'feature_observations' => 'Observation Tracking',
     'feature_observations_desc' => 'Teachers can make detailed observations about student performance. Admins receive real-time notifications for new observations.',
 
+    // Personal Information
+    'student_serial_number' => 'Serial Number',
     'full_name' => 'Full Name',
+    'sex' => 'Sex',
+    'male' => 'Male',
+    'female' => 'Female',
+    'birth_date' => 'Birth Date',
+    'blood_type' => 'Blood Type',
+    'personal_phone' => 'Personal Phone',
+    'height_cm' => 'Height (cm)',
+    'weight_kg' => 'Weight (kg)',
+    'is_foreign' => 'Is Foreign?',
+    'yes' => 'Yes',
+    'no' => 'No',
+    'health_status' => 'Health Status',
+    'birth_cert_number' => 'Birth Cert Number',
+    'id_card_number' => 'ID Card Number',
+    'postal_account' => 'Postal Account',
+    'military_necklace' => 'Military Necklace?',
+    
+    // Academic Details
+    'grade_rank' => 'Grade / Rank',
+    'section' => 'Section',
+    'category' => 'Category',
+    
+    // Family Information
     'father_name' => 'Father Name',
     'mother_name' => 'Mother Name',
     'father_profession' => 'Father Profession',
     'mother_profession' => 'Mother Profession',
     'parents_situation' => "Parents' Situation",
     'orphan_status' => 'Orphan Status',
+    'married' => 'Married',
+    'divorced' => 'Divorced',
+    'separated' => 'Separated',
+    'widowed' => 'Widowed',
+    'none' => 'None',
+    
+    // Addresses
+    'addresses' => 'Addresses',
     'birth_place_country' => 'Birth Place - Country',
     'personal_address_country' => 'Personal Address - Country',
+    
+    // Emergency Contact
+    'emergency_contact' => 'Emergency Contact',
     'emergency_name' => 'Name',
     'emergency_relation' => 'Relation',
+    
+    // Report sections
+    'personal_information' => 'Personal Information',
+    'academic_details' => 'Academic Details',
     'report_date' => 'Report Date',
+    'absences' => 'Absences',
+    'observations' => 'Observations',
+    'punishments' => 'Punishments',
+    'rewards' => 'Rewards',
     'date' => 'Date',
     'type' => 'Type',
     'note' => 'Note',
+    'teacher_label' => 'Teacher',
+    
+    // No data messages
+    'no_absences_period' => 'No absences recorded in this period.',
+    'no_observations' => 'No observations recorded.',
+    'no_punishments_period' => 'No punishments recorded in this period.',
+    'no_rewards_period' => 'No rewards recorded in this period.',
     'feature_absences' => 'Absence Management',
     'feature_absences_desc' => 'Record and track student absences with dates, times, and motifs. Generate reports and monitor attendance patterns.',
     'feature_sessions' => 'Study Session Scheduling',
@@ -400,7 +451,7 @@ $T = [
 
     // Shared Navbar & General
     'nav_home' => 'Home',
-    'nav_search' => 'Search',
+    'nav_search' => 'Study Sessions',
     'nav_student_records' => 'Student Records',
     'nav_student_mgmt' => 'Management',
     'nav_disciplinary' => 'Disciplinary',
@@ -412,6 +463,9 @@ $T = [
     'rewards' => 'Rewards',
     'nav_options' => 'Options',
     'nav_tutorial' => 'Tutorial',
+    'theme_toggle' => 'Toggle Theme',
+    'light_mode' => 'Light Mode',
+    'dark_mode' => 'Dark Mode',
     'nav_logout' => 'Logout',
     'logout_disabled_during_onboarding' => 'Logout is disabled during onboarding. Please complete the setup process.',
     'punishment_type' => 'Punishment Type',
