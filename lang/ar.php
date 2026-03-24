@@ -775,5 +775,13 @@ $T = [
     "uniforms" => "الزي الرسمي",
     "save_changes" => "حفظ التغييرات",
     "and" => "و",
+
+    // Charts
+    "users_distribution" => "توزيع المستخدمين",
+    "academic_setup" => "الإعداد الأكاديمي",
+    "records_activity" => "السجلات والأنشطة",
+    "students_by_category" => "الطلاب حسب الفئة",
+    "absences_by_motif" => "الغيابات حسب السبب",
+    "observations_by_motif" => "الملاحظات حسب السبب",
 ];
 

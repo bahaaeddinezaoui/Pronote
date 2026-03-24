@@ -822,4 +822,12 @@ $T = [
     'uniforms' => 'Uniforms',
     'save_changes' => 'Save Changes',
     'and' => '&',
+
+    // Charts
+    'users_distribution' => 'Users Distribution',
+    'academic_setup' => 'Academic Setup',
+    'records_activity' => 'Records & Activity',
+    'students_by_category' => 'Students by Category',
+    'absences_by_motif' => 'Absences by Motif',
+    'observations_by_motif' => 'Observations by Motif',
 ];
