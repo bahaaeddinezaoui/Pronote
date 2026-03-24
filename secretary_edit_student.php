@@ -39,6 +39,16 @@ if ($row = $res->fetch_assoc()) {
 }
 $stmt->close();
 
+$secretary_id = null;
+$stmt = $conn->prepare("SELECT SECRETARY_ID FROM secretary WHERE USER_ID = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$res = $stmt->get_result();
+if ($row = $res->fetch_assoc()) {
+    $secretary_id = (int)$row['SECRETARY_ID'];
+}
+$stmt->close();
+
 function upsertAddress($conn, $existingId, $street_en, $street_ar, $country, $wilaya, $daira, $commune) {
     $country = intval($country);
     $wilaya = intval($wilaya);
@@ -355,6 +365,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $stmtCascadeObs->bind_param("ss", $serial, $originalSerial);
                 $stmtCascadeObs->execute();
                 $stmtCascadeObs->close();
+            }
+
+            $stmtCascadeRewards = $conn->prepare("UPDATE secretary_rewards_student SET STUDENT_SERIAL_NUMBER = ? WHERE STUDENT_SERIAL_NUMBER = ?");
+            if ($stmtCascadeRewards) {
+                $stmtCascadeRewards->bind_param("ss", $serial, $originalSerial);
+                $stmtCascadeRewards->execute();
+                $stmtCascadeRewards->close();
+            }
+
+            $stmtCascadePunishments = $conn->prepare("UPDATE secretary_punishes_student SET STUDENT_SERIAL_NUMBER = ? WHERE STUDENT_SERIAL_NUMBER = ?");
+            if ($stmtCascadePunishments) {
+                $stmtCascadePunishments->bind_param("ss", $serial, $originalSerial);
+                $stmtCascadePunishments->execute();
+                $stmtCascadePunishments->close();
             }
         }
 
@@ -693,6 +717,18 @@ $relations = [];
 $res = $conn->query("SELECT relation_id, relation_name_en, relation_name_ar FROM relation ORDER BY relation_name_en");
 if ($res) {
     while($r = $res->fetch_assoc()) $relations[] = $r;
+}
+
+$reward_types = [];
+$res = $conn->query("SELECT REWARD_TYPE_ID, REWARD_LABEL_EN, REWARD_LABEL_AR, REWARD_DURATION FROM reward_type ORDER BY REWARD_LABEL_EN");
+if ($res) {
+    while ($r = $res->fetch_assoc()) $reward_types[] = $r;
+}
+
+$punishment_types = [];
+$res = $conn->query("SELECT PUNISHMENT_TYPE_ID, PUNISHMENT_LABEL_EN, PUNISHMENT_LABEL_AR, PUNISHMENT_DURATION FROM punishment_type ORDER BY PUNISHMENT_LABEL_EN");
+if ($res) {
+    while ($r = $res->fetch_assoc()) $punishment_types[] = $r;
 }
 
 $countries = [];
@@ -1196,6 +1232,15 @@ function selectedAttr($current, $value) {
         .tab-content-container { flex-grow: 1; min-width: 0; }
         .tab-panel { display: none; animation: fadeIn 0.4s ease; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-md); }
         .tab-panel.active { display: block; }
+
+        .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; padding: 1rem; z-index: 2000; }
+        .modal-backdrop.active { display: flex; }
+        .modal-card { width: 100%; max-width: 640px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); padding: 1.25rem; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .modal-title { font-weight: 800; font-size: 1.1rem; }
+        .modal-close { border: none; background: transparent; cursor: pointer; font-size: 1.5rem; line-height: 1; color: var(--text-secondary); }
+        .modal-actions { display:flex; justify-content:flex-end; gap:0.5rem; margin-top:1rem; }
+        .btn-secondary { background: var(--border-color); color: var(--text-primary); }
         
         @media (max-width: 992px) {
             .tabs-container { flex-direction: column; }
@@ -1265,6 +1310,8 @@ function selectedAttr($current, $value) {
                             <button type="button" class="tab-button" onclick="switchTab(event, 'tab-address')"><?php echo t('label_personal_address'); ?></button>
                             <button type="button" class="tab-button" onclick="switchTab(event, 'tab-uniforms')"><?php echo t('uniforms'); ?></button>
                             <button type="button" class="tab-button" onclick="switchTab(event, 'tab-other')"><?php echo t('step_other_details'); ?></button>
+                            <button type="button" class="tab-button" onclick="switchTab(event, 'tab-rewards')"><?php echo t('rewards'); ?></button>
+                            <button type="button" class="tab-button" onclick="switchTab(event, 'tab-punishments')"><?php echo t('punishments'); ?></button>
                             <button type="button" class="tab-button" onclick="switchTab(event, 'tab-emergency')"><?php echo t('step_emergency_contact'); ?></button>
                         </div>
 
@@ -1704,6 +1751,24 @@ function selectedAttr($current, $value) {
                                     </div>
                                 </div>
                             </div>
+
+                            <div id="tab-rewards" class="tab-panel">
+                                <h2 class="form-section-title"><?php echo t('rewards'); ?></h2>
+                                <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-bottom:1rem;">
+                                    <button type="button" class="btn-search" id="BTN_OPEN_REWARD_MODAL"><?php echo t('add_reward'); ?></button>
+                                </div>
+                                <div id="REWARDS_STATUS" style="margin-top:0.5rem;"></div>
+                                <div id="REWARDS_HISTORY" style="margin-top:1rem;"></div>
+                            </div>
+
+                            <div id="tab-punishments" class="tab-panel">
+                                <h2 class="form-section-title"><?php echo t('punishments'); ?></h2>
+                                <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-bottom:1rem;">
+                                    <button type="button" class="btn-search" id="BTN_OPEN_PUNISHMENT_MODAL"><?php echo t('add_punishment'); ?></button>
+                                </div>
+                                <div id="PUNISHMENTS_STATUS" style="margin-top:0.5rem;"></div>
+                                <div id="PUNISHMENTS_HISTORY" style="margin-top:1rem;"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -1712,6 +1777,62 @@ function selectedAttr($current, $value) {
                     </div>
 
                 </form>
+            </div>
+
+            <div class="modal-backdrop" id="REWARD_MODAL">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <div class="modal-title"><?php echo t('add_reward'); ?></div>
+                        <button type="button" class="modal-close" data-close-modal="REWARD_MODAL">&times;</button>
+                    </div>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                        <div class="form-group" data-label="<?php echo t('reward_type'); ?>">
+                            <select id="REWARD_TYPE_ID">
+                                <option value="" disabled selected><?php echo t('reward_type'); ?></option>
+                                <?php foreach ($reward_types as $rt): ?>
+                                    <?php $label = ($LANG === 'ar' && !empty($rt['REWARD_LABEL_AR'])) ? $rt['REWARD_LABEL_AR'] : $rt['REWARD_LABEL_EN']; ?>
+                                    <option value="<?php echo (int)$rt['REWARD_TYPE_ID']; ?>" data-duration="<?php echo (int)($rt['REWARD_DURATION'] ?? 0); ?>"><?php echo h($label); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group" data-label="<?php echo t('start_date'); ?>"><input type="date" id="REWARD_START_DATE"></div>
+                        <div class="form-group" data-label="<?php echo t('end_date'); ?>"><input type="date" id="REWARD_END_DATE" readonly></div>
+                        <div class="form-group" style="grid-column: 1 / -1;" data-label="<?php echo t('note'); ?>"><textarea id="REWARD_NOTE" rows="3" placeholder="<?php echo t('optional_note'); ?>"></textarea></div>
+                    </div>
+                    <div id="REWARD_MODAL_STATUS" style="margin-top:0.75rem;"></div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-search btn-secondary" data-close-modal="REWARD_MODAL"><?php echo t('cancel'); ?></button>
+                        <button type="button" class="btn-search" id="BTN_ADD_REWARD"><?php echo t('save'); ?></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-backdrop" id="PUNISHMENT_MODAL">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <div class="modal-title"><?php echo t('add_punishment'); ?></div>
+                        <button type="button" class="modal-close" data-close-modal="PUNISHMENT_MODAL">&times;</button>
+                    </div>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                        <div class="form-group" data-label="<?php echo t('punishment_type'); ?>">
+                            <select id="PUNISHMENT_TYPE_ID">
+                                <option value="" disabled selected><?php echo t('punishment_type'); ?></option>
+                                <?php foreach ($punishment_types as $pt): ?>
+                                    <?php $label = ($LANG === 'ar' && !empty($pt['PUNISHMENT_LABEL_AR'])) ? $pt['PUNISHMENT_LABEL_AR'] : $pt['PUNISHMENT_LABEL_EN']; ?>
+                                    <option value="<?php echo (int)$pt['PUNISHMENT_TYPE_ID']; ?>" data-duration="<?php echo (int)($pt['PUNISHMENT_DURATION'] ?? 0); ?>"><?php echo h($label); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group" data-label="<?php echo t('start_date'); ?>"><input type="date" id="PUNISHMENT_START_DATE"></div>
+                        <div class="form-group" data-label="<?php echo t('end_date'); ?>"><input type="date" id="PUNISHMENT_END_DATE" readonly></div>
+                        <div class="form-group" style="grid-column: 1 / -1;" data-label="<?php echo t('note'); ?>"><textarea id="PUNISHMENT_NOTE" rows="3" placeholder="<?php echo t('optional_note'); ?>"></textarea></div>
+                    </div>
+                    <div id="PUNISHMENT_MODAL_STATUS" style="margin-top:0.75rem;"></div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-search btn-secondary" data-close-modal="PUNISHMENT_MODAL"><?php echo t('cancel'); ?></button>
+                        <button type="button" class="btn-search" id="BTN_ADD_PUNISHMENT"><?php echo t('save'); ?></button>
+                    </div>
+                </div>
             </div>
             <?php endif; ?>
 
@@ -1753,11 +1874,250 @@ function switchTab(evt, tabId) {
     if (window.innerWidth <= 992) {
         evt.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
+
+    if (tabId === 'tab-rewards') {
+        loadRewardsHistory();
+    }
+    if (tabId === 'tab-punishments') {
+        loadPunishmentsHistory();
+    }
 }
 
 var T = <?php echo json_encode($T); ?>;
 
 const t = (key) => T[key] || key;
+
+const CURRENT_STUDENT_SERIAL = <?php echo json_encode($student ? ($student['STUDENT_SERIAL_NUMBER'] ?? '') : ''); ?>;
+
+function formatHistoryTable(rows, columns) {
+    if (!Array.isArray(rows) || rows.length < 1) {
+        return `<div style="color:var(--text-secondary); font-size:0.95rem;">${t('no_records_found')}</div>`;
+    }
+
+    const header = `<tr>${columns.map(c => `<th style="text-align:left; padding:0.5rem; border-bottom:1px solid var(--border-color);">${c.label}</th>`).join('')}</tr>`;
+    const body = rows.map(r => {
+        return `<tr>${columns.map(c => `<td style="padding:0.5rem; border-bottom:1px solid var(--border-color); vertical-align:top;">${c.render(r)}</td>`).join('')}</tr>`;
+    }).join('');
+
+    return `
+        <div style="overflow:auto; border:1px solid var(--border-color); border-radius:var(--radius-lg);">
+            <table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
+                <thead style="background:var(--bg-secondary);">${header}</thead>
+                <tbody>${body}</tbody>
+            </table>
+        </div>
+    `;
+}
+
+function showInlineStatus(elId, message, type) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    el.textContent = message || '';
+    el.style.color = type === 'error' ? '#b91c1c' : type === 'success' ? '#15803d' : 'var(--text-secondary)';
+    el.style.fontSize = '0.95rem';
+}
+
+function addDays(dateStr, days) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr + 'T00:00:00');
+    if (Number.isNaN(d.getTime())) return '';
+    const delta = parseInt(days || 0, 10);
+    if (Number.isNaN(delta) || delta <= 0) return dateStr;
+    d.setDate(d.getDate() + delta);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+}
+
+async function fetchHistory(endpoint, action, serial) {
+    const fd = new FormData();
+    fd.append('action', action);
+    fd.append('serial_number', serial);
+    const res = await fetch(endpoint, { method: 'POST', body: fd });
+    return res.json();
+}
+
+async function addRecord(endpoint, action, payload) {
+    const fd = new FormData();
+    Object.keys(payload).forEach(k => fd.append(k, payload[k] == null ? '' : payload[k]));
+    fd.append('action', action);
+    const res = await fetch(endpoint, { method: 'POST', body: fd });
+    return res.json();
+}
+
+async function loadRewardsHistory() {
+    if (!CURRENT_STUDENT_SERIAL) return;
+    try {
+        const rewardsData = await fetchHistory('secretary_rewards_student.php', 'get_history', CURRENT_STUDENT_SERIAL);
+        if (rewardsData && rewardsData.success) {
+            const rows = rewardsData.history || [];
+            document.getElementById('REWARDS_HISTORY').innerHTML = formatHistoryTable(rows, [
+                { label: t('date'), render: (r) => (r.REWARD_SUGGESTED_AT || '') },
+                { label: t('reward_type'), render: (r) => (<?php echo json_encode($LANG); ?> === 'ar' && r.REWARD_LABEL_AR ? r.REWARD_LABEL_AR : (r.REWARD_LABEL_EN || '')) },
+                { label: t('start_date'), render: (r) => (r.REWARD_START_DATE || '') },
+                { label: t('end_date'), render: (r) => (r.REWARD_END_DATE || '') },
+                { label: t('note'), render: (r) => (r.REWARD_NOTE || '') }
+            ]);
+        }
+    } catch (e) {
+        showInlineStatus('REWARDS_STATUS', t('msg_error_loading'), 'error');
+    }
+}
+
+async function loadPunishmentsHistory() {
+    if (!CURRENT_STUDENT_SERIAL) return;
+    try {
+        const punData = await fetchHistory('secretary_punishes_student.php', 'get_history', CURRENT_STUDENT_SERIAL);
+        if (punData && punData.success) {
+            const rows = punData.history || [];
+            document.getElementById('PUNISHMENTS_HISTORY').innerHTML = formatHistoryTable(rows, [
+                { label: t('date'), render: (r) => (r.PUNISHMENT_SUGGESTED_AT || '') },
+                { label: t('punishment_type'), render: (r) => (<?php echo json_encode($LANG); ?> === 'ar' && r.PUNISHMENT_LABEL_AR ? r.PUNISHMENT_LABEL_AR : (r.PUNISHMENT_LABEL_EN || '')) },
+                { label: t('start_date'), render: (r) => (r.PUNISHMENT_START_DATE || '') },
+                { label: t('end_date'), render: (r) => (r.PUNISHMENT_END_DATE || '') },
+                { label: t('note'), render: (r) => (r.PUNISHMENT_NOTE || '') }
+            ]);
+        }
+    } catch (e) {
+        showInlineStatus('PUNISHMENTS_STATUS', t('msg_error_loading'), 'error');
+    }
+}
+
+function wireDisciplineForm() {
+    const rewardType = document.getElementById('REWARD_TYPE_ID');
+    const rewardStart = document.getElementById('REWARD_START_DATE');
+    const rewardEnd = document.getElementById('REWARD_END_DATE');
+    const rewardBtn = document.getElementById('BTN_ADD_REWARD');
+
+    const openRewardModalBtn = document.getElementById('BTN_OPEN_REWARD_MODAL');
+    const rewardModal = document.getElementById('REWARD_MODAL');
+
+    if (rewardType && rewardStart && rewardEnd) {
+        const syncRewardEnd = () => {
+            const opt = rewardType.options[rewardType.selectedIndex];
+            const dur = opt ? opt.getAttribute('data-duration') : 0;
+            rewardEnd.value = addDays(rewardStart.value, dur);
+        };
+        rewardType.addEventListener('change', syncRewardEnd);
+        rewardStart.addEventListener('change', syncRewardEnd);
+    }
+
+    if (openRewardModalBtn && rewardModal) {
+        openRewardModalBtn.addEventListener('click', () => {
+            showInlineStatus('REWARD_MODAL_STATUS', '', '');
+            rewardModal.classList.add('active');
+        });
+    }
+
+    if (rewardBtn) {
+        rewardBtn.addEventListener('click', async () => {
+            if (!CURRENT_STUDENT_SERIAL) return;
+            showInlineStatus('REWARDS_STATUS', t('saving'), '');
+            const typeId = rewardType ? rewardType.value : '';
+            const startDate = rewardStart ? rewardStart.value : '';
+            const endDate = rewardEnd ? rewardEnd.value : '';
+            const note = (document.getElementById('REWARD_NOTE') || {}).value || '';
+            if (!typeId || !startDate || !endDate) {
+                showInlineStatus('REWARDS_STATUS', t('error_missing_fields'), 'error');
+                return;
+            }
+            try {
+                const data = await addRecord('secretary_rewards_student.php', 'add_reward', {
+                    serial_number: CURRENT_STUDENT_SERIAL,
+                    reward_type_id: typeId,
+                    start_date: startDate,
+                    end_date: endDate,
+                    note: note
+                });
+                if (data && data.success) {
+                    showInlineStatus('REWARDS_STATUS', data.message || t('saved'), 'success');
+                    showInlineStatus('REWARD_MODAL_STATUS', data.message || t('saved'), 'success');
+                    if (rewardModal) rewardModal.classList.remove('active');
+                    loadRewardsHistory();
+                } else {
+                    showInlineStatus('REWARD_MODAL_STATUS', (data && data.message) ? data.message : t('error_saving_reward'), 'error');
+                }
+            } catch (e) {
+                showInlineStatus('REWARD_MODAL_STATUS', t('error_saving_reward'), 'error');
+            }
+        });
+    }
+
+    const punType = document.getElementById('PUNISHMENT_TYPE_ID');
+    const punStart = document.getElementById('PUNISHMENT_START_DATE');
+    const punEnd = document.getElementById('PUNISHMENT_END_DATE');
+    const punBtn = document.getElementById('BTN_ADD_PUNISHMENT');
+
+    const openPunModalBtn = document.getElementById('BTN_OPEN_PUNISHMENT_MODAL');
+    const punModal = document.getElementById('PUNISHMENT_MODAL');
+
+    if (punType && punStart && punEnd) {
+        const syncPunEnd = () => {
+            const opt = punType.options[punType.selectedIndex];
+            const dur = opt ? opt.getAttribute('data-duration') : 0;
+            punEnd.value = addDays(punStart.value, dur);
+        };
+        punType.addEventListener('change', syncPunEnd);
+        punStart.addEventListener('change', syncPunEnd);
+    }
+
+    if (openPunModalBtn && punModal) {
+        openPunModalBtn.addEventListener('click', () => {
+            showInlineStatus('PUNISHMENT_MODAL_STATUS', '', '');
+            punModal.classList.add('active');
+        });
+    }
+
+    if (punBtn) {
+        punBtn.addEventListener('click', async () => {
+            if (!CURRENT_STUDENT_SERIAL) return;
+            showInlineStatus('PUNISHMENTS_STATUS', t('saving'), '');
+            const typeId = punType ? punType.value : '';
+            const startDate = punStart ? punStart.value : '';
+            const endDate = punEnd ? punEnd.value : '';
+            const note = (document.getElementById('PUNISHMENT_NOTE') || {}).value || '';
+            if (!typeId || !startDate || !endDate) {
+                showInlineStatus('PUNISHMENTS_STATUS', t('error_missing_fields'), 'error');
+                return;
+            }
+            try {
+                const data = await addRecord('secretary_punishes_student.php', 'add_punishment', {
+                    serial_number: CURRENT_STUDENT_SERIAL,
+                    punishment_type_id: typeId,
+                    start_date: startDate,
+                    end_date: endDate,
+                    note: note
+                });
+                if (data && data.success) {
+                    showInlineStatus('PUNISHMENTS_STATUS', data.message || t('saved'), 'success');
+                    showInlineStatus('PUNISHMENT_MODAL_STATUS', data.message || t('saved'), 'success');
+                    if (punModal) punModal.classList.remove('active');
+                    loadPunishmentsHistory();
+                } else {
+                    showInlineStatus('PUNISHMENT_MODAL_STATUS', (data && data.message) ? data.message : t('error_saving_punishment'), 'error');
+                }
+            } catch (e) {
+                showInlineStatus('PUNISHMENT_MODAL_STATUS', t('error_saving_punishment'), 'error');
+            }
+        });
+    }
+}
+
+wireDisciplineForm();
+
+document.addEventListener('click', function(e) {
+    const closeTarget = e.target && e.target.getAttribute ? e.target.getAttribute('data-close-modal') : null;
+    if (closeTarget) {
+        const modal = document.getElementById(closeTarget);
+        if (modal) modal.classList.remove('active');
+    }
+
+    const isBackdrop = e.target && e.target.classList && e.target.classList.contains('modal-backdrop');
+    if (isBackdrop) {
+        e.target.classList.remove('active');
+    }
+});
 
 let allStudents = [];
 let allStudentsLoaded = false;

@@ -956,9 +956,9 @@
     function getPerformanceMode() {
         try {
             const v = localStorage.getItem(PERFORMANCE_KEY);
-            return (v === 'low' || v === 'high') ? v : 'high';
+            return (v === 'low' || v === 'high') ? v : 'low';
         } catch (e) {
-            return 'high';
+            return 'low';
         }
     }
 
@@ -982,7 +982,7 @@
     function initEffects() {
         const perfMode = applyPerformanceMode();
 
-        if (perfMode === 'high') {
+        if (perfMode === 'low') {
             initRippleEffect();
             initScrollAnimations();
             initFormValidation();
@@ -1017,7 +1017,7 @@
             ConfirmDialog,
             getPerformanceMode,
             setPerformanceMode(mode) {
-                const normalized = mode === 'low' ? 'low' : 'high';
+                const normalized = mode === 'high' ? 'high' : 'low';
                 try {
                     localStorage.setItem(PERFORMANCE_KEY, normalized);
                 } catch (e) {}

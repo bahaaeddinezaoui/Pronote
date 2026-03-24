@@ -204,13 +204,13 @@ if (!isset($_SESSION['user_id'])) {
                         <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                         <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                     </svg>
-                    <h2 class="section-title"><?php echo t('security') ?? 'Security'; ?></h2>
+                    <h2 class="section-title"><?php echo t('security'); ?></h2>
                 </div>
                 
                 <div class="option-item">
                     <div class="option-info">
                         <div class="option-label"><?php echo t('change_password'); ?></div>
-                        <div class="option-desc"><?php echo t('change_password_desc') ?? 'Update your account password to stay secure.'; ?></div>
+                        <div class="option-desc"><?php echo t('change_password_desc'); ?></div>
                     </div>
                     <button class="btn btn-secondary" id="openPasswordModal" style="width: auto; padding: 8px 16px;">
                         <?php echo t('change_password'); ?>
@@ -224,13 +224,13 @@ if (!isset($_SESSION['user_id'])) {
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color);">
                         <path d="M3 12h3l3 8 4-16 3 8h3"></path>
                     </svg>
-                    <h2 class="section-title"><?php echo t('performance') ?: 'Performance'; ?></h2>
+                    <h2 class="section-title"><?php echo t('performance'); ?></h2>
                 </div>
                 <div class="option-item">
                     <div class="option-info">
-                        <div class="option-label"><?php echo t('performance_mode') ?: 'Performance mode'; ?></div>
+                        <div class="option-label"><?php echo t('performance_mode'); ?></div>
                         <div class="option-desc">
-                            <?php echo t('performance_mode_desc') ?: 'Reduce animations and glass effects for better performance on slower devices.'; ?>
+                            <?php echo t('performance_mode_desc'); ?>
                         </div>
                     </div>
                     <label class="switch">
@@ -359,14 +359,14 @@ if (!isset($_SESSION['user_id'])) {
         function getPerf() {
             try {
                 const v = localStorage.getItem(PERFORMANCE_KEY);
-                return (v === 'low' || v === 'high') ? v : 'high';
+                return (v === 'low' || v === 'high') ? v : 'low';
             } catch (e) {
-                return 'high';
+                return 'low';
             }
         }
 
         function applyPerf(mode) {
-            const m = mode === 'low' ? 'low' : 'high';
+            const m = mode === 'high' ? 'high' : 'low';
             try {
                 localStorage.setItem(PERFORMANCE_KEY, m);
                 htmlEl.setAttribute('data-performance', m);
@@ -378,17 +378,17 @@ if (!isset($_SESSION['user_id'])) {
 
         if (perfToggle) {
             const current = getPerf();
-            perfToggle.checked = (current === 'low');
+            perfToggle.checked = (current === 'high');
             applyPerf(current);
 
             perfToggle.addEventListener('change', function() {
-                const mode = this.checked ? 'low' : 'high';
+                const mode = this.checked ? 'high' : 'low';
                 applyPerf(mode);
                 if (window.EduTrackEffects && window.EduTrackEffects.Toast) {
                     window.EduTrackEffects.Toast.show(
-                        mode === 'low'
-                            ? (T.performance_mode_enabled || 'Performance mode enabled')
-                            : (T.performance_mode_disabled || 'Performance mode disabled'),
+                        mode === 'high'
+                            ? (T.performance_mode_enabled)
+                            : (T.performance_mode_disabled),
                         'info',
                         2200
                     );

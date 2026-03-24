@@ -707,25 +707,25 @@ body::after {
     mix-blend-mode: overlay;
 }
 
-/* Performance mode: reduce heavy visuals */
-[data-performance="low"] body::before,
-[data-performance="low"] body::after {
+/* Performance mode: enabled (low visuals) when mode is "low" */
+[data-performance="high"] body::before,
+[data-performance="high"] body::after {
     display: none;
 }
 
-[data-performance="low"] .sidebar,
-[data-performance="low"] .main-content,
-[data-performance="low"] .login-card,
-[data-performance="low"] .table-container,
-[data-performance="low"] .stat-card,
-[data-performance="low"] .welcome-header,
-[data-performance="low"] .hero-section {
+[data-performance="high"] .sidebar,
+[data-performance="high"] .main-content,
+[data-performance="high"] .login-card,
+[data-performance="high"] .table-container,
+[data-performance="high"] .stat-card,
+[data-performance="high"] .welcome-header,
+[data-performance="high"] .hero-section {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     box-shadow: var(--shadow-md);
 }
 
-[data-performance="low"] .notifications-panel {
+[data-performance="high"] .notifications-panel {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
@@ -1668,6 +1668,7 @@ html[dir="rtl"] .sidebar-toggle-btn {
     line-height: 1.45;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
