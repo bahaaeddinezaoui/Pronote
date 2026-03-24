@@ -22,6 +22,16 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'Teacher') {
             border-radius: 12px;
             padding: 20px;
         }
+
+        /* Fix select/option colors in dark mode */
+        #ta_category_select {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        #ta_category_select option {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
         .ta-grid {
             display: grid;
             gap: 12px;
@@ -277,6 +287,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'Teacher') {
                 searchWrap.style.gap = '10px';
                 searchWrap.style.alignItems = 'center';
                 searchWrap.style.marginBottom = '12px';
+                searchWrap.style.flexWrap = 'wrap';
 
                 var searchInput = document.createElement('input');
                 searchInput.type = 'text';
@@ -284,7 +295,39 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'Teacher') {
                 searchInput.placeholder = (T.search_major_placeholder || 'Search majors...');
                 searchInput.style.maxWidth = '420px';
 
+                var clearBtn = document.createElement('button');
+                clearBtn.type = 'button';
+                clearBtn.className = 'btn btn-secondary';
+                clearBtn.style.width = 'auto';
+                clearBtn.textContent = (T.clear || 'Clear');
+                clearBtn.addEventListener('click', function() {
+                    searchInput.value = '';
+                    renderMajors();
+                    searchInput.focus();
+                });
+
+                var selectedOnlyWrap = document.createElement('label');
+                selectedOnlyWrap.style.display = 'inline-flex';
+                selectedOnlyWrap.style.alignItems = 'center';
+                selectedOnlyWrap.style.gap = '8px';
+                selectedOnlyWrap.style.cursor = 'pointer';
+                selectedOnlyWrap.style.userSelect = 'none';
+                selectedOnlyWrap.style.color = 'var(--text-secondary)';
+
+                var selectedOnlyCb = document.createElement('input');
+                selectedOnlyCb.type = 'checkbox';
+                selectedOnlyCb.style.width = '16px';
+                selectedOnlyCb.style.height = '16px';
+
+                var selectedOnlyText = document.createElement('span');
+                selectedOnlyText.textContent = (T.show_selected_only || 'Show selected only');
+
+                selectedOnlyWrap.appendChild(selectedOnlyCb);
+                selectedOnlyWrap.appendChild(selectedOnlyText);
+
                 searchWrap.appendChild(searchInput);
+                searchWrap.appendChild(clearBtn);
+                searchWrap.appendChild(selectedOnlyWrap);
                 majorsList.appendChild(searchWrap);
 
                 var grid = document.createElement('div');
@@ -297,7 +340,9 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'Teacher') {
                     var q = String(filterText || '').trim().toLowerCase();
                     grid.innerHTML = '';
 
-                    if (!q) {
+                    var selectedOnly = !!(selectedOnlyCb && selectedOnlyCb.checked);
+
+                    if (!selectedOnly && !q) {
                         grid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 16px; color: var(--text-secondary);">' + (T.search_major_prompt || 'Type to search majors.') + '</div>';
                         return;
                     }
@@ -305,7 +350,14 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'Teacher') {
                     var shown = 0;
                     majors.forEach(function(m) {
                         var name = String(m.name || '');
-                        if (q && name.toLowerCase().indexOf(q) === -1) return;
+                        var majorIdStr = String(m.id);
+                        var isSelected = !!(majorSectionsState[majorIdStr] && Object.keys(majorSectionsState[majorIdStr]).some(function(sid){ return majorSectionsState[majorIdStr][sid]; }));
+
+                        if (selectedOnly) {
+                            if (!isSelected) return;
+                        } else {
+                            if (q && name.toLowerCase().indexOf(q) === -1) return;
+                        }
 
                         shown++;
                         majorNamesMap[String(m.id)] = name;
@@ -325,7 +377,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'Teacher') {
                         cb.style.width = '16px';
                         cb.style.height = '16px';
 
-                        if (majorSectionsState[String(m.id)] && Object.keys(majorSectionsState[String(m.id)]).some(function(sid){ return majorSectionsState[String(m.id)][sid]; })) {
+                        if (isSelected) {
                             cb.checked = true;
                         }
 
@@ -354,6 +406,10 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'Teacher') {
 
                 searchInput.addEventListener('input', function() {
                     renderMajors(this.value);
+                });
+
+                selectedOnlyCb.addEventListener('change', function() {
+                    renderMajors(searchInput.value);
                 });
 
                 renderMajors();

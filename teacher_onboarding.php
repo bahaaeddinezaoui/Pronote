@@ -85,6 +85,16 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
             font-size: 0.875rem;
             color: var(--text-muted);
         }
+
+        /* Fix select/option colors in dark mode */
+        #category_select {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        #category_select option {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
     </style>
 </head>
 <body>
@@ -509,6 +519,7 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                     searchWrap.style.display = 'flex';
                     searchWrap.style.gap = '10px';
                     searchWrap.style.alignItems = 'center';
+                    searchWrap.style.flexWrap = 'wrap';
 
                     var searchInput = document.createElement('input');
                     searchInput.type = 'text';
@@ -516,7 +527,34 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                     searchInput.placeholder = (T.search_major_placeholder || 'Search majors...');
                     searchInput.style.maxWidth = '420px';
 
+                    var clearBtn = document.createElement('button');
+                    clearBtn.type = 'button';
+                    clearBtn.className = 'btn btn-secondary';
+                    clearBtn.style.width = 'auto';
+                    clearBtn.textContent = (T.clear || 'Clear');
+
+                    var selectedOnlyWrap = document.createElement('label');
+                    selectedOnlyWrap.style.display = 'inline-flex';
+                    selectedOnlyWrap.style.alignItems = 'center';
+                    selectedOnlyWrap.style.gap = '8px';
+                    selectedOnlyWrap.style.cursor = 'pointer';
+                    selectedOnlyWrap.style.userSelect = 'none';
+                    selectedOnlyWrap.style.color = 'var(--text-secondary)';
+
+                    var selectedOnlyCb = document.createElement('input');
+                    selectedOnlyCb.type = 'checkbox';
+                    selectedOnlyCb.style.width = '16px';
+                    selectedOnlyCb.style.height = '16px';
+
+                    var selectedOnlyText = document.createElement('span');
+                    selectedOnlyText.textContent = (T.show_selected_only || 'Show selected only');
+
+                    selectedOnlyWrap.appendChild(selectedOnlyCb);
+                    selectedOnlyWrap.appendChild(selectedOnlyText);
+
                     searchWrap.appendChild(searchInput);
+                    searchWrap.appendChild(clearBtn);
+                    searchWrap.appendChild(selectedOnlyWrap);
                     majorsList.appendChild(searchWrap);
 
                     var majorsGrid = document.createElement('div');
@@ -528,7 +566,9 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                         var q = String(filterText || '').trim().toLowerCase();
                         majorsGrid.innerHTML = '';
 
-                        if (!q) {
+                        var selectedOnly = !!(selectedOnlyCb && selectedOnlyCb.checked);
+
+                        if (!selectedOnly && !q) {
                             majorsGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 16px; color: var(--text-secondary);">' + (T.search_major_prompt || 'Type to search majors.') + '</div>';
                             return;
                         }
@@ -537,7 +577,14 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
 
                         (data.majors || []).forEach(function(m){
                             var name = String(m.name || '');
-                            if (q && name.toLowerCase().indexOf(q) === -1) return;
+                            var majorIdStr = String(m.id);
+                            var isSelected = !!(majorSectionsState[majorIdStr] && Object.keys(majorSectionsState[majorIdStr]).some(function(sid){ return majorSectionsState[majorIdStr][sid]; }));
+
+                            if (selectedOnly) {
+                                if (!isSelected) return;
+                            } else {
+                                if (q && name.toLowerCase().indexOf(q) === -1) return;
+                            }
                             shown++;
 
                         var majorDiv = document.createElement('div');
@@ -557,7 +604,7 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                         checkbox.style.width = '16px';
                         checkbox.style.height = '16px';
                         // Restore checked state if this major was previously selected
-                        if (majorSectionsState[m.id]) {
+                        if (isSelected) {
                             checkbox.checked = true;
                         }
                         checkbox.addEventListener('change', function(){
@@ -580,7 +627,7 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
                         majorsGrid.appendChild(majorDiv);
                         
                         // If this major was previously selected, load its sections
-                        if (majorSectionsState[m.id]) {
+                        if (isSelected) {
                             loadSectionsForMajor(m.id);
                         }
                         });
@@ -594,6 +641,16 @@ if (empty($_SESSION['needs_onboarding']) || !empty($_SESSION['last_login_at'])) 
 
                     searchInput.addEventListener('input', function() {
                         renderMajors(this.value);
+                    });
+
+                    clearBtn.addEventListener('click', function() {
+                        searchInput.value = '';
+                        renderMajors();
+                        searchInput.focus();
+                    });
+
+                    selectedOnlyCb.addEventListener('change', function() {
+                        renderMajors(searchInput.value);
                     });
 
                     renderMajors();
