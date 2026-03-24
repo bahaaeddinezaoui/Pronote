@@ -37,90 +37,111 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 }
 
-// Get statistics from database
-$students_by_category = [];
-$cat_col = ($LANG === 'ar') ? "c.CATEGORY_NAME_AR" : "c.CATEGORY_NAME_EN";
+// ── 1. Absences Trend — last 30 days ──────────────────────────────
+$absences_trend = [];
 $result = $conn->query("
-    SELECT IFNULL($cat_col, 'Unknown') as category, COUNT(*) as count 
-    FROM student s 
-    LEFT JOIN category c ON s.CATEGORY_ID = c.CATEGORY_ID 
-    GROUP BY s.CATEGORY_ID
-    ORDER BY count DESC
+    SELECT DATE(a.ABSENCE_DATE_AND_TIME) as date, COUNT(*) as count
+    FROM absence a
+    WHERE a.ABSENCE_DATE_AND_TIME >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+    GROUP BY DATE(a.ABSENCE_DATE_AND_TIME)
+    ORDER BY date ASC
 ");
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        $students_by_category[] = $row;
-    }
-}
+if ($result) while ($row = $result->fetch_assoc()) $absences_trend[] = $row;
 
+// ── 2. Top 10 Most Absent Students ────────────────────────────────
+$top_absent_students = [];
+$result = $conn->query("
+    SELECT CONCAT(s.STUDENT_FIRST_NAME_EN, ' ', s.STUDENT_LAST_NAME_EN) as student,
+           COUNT(sga.ABSENCE_ID) as total
+    FROM student_gets_absent sga
+    JOIN student s ON sga.STUDENT_SERIAL_NUMBER = s.STUDENT_SERIAL_NUMBER
+    GROUP BY sga.STUDENT_SERIAL_NUMBER
+    ORDER BY total DESC
+    LIMIT 10
+");
+if ($result) while ($row = $result->fetch_assoc()) $top_absent_students[] = $row;
+
+// ── 3. Absences by Motif ──────────────────────────────────────────
 $absences_by_motif = [];
 $motif_col_abs = ($LANG === 'ar') ? "am.ABSENCE_MOTIF_AR" : "am.ABSENCE_MOTIF_EN";
 $result = $conn->query("
-    SELECT IFNULL($motif_col_abs, 'Unknown') as motif, COUNT(*) as count 
-    FROM absence a 
-    LEFT JOIN absence_motif am ON a.ABSENCE_MOTIF_ID = am.ABSENCE_MOTIF_ID 
+    SELECT IFNULL($motif_col_abs, 'Unspecified') as motif, COUNT(*) as count
+    FROM absence a
+    LEFT JOIN absence_motif am ON a.ABSENCE_MOTIF_ID = am.ABSENCE_MOTIF_ID
     GROUP BY am.ABSENCE_MOTIF_ID
     ORDER BY count DESC
 ");
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        $absences_by_motif[] = $row;
-    }
-}
+if ($result) while ($row = $result->fetch_assoc()) $absences_by_motif[] = $row;
 
+// ── 4. Punishments by Type ────────────────────────────────────────
+$punishments_by_type = [];
+$pub_col = ($LANG === 'ar') ? "pt.PUNISHMENT_LABEL_AR" : "pt.PUNISHMENT_LABEL_EN";
+$result = $conn->query("
+    SELECT IFNULL($pub_col, 'Unknown') as type, COUNT(*) as count
+    FROM secretary_punishes_student sps
+    LEFT JOIN punishment_type pt ON sps.PUNISHMENT_TYPE_ID = pt.PUNISHMENT_TYPE_ID
+    GROUP BY sps.PUNISHMENT_TYPE_ID
+    ORDER BY count DESC
+");
+if ($result) while ($row = $result->fetch_assoc()) $punishments_by_type[] = $row;
+
+// ── 5. Rewards by Type ────────────────────────────────────────────
+$rewards_by_type = [];
+$rew_col = ($LANG === 'ar') ? "rt.REWARD_LABEL_AR" : "rt.REWARD_LABEL_EN";
+$result = $conn->query("
+    SELECT IFNULL($rew_col, 'Unknown') as type, COUNT(*) as count
+    FROM secretary_rewards_student srs
+    LEFT JOIN reward_type rt ON srs.REWARD_TYPE_ID = rt.REWARD_TYPE_ID
+    GROUP BY srs.REWARD_TYPE_ID
+    ORDER BY count DESC
+");
+if ($result) while ($row = $result->fetch_assoc()) $rewards_by_type[] = $row;
+
+// ── 6. Punishment vs Reward — last 6 months (monthly grouped) ─────
+$monthly_punish_reward = [];
+$result = $conn->query("
+    SELECT month, SUM(punishments) as punishments, SUM(rewards) as rewards FROM (
+        SELECT DATE_FORMAT(PUNISHMENT_SUGGESTED_AT,'%Y-%m') as month,
+               COUNT(*) as punishments, 0 as rewards
+        FROM secretary_punishes_student
+        WHERE PUNISHMENT_SUGGESTED_AT >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+        GROUP BY month
+        UNION ALL
+        SELECT DATE_FORMAT(REWARD_SUGGESTED_AT,'%Y-%m') as month,
+               0 as punishments, COUNT(*) as rewards
+        FROM secretary_rewards_student
+        WHERE REWARD_SUGGESTED_AT >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
+        GROUP BY month
+    ) combined
+    GROUP BY month
+    ORDER BY month ASC
+");
+if ($result) while ($row = $result->fetch_assoc()) $monthly_punish_reward[] = $row;
+
+// ── 7. Observations by Motif ──────────────────────────────────────
 $observations_by_motif = [];
 $motif_col_obs = ($LANG === 'ar') ? "om.OBSERVATION_MOTIF_AR" : "om.OBSERVATION_MOTIF_EN";
 $result = $conn->query("
-    SELECT IFNULL($motif_col_obs, 'Unknown') as motif, COUNT(*) as count 
+    SELECT IFNULL($motif_col_obs, 'Unspecified') as motif, COUNT(*) as count
     FROM teacher_makes_an_observation_for_a_student tmo
-    LEFT JOIN observation_motif om ON tmo.OBSERVATION_MOTIF_ID = om.OBSERVATION_MOTIF_ID 
+    LEFT JOIN observation_motif om ON tmo.OBSERVATION_MOTIF_ID = om.OBSERVATION_MOTIF_ID
     GROUP BY om.OBSERVATION_MOTIF_ID
     ORDER BY count DESC
 ");
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        $observations_by_motif[] = $row;
-    }
-}
+if ($result) while ($row = $result->fetch_assoc()) $observations_by_motif[] = $row;
 
-$students_by_sex = [];
-$result_sex = $conn->query("SELECT STUDENT_SEX, COUNT(*) as count FROM student GROUP BY STUDENT_SEX");
-if ($result_sex) {
-    while ($row = $result_sex->fetch_assoc()) {
-        $key = empty($row['STUDENT_SEX']) ? 'Unknown' : $row['STUDENT_SEX'];
-        $students_by_sex[] = ['sex' => $key, 'count' => $row['count']];
-    }
-}
-
-$students_by_grade = [];
-$grade_col = ($LANG === 'ar') ? "g.GRADE_LABEL_AR" : "g.GRADE_LABEL_EN";
-$result_grade = $conn->query("
-    SELECT IFNULL($grade_col, 'Unknown') as grade, COUNT(*) as count 
-    FROM student s 
-    LEFT JOIN grade g ON s.STUDENT_GRADE_ID = g.GRADE_ID
-    GROUP BY s.STUDENT_GRADE_ID
-    ORDER BY count DESC
+// ── 8. Most Active Teachers (by observation count) ────────────────
+$top_observing_teachers = [];
+$result = $conn->query("
+    SELECT CONCAT(t.TEACHER_FIRST_NAME_EN,' ',t.TEACHER_LAST_NAME_EN) as teacher,
+           COUNT(*) as total
+    FROM teacher_makes_an_observation_for_a_student tmo
+    JOIN teacher t ON tmo.TEACHER_SERIAL_NUMBER = t.TEACHER_SERIAL_NUMBER
+    GROUP BY tmo.TEACHER_SERIAL_NUMBER
+    ORDER BY total DESC
     LIMIT 10
 ");
-if ($result_grade) {
-    while ($row = $result_grade->fetch_assoc()) {
-        $students_by_grade[] = $row;
-    }
-}
-
-$absences_trend = [];
-$result_trend = $conn->query("
-    SELECT DATE(ABSENCE_DATE_AND_TIME) as date, COUNT(*) as count 
-    FROM absence 
-    WHERE ABSENCE_DATE_AND_TIME >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)
-    GROUP BY DATE(ABSENCE_DATE_AND_TIME)
-    ORDER BY DATE(ABSENCE_DATE_AND_TIME) ASC
-");
-if ($result_trend) {
-    while ($row = $result_trend->fetch_assoc()) {
-        $absences_trend[] = $row;
-    }
-}
+if ($result) while ($row = $result->fetch_assoc()) $top_observing_teachers[] = $row;
 
 $conn->close();
 ?>
@@ -229,14 +250,22 @@ $conn->close();
 
         .chart-card h3 {
             margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 16px;
+            margin-bottom: 16px;
+            font-size: 15px;
             color: var(--text-primary);
-            text-align: center;
-            font-weight: 600;
+            text-align: left;
+            font-weight: 700;
             width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        
+        .chart-subtitle {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            margin-left: 4px;
+        }
         .chart-container {
             position: relative;
             width: 100%;
@@ -261,55 +290,67 @@ $conn->close();
         <p><?php echo t('welcome_admin_sub'); ?></p>
     </div>
 
-    <!-- Analytics Dashboard - Bento Layout -->
+    <!-- Analytics Dashboard - Bento Grid -->
     <div class="charts-grid">
-        <!-- Wide Line Chart (Absences Trend) -->
+
+        <!-- ROW 1: Absences Trend – full width -->
         <div class="chart-card col-span-12">
-            <h3><?php echo t('absences_trend') !== 'absences_trend' ? t('absences_trend') : 'Absences Trend (Last 14 Days)'; ?></h3>
-            <div class="chart-container" style="min-height: 320px;">
+            <h3>📈 Absences Trend <span class="chart-subtitle">(Last 30 Days)</span></h3>
+            <div class="chart-container" style="min-height:300px;">
                 <canvas id="trendChart"></canvas>
             </div>
         </div>
-        
-        <!-- Category (Bar) -->
-        <div class="chart-card col-span-5">
-            <h3><?php echo t('students_by_category') !== 'students_by_category' ? t('students_by_category') : 'Students by Category'; ?></h3>
-            <div class="chart-container">
-                <canvas id="categoryChart"></canvas>
+
+        <!-- ROW 2: Top Absentees (8) + Absences by Motif (4) -->
+        <div class="chart-card col-span-8">
+            <h3>🔴 Top 10 Most Absent Students</h3>
+            <div class="chart-container" style="min-height:300px;">
+                <canvas id="topAbsentChart"></canvas>
             </div>
         </div>
-
-        <!-- Grade (Bar) -->
-        <div class="chart-card col-span-7">
-            <h3><?php echo t('students_by_grade') !== 'students_by_grade' ? t('students_by_grade') : 'Students by Grade'; ?></h3>
-            <div class="chart-container">
-                <canvas id="gradeChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Doughnut (Students by Sex) -->
         <div class="chart-card col-span-4">
-            <h3><?php echo t('students_by_sex') !== 'students_by_sex' ? t('students_by_sex') : 'Students by Gender'; ?></h3>
-            <div class="chart-container">
-                <canvas id="sexChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Absences Motif (Doughnut) -->
-        <div class="chart-card col-span-4">
-            <h3><?php echo t('absences_by_motif') !== 'absences_by_motif' ? t('absences_by_motif') : 'Absences by Motif'; ?></h3>
-            <div class="chart-container">
+            <h3>📋 Absences by Motif</h3>
+            <div class="chart-container" style="min-height:300px;">
                 <canvas id="absencesChart"></canvas>
             </div>
         </div>
 
-        <!-- Observations Motif (Doughnut) -->
+        <!-- ROW 3: Punishment vs Reward Monthly – full width -->
+        <div class="chart-card col-span-12">
+            <h3>⚖️ Punishments vs Rewards <span class="chart-subtitle">(Last 6 Months)</span></h3>
+            <div class="chart-container" style="min-height:280px;">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+        </div>
+
+        <!-- ROW 4: Punishments by Type (6) + Rewards by Type (6) -->
+        <div class="chart-card col-span-6">
+            <h3>🔒 Punishments by Type</h3>
+            <div class="chart-container" style="min-height:280px;">
+                <canvas id="punishChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card col-span-6">
+            <h3>🏅 Rewards by Type</h3>
+            <div class="chart-container" style="min-height:280px;">
+                <canvas id="rewardChart"></canvas>
+            </div>
+        </div>
+
+        <!-- ROW 5: Top Observing Teachers (8) + Observations by Motif (4) -->
+        <div class="chart-card col-span-8">
+            <h3>👁️ Most Active Observing Teachers</h3>
+            <div class="chart-container" style="min-height:300px;">
+                <canvas id="topTeachersChart"></canvas>
+            </div>
+        </div>
         <div class="chart-card col-span-4">
-            <h3><?php echo t('observations_by_motif') !== 'observations_by_motif' ? t('observations_by_motif') : 'Observations by Motif'; ?></h3>
-            <div class="chart-container">
+            <h3>📝 Observations by Motif</h3>
+            <div class="chart-container" style="min-height:300px;">
                 <canvas id="observationsChart"></canvas>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -319,176 +360,198 @@ $conn->close();
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const studentsByCategory = <?php echo json_encode($students_by_category); ?>;
-    const absencesByMotif = <?php echo json_encode($absences_by_motif); ?>;
+    // ── PHP data injected into JS ──────────────────────────────────
+    const absencesTrend       = <?php echo json_encode($absences_trend); ?>;
+    const topAbsentStudents   = <?php echo json_encode($top_absent_students); ?>;
+    const absencesByMotif     = <?php echo json_encode($absences_by_motif); ?>;
+    const monthlyPunishReward = <?php echo json_encode($monthly_punish_reward); ?>;
+    const punishmentsByType   = <?php echo json_encode($punishments_by_type); ?>;
+    const rewardsByType       = <?php echo json_encode($rewards_by_type); ?>;
     const observationsByMotif = <?php echo json_encode($observations_by_motif); ?>;
-    const studentsBySex = <?php echo json_encode($students_by_sex); ?>;
-    const studentsByGrade = <?php echo json_encode($students_by_grade); ?>;
-    const absencesTrend = <?php echo json_encode($absences_trend); ?>;
+    const topTeachers         = <?php echo json_encode($top_observing_teachers); ?>;
 
-    const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#333';
-    const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || '#e5e7eb';
-    
+    const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#e2e8f0';
+    const subColor  = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() || '#94a3b8';
+    const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || 'rgba(255,255,255,0.08)';
+
     Chart.defaults.color = textColor;
     Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.font.size = 12;
 
-    const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#3b82f6', '#14b8a6', '#f43f5e', '#a855f7'];
+    const C = ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#3b82f6','#14b8a6','#f43f5e','#a855f7'];
+    const scaleY = { beginAtZero:true, ticks:{ color:textColor, precision:0 }, grid:{ color:gridColor } };
+    const scaleX = { ticks:{ color:textColor }, grid:{ display:false } };
+    const scaleXint = { beginAtZero:true, ticks:{ color:textColor, precision:0 }, grid:{ color:gridColor } };
+    const scaleYno  = { ticks:{ color:textColor }, grid:{ display:false } };
 
-    // 1. Absences Trend Line Chart
-    const ctxTrend = document.getElementById('trendChart').getContext('2d');
-    new Chart(ctxTrend, {
+    // ── 1. Absences Trend (line, 30 days) ─────────────────────────
+    new Chart(document.getElementById('trendChart'), {
         type: 'line',
         data: {
-            labels: absencesTrend.map(item => item.date),
+            labels: absencesTrend.map(d => d.date),
             datasets: [{
                 label: 'Absences',
-                data: absencesTrend.map(item => item.count),
+                data: absencesTrend.map(d => d.count),
                 borderColor: '#6366f1',
-                backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                borderWidth: 3,
-                tension: 0.4,
+                backgroundColor: 'rgba(99,102,241,0.12)',
+                borderWidth: 2.5,
+                tension: 0.45,
                 fill: true,
-                pointBackgroundColor: '#ffffff',
+                pointBackgroundColor: '#fff',
                 pointBorderColor: '#6366f1',
                 pointBorderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 6
+                pointRadius: 3,
+                pointHoverRadius: 5
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: { callbacks: { label: function(context) { return context.raw; } } }
-            },
-            scales: {
-                y: { 
-                    beginAtZero: true, 
-                    ticks: { color: textColor, precision: 0 },
-                    grid: { color: gridColor, drawBorder: false }
-                },
-                x: {
-                    ticks: { color: textColor },
-                    grid: { display: false }
-                }
-            }
+            responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ display:false } },
+            scales:{ y:scaleY, x:scaleX }
         }
     });
 
-    // 2. Category Chart
-    const ctxCat = document.getElementById('categoryChart').getContext('2d');
-    new Chart(ctxCat, {
+    // ── 2. Top 10 Most Absent Students (horizontal bar) ───────────
+    new Chart(document.getElementById('topAbsentChart'), {
         type: 'bar',
         data: {
-            labels: studentsByCategory.map(item => item.category),
+            labels: topAbsentStudents.map(d => d.student),
             datasets: [{
-                label: '<?php echo t("student"); ?>',
-                data: studentsByCategory.map(item => item.count),
-                backgroundColor: colors[1],
-                borderRadius: 6,
-                borderSkipped: false
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { beginAtZero: true, ticks: { color: textColor, precision: 0 }, grid: { color: gridColor } },
-                x: { ticks: { color: textColor }, grid: { display: false } }
-            }
-        }
-    });
-
-    // 3. Grade Chart
-    const ctxGrade = document.getElementById('gradeChart').getContext('2d');
-    new Chart(ctxGrade, {
-        type: 'bar',
-        data: {
-            labels: studentsByGrade.map(item => item.grade),
-            datasets: [{
-                label: '<?php echo t("student"); ?>',
-                data: studentsByGrade.map(item => item.count),
-                backgroundColor: colors[2],
-                borderRadius: 6,
+                label: 'Absences',
+                data: topAbsentStudents.map(d => d.total),
+                backgroundColor: topAbsentStudents.map((_,i) => `${C[0]}${Math.round(255 - i*18).toString(16).padStart(2,'0')}`),
+                borderRadius: 5,
                 borderSkipped: false
             }]
         },
         options: {
             indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                x: { beginAtZero: true, ticks: { color: textColor, precision: 0 }, grid: { color: gridColor } },
-                y: { ticks: { color: textColor }, grid: { display: false } }
-            }
+            responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ display:false } },
+            scales:{ x:scaleXint, y:scaleYno }
         }
     });
 
-    // 4. Students by Sex Chart
-    const ctxSex = document.getElementById('sexChart').getContext('2d');
-    new Chart(ctxSex, {
+    // ── 3. Absences by Motif (doughnut) ──────────────────────────
+    new Chart(document.getElementById('absencesChart'), {
         type: 'doughnut',
         data: {
-            labels: studentsBySex.map(item => item.sex),
-            datasets: [{
-                data: studentsBySex.map(item => item.count),
-                backgroundColor: ['#3b82f6', '#ec4899', '#9ca3af'],
-                borderWidth: 0,
-                hoverOffset: 4
-            }]
+            labels: absencesByMotif.map(d => d.motif),
+            datasets: [{ data: absencesByMotif.map(d => d.count), backgroundColor: C, borderWidth:0, hoverOffset:6 }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom', labels: { color: textColor } } },
+            responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ position:'bottom', labels:{ color:textColor, boxWidth:12, padding:8 } } },
             cutout: '65%'
         }
     });
 
-    // 5. Absences Chart
-    const ctxAbs = document.getElementById('absencesChart').getContext('2d');
-    new Chart(ctxAbs, {
-        type: 'doughnut',
+    // ── 4. Punishment vs Reward Monthly (grouped bar) ─────────────
+    new Chart(document.getElementById('monthlyChart'), {
+        type: 'bar',
         data: {
-            labels: absencesByMotif.map(item => item.motif),
-            datasets: [{
-                data: absencesByMotif.map(item => item.count),
-                backgroundColor: colors,
-                borderWidth: 0,
-                hoverOffset: 4
-            }]
+            labels: monthlyPunishReward.map(d => d.month),
+            datasets: [
+                {
+                    label: 'Punishments',
+                    data: monthlyPunishReward.map(d => d.punishments),
+                    backgroundColor: '#ef4444cc',
+                    borderRadius: 5,
+                    borderSkipped: false
+                },
+                {
+                    label: 'Rewards',
+                    data: monthlyPunishReward.map(d => d.rewards),
+                    backgroundColor: '#10b981cc',
+                    borderRadius: 5,
+                    borderSkipped: false
+                }
+            ]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom', labels: { color: textColor } } },
-            cutout: '65%'
+            responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ position:'top', labels:{ color:textColor, boxWidth:12 } } },
+            scales:{ y:scaleY, x:scaleX }
         }
     });
 
-    // 6. Observations Chart
-    const ctxObs = document.getElementById('observationsChart').getContext('2d');
-    new Chart(ctxObs, {
+    // ── 5. Punishments by Type (bar) ──────────────────────────────
+    new Chart(document.getElementById('punishChart'), {
+        type: 'bar',
+        data: {
+            labels: punishmentsByType.map(d => d.type),
+            datasets: [{
+                label: 'Punishments',
+                data: punishmentsByType.map(d => d.count),
+                backgroundColor: punishmentsByType.map((_,i) => C[(i+3)%C.length]),
+                borderRadius: 5,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ display:false } },
+            scales:{ y:scaleY, x:scaleX }
+        }
+    });
+
+    // ── 6. Rewards by Type (bar) ──────────────────────────────────
+    new Chart(document.getElementById('rewardChart'), {
+        type: 'bar',
+        data: {
+            labels: rewardsByType.map(d => d.type),
+            datasets: [{
+                label: 'Rewards',
+                data: rewardsByType.map(d => d.count),
+                backgroundColor: rewardsByType.map((_,i) => C[(i+1)%C.length]),
+                borderRadius: 5,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ display:false } },
+            scales:{ y:scaleY, x:scaleX }
+        }
+    });
+
+    // ── 7. Top Observing Teachers (horizontal bar) ────────────────
+    new Chart(document.getElementById('topTeachersChart'), {
+        type: 'bar',
+        data: {
+            labels: topTeachers.map(d => d.teacher),
+            datasets: [{
+                label: 'Observations',
+                data: topTeachers.map(d => d.total),
+                backgroundColor: topTeachers.map((_,i) => `${C[4]}${Math.round(255 - i*18).toString(16).padStart(2,'0')}`),
+                borderRadius: 5,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ display:false } },
+            scales:{ x:scaleXint, y:scaleYno }
+        }
+    });
+
+    // ── 8. Observations by Motif (polar area) ────────────────────
+    new Chart(document.getElementById('observationsChart'), {
         type: 'polarArea',
         data: {
-            labels: observationsByMotif.map(item => item.motif),
+            labels: observationsByMotif.map(d => d.motif),
             datasets: [{
-                data: observationsByMotif.map(item => item.count),
-                backgroundColor: colors.map(c => c + '80'),
-                borderColor: colors,
+                data: observationsByMotif.map(d => d.count),
+                backgroundColor: C.map(c => c + 'a0'),
+                borderColor: C,
                 borderWidth: 1
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom', labels: { color: textColor } } },
-            scales: {
-                r: { grid: { color: gridColor }, ticks: { display: false } }
-            }
+            responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ position:'bottom', labels:{ color:textColor, boxWidth:12, padding:8 } } },
+            scales:{ r:{ grid:{ color:gridColor }, ticks:{ display:false } } }
         }
     });
 </script>
