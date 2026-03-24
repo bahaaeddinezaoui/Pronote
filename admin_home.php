@@ -358,8 +358,14 @@ $conn->close();
 </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/chart.umd.js"></script>
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof Chart === "undefined") {
+            console.error("Chart.js failed to load from CDN.");
+            return;
+        }
+
     // ── PHP data injected into JS ──────────────────────────────────
     const absencesTrend       = <?php echo json_encode($absences_trend); ?>;
     const topAbsentStudents   = <?php echo json_encode($top_absent_students); ?>;
@@ -554,6 +560,7 @@ $conn->close();
             scales:{ r:{ grid:{ color:gridColor }, ticks:{ display:false } } }
         }
     });
+});
 </script>
 
 </body>
