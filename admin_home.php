@@ -376,9 +376,19 @@ $conn->close();
     const observationsByMotif = <?php echo json_encode($observations_by_motif); ?>;
     const topTeachers         = <?php echo json_encode($top_observing_teachers); ?>;
 
-    const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#e2e8f0';
-    const subColor  = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() || '#94a3b8';
-    const gridColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || 'rgba(255,255,255,0.08)';
+    const getThemeColors = () => {
+        const root = document.documentElement;
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        const style = getComputedStyle(root);
+        
+        const textColor = style.getPropertyValue('--text-primary').trim() || (isDark ? '#f8fafc' : '#1e293b');
+        const subColor  = style.getPropertyValue('--text-secondary').trim() || (isDark ? '#94a3b8' : '#64748b');
+        const gridColor = style.getPropertyValue('--border-color').trim() || (isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)');
+        
+        return { textColor, subColor, gridColor };
+    };
+
+    const { textColor, subColor, gridColor } = getThemeColors();
 
     Chart.defaults.color = textColor;
     Chart.defaults.font.family = "'Inter', sans-serif";
