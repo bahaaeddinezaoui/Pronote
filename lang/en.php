@@ -663,6 +663,7 @@ $T = [
     'msg_please_select_date' => 'Please select a date.',
     'quick_actions' => 'Quick Actions',
     'generate_report' => 'Generate Report',
+    'student_report' => 'Student Report',
 
     // Teacher Onboarding
     'onboarding_welcome_title' => 'Welcome to eNote!',

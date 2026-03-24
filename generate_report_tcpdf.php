@@ -129,7 +129,9 @@ try {
             rel.relation_name_en AS CONTACT_RELATION_EN,
             rel.relation_name_ar AS CONTACT_RELATION_AR,
             sec_emg.CONTACT_PHONE_NUMBER AS EMG_PHONE,
-            sec_emg.CONSULATE_NUMBER
+            sec_emg.CONSULATE_NUMBER,
+            s.STUDENT_PHOTO
+
 
         FROM student s
         LEFT JOIN section sec ON s.SECTION_ID = sec.SECTION_ID
@@ -326,16 +328,13 @@ try {
         $this->SetFillColor(0, 51, 102);
         $this->Rect(10, 12, $this->getPageWidth() - 20, 18, 'F');
         
-        // Institution name
-        $appName = $this->isRTL ? tr_lang('app_name', 'ar') : 'eNote';
-        $systemName = $this->isRTL ? tr_lang('system_name', 'ar') : 'Educational Management System';
-        
+        // Institution name (Bilingual)
         $this->SetTextColor(255, 255, 255);
-        $this->SetFont($this->isRTL ? $FONT_AR : $FONT_EN, 'B', 16);
-        $this->SetY(14);
-        $this->Cell(0, 8, $appName, 0, 1, 'C');
-        $this->SetFont($this->isRTL ? $FONT_AR : $FONT_EN, '', 10);
-        $this->Cell(0, 6, $systemName, 0, 1, 'C');
+        $this->SetY(13);
+        $this->SetFont($FONT_AR, 'B', 15);
+        $this->Cell(0, 8, tr_lang('app_name', 'ar') . ' - ' . "\xE2\x80\xAA" . 'eNote' . "\xE2\x80\xAC", 0, 1, 'C');
+        $this->SetFont($FONT_AR, '', 9);
+        $this->Cell(0, 5, tr_lang('system_name', 'ar') . ' / ' . "\xE2\x80\xAA" . 'Educational Management System' . "\xE2\x80\xAC", 0, 1, 'C');
         
         // Reset text color
         $this->SetTextColor(0, 0, 0);
@@ -663,30 +662,61 @@ try {
     // Title with official document styling
     $pdf->SetY(45);
     
-    // Document title box
+    // Document title box with space for photo
     $pdf->SetFillColor(240, 245, 250);
     $pdf->SetDrawColor(0, 51, 102);
     $pdf->SetLineWidth(0.8);
     $titleY = $pdf->GetY();
-    $pdf->Rect(15, $titleY, $pdf->getPageWidth() - 30, 25, 'DF');
     
-    $pdf->SetFont($isRTL ? $FONT_AR : $FONT_EN, 'B', 16);
+    $photoBoxW = 32;
+    $photoBoxH = 42;
+    $spacing = 5;
+    $contentW = $pdf->getPageWidth() - 30;
+    $titleBoxW = $contentW - $photoBoxW - $spacing;
+    
+    $pdf->Rect(15, $titleY, $titleBoxW, 25, 'DF');
+    
+    // Bilingual Title
     $pdf->SetTextColor(0, 51, 102);
-    $pdf->Cell(0, 12, $reportTitle, 0, 1, 'C');
+    $pdf->SetFont($FONT_AR, 'B', 15);
+    $studentNameAR = ($student['STUDENT_FIRST_NAME_AR'] ?? '') . ' ' . ($student['STUDENT_LAST_NAME_AR'] ?? '');
+    $studentNameEN = trim(($student['STUDENT_FIRST_NAME_EN'] ?? '') . ' ' . ($student['STUDENT_LAST_NAME_EN'] ?? ''));
+    $titleAR = tr_lang('student_report', 'ar') . ': ' . $studentNameAR;
+    $titleEN = "\xE2\x80\xAA" . tr_lang('student_report', 'en') . ': ' . $studentNameEN . "\xE2\x80\xAC";
+    $pdf->Cell($titleBoxW, 10, $titleAR . ' / ' . $titleEN, 0, 1, 'C');
     
-    $pdf->SetFont($isRTL ? $FONT_AR : $FONT_EN, '', 10);
+    // Bilingual Date
+    $pdf->SetFont($FONT_AR, '', 10);
     $pdf->SetTextColor(80, 80, 80);
-    $dateLabel = ($lang === 'ar') ? tr_lang('report_date', 'ar') : 'Report Date';
-    $pdf->Cell(0, 8, $dateLabel . ': ' . date('d/m/Y H:i'), 0, 1, 'C');
+    $dateLabelAR = tr_lang('report_date', 'ar');
+    $dateLabelEN = "\xE2\x80\xAA" . 'Report Date' . "\xE2\x80\xAC";
+    $pdf->Cell($titleBoxW, 8, $dateLabelAR . ' / ' . $dateLabelEN . ': ' . date('d/m/Y H:i'), 0, 1, 'C');
     $pdf->SetTextColor(0, 0, 0);
+
+    // Student Photo on the right
+    $photoPath = $student['STUDENT_PHOTO'] ?? '';
+    if (!empty($photoPath)) {
+        $photoPath = str_replace('\\', '/', $photoPath);
+        $fullPath = __DIR__ . '/' . $photoPath;
+        if (file_exists($fullPath)) {
+            $photoX = 15 + $titleBoxW + $spacing;
+            // Photo frame
+            $pdf->SetDrawColor(0, 51, 102);
+            $pdf->SetLineWidth(0.5);
+            $pdf->Rect($photoX, $titleY, $photoBoxW, $photoBoxH, 'D');
+            $pdf->Image($fullPath, $photoX + 1, $titleY + 1, $photoBoxW - 2, $photoBoxH - 2, '', '', '', true, 300, '', false, false, 0, false, false, false);
+        }
+    }
     
-    // Period info
-    $periodText = ($lang === 'ar') 
-        ? tr_lang('start_date', 'ar') . ': ' . $start_date . ' - ' . tr_lang('end_date', 'ar') . ': ' . $end_date
-        : 'Period: ' . $start_date . ' to ' . $end_date;
-    $pdf->SetFont($FONT_EN, 'I', 9);
+    // Period info - ensure it starts below both boxes
+    $pdf->SetY($titleY + max(25, !empty($photoPath) ? $photoBoxH : 0) + 2);
+    // Bilingual Period
+    $periodLabelAR = 'الفترة (من ' . $start_date . ' إلى ' . $end_date . ')';
+    $periodLabelEN = "\xE2\x80\xAA" . 'Period: ' . $start_date . ' to ' . $end_date . "\xE2\x80\xAC";
+    $pdf->SetFont($FONT_AR, 'I', 9);
     $pdf->SetTextColor(100, 100, 100);
-    $pdf->Cell(0, 6, $periodText, 0, 1, 'C');
+    $pdf->Cell(0, 6, $periodLabelAR . ' / ' . $periodLabelEN, 0, 1, 'C');
+
     $pdf->SetTextColor(0, 0, 0);
     $pdf->Ln(8);
 

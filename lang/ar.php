@@ -616,6 +616,7 @@ $T = [
     "administrator" => "المسؤول",
     "quick_actions" => "إجراءات سريعة",
     "generate_report" => "إنشاء تقرير",
+    "student_report" => "تقرير الطالب",
 
     // Teacher Onboarding
     "onboarding_welcome_title" => "مرحبا بك في إينوت!",
