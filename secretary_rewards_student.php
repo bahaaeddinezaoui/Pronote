@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 (STUDENT_SERIAL_NUMBER, SECRETARY_ID, REWARD_TYPE_ID, REWARD_SUGGESTED_AT, REWARD_START_DATE, REWARD_END_DATE, REWARD_NOTE)
             VALUES (?, ?, ?, NOW(), ?, ?, ?)
         ");
-        $stmt->bind_param("siissss", $serial, $secretary_id, $type_id, $start_date, $end_date, $note);
+        $stmt->bind_param("siisss", $serial, $secretary_id, $type_id, $start_date, $end_date, $note);
         if ($stmt->execute()) {
             echo json_encode(['success' => true, 'message' => t('reward_added_success') ?: 'Reward added successfully.']);
         } else {
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
             $failed = [];
             foreach ($serials as $serial) {
-                $stmt->bind_param('siissss', $serial, $secretary_id, $type_id, $start_date, $end_date, $note);
+                $stmt->bind_param('siisss', $serial, $secretary_id, $type_id, $start_date, $end_date, $note);
                 if (!$stmt->execute()) {
                     $failed[] = $serial;
                 }

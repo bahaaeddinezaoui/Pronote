@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 (STUDENT_SERIAL_NUMBER, SECRETARY_ID, PUNISHMENT_TYPE_ID, PUNISHMENT_SUGGESTED_AT, PUNISHMENT_START_DATE, PUNISHMENT_END_DATE, PUNISHMENT_NOTE)
             VALUES (?, ?, ?, NOW(), ?, ?, ?)
         ");
-        $stmt->bind_param("siissss", $serial, $secretary_id, $type_id, $start_date, $end_date, $note);
+        $stmt->bind_param("siisss", $serial, $secretary_id, $type_id, $start_date, $end_date, $note);
         if ($stmt->execute()) {
             echo json_encode(['success' => true, 'message' => t('punishment_added_success') ?: 'Punishment added successfully.']);
         } else {
@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
             $failed = [];
             foreach ($serials as $serial) {
-                $stmt->bind_param('siissss', $serial, $secretary_id, $type_id, $start_date, $end_date, $note);
+                $stmt->bind_param('siisss', $serial, $secretary_id, $type_id, $start_date, $end_date, $note);
                 if (!$stmt->execute()) {
                     $failed[] = $serial;
                 }

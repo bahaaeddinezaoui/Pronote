@@ -122,6 +122,11 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
             <span class="text" id="themeToggleText" data-tooltip="<?php echo t('theme_toggle'); ?>"><?php echo t('theme_toggle'); ?></span>
         </a>
 
+        <a href="changelog.php" id="viewChangelogHistory" class="sidebar-link <?php echo ($current_page == 'changelog.php') ? 'active' : ''; ?>">
+            <span class="icon">📜</span>
+            <span class="text" data-tooltip="<?php echo ($lang === 'ar') ? 'سجل التغييرات' : 'Changelog'; ?>"><?php echo ($lang === 'ar') ? 'سجل التغييرات' : 'Changelog'; ?></span>
+        </a>
+
         <a href="logout.php" id="navLogout" class="sidebar-link logout-btn <?php if ($role === 'Teacher' && !empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) echo 'disabled'; ?>" 
            <?php if ($role === 'Teacher' && !empty($_SESSION['needs_onboarding']) && empty($_SESSION['last_login_at'])) echo 'onclick="return false;" title="' . t('logout_disabled_during_onboarding') . '"'; ?>>
             <span class="icon">🚪</span>
@@ -540,3 +545,5 @@ if ($role === 'Secretary') $home_link = 'secretary_home.php';
     }
 })();
 </script>
+
+<?php include __DIR__ . '/changelog_modal.php'; ?>
